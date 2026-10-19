@@ -78,6 +78,7 @@ Deep-linkable URLs are built in from day one — cheap now, expensive to retrofi
 | `/bestiary/` · `/bestiary/<slug>` | Bestiary — the book's mythological creatures (§11) |
 | `/avadhana/` | The Memory Hall — the recitation technique Dvij learns (§12) |
 | `/valley/` | Valley map, with the Real India layer |
+| `/valley/#3d` | The same valley as a 3D flyover (§10.1) |
 | `/search/` | Full-text search across comic text and codex |
 | `/about/` | About the book and author |
 
@@ -199,6 +200,7 @@ Rules the pass followed:
 | Parchment + per-puzzle crops | `images/artifacts/parchment.png`, cut using the boxes in `parchment - mapped.png` (§7.1) |
 | Codex diagrams | Only the `images/artifacts/` diagrams a codex entry actually uses (e.g. `vaastu mandala.jpg`, `tattvas.jpg`, `nakshatra.jpg`, `gnomon.jpg`, `lakshmis symbol.jpg`) |
 | Parchment texture for puzzle pages | One of `one`–`five.png`, as a background |
+| The 3D valley's heightmap, drape and poster (derived files, not working images) | Built from `map.jpg`'s contours and B1 p1's painting (§10.1); served by the site itself, not R2 (§14.3) |
 
 Nothing else from `images/` is published: no working panel PNGs, part PDFs, breakdowns or character sheets. Each file added to this list should be a deliberate choice.
 
@@ -280,6 +282,7 @@ A reader who arrives by deep link and has no progress gets a one-time prompt: "H
 - Full keyboard operation.
 - Visible focus rings and respect for `prefers-reduced-motion`: panel-mode zooms become cuts.
 - Hotspot marks (§6.3) are real buttons, not just shapes on the image.
+- The 3D valley (§10.1) is a canvas, so everything in it that matters is also outside it: each place's label is a real button over the canvas (Tab reaches all 8, Enter flies there), the canvas itself takes arrow keys, + and - and Home, and the flat map stays one click away. Reduced motion turns flights into cuts.
 
 ---
 
@@ -556,6 +559,19 @@ numbers:
   least its height, Dronagiri highest on the map and craggier to the south-east (90th-percentile slope over 1.3× the
   north-west's), the lake below its shore, the build deterministic, and the files within budget.
 
+**The viewer.** `/valley/` gains a *Map / 3D* switch; the flat map stays the default and the fallback. The island
+(`src/islands/Valley3D.tsx`, under 4 KB) loads three.js only when the 3D view opens, through a dynamic import of
+`src/lib/valley3d/scene.ts`: the site's first code-split chunk (158 KB gzip with the terrain data, against a
+200 KB budget). The land is a 512 × 345 grid (256 on phones) raised from the heightmap and stretched 1.6×, wearing the
+painted drape in one ShaderMaterial: a few soft bands of light from a low eastern sun (ch50), a faint ink line every
+70 m, paper grain, and land that fades into plain paper past the map's edge. Sheetal Lake is a flat blue plane at
+its water level, and the boulders are one instanced low-poly rock. It draws only while something moves and stops
+when hidden. The 8 labelled places are HTML buttons over the canvas, kept on screen and dimmed when a hill hides
+them; choosing one flies there and names it, with a link to its card. `#3d` opens the view directly. Without WebGL2
+the switch says so and the flat map stays. Tests: `tests/e2e/valley3d.spec.ts` (budgets, no 3D code on the flat
+map's load, a drawn canvas, labels, flights, keyboard, no-WebGL, reduced motion, `#3d`, phone layout) and Vitest
+on the label and camera maths.
+
 **Checks.** `pipeline/valley_contours.py` holds the rules every consumer shares: rings are simple (shapely), have
 at least 8 points, sit on the map, levels run 1..n without gaps, and each level lies inside the one below it.
 `validate_content.py` and `pipeline/tests/test_contours.py` run them; the tests also trace synthetic gappy rings
@@ -749,6 +765,7 @@ It has its own nav entry, **Memory**, next to Puzzles.
 - **Islands:** reader, parchment, caves, journey rail, valley map. Preact or vanilla TypeScript; no heavy framework needed.
 - **3D:** [three.js](https://threejs.org) for the valley flyover (§10.1) only, loaded by a dynamic import when a reader opens the 3D view, so no other page pays for it. Measured floor for what the flyover needs (renderer, camera, plane geometry, shader material, instanced mesh, raycaster, OrbitControls): 139 KB gzip, against a 200 KB budget. Headless Chrome in the e2e suite gets hardware WebGL2 on this machine, so Playwright needs no software-GL flags.
 - **Tests:** Playwright end to end against the built site (114 tests across desktop and phone: 107 pass, 7 are device-specific skips), Vitest for pure helpers in `src/lib` (`*.test.ts`, via Astro's own Vite config), and pytest for the pipeline (`pipeline/tests`).
+- **Code splitting:** the 3D valley's scene is the one dynamic import of bundled code; nothing else loads three.js.
 - **Search:** [Pagefind](https://pagefind.app) indexes the built HTML at build time, including the hidden page transcripts and codex. It runs fully client-side, with no search backend.
 
 ### 14.2 Repository layout
@@ -798,6 +815,8 @@ The published binaries are the compressed PDFs (202 MB) and the page images rend
 `pipeline/upload_assets.mjs` (`npm run upload`) mirrors `site-assets/{pages,art,pdf}` into the bucket, sets each object's content type, caches the content-hashed images for a year and the PDFs for a week, and skips anything already there at the same size. The site reads `PUBLIC_ASSET_BASE`, set as a Netlify environment variable. Setup steps are in [the site README](../README.md#hosting-the-assets-cloudflare-r2).
 
 Until the domain exists the bucket's `r2.dev` URL works; after that it moves to a custom domain such as `assets.<domain>`, which is one environment variable and a redeploy.
+
+**The 3D valley's files are the exception: the site serves them itself** (`/_assets/terrain/`, copied into every build by `integrations/local-assets.mjs`). WebGL reads the heightmap with `fetch()` and the drape as a texture, and both would need CORS headers on the bucket, which it doesn't send. They are three content-hashed files, about 650 KB together, cached for a year (`netlify.toml`).
 
 **jsDelivr was considered and rejected.** It would serve the page images — the largest is 1.7 MB, under its 20 MB per-file cap — but all five PDFs are 30–64 MB and exceed it, the files would have to live in a second GitHub repo as 547 MB of permanent history, and jsDelivr is a free service for open-source code rather than a host for a comic's artwork. If it throttled or blocked the repo, the art would go dark with no warning.
 

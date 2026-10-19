@@ -4,10 +4,14 @@ import Base from "../layouts/Base.astro";
 import PlaceCredit from "../components/PlaceCredit.astro";
 import VeilNotice from "../components/VeilNotice.astro";
 import VeilScript from "../components/VeilScript.astro";
-import { artFile } from "../lib/manifest";
+import Valley3D from "../islands/Valley3D.tsx";
+import { artFile, terrainFile } from "../lib/manifest";
 import { valley, places, fictional, located, rectStyle, pinStyle, osmUrl } from "../lib/places";
+import { terrain } from "../lib/terrain-data";
 
 const withPhotos = places.filter((p) => p.real.images.length > 0).length;
+// The 3D view's labels: the same 8 places the map labels (design §10.1).
+const places3d = located.map((p) => ({ id: p.id, name: p.name, pin: p.real.pin, fiction: p.fiction }));
 const CONFIDENCE: Record<string, string> = {
   high: "Close match", "medium-high": "Good match", medium: "Partial match", low: "Name only",
 };
@@ -33,6 +37,9 @@ const CONFIDENCE: Record<string, string> = {
       <button type="button" id="toggle" class="chip" aria-pressed="false">Real India</button>
       <p class="hint" id="hint">Off: the valley as the book draws it.</p>
     </div>
+
+    <Valley3D client:visible places={places3d} heightUrl={terrainFile(terrain.height.file)}
+      drapeUrl={terrainFile(terrain.drape)} posterUrl={terrainFile(terrain.poster)} />
 
     <figure class="mapfig">
       <div class="map" id="map">
@@ -218,6 +225,42 @@ const CONFIDENCE: Record<string, string> = {
     .legend { margin: 10px 0 0; padding-left: 26px; font: 0.86rem/1.7 var(--font-ui); color: var(--ink-2); }
     .legend a { color: inherit; }
     .shots img { height: 180px; }
+  }
+</style>
+
+<style is:global>
+  /* The 3D view (design §10.1); its markup comes from islands/Valley3D.tsx. */
+  .valley-3d .views { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+  .valley-3d .views .chip { font: 600 0.85rem var(--font-ui); padding: 6px 16px; border-radius: 999px;
+    border: 2px solid var(--paper-3); background: transparent; color: var(--ink-2); cursor: pointer; }
+  .valley-3d .views .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .valley-3d .v3d-note { margin: 0 0 0 6px; font: 0.85rem var(--font-ui); color: var(--sepia); }
+  .valley-3d .stage { position: relative; height: min(72vh, 660px); border: 1px solid var(--paper-3);
+    border-radius: 8px; overflow: hidden; background: #c9a878; margin: 0 0 30px; touch-action: none; }
+  .valley-3d .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transition: opacity 0.6s; }
+  .valley-3d[data-ready] .poster { opacity: 0; pointer-events: none; }
+  .valley-3d .land, .valley-3d canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .valley-3d .land:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+  .valley-3d .v3d-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .valley-3d .v3d-label { position: absolute; left: 0; top: 0; pointer-events: auto; white-space: nowrap;
+    font: 600 0.74rem var(--font-ui); padding: 3px 8px; border-radius: 4px; cursor: pointer;
+    border: 1px solid rgb(43 36 28 / 40%); background: rgb(245 236 218 / 92%); color: var(--ink);
+    visibility: hidden; transition: opacity 0.2s; }
+  .valley-3d[data-ready] .v3d-label { visibility: visible; }
+  .valley-3d .v3d-label[data-hidden-by-land] { opacity: 0.45; }
+  .valley-3d .v3d-label[data-offscreen] { opacity: 0.7; font-size: 0.66rem; }
+  .valley-3d .v3d-label[aria-pressed="true"], .valley-3d .v3d-label:focus-visible {
+    background: var(--ink); color: var(--paper); opacity: 1; outline: none; }
+  .valley-3d .v3d-status { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0;
+    padding: 10px 16px; border-radius: 8px; background: rgb(245 236 218 / 94%); font: 0.9rem var(--font-ui); }
+  .valley-3d .v3d-caption { position: absolute; left: 12px; right: 12px; bottom: 12px; padding: 10px 14px;
+    border-radius: 8px; background: rgb(245 236 218 / 94%); font: 0.88rem/1.4 var(--font-ui); color: var(--ink-2); }
+  .valley-3d .v3d-caption span { color: var(--sepia); }
+  .valley-3d .v3d-caption a { color: var(--accent); font-weight: 600; white-space: nowrap; }
+  @media (max-width: 640px) {
+    .valley-3d .stage { height: 62vh; }
+    .valley-3d .v3d-label { font-size: 0.68rem; padding: 2px 6px; }
   }
 </style>
 

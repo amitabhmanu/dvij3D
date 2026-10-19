@@ -53,6 +53,10 @@ export const ASSET_BASE: string = (import.meta.env.PUBLIC_ASSET_BASE || "/_asset
 
 export const pageFile = (name: string) => `${ASSET_BASE}/pages/${name}`;
 export const artFile = (name: string) => `${ASSET_BASE}/art/${name}`;
+// The 3D valley's files are always served by the site itself, never the R2
+// bucket: WebGL reads them with fetch() and as textures, which cross-origin would
+// need CORS on the bucket. They are small (about 650 KB) and content-hashed.
+export const terrainFile = (name: string) => `/_assets/terrain/${name}`;
 export const pdfUrl = (book: Book) => `${ASSET_BASE}/${book.pdf.file}`;
 
 export function srcset(set: Srcset): string {

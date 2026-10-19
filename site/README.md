@@ -243,6 +243,21 @@ needs no code — it counts server-side, so there is nothing to add and no conse
 privacy-friendly script instead, set `PUBLIC_ANALYTICS_SRC` (and `PUBLIC_ANALYTICS_DOMAIN`) and
 `src/components/Analytics.astro` emits the tag.
 
+## The valley in 3D
+
+`/valley/` has a *Map / 3D* switch (design §10.1). The 3D view is built offline from the book's map:
+`trace_contours.py` (the rings), `extract_valley_drape.py` (the painted map as its skin) and `build_terrain.py`
+(the heightmap, from the knobs in `src/content/valley/terrain.yaml`), then drawn in the browser by
+`src/islands/Valley3D.tsx` and `src/lib/valley3d/`. three.js loads only when a reader opens the 3D view. After
+changing a ring's summit, a matching point or a knob:
+
+```bash
+npm run pipeline -- --from contours   # or just: npm run terrain
+```
+
+The terrain's three files live in `site-assets/terrain/` and ship inside every build (not via R2), because WebGL
+must read them from the site's own origin.
+
 ## Build, test, deploy
 
 ```bash
