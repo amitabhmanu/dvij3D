@@ -80,6 +80,7 @@ Steps (see each script's docstring):
 14. `link_companions.py` — locates the Journey rail beats, crops each Voice's portrait from the panel where they speak, and places the `voice:` and hidden `fragment:` hotspots. `--sheet` also writes a portrait contact sheet.
 15. `fetch_real_india.py` — downloads the Real India layer's photographs from Wikimedia Commons, refuses anything that is not freely licensed, and records each one's photographer, licence and file page.
 16. `link_places.py` — joins `src/content/places.yaml` to those credits and to the comic pages that name each place.
+16.5. `build_terrain.py` — turns the traced contours into the 3D valley's heightmap, poster, boulders and place anchors, from the knobs in `src/content/valley/terrain.yaml` (design §10.1). Review `pipeline/reports/terrain-preview.png`: the red iso-lines should sit on the blue rings.
 17. `validate_content.py` — checks every Codex, Bestiary, Memory Hall and place link, image, credit, hotspot, puzzle answer, voice, rail beat, fragment and page reference resolves (`npm run validate`).
 
 Helper: `python pipeline/find_page.py "a manuscript quote"` → book, page and chapter where it appears in the comic.

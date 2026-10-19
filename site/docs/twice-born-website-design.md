@@ -528,6 +528,34 @@ own paper colour. Output: `site-assets/terrain/valley-drape.<hash>.webp`, 1792 �
 `generated/drape.json`. The painting draws pools where map.jpg draws Nagadwara's top rings and a small closed ring
 on Dronagiri's south-east flank; the terrain follows map.jpg's rings, and the pools show only as paint.
 
+**The heightmap.** `pipeline/build_terrain.py` makes the land from the rings and the knobs in
+`src/content/valley/terrain.yaml`, every one of which is **ours** and says so, since the book gives no surveyed
+numbers:
+- **Scale:** the map is 10 km across. Dronagiri's summit stands 900 m (about 3,000 ft) above the floor, after
+  "the tallest peak around the valley… at least a few thousand feet high" (B4 ch52); Gaumukh 520 m; the other hills
+  70 m a ring. Nagadwara stands on Dronagiri's shoulder and starts from the ring it stands in. The viewer stretches
+  heights 1.6× so the relief reads from the air.
+- **Base terrain:** within a hill, ring k is one interval above ring k-1, and between two rings the land rises
+  evenly with distance from one to the next, so every ring lies exactly where its height is crossed. A hill's top is
+  a low dome; below its first ring it eases down to the floor over 350 m. The floor is a shallow bowl, 90 m higher
+  at the map's edges ("a bowl with one steep road out"), and past the edges it climbs into a 520 m rim so the world
+  has no cliff where the drawing stops. Sheetal Lake is a basin: three rings stepping down 6 m each to a flat lake
+  whose water stands just below the lowest point of its shore.
+- **Detail, bounded:** Dronagiri's south-east face gets cliff bands (ledges and drops within each ring) and ridged
+  roughness, and keeps its edges; its north-west face is smoothed (ch52). Seeded fractal noise roughens slopes and
+  leaves the floor calm. Nothing may move the land by more than a quarter of one ring interval.
+- **Boulders:** 949, scattered by seeded Poisson-disc sampling, three times as thick around the fort on Keval hill
+  (B1 ch18), never in the lake, and drawn 14–38 m across so they read from the air.
+- **Output:** `valley-height.<hash>.png` (8-bit grayscale, 1024 × 758 with the rim, about 40 KB: 8 bits over 950 m
+  is under 4 m a step, finer than a flyover can show), `valley-poster.<hash>.webp` (the drape, hillshaded, about
+  140 KB, shown before the 3D code loads) and `generated/terrain.json` (levels, summits, water, boulders and an
+  anchor for each of the 8 labelled places). `src/lib/terrain.ts` holds the frames' arithmetic and imports no data,
+  so the page's island can use it without pulling the terrain into its first load.
+- **Fidelity, tested:** `pipeline/tests/test_terrain.py` re-extracts each hill's iso-line at every ring's height and
+  requires it within 3 px of the drawn ring; it also holds the detail to its cap, the land inside each ring to at
+  least its height, Dronagiri highest on the map and craggier to the south-east (90th-percentile slope over 1.3× the
+  north-west's), the lake below its shore, the build deterministic, and the files within budget.
+
 **Checks.** `pipeline/valley_contours.py` holds the rules every consumer shares: rings are simple (shapely), have
 at least 8 points, sit on the map, levels run 1..n without gaps, and each level lies inside the one below it.
 `validate_content.py` and `pipeline/tests/test_contours.py` run them; the tests also trace synthetic gappy rings

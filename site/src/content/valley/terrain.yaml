@@ -1,0 +1,76 @@
+# How the traced contours become a landscape (design §10.1), read by
+# pipeline/build_terrain.py. The book gives the valley's shape (the rings on
+# its map) but no surveyed numbers, so every number here is OURS: a choice made
+# for the site, written down so it can be changed. Each says where it comes from.
+
+# The map's width on the ground. Ours: about 10 km, a valley a day's walk
+# across, small enough to stay hidden from the outside world.
+worldWidth: 10000  # metres, west edge to east edge of map.jpg
+
+# Metres per contour ring, unless a hill sets its own peak below.
+metresPerLevel: 70
+
+# A hill's top rises this fraction of one ring interval above its innermost ring.
+domeFraction: 0.6
+
+hills:
+  # "The tallest peak around the valley" and "at least a few thousand feet
+  # high" (B4 ch52). Ours: about 900 m (3,000 ft) above the floor, which makes
+  # it the highest summit even though Gaumukh is drawn with one more ring.
+  dronagiri:
+    peak: 900
+    # Ch52: a jagged, bare face to the south-east, a gentle green one to the
+    # north-west. The SE face gets cliff-like bands and ridged roughness; the
+    # NW face is smoothed. The rings' positions are kept either way.
+    rough:
+      towards: 135   # degrees clockwise from north: south-east
+      cliff: 5.0     # steepness of the cliff bands (1 = even slope): ledges and drops
+      noise: 0.22    # ridged noise, as a fraction of one ring interval
+  gaumukh:
+    peak: 520
+  nagadwara: {}      # rises from Dronagiri's shoulder at metresPerLevel
+  south: {}
+  southeast: {}
+  southwest: {}
+  sheetal:
+    # A basin: each ring steps down, and the innermost is the shore.
+    depthPerLevel: 6
+    lakeDepth: 8     # the lake bed, below the water
+
+# The valley floor between the hills, and how the land rises past the map's
+# edge so the world has no cliff where the drawing stops.
+floor:
+  # Below a hill's first ring the land eases down over this many metres.
+  foot: 350
+  # The valley is a bowl (B1): the floor rises this many metres toward the
+  # map's edges, over this fraction of the map's width from each edge. Hills
+  # stand on the floor beneath them, so a peak is its height above that.
+  bowl: 90
+  bowlWidth: 0.2
+  margin: 0.12       # rim beyond each map edge, as a fraction of the map width
+  rim: 520           # metres the rim climbs to at its outer edge, from the bowl's lip
+
+# Seeded, so the same inputs always give the same terrain.
+noise:
+  seed: 18
+  # Fractal noise on the slopes, never more than this fraction of one ring
+  # interval anywhere (the fidelity tests hold the terrain to it).
+  cap: 0.25
+  amplitude: 0.12
+
+# Heightmap resolution, across the map plus its rims.
+raster:
+  width: 1024
+
+# Boulders "scattered everywhere", thickest around Keval hill and the fort
+# (B1 ch18). Drawn larger than life (metres across) so they read from the air.
+boulders:
+  seed: 7
+  spacing: 230       # metres between boulders on open ground
+  nearFort: 0.3      # spacing multiplier within fortRadius of Fort Ruins
+  fortRadius: 900    # metres
+  size: [14, 38]     # metres across, min and max
+
+# For the viewer: how much to stretch heights, so 900 m over 10 km reads as a
+# mountain from the air.
+verticalExaggeration: 1.6

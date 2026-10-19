@@ -212,6 +212,18 @@ def main() -> int:
     contours = load_contours()
     errors.extend(contour_problems(contours))
     rings = sum(len(h["rings"]) for h in contours["hills"])
+    terrain = json.loads((CONTENT / "generated" / "terrain.json").read_text(encoding="utf-8"))
+    published = {terrain["height"]["file"], terrain["drape"], terrain["poster"]}
+    terrain_dir = ASSETS / "terrain"
+    for f in sorted(published):
+        if not (terrain_dir / f).exists():
+            errors.append(f"terrain: {f} not in site-assets/terrain (run build_terrain.py)")
+    for f in sorted(p.name for p in terrain_dir.glob("*")):
+        if f not in published:
+            errors.append(f"terrain: site-assets/terrain/{f} is not used by terrain.json (a stale build? delete it)")
+    for pl in places["places"]:
+        if pl["rects"] and pl["id"] not in terrain["anchors"]:
+            errors.append(f"terrain: place {pl['id']} has no 3D anchor (run build_terrain.py)")
 
     total = (len(auto) + len(puzzle_hs) + len(companion_hs) + len(beast_hs) + len(memory_hs)
              - len(manual.get("remove", [])) + len(manual.get("add", [])))
@@ -223,7 +235,7 @@ def main() -> int:
     print(f"OK: {len(entries)} codex entries, {len(beasts)} creatures, {len(parchment['puzzles'])} puzzles, "
           f"{len(memory['verses'])} memory verses, {len(voices)} voices, {len(rail['nodes'])} rail beats, "
           f"{len(frags)} fragments, {len(places['places'])} places with {photos} credited photographs, "
-          f"{total} hotspots, {rings} contour rings on {len(contours['hills'])} hills, all references resolve.")
+          f"{total} hotspots, {rings} contour rings on {len(contours['hills'])} hills, {len(terrain['anchors'])} places anchored in 3D, all references resolve.")
     return 0
 
 
