@@ -1,0 +1,82 @@
+{
+ "valley-map": {
+  "file": "valley-map.webp",
+  "w": 686,
+  "h": 465
+ },
+ "parchment-lineart": {
+  "file": "parchment-lineart.webp",
+  "w": 642,
+  "h": 499
+ },
+ "parchment": {
+  "file": "parchment.webp",
+  "w": 1448,
+  "h": 1086
+ },
+ "codex-vaastu-mandala": {
+  "file": "codex-vaastu-mandala.webp",
+  "w": 412,
+  "h": 331
+ },
+ "codex-tattvas": {
+  "file": "codex-tattvas.webp",
+  "w": 91,
+  "h": 369
+ },
+ "codex-nakshatra": {
+  "file": "codex-nakshatra.webp",
+  "w": 162,
+  "h": 131
+ },
+ "codex-gnomon": {
+  "file": "codex-gnomon.webp",
+  "w": 386,
+  "h": 231
+ },
+ "codex-lakshmi-symbol": {
+  "file": "codex-lakshmi-symbol.webp",
+  "w": 170,
+  "h": 158
+ },
+ "codex-directions": {
+  "file": "codex-directions.webp",
+  "w": 221,
+  "h": 196
+ },
+ "codex-hierarchy": {
+  "file": "codex-hierarchy.webp",
+  "w": 577,
+  "h": 411
+ },
+ "codex-leaf": {
+  "file": "codex-leaf.webp",
+  "w": 858,
+  "h": 399
+ },
+ "puzzle-1": {
+  "file": "puzzle-1.webp",
+  "w": 408,
+  "h": 310
+ },
+ "puzzle-2": {
+  "file": "puzzle-2.webp",
+  "w": 792,
+  "h": 294
+ },
+ "puzzle-3": {
+  "file": "puzzle-3.webp",
+  "w": 712,
+  "h": 334
+ },
+ "puzzle-4": {
+  "file": "puzzle-4.webp",
+  "w": 308,
+  "h": 198
+ },
+ "puzzle-5": {
+  "file": "puzzle-5.webp",
+  "w": 680,
+  "h": 310
+ }
+}

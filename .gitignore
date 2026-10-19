@@ -1,25 +1,36 @@
-# dependencies & build output
+# Book source material: manuscripts, print PDFs and chapter art.
+# Too large for GitHub (many files over 100 MB) and not meant for a public repo.
+/book/
+/images/
+
+# Large site assets live in Cloudflare R2 (see site/netlify.toml), not in git.
+/site-assets/master/
+/site-assets/pages/
+/site-assets/pdf/
+
+# Rendered teaser media (regenerate with teaser/make_teaser.py)
+/teaser/*.mp4
+/teaser/*.gif
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies, build output, caches
 node_modules/
 dist/
 .astro/
 .netlify/
-
-# pipeline scratch output (compress.json records the quality gate, so keep it;
-# the run logs are noise)
-pipeline/__pycache__/
-pipeline/reports/*.log
+__pycache__/
 *.pyc
+test-results/
+playwright-report/
 
-# local env
-.env
-.env.*
-!.env.example
+# Local Claude Code permissions (machine-specific paths)
+.claude/settings.local.json
 
 # OS / editor
 .DS_Store
 Thumbs.db
 .vscode/
-
-# test output
-test-results/
-playwright-report/
