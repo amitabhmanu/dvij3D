@@ -1,0 +1,59 @@
+# Matching points between the two drawings of the valley (design §10.1), used by
+# pipeline/extract_valley_drape.py to lay the painted map from book/B1.pdf p1
+# over the line map (images/artifacts/map.jpg) the terrain is traced from.
+#
+# Each pair is [x, y] normalised 0-1: `painted` on the 1425x1104 painting,
+# `map` on map.jpg. They were read off both drawings by eye, so expect a few
+# pixels of slack; the step reports the fit's residual.
+#
+# The two drawings are not one survey redrawn. Labels sit in different places
+# (the Access Road and Naga Forest labels move by 5% of the map), so only
+# features that are the same thing in both are used: summits, a building, the
+# lake, and labels only where they sit on their feature in both.
+
+points:
+  - name: Gaumukh Hill summit
+    painted: [0.190, 0.163]
+    map: [0.191, 0.173]
+  - name: Mount Dronagiri summit
+    painted: [0.823, 0.204]
+    map: [0.813, 0.226]
+  - name: Nagadwara Hill top (a pool on the painting, the innermost rings on map.jpg)
+    painted: [0.774, 0.145]
+    map: [0.762, 0.134]
+  - name: The small closed rings on Dronagiri's south-east flank (a pool on the painting)
+    painted: [0.837, 0.322]
+    map: [0.857, 0.323]
+  - name: Kamal Taal, its label beside the lake in both
+    painted: [0.705, 0.290]
+    map: [0.693, 0.274]
+  - name: Forest Officer's Bungalow, the building
+    painted: [0.644, 0.376]
+    map: [0.648, 0.376]
+  - name: Bhoothnath Temple, its label over the temple in both
+    painted: [0.602, 0.177]
+    map: [0.624, 0.169]
+  - name: Ram Temple (Hanuman Temple on the painting), the building
+    painted: [0.327, 0.240]
+    map: [0.332, 0.258]
+  - name: Sheetal Lake, the middle of the water
+    painted: [0.460, 0.457]
+    map: [0.447, 0.468]
+  - name: Fort Ruins, its label over the walls in both
+    painted: [0.204, 0.532]
+    map: [0.200, 0.562]
+  - name: Village Bazaar, its label over the stalls in both
+    painted: [0.390, 0.509]
+    map: [0.375, 0.548]
+  - name: Tavern, its label beside the tavern in both
+    painted: [0.441, 0.586]
+    map: [0.466, 0.634]
+  - name: The south-western hill's summit
+    painted: [0.260, 0.754]
+    map: [0.277, 0.810]
+  - name: The southern hill's summit
+    painted: [0.570, 0.767]
+    map: [0.555, 0.817]
+  - name: The south-eastern hill's summit
+    painted: [0.686, 0.749]
+    map: [0.649, 0.812]

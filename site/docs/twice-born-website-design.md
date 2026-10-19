@@ -519,6 +519,15 @@ step down to the water, and the innermost ring is the shore. Judgement calls, fo
 - Sheetal Lake's rings could be read as a mound with a lake on top (the painted map hints at that) or as a basin.
   It is a basin here, since the book puts the lake at the bottom of the valley's bowl.
 
+**The skin.** `pipeline/extract_valley_drape.py` takes the painting out of B1 p1 by its xref, refusing it if it is
+the wrong size or nearly black (the page's black image is only 336 pixels smaller), and registers it to map.jpg by
+15 matching features read off both drawings (`src/content/valley/drape-points.yaml`): hill summits, a building,
+the lake, and labels only where they sit on their feature in both. An affine fit leaves 12 px RMS on map.jpg, so a
+smoothed thin-plate spline takes over; the drawings were never one survey. The painting's torn edges fade into its
+own paper colour. Output: `site-assets/terrain/valley-drape.<hash>.webp`, 1792 × 1215 at q72 (about 460 KB), and
+`generated/drape.json`. The painting draws pools where map.jpg draws Nagadwara's top rings and a small closed ring
+on Dronagiri's south-east flank; the terrain follows map.jpg's rings, and the pools show only as paint.
+
 **Checks.** `pipeline/valley_contours.py` holds the rules every consumer shares: rings are simple (shapely), have
 at least 8 points, sit on the map, levels run 1..n without gaps, and each level lies inside the one below it.
 `validate_content.py` and `pipeline/tests/test_contours.py` run them; the tests also trace synthetic gappy rings
