@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { gzipSync } from "node:zlib";
 import { expect, test, type Page } from "@playwright/test";
 import sharp from "sharp";
 
@@ -171,4 +172,31 @@ test("choosing a place in 3D brings its card into view", async ({ page }) => {
   await page.locator(".v3d-caption").getByRole("link", { name: "Read about it" }).click();
   await expect(page).toHaveURL(/#mount-dronagiri$/);
   await expect(page.locator("#mount-dronagiri")).toBeInViewport();
+});
+
+// Budgets (design §10.1). The flat map's first load was 1,237 KB before the 3D
+// view existed (measured on desktop, 19 Oct 2026); it may grow by 5% at most.
+const BASELINE_KB = 1237;
+
+test("the flat map's first load stays within 5% of what it was", async ({ page, isMobile }) => {
+  test.skip(isMobile, "the baseline was measured on desktop");
+  let bytes = 0;
+  page.on("response", async (res) => { bytes += (await res.body().catch(() => Buffer.alloc(0))).length; });
+  await page.goto("/valley/");
+  await page.locator('.valley-3d[data-hydrated="true"]').waitFor();
+  await page.waitForLoadState("networkidle");
+  expect(bytes / 1024).toBeLessThan(BASELINE_KB * 1.05);
+});
+
+test("the 3D code stays within 200 KB gzipped", async ({ page }) => {
+  const chunks: Buffer[] = [];
+  page.on("response", async (res) => {
+    if ((res.headers()["content-type"] || "").includes("javascript")) {
+      const body = await res.body().catch(() => Buffer.alloc(0));
+      if (body.includes("THREE.WebGLRenderer")) chunks.push(body);
+    }
+  });
+  await open3d(page);
+  expect(chunks).toHaveLength(1);
+  expect(gzipSync(chunks[0]).length / 1024).toBeLessThan(200);
 });

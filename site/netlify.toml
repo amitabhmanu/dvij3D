@@ -2,8 +2,9 @@
 # Page images, art and PDFs are NOT in this repo. They are served from a
 # Cloudflare R2 bucket, set as the PUBLIC_ASSET_BASE environment variable in
 # the Netlify UI (design §14.3); R2 carries their cache headers, set at upload
-# time by pipeline/upload_assets.mjs. The /_assets rules below only apply to a
-# local BUNDLE_ASSETS=1 build.
+# time by pipeline/upload_assets.mjs. The /_assets rules below apply to a local
+# BUNDLE_ASSETS=1 build, except /_assets/terrain/*: the 3D valley's files ship in
+# every build, because WebGL must read them from the site's own origin (§14.3).
 
 [build]
   command = "npm run build"

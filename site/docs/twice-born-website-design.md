@@ -888,11 +888,12 @@ If per-question cost is too high even with caching, fall back to **retrieval**: 
 | 5 | Valley map + Real India layer | **Done.** 17 places, 25 credited photographs, 8 map pins. Pairings still need your confirmation ([real-india-pairings.md](real-india-pairings.md)); the India-wide map is not drawn |
 | 6 | **Bestiary** — 13 creature entries, gallery, `beast:` hotspots (§11) | **Done.** 10 illustrated from the comic art, 11 hotspots |
 | 7 | **Memory Hall** — pāṭha ladder, avadhana ring, recall check (§12) | **Done.** 2 verses, 2 Codex entries. Ships silent; audio still open |
+| 7.5 | **The valley in 3D** — a flyover traced from the book's own map (§10.1) | **Done.** 26 contour rings on 7 hills, the painted map as the land's skin, 949 boulders, 8 labelled places; 27 e2e tests, 31 pytest, 22 Vitest. Not yet seen on Firefox, Safari or phones (checklist in §10.1); walking it is not planned (§18 item 14) |
 | 8 (v2) | Ask the Codex, Talk to a Voice | Not started; needs a cost review |
 
 Phase 1 alone is a complete, shippable comic site. Each later phase adds a layer without reworking earlier ones, because they all share the manifest + hotspot + `firstSeen` pattern.
 
-**Verification as of this pass:** `npm run build` and Pagefind succeed; `validate_content.py` resolves every hotspot target, codex link, `firstSeen` and companion reference; 45 Playwright tests pass (3 skipped by viewport).
+**Verification as of this pass (19 Oct 2026):** `npm run build` and Pagefind succeed; `validate_content.py` resolves every hotspot target, codex link, `firstSeen`, companion reference, contour ring and 3D anchor; 134 Playwright tests pass (10 skipped by viewport), as do 31 pytest and 22 Vitest tests; `npm run check` is clean.
 
 ---
 
@@ -927,6 +928,26 @@ Verified against the manuscript and the PDFs:
 7. **Covers for Books 2–5**, for the book picker and share cards. Only Book 1 has a front page.
 8. **Bestiary (§11), now built.** Both of the calls made while building have since been revisited at your request: *kimpurusha* and *kinnara* are now **two** entries (each carrying the caution that the sources which split them disagree about which is which), and the **Nagas** have a Codex entry of their own rather than a place in the bestiary, since in this book the word names a people and a hill, never a serpent (§11.5). One thing still needs you: the Naga drawing's **source and licence** are unrecorded — `imageCredit` in `codex/nagas.md` says so on the page until you supply them. Otherwise: confirm the 13 creatures, and review the "in tradition" register, which is written from outside the book and needs the same read-through as the Codex framing (item 5).
 9. **Memory Hall audio (§12.6), now built and silent.** The technique is oral and the Hall has no sound. CC-licensed ghanapatha recordings with credit, or a reciter you record? (Not TTS — it would teach a wrong reading.) Separately: the second verse in the ladder is **Rigveda 1.164.46**, *ekaṃ sad viprā bahudhā vadanti*, picked because the book reaches for the same idea when it wonders how the Rigveda's 33 gods became thirty-three *koti* (b3-p014). Confirm or replace it.
+
+14. **The valley in 3D (§10.1), now built.** Every number in it is ours, and each of these is a choice you can change in
+    `src/content/valley/terrain.yaml` or `hills.yaml`:
+    - **Which drawing.** The terrain is traced from `map.jpg` and wears B1 p1's painting as its skin; where they
+      disagree, `map.jpg` wins for shape and names. The painting draws pools where `map.jpg` draws Nagadwara's top
+      rings and a small ring on Dronagiri's south-east flank, and labels "Nagadvaja" and "Hanuman Temple" where
+      `map.jpg` says "Nagadwara" and "Ram Temple". Is `map.jpg` the plate?
+    - **Scale.** 10 km across; Dronagiri 900 m above the floor, Gaumukh 520 m, 70 m a ring elsewhere; heights
+      stretched 1.6× on screen.
+    - **Sheetal Lake as a basin**, its rings stepping down to the water, though the painting could be read as a lake
+      on a low mound.
+    - **The southern hills** stop at the rings that are theirs alone, so their shared outer ring and the south-western
+      hill's outer lines (which run into the fort's walls) are not raised.
+    - **North is up**, and the map wins over prose: Bhoothnath is upper-centre on the map though the prose calls it
+      north-west.
+    - **Not built, on purpose:** the ascent's stations placed on Dronagiri (the book gives their order, not their
+      places, and mapping the rail's beats onto them needs you), a second "painted ramp" look, and a walkable valley
+      with modelled buildings, which would fix appearances the book leaves open.
+    - **Seen only in Chrome so far.** Please try it on Firefox, Safari (desktop and iPhone) and an Android phone with
+      the checklist in `docs/valley-3d-device-checklist.md`.
 
 **Decided 27 Sep 2026:**
 
