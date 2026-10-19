@@ -15,6 +15,7 @@ import sys
 import yaml
 
 from common import ASSETS, BOOKS, SITE
+from valley_contours import load_contours, problems as contour_problems
 
 CONTENT = SITE / "src" / "content"
 
@@ -207,6 +208,11 @@ def main() -> int:
             if not pic["licenseUrl"] and not pic["license"].upper().startswith(("CC0", "PUBLIC")):
                 errors.append(f"place {pl['id']}: image {pic['id']} ({pic['license']}) has no licence URL")
 
+    # The valley's terrain (design §10.1): traced contours must stay well formed.
+    contours = load_contours()
+    errors.extend(contour_problems(contours))
+    rings = sum(len(h["rings"]) for h in contours["hills"])
+
     total = (len(auto) + len(puzzle_hs) + len(companion_hs) + len(beast_hs) + len(memory_hs)
              - len(manual.get("remove", [])) + len(manual.get("add", [])))
     if errors:
@@ -217,7 +223,7 @@ def main() -> int:
     print(f"OK: {len(entries)} codex entries, {len(beasts)} creatures, {len(parchment['puzzles'])} puzzles, "
           f"{len(memory['verses'])} memory verses, {len(voices)} voices, {len(rail['nodes'])} rail beats, "
           f"{len(frags)} fragments, {len(places['places'])} places with {photos} credited photographs, "
-          f"{total} hotspots, all references resolve.")
+          f"{total} hotspots, {rings} contour rings on {len(contours['hills'])} hills, all references resolve.")
     return 0
 
 

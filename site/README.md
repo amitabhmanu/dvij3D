@@ -69,6 +69,7 @@ Steps (see each script's docstring):
 5. `detect_panels.py` — draft panel boxes (paint-order aware).
 6. `map_chapters.py` — chapter start pages from the breakdown quotes.
 7. `prepare_art.py` — publishes only the allow-listed working images + parchment puzzle crops.
+7.5. `trace_contours.py` — traces the valley map's contour rings (`images/artifacts/map.jpg`) around each summit in `src/content/valley/hills.yaml` into `generated/contours.json`, the shape of the 3D valley (design §10.1). Review `pipeline/reports/contours-overlay.png` after a change.
 8. `extract_endnotes.py` — manuscript endnotes → draft glossary entries.
 9. `build_manifests.py` — merges all of the above plus `src/content/corrections/`.
 10. `link_codex.py` — finds every balloon/caption that mentions a Codex entry (by its `aliases`) and makes it a hotspot; the earliest mention becomes the entry's spoiler position (`firstSeen`).

@@ -492,6 +492,38 @@ them, with 25 freely licensed photographs. Six more places carry a note saying t
 
 ---
 
+### 10.1 The valley in 3D: terrain from the contours
+
+**Two drawings of the valley, two jobs.** `images/artifacts/map.jpg` (686 × 465) is a line drawing: contour rings, a
+grid, labels, huts and roads. It is the 2D page's base and the coordinate space of every `places.yaml` rect.
+`book/B1.pdf` p1 carries a different drawing of the same valley, the painted parchment map (1425 × 1104, xref 18;
+the reader's page `b1-p001`), with trees and hachures but no grid, and two labels that differ ("Nagadvaja Hill",
+"Hanuman Temple" against map.jpg's "Nagadwara Hill", "Ram Temple"). **The terrain's shape is traced from map.jpg;
+the painted map is only its skin**, registered onto it. Where the two disagree, map.jpg wins for shape and names.
+
+**Tracing.** `src/content/valley/hills.yaml` names each hill's summit and how many rings to follow outward; nothing
+about the rings' shape is authored. `pipeline/trace_contours.py` drops the grid (it is drawn lighter than the ink)
+and anything too short to be a contour line, unrolls the distance-to-ink around each summit into polar
+coordinates, and takes each ring as the cheapest closed path that stays outside the previous ring and no further out
+than about two ring spacings. That bridges the gaps in the freehand rings, and cannot skip one, even where a ring
+runs into the next like a spiral. A ring is kept only if 60% of it lies on the ink. The result is
+`generated/contours.json`: per hill, rings numbered from 1 (outermost), in 0-1 map coordinates.
+
+**Traced:** 26 rings on 7 hills — Gaumukh 6, Dronagiri 5, Nagadwara 2 (on Dronagiri's shoulder), the southern and
+south-eastern hills 4 each, the south-western hill 2, and 3 around Sheetal Lake, which is a **basin**: its rings
+step down to the water, and the innermost ring is the shore. Judgement calls, for you:
+- The two southern hills share their outer rings, and the south-western hill's outer lines run into the walls and
+  roads around the fort, so those hills stop at the last ring that is theirs alone.
+- The book makes Dronagiri the tallest peak, but Gaumukh is drawn with one more ring. Heights come from the scale
+  knobs, not the ring count, so Dronagiri can stay tallest without redrawing anything.
+- Sheetal Lake's rings could be read as a mound with a lake on top (the painted map hints at that) or as a basin.
+  It is a basin here, since the book puts the lake at the bottom of the valley's bowl.
+
+**Checks.** `pipeline/valley_contours.py` holds the rules every consumer shares: rings are simple (shapely), have
+at least 8 points, sit on the map, levels run 1..n without gaps, and each level lies inside the one below it.
+`validate_content.py` and `pipeline/tests/test_contours.py` run them; the tests also trace synthetic gappy rings
+under a grid and require each one found in order with its gap bridged.
+
 ## 11. The Bestiary (Layer 5) — built: `/bestiary/`
 
 The valley is full of creatures. Most are spoken of rather than met: the cook warns of yakshas hiding in the trees, Viraat reels off banmanus, pichhal peris, pishachas, kimpurushas and kinnars as the van climbs into the dark, Bhavi explains the boulder field with a rakshasa riding a mountain, and vyalas are carved on the temple steps. The Bestiary is where a reader can browse them, see them, and read what tradition says about them.

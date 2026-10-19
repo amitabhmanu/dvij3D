@@ -1,0 +1,56 @@
+# The valley's hills, as seeds for pipeline/trace_contours.py (design §10.1).
+#
+# The terrain's shape comes from the contour rings drawn on
+# images/artifacts/map.jpg. Each hill names its summit (normalised 0-1 on that
+# map, like the places.yaml rects: a point inside the innermost ring) and how
+# many rings to follow outward from it. The rings themselves are read off the
+# drawing; nothing about their shape is invented here.
+#
+#   rings: how many rings to follow outward. The tracer stops early if a ring
+#          stops being visible. Where hills share their outer rings (the two
+#          southern hills) or the outer lines run into walls and roads (the
+#          south-western hill), the count stops at the last ring that belongs
+#          to that hill alone.
+#   kind:  "hill" (default) steps up toward the summit; "basin" steps down to
+#          water, and its innermost ring is the shore.
+#
+# A hill that rises from another's slope (Nagadwara on Dronagiri's shoulder)
+# needs nothing extra: build_terrain.py starts it from the level of the ring
+# it stands in.
+
+hills:
+  - id: gaumukh
+    name: Gaumukh Hill
+    summit: [0.191, 0.173]
+    rings: 6
+
+  - id: dronagiri
+    name: Mount Dronagiri
+    summit: [0.811, 0.222]
+    rings: 5
+
+  - id: nagadwara
+    name: Nagadwara Hill
+    summit: [0.758, 0.132]
+    rings: 2
+
+  - id: south
+    name: The southern hill
+    summit: [0.559, 0.817]
+    rings: 4
+
+  - id: southeast
+    name: The south-eastern hill
+    summit: [0.656, 0.810]
+    rings: 4
+
+  - id: southwest
+    name: The south-western hill
+    summit: [0.277, 0.810]
+    rings: 2
+
+  - id: sheetal
+    name: Sheetal Lake
+    summit: [0.442, 0.473]
+    rings: 3
+    kind: basin
