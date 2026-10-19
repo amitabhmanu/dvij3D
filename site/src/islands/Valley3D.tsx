@@ -9,9 +9,13 @@
 // - Labels are real buttons: Tab reaches every place, Enter flies there.
 // - Arrow keys orbit, + and - zoom, Home goes back to the start.
 // - prefers-reduced-motion turns every flight into a cut.
+// - Spoilers follow the flat map exactly: labels name their places, as the
+//   drawn map does, and what the reader hasn't reached stays veiled in each
+//   place's card. The Real India button renames the labels as it does the pins.
 import { useEffect, useRef, useState } from "preact/hooks";
 import type { Valley } from "../lib/valley3d/scene";
 import type { Vec3 } from "../lib/valley3d/camera";
+import { labelText } from "../lib/valley3d/veil";
 
 export type Place3D = { id: string; name: string; pin: string; fiction: string };
 type Props = { heightUrl: string; drapeUrl: string; posterUrl: string; places: Place3D[] };
@@ -40,6 +44,7 @@ export default function Valley3D({ heightUrl, drapeUrl, posterUrl, places }: Pro
   const [status, setStatus] = useState<Status>("idle");
   const [picked, setPicked] = useState<string | null>(null);
   const [flying, setFlying] = useState(false);
+  const [real, setReal] = useState(false);
   const canvas = useRef<HTMLCanvasElement>(null);
   const labels = useRef(new Map<string, HTMLElement>());
   const valley = useRef<Valley | null>(null);
@@ -92,8 +97,20 @@ export default function Valley3D({ heightUrl, drapeUrl, posterUrl, places }: Pro
   useEffect(() => {
     setHydrated(true);
     if (location.hash === "#3d") open();
-    return () => valley.current?.dispose();
+    // Follow the page's Real India toggle (a plain script sets #map[data-real]).
+    const read = () => setReal(document.getElementById("map")?.getAttribute("data-real") === "on");
+    read();
+    const watch = new MutationObserver(read);
+    const map = document.getElementById("map");
+    if (map) watch.observe(map, { attributes: true, attributeFilter: ["data-real"] });
+    return () => {
+      watch.disconnect();
+      valley.current?.dispose();
+    };
   }, []);
+
+  // A label's width changes with its text, so place the labels again.
+  useEffect(() => valley.current?.refreshLabels(), [real]);
 
   // The canvas exists once the 3D view renders, so start from here.
   useEffect(() => {
@@ -147,13 +164,16 @@ export default function Valley3D({ heightUrl, drapeUrl, posterUrl, places }: Pro
             <canvas ref={canvas} />
           </div>
           <div class="v3d-labels">
-            {places.map((p) => (
-              <button type="button" class="v3d-label" data-place={p.id} key={p.id}
-                      ref={(el) => { if (el) labels.current.set(p.id, el); else labels.current.delete(p.id); }}
-                      aria-pressed={picked === p.id} onClick={() => pick(p.id)}>
-                {p.name}
-              </button>
-            ))}
+            {places.map((p) => {
+              const l = labelText(p, real);
+              return (
+                <button type="button" class="v3d-label" data-place={p.id} key={p.id} aria-label={l.aria}
+                        ref={(el) => { if (el) labels.current.set(p.id, el); else labels.current.delete(p.id); }}
+                        aria-pressed={picked === p.id} onClick={() => pick(p.id)}>
+                  {l.text}
+                </button>
+              );
+            })}
           </div>
           {status === "loading" && <p class="v3d-status" role="status">Raising the valley…</p>}
           {status === "failed" && <p class="v3d-status" role="alert">The 3D valley didn't load. <button type="button" onClick={close}>Back to the map</button></p>}
@@ -164,7 +184,8 @@ export default function Valley3D({ heightUrl, drapeUrl, posterUrl, places }: Pro
           )}
           {chosen && (
             <div class="v3d-caption" role="status">
-              <strong>{chosen.name}</strong> <span>{chosen.fiction}</span>{" "}
+              <strong>{chosen.name}</strong>{" "}
+              <span>{real ? `is most like ${chosen.pin}` : chosen.fiction}</span>{" "}
               <a href={`#${chosen.id}`}>Read about it</a>
             </div>
           )}

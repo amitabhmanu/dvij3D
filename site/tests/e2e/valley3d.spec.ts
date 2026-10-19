@@ -138,3 +138,37 @@ test("on a phone the labels stay inside the view and the page doesn't scroll sid
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test("the 3D view veils exactly what the flat map veils", async ({ page }) => {
+  await page.goto("/read/b1/12");
+  await page.locator('.reader[data-hydrated="true"]').waitFor();
+  await page.waitForFunction(() => !!localStorage.getItem("twice-born:v1"));
+  await open3d(page);
+  // the map draws the fort's name, so its label names it too...
+  const fort = page.locator('.v3d-label[data-place="fort-ruins"]');
+  await expect(fort).toHaveText("Fort Ruins");
+  await fort.click();
+  // ...and what the book says about it stays veiled in its card (searched on b1 p29)
+  await page.locator(".v3d-caption").getByRole("link", { name: "Read about it" }).click();
+  await expect(page.locator("#fort-ruins")).toHaveAttribute("data-veiled", "");
+});
+
+test("the Real India toggle renames the 3D labels", async ({ page }) => {
+  await open3d(page);
+  const fort = page.locator('.v3d-label[data-place="fort-ruins"]');
+  await expect(fort).toHaveText("Fort Ruins");
+  await page.getByRole("button", { name: "Real India" }).click();
+  await expect(fort).toHaveText("Daulatabad Fort");
+  await fort.click();
+  await expect(page.locator(".v3d-caption")).toContainText("is most like Daulatabad Fort");
+  await page.getByRole("button", { name: "Real India" }).click();
+  await expect(fort).toHaveText("Fort Ruins");
+});
+
+test("choosing a place in 3D brings its card into view", async ({ page }) => {
+  await open3d(page);
+  await page.locator('.v3d-label[data-place="mount-dronagiri"]').click();
+  await page.locator(".v3d-caption").getByRole("link", { name: "Read about it" }).click();
+  await expect(page).toHaveURL(/#mount-dronagiri$/);
+  await expect(page.locator("#mount-dronagiri")).toBeInViewport();
+});

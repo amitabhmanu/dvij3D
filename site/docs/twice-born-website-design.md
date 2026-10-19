@@ -277,6 +277,10 @@ Every companion layer reveals plot: Kurup's betrayal, puzzle answers, who leaves
 
 A reader who arrives by deep link and has no progress gets a one-time prompt: "Hide spoilers beyond this page?"
 
+The 3D valley (§10.1) follows the flat map exactly rather than adding a rule of its own: the drawn map names every
+place, so its 3D labels do too, and what the reader hasn't reached stays veiled in each place's card, which every
+label links to.
+
 ### 5.6 Accessibility
 - Hidden transcript per page (§4.2), plus panel alt text.
 - Full keyboard operation.
@@ -568,9 +572,15 @@ painted drape in one ShaderMaterial: a few soft bands of light from a low easter
 its water level, and the boulders are one instanced low-poly rock. It draws only while something moves and stops
 when hidden. The 8 labelled places are HTML buttons over the canvas, kept on screen and dimmed when a hill hides
 them; choosing one flies there and names it, with a link to its card. `#3d` opens the view directly. Without WebGL2
-the switch says so and the flat map stays. Tests: `tests/e2e/valley3d.spec.ts` (budgets, no 3D code on the flat
-map's load, a drawn canvas, labels, flights, keyboard, no-WebGL, reduced motion, `#3d`, phone layout) and Vitest
-on the label and camera maths.
+the switch says so and the flat map stays. **Spoilers and Real India** follow the flat page (§5.5): labels name their places as the drawn map does (the
+drape prints the same names), and each label's "Read about it" leads to the place's card, veiled until the reader
+reaches it. The Real India button renames the 3D labels as it does the map's pins; the island watches `#map`'s
+`data-real` rather than taking over the page's own script.
+
+**Built:** 26 contour rings on 7 hills, 949 boulders, 8 labelled places; 12 e2e tests on each of desktop and phone
+(`tests/e2e/valley3d.spec.ts`: budgets, no 3D code on the flat map's load, a drawn canvas, labels, flights, keyboard,
+no WebGL, reduced motion, `#3d`, phone layout, spoilers, Real India, card links), 31 pytest tests on the pipeline,
+and Vitest on the frames, label and camera maths.
 
 **Checks.** `pipeline/valley_contours.py` holds the rules every consumer shares: rings are simple (shapely), have
 at least 8 points, sit on the map, levels run 1..n without gaps, and each level lies inside the one below it.
