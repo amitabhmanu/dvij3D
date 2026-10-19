@@ -1,0 +1,16 @@
+[
+ {
+  "id": "memory-avadhana",
+  "page": "b2-p008",
+  "rect": [
+   0.374,
+   0.3428,
+   0.6766,
+   0.4133
+  ],
+  "targets": [
+   "memory:avadhana"
+  ],
+  "label": "The memory technique"
+ }
+]

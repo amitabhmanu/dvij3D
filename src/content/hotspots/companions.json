@@ -1,0 +1,189 @@
+[
+ {
+  "id": "voice-mahant",
+  "page": "b1-p006",
+  "rect": [
+   0.646,
+   0.0024,
+   0.8807,
+   0.0571
+  ],
+  "targets": [
+   "voice:mahant"
+  ],
+  "label": "The Mahant"
+ },
+ {
+  "id": "voice-mahavidya-pujari",
+  "page": "b4-p010",
+  "rect": [
+   0.3535,
+   0.8752,
+   0.5526,
+   0.9216
+  ],
+  "targets": [
+   "voice:mahavidya-pujari"
+  ],
+  "label": "The head pujari of the Mahavidya temples"
+ },
+ {
+  "id": "voice-round-nosed-man",
+  "page": "b4-p022",
+  "rect": [
+   0.4003,
+   0.2153,
+   0.5462,
+   0.2493
+  ],
+  "targets": [
+   "voice:round-nosed-man"
+  ],
+  "label": "The round-nosed man"
+ },
+ {
+  "id": "voice-tantric-baba",
+  "page": "b1-p040",
+  "rect": [
+   0.5737,
+   0.7579,
+   0.8186,
+   0.815
+  ],
+  "targets": [
+   "voice:tantric-baba"
+  ],
+  "label": "The tantric baba"
+ },
+ {
+  "id": "voice-the-monk",
+  "page": "b5-p021",
+  "rect": [
+   0.0904,
+   0.124,
+   0.2895,
+   0.1704
+  ],
+  "targets": [
+   "voice:the-monk"
+  ],
+  "label": "The monk under the tree"
+ },
+ {
+  "id": "voice-the-professor",
+  "page": "b4-p004",
+  "rect": [
+   0.7983,
+   0.6691,
+   0.9974,
+   0.7155
+  ],
+  "targets": [
+   "voice:the-professor"
+  ],
+  "label": "The Professor"
+ },
+ {
+  "id": "voice-vedic-sage",
+  "page": "b5-p010",
+  "rect": [
+   0.1177,
+   0.0002,
+   0.335,
+   0.0508
+  ],
+  "targets": [
+   "voice:vedic-sage"
+  ],
+  "label": "The sage of the Vedic ashram"
+ },
+ {
+  "id": "voice-yogini",
+  "page": "b3-p032",
+  "rect": [
+   0.1232,
+   0.0664,
+   0.3667,
+   0.1231
+  ],
+  "targets": [
+   "voice:yogini"
+  ],
+  "label": "Yogini"
+ },
+ {
+  "id": "fragment-manuscript",
+  "page": "b1-p007",
+  "rect": [
+   0.015,
+   0.94,
+   0.07,
+   0.985
+  ],
+  "targets": [
+   "fragment:manuscript"
+  ],
+  "label": "A manuscript in disguise",
+  "subtle": true
+ },
+ {
+  "id": "fragment-fools",
+  "page": "b4-p004",
+  "rect": [
+   0.8151,
+   0.4641,
+   0.9934,
+   0.5057
+  ],
+  "targets": [
+   "fragment:fools"
+  ],
+  "label": "A work of fools",
+  "subtle": true
+ },
+ {
+  "id": "fragment-not-destroyed",
+  "page": "b4-p004",
+  "rect": [
+   0.7983,
+   0.6691,
+   0.9974,
+   0.7155
+  ],
+  "targets": [
+   "fragment:not-destroyed"
+  ],
+  "label": "Not destroyed",
+  "subtle": true
+ },
+ {
+  "id": "fragment-shrine",
+  "page": "b4-p020",
+  "rect": [
+   0.1,
+   0.9503,
+   0.9,
+   0.9783
+  ],
+  "targets": [
+   "fragment:shrine"
+  ],
+  "label": "Vidgati's shrine",
+  "subtle": true
+ },
+ {
+  "id": "fragment-joyously",
+  "page": "b4-p022",
+  "rect": [
+   0.4003,
+   0.2153,
+   0.5462,
+   0.2493
+  ],
+  "targets": [
+   "fragment:joyously"
+  ],
+  "label": "While life is yours",
+  "subtle": true
+ }
+]

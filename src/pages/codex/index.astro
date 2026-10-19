@@ -1,0 +1,64 @@
+---
+import Base from "../../layouts/Base.astro";
+import VeilNotice from "../../components/VeilNotice.astro";
+import VeilScript from "../../components/VeilScript.astro";
+import { codexEntries } from "../../lib/codex";
+import { artFile } from "../../lib/manifest";
+
+const entries = await codexEntries();
+const groups = new Map<string, typeof entries>();
+for (const e of entries) {
+  const letter = e.data.title[0].toUpperCase();
+  groups.set(letter, [...(groups.get(letter) ?? []), e]);
+}
+---
+<Base title="Codex" description="The ideas, gods, texts and traditions behind The Twice Born: a companion glossary.">
+  <div class="wrap">
+    <h1>Codex</h1>
+    <p class="prose muted">
+      The ideas, gods, texts and traditions the story draws on, from the book's own notes and its characters'
+      explanations. Entries you haven't reached in the comic yet are blurred.
+      <button type="button" class="linklike" data-reveal-all>Show everything</button>
+      <button type="button" class="linklike" data-hide-again>Hide spoilers again</button>
+    </p>
+
+    <nav class="letters" aria-label="Jump to letter">
+      {[...groups.keys()].map((l) => <a href={`#letter-${l}`}>{l}</a>)}
+    </nav>
+
+    {[...groups].map(([letter, list]) => (
+      <section id={`letter-${letter}`}>
+        <h2>{letter}</h2>
+        <ul class="entries">
+          {list.map((e) => (
+            <li data-first-book={e.firstSeen?.book} data-first-page={e.firstSeen?.page}>
+              {e.data.images[0] && <img src={artFile(`${e.data.images[0]}.webp`)} alt="" loading="lazy" width="64" height="64" />}
+              <div>
+                <h3><a href={`/codex/${e.id}/`}>{e.data.title}</a></h3>
+                {e.firstSeen && <VeilNotice book={e.firstSeen.book} page={e.firstSeen.page} />}
+                <p class="veil-content">{e.data.summary}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+  <VeilScript />
+</Base>
+
+<style>
+  .letters { display: flex; flex-wrap: wrap; gap: 6px 12px; font-family: var(--font-ui); font-weight: 600; margin: 24px 0; }
+  .letters a { text-decoration: none; }
+  .entries { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px 32px; }
+  .entries li { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; }
+  .entries li:not(:has(img)) { grid-template-columns: 1fr; }
+  .entries img { width: 64px; height: 64px; object-fit: contain; background: #fff; border-radius: 4px; border: 1px solid var(--paper-3); }
+  .entries h3 { margin: 0 0 4px; font-size: 1.25rem; }
+  .entries h3 a { color: var(--ink); text-decoration: none; }
+  .entries h3 a:hover { color: var(--accent); }
+  .entries p { margin: 0; color: var(--ink-2); font-size: 0.98rem; }
+  .linklike { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; margin-left: 8px; }
+  :root:not([data-reveal-all]) [data-hide-again] { display: none; }
+  :root[data-reveal-all] [data-reveal-all] { display: none; }
+</style>

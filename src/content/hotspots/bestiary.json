@@ -1,0 +1,195 @@
+[
+ {
+  "id": "beast-b1-p011-1",
+  "page": "b1-p011",
+  "rect": [
+   0.0768,
+   0.0659,
+   0.302,
+   0.1184
+  ],
+  "targets": [
+   "beast:yaksha"
+  ],
+  "terms": [
+   "Yakshas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-b1-p018-1",
+  "page": "b1-p018",
+  "rect": [
+   0.7063,
+   0.0949,
+   0.9321,
+   0.1475
+  ],
+  "targets": [
+   "beast:banmanus",
+   "beast:pichhal-peri",
+   "beast:pishacha",
+   "beast:kimpurusha",
+   "beast:kinnara"
+  ],
+  "terms": [
+   "Banmanus",
+   "pichhal peris",
+   "pishachas",
+   "kimpurushas",
+   "kinnars"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-b1-p030-5",
+  "page": "b1-p030",
+  "rect": [
+   0.4225,
+   0.5609,
+   0.7116,
+   0.6283
+  ],
+  "targets": [
+   "beast:giants",
+   "beast:rakshasa"
+  ],
+  "terms": [
+   "giants",
+   "rakshasa",
+   "Vraktaasura"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-b1-p036-0",
+  "page": "b1-p036",
+  "rect": [
+   0.0705,
+   0.2909,
+   0.9295,
+   0.3074
+  ],
+  "targets": [
+   "beast:bhoot-pret"
+  ],
+  "terms": [
+   "bhoot"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-b1-p039-7",
+  "page": "b1-p039",
+  "rect": [
+   0.0908,
+   0.9605,
+   0.9091,
+   0.9885
+  ],
+  "targets": [
+   "beast:vyala"
+  ],
+  "terms": [
+   "vyalas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-b3-p034-3",
+  "page": "b3-p034",
+  "rect": [
+   0.6196,
+   0.1792,
+   0.7985,
+   0.2208
+  ],
+  "targets": [
+   "beast:bhoot-pret"
+  ],
+  "terms": [
+   "Bhoots",
+   "prets"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-b4-p017-5",
+  "page": "b4-p017",
+  "rect": [
+   0.7047,
+   0.6826,
+   0.9,
+   0.7281
+  ],
+  "targets": [
+   "beast:gandharva"
+  ],
+  "terms": [
+   "gandharva"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-b4-p019-0",
+  "page": "b4-p019",
+  "rect": [
+   0.7232,
+   0.2001,
+   0.9879,
+   0.2618
+  ],
+  "targets": [
+   "beast:ashtomi"
+  ],
+  "terms": [
+   "Ashtomis"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-b5-p028-0",
+  "page": "b5-p028",
+  "rect": [
+   0.1,
+   0.216,
+   0.9,
+   0.244
+  ],
+  "targets": [
+   "beast:apsara"
+  ],
+  "terms": [
+   "apsara"
+  ],
+  "auto": true
+ },
+ {
+  "id": "beast-art-shesha",
+  "page": "b2-p003",
+  "rect": [
+   0.6183,
+   0.152,
+   0.7588,
+   0.2108
+  ],
+  "targets": [
+   "beast:shesha"
+  ],
+  "label": "Shesha, the serpent couch"
+ },
+ {
+  "id": "beast-drawn-vyala-0",
+  "page": "b3-p022",
+  "rect": [
+   0.5027,
+   0.0,
+   0.999,
+   0.199
+  ],
+  "targets": [
+   "beast:vyala"
+  ],
+  "label": "Vyala"
+ }
+]

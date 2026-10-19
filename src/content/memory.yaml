@@ -1,0 +1,84 @@
+# The Memory Hall (design §12). The recitation technique the Professor explains
+# at the foundation ceremony, and that Dvij later uses on the pi shloka.
+#
+# The anchors below are comic *lettering*, not manuscript prose, so they are
+# pinned to a page id and matched inside it (pipeline/link_memory.py). That is
+# why there is no `quote` -> find_page lookup here as there is in rail.yaml:
+# find_page searches the manuscript, and these lines are the art's own wording.
+
+anchors:
+  # Where the Professor names the technique. The Hall opens to readers here.
+  teaches:
+    page: b2-p008
+    match: "Techniques of memorization"
+  # Where he names the performance itself.
+  names:
+    page: b2-p008
+    match: "Avadhan. That's what this is called"
+  # Where it pays off, three books later.
+  payoff:
+    page: b2-p025
+    match: "Professor explained their memorization technique to me"
+
+# Verses the ladder can drill. `words` is the *pada* split — the segmentation the
+# pathas work on. Note this is NOT the syllable split the katapayadi decode uses
+# in Caves.tsx: same verse, two different readings (design §12.3).
+verses:
+  - id: gopi-bhagya
+    title: The pi shloka
+    subtitle: gopī bhāgya madhuvrāta…
+    source: >-
+      Attributed to Jagadguru Swami Sri Bharati Krishna Tirthaji Maharaja,
+      *Vedic Mathematics* — the verse quoted in the book's own notes.
+    note: >-
+      This is the one Dvij drills. Built as a mnemonic, so its surface sense is
+      strained: it is carrying digits, not making an argument.
+    codex: katapayadi
+    words:
+      - { deva: "गोपी", iast: "gopī", gloss: "cowherd women" }
+      - { deva: "भाग्य", iast: "bhāgya", gloss: "fortune" }
+      - { deva: "मधुव्रात", iast: "madhuvrāta", gloss: "swarm of bees" }
+      - { deva: "शृङ्गिशो", iast: "śṛṅgiśo", gloss: "the horned one's" }
+      - { deva: "दधि", iast: "dadhi", gloss: "curd" }
+      - { deva: "सन्धिग", iast: "sandhiga", gloss: "joined together" }
+
+  - id: ekam-sat
+    title: One being, many names
+    subtitle: ekaṃ sad viprā bahudhā vadanti
+    source: >-
+      Rigveda 1.164.46 — one of the oldest verses carried by exactly this method.
+    note: >-
+      "Truth is one; the wise call it by many names." The book reaches for the
+      same idea when it wonders how the Rigveda's 33 gods became thirty-three
+      *koti*.
+    at: b3-p014
+    words:
+      - { deva: "एकम्", iast: "ekam", gloss: "one" }
+      - { deva: "सत्", iast: "sat", gloss: "being; what is" }
+      - { deva: "विप्राः", iast: "viprāḥ", gloss: "the inspired, the wise" }
+      - { deva: "बहुधा", iast: "bahudhā", gloss: "in many ways" }
+      - { deva: "वदन्ति", iast: "vadanti", gloss: "they call it" }
+
+# The avadhana ring (design §12.3b). Each questioner hands over one thing to
+# hold. Taken from the ceremony on the very page that teaches the technique, so
+# nothing here is a spoiler for a reader who has just unlocked the Hall.
+ring:
+  items:
+    - conch
+    - kalasha
+    - navaratnas
+    - navadhanyas
+    - navakhanijas
+    - ghee
+    - lamp
+    - garland
+    - foundation stone
+    - sacred water
+    - brass vessel
+    - bolster
+  # The Professor gets shushed mid-explanation on b2-p008; that is the model for
+  # the interruption between the questions and the answers.
+  distractions:
+    - "SHHHH! The dignitaries turn and glare. How many of them?"
+    - "A conch sounds. Brahmakaal has arrived. How many blasts?"
+    - "The priest adds ghee to the fire. How many ladles?"

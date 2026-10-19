@@ -1,0 +1,81 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import VeilNotice from "../../components/VeilNotice.astro";
+import VeilScript from "../../components/VeilScript.astro";
+import { rail, voiceEntries } from "../../lib/companions";
+import { codexEntries } from "../../lib/codex";
+import { artFile } from "../../lib/manifest";
+
+export async function getStaticPaths() {
+  const voices = await voiceEntries();
+  return voices.map((v) => ({ params: { id: v.id }, props: { v } }));
+}
+const { v } = Astro.props;
+const { Content } = await render(v);
+const codex = new Map((await codexEntries()).map((e) => [e.id, e]));
+const beats = rail.nodes.filter((n) => n.teacher?.voice === v.id && n.at);
+const fs = v.firstSeen;
+const ROLE: Record<string, string> = { teacher: "Teacher", guide: "Guide", antagonist: "Antagonist", survey: "Field guide" };
+---
+<Base title={v.data.name} description={v.data.tradition} image={v.portrait ? artFile(v.portrait.file) : undefined}>
+  <article class={`wrap voice role-${v.data.role}`} data-first-book={fs?.book} data-first-page={fs?.page}
+    data-pagefind-body data-pagefind-meta={`title:Council of Voices · ${v.data.name}`}>
+    <p class="eyebrow"><a href="/voices/">Council of Voices</a> · {ROLE[v.data.role]}</p>
+    <h1>{v.data.name}</h1>
+    {v.data.fullName && <p class="full muted">{v.data.fullName}</p>}
+    {fs && <VeilNotice book={fs.book} page={fs.page} />}
+    <div class="veil-content layout">
+      <div>
+        <dl class="facts">
+          <dt>Tradition</dt><dd>{v.data.tradition}</dd>
+          <dt>Where Dvij meets them</dt><dd>{v.data.setting}</dd>
+          {fs && <><dt>First appears</dt><dd><a href={`/read/b${fs.book}/${fs.page}`}>Book {fs.book}, page {fs.page}</a></dd></>}
+        </dl>
+        <blockquote>{v.data.excerpt}</blockquote>
+        <div class="prose"><Content /></div>
+        {beats.length > 0 && (
+          <section>
+            <h2>On the journey</h2>
+            <ul>{beats.map((b) => <li data-first-book={b.at!.book} data-first-page={b.at!.page}>
+              <a href={`/read/b${b.at!.book}/${b.at!.page}`}>{b.title}</a>: {b.teacher!.text}</li>)}</ul>
+            <p class="small"><a href="/journey/">The whole journey →</a></p>
+          </section>
+        )}
+        {v.data.codex.length > 0 && (
+          <section>
+            <h2>In the Codex</h2>
+            <ul class="codex">{v.data.codex.map((id) => codex.get(id)).filter(Boolean).map((e) => (
+              <li data-first-book={e!.firstSeen?.book} data-first-page={e!.firstSeen?.page}><a href={`/codex/${e!.id}/`}>{e!.data.title}</a></li>
+            ))}</ul>
+          </section>
+        )}
+      </div>
+      {v.portrait && (
+        <figure class="portrait">
+          <img src={artFile(v.portrait.file)} alt={`${v.data.name}, from the comic`} width={v.portrait.w} height={v.portrait.h} />
+          <figcaption class="muted">From {v.portrait.page.replace(/^b(\d)-p0*(\d+)$/, "Book $1, page $2")}</figcaption>
+        </figure>
+      )}
+    </div>
+  </article>
+  <VeilScript />
+</Base>
+
+<style>
+  .full { margin-top: -0.4em; font-family: var(--font-ui); }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; align-items: start; }
+  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-family: var(--font-ui); font-size: 0.92rem; }
+  .facts dt { color: var(--ink-3); }
+  .facts dd { margin: 0; }
+  blockquote { margin: 20px 0; padding: 8px 16px; border-left: 4px solid var(--gold); font-size: 1.15rem; font-style: italic; }
+  .role-antagonist blockquote { border-left-color: var(--accent); }
+  .role-antagonist .eyebrow { color: var(--accent); }
+  .portrait { margin: 0; }
+  .portrait img { border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .portrait figcaption { font: 0.8rem var(--font-ui); margin-top: 6px; }
+  .codex { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 0; list-style: none; font-family: var(--font-ui); }
+  .codex li[data-veiled], section li[data-veiled] { display: none; }
+  .small { font-size: 0.9rem; }
+  @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } .portrait { order: -1; max-width: 420px; } }
+</style>

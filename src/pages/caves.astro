@@ -1,0 +1,64 @@
+---
+import Base from "../layouts/Base.astro";
+import Caves from "../islands/Caves.tsx";
+import VeilNotice from "../components/VeilNotice.astro";
+import VeilScript from "../components/VeilScript.astro";
+import data from "../content/generated/parchment.json";
+
+const at = data.caves.available;
+---
+<Base title="The Bhoodara caves" description="A labyrinth nobody comes back from, unless they know the value of pi.">
+  <div class="wrap" data-first-book={at.book} data-first-page={at.page}>
+    <p class="eyebrow">A companion game</p>
+    <h1>The Bhoodara caves</h1>
+    <VeilNotice book={at.book} page={at.page} />
+    <div class="veil-content">
+      <p class="prose">"These are not called the Bhoodara caves for nothing. It is a veritable chakravyuha inside the belly of the earth."
+        Nobody is known to have come back out. Dvij did, with a verse and eight digits. Can you?</p>
+      <Caves client:load />
+      <p class="more-puzzles"><a href="/parchment/">Back to the Parchment of Puzzles →</a></p>
+    </div>
+  </div>
+  <VeilScript />
+</Base>
+
+<style is:global>
+  .caves-game .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .caves-game .modes { display: flex; gap: 6px; }
+  .caves-game .modes button { font: 600 0.9rem var(--font-ui); padding: 8px 12px; border-radius: var(--radius); border: 2px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+  .caves-game .modes button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .caves-game .katapayadi { border-collapse: collapse; font-family: var(--font-ui); font-size: 0.85rem; margin: 12px 0; display: block; overflow-x: auto; }
+  .caves-game .katapayadi th, .caves-game .katapayadi td { border: 1px solid var(--paper-3); padding: 4px 8px; text-align: center; }
+  .caves-game .katapayadi thead th { background: var(--paper-2); }
+  .caves-game .syllables { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .caves-game .syl { display: grid; gap: 2px; min-width: 64px; padding: 8px; border-radius: 6px; border: 2px solid var(--paper-3); background: var(--paper); cursor: pointer; font-family: var(--font-text); color: var(--ink); }
+  .caves-game .syl.active { border-color: var(--ink); }
+  .caves-game .syl.right { border-color: #2e7d32; background: #e3f1e3; }
+  .caves-game .syl.wrong { border-color: var(--accent); background: #f6e0dd; }
+  .caves-game .syl .s { font-style: italic; font-size: 1.1rem; }
+  .caves-game .syl .d { font: 700 1.3rem var(--font-ui); }
+  .caves-game .keypad { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--font-ui); }
+  .caves-game .keypad button { font: 700 1rem var(--font-ui); width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--ink-3); background: var(--paper); color: var(--ink); cursor: pointer; }
+  .caves-game .keypad .hint { flex-basis: 100%; margin: 6px 0 0; }
+  .caves-game .feedback.right { background: #e3f1e3; color: #1b3d1c; padding: 10px 14px; border-radius: 6px; }
+  .caves-game .rule { max-width: 60ch; }
+  .caves-game .digits { font: 700 1.2rem var(--font-ui); letter-spacing: 0.3em; }
+  .caves-game .digits .done { color: #2e7d32; }
+  .caves-game .digits .now { color: var(--accent); text-decoration: underline; }
+  .caves-game .chamber { width: min(420px, 100%); display: block; margin: 8px 0; }
+  .caves-game .chamber .wall { fill: #3a2f24; stroke: #1a130b; stroke-width: 6; }
+  .caves-game .chamber .entrance { stroke: var(--gold); stroke-width: 8; }
+  .caves-game .chamber .label { fill: var(--ink-3); font: 12px var(--font-ui); }
+  .caves-game .chamber .wall + .entrance + .label + .label { fill: #cdb892; }
+  .caves-game .chamber .tunnel { stroke: #3a2f24; stroke-width: 18; stroke-linecap: round; }
+  .caves-game .chamber .mouth { fill: #120d08; stroke: #6b5840; stroke-width: 2; }
+  .caves-game .chamber .exit { cursor: pointer; outline: none; }
+  .caves-game .chamber .exit:hover .mouth, .caves-game .chamber .exit:focus-visible .mouth { stroke: var(--gold); stroke-width: 4; }
+  .caves-game .chamber .exit.wrong .mouth { stroke: var(--accent); stroke-width: 4; }
+  .caves-game .chamber .num { fill: #fff; font: 700 14px var(--font-ui); pointer-events: none; }
+  .caves-game .lost { color: var(--accent); font-weight: 600; }
+  .caves-game .painting { background: var(--paper-2); border-radius: 8px; padding: 16px 20px; margin-top: 12px; }
+  .caves-game .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .linklike { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+  .more-puzzles { margin-top: 2rem; font-family: var(--font-ui); font-weight: 600; }
+</style>

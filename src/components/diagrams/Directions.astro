@@ -1,0 +1,87 @@
+---
+// The eight guardians on their 3x3 grid, centre left empty. Cell positions
+// reproduce the book's own plate (images/artifacts/directions.jpg), which is
+// printed beside this diagram on the page. Names, directions and weapons are
+// the table in src/content/codex/dikpalas.md.
+//
+// The plate is not a compass. Its four cardinals sit where a north-up reading
+// expects them, but each corner sits one quarter-turn clockwise of the
+// direction it guards, which is why Ishana (NE) heads the top row and Vaayu
+// (NW) the bottom. The direction under each name is the one that deity rules,
+// per the table, not the compass point of the square it occupies.
+type Cell = { dir: string; name: string; weapon: string; maha?: boolean };
+
+const GRID: (Cell | null)[] = [
+  { dir: "NE", name: "Ishana", weapon: "Trishula" },
+  { dir: "N", name: "Kubera", weapon: "Gada", maha: true },
+  { dir: "SE", name: "Agni", weapon: "Shakti" },
+  { dir: "W", name: "Varuna", weapon: "Paasha", maha: true },
+  null,
+  { dir: "E", name: "Indra", weapon: "Vajra", maha: true },
+  { dir: "NW", name: "Vaayu", weapon: "Ankusha" },
+  { dir: "S", name: "Yama", weapon: "Danda", maha: true },
+  { dir: "SW", name: "Nirrti", weapon: "Khadga" },
+];
+
+const W = 88, H = 72, GAP = 4, X0 = 14, Y0 = 16;
+const VB_H = Y0 + 3 * H + 2 * GAP + 40;
+const left = (c: number) => X0 + c * (W + GAP);
+const top = (r: number) => Y0 + r * (H + GAP);
+---
+
+<figure class="diagram">
+  <svg viewBox={`0 0 300 ${VB_H}`} role="img" aria-labelledby="dik-t dik-d">
+    <title id="dik-t">The eight dikpalas on a three-by-three grid</title>
+    <desc id="dik-d">
+      A three-by-three grid laid out as the book's own plate has it, with the centre
+      square left empty. Top row: Ishana, guardian of the northeast; Kubera, north; Agni,
+      southeast. Middle row: Varuna, west; the empty centre; Indra, east. Bottom row:
+      Vaayu, northwest; Yama, south; Nirrti, southwest. The four cardinal guardians fall
+      where a north-up reading expects them, but each corner guardian sits one
+      quarter-turn clockwise of the direction it rules.
+    </desc>
+
+    {GRID.map((cell, i) => {
+      const r = Math.floor(i / 3), c = i % 3;
+      const x = left(c), y = top(r);
+      if (!cell) {
+        return (
+          <g>
+            <rect class="cell empty" x={x} y={y} width={W} height={H} rx="4" />
+            <text class="empty-label" x={x + W / 2} y={y + H / 2 + 4} text-anchor="middle">left empty</text>
+          </g>
+        );
+      }
+      return (
+        <g class={cell.maha ? "maha" : ""}>
+          <rect class="cell" x={x} y={y} width={W} height={H} rx="4" />
+          <text class="dir" x={x + W / 2} y={y + 19} text-anchor="middle">{cell.dir}</text>
+          <text class="name" x={x + W / 2} y={y + 39} text-anchor="middle">{cell.name}</text>
+          <text class="weapon" x={x + W / 2} y={y + 55} text-anchor="middle">{cell.weapon}</text>
+        </g>
+      );
+    })}
+
+    <text class="d-foot" x="150" y={VB_H - 14} text-anchor="middle">bold = the four Mahadikpalas</text>
+  </svg>
+  <figcaption>
+    Laid out as the book's plate has it. The four Mahadikpalas fall where you would
+    expect — Kubera north at the top, Yama south at the foot, Indra east and Varuna
+    west — but the corners do not: each sits a quarter-turn clockwise of the direction
+    it guards, which is why Ishana (northeast) heads the top row. The direction under
+    each name is the one that deity rules. Brahma (zenith) and Vishnu (nadir) have no
+    square.
+  </figcaption>
+</figure>
+
+<style>
+  .cell { fill: var(--paper); stroke: var(--paper-3); stroke-width: 1.2; }
+  .maha .cell { stroke: var(--sepia); stroke-width: 2; }
+  .empty { fill: none; stroke-dasharray: 4 4; stroke: var(--ink-3); }
+  .empty-label { font-family: var(--font-ui); font-size: 9.5px; font-style: italic; fill: var(--ink-3); }
+
+  .dir { font-family: var(--font-ui); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; fill: var(--ink-3); }
+  .name { font-family: var(--font-text); font-size: 13px; fill: var(--ink); }
+  .maha .name { font-weight: 700; fill: var(--sepia); }
+  .weapon { font-family: var(--font-ui); font-size: 8.5px; font-style: italic; fill: var(--ink-3); }
+</style>

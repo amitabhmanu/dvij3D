@@ -1,0 +1,6358 @@
+{
+ "book": 5,
+ "slug": "b5",
+ "title": "Discovery",
+ "pageCount": 29,
+ "cover": "b5-p001",
+ "pdf": {
+  "file": "pdf/the-twice-born-b5.pdf",
+  "bytes": 33203876
+ },
+ "parts": [
+  {
+   "n": 1,
+   "startPage": 1,
+   "endPage": 6
+  },
+  {
+   "n": 2,
+   "startPage": 7,
+   "endPage": 13
+  },
+  {
+   "n": 3,
+   "startPage": 14,
+   "endPage": 19
+  },
+  {
+   "n": 4,
+   "startPage": 20,
+   "endPage": 24
+  },
+  {
+   "n": 5,
+   "startPage": 25,
+   "endPage": 29
+  }
+ ],
+ "chapters": [
+  {
+   "n": 64,
+   "title": "Chapter 64",
+   "startPage": 1,
+   "confirmed": true
+  },
+  {
+   "n": 65,
+   "title": "Chapter 65",
+   "startPage": 3,
+   "confirmed": true
+  },
+  {
+   "n": 66,
+   "title": "Chapter 66",
+   "startPage": 5,
+   "confirmed": true
+  },
+  {
+   "n": 67,
+   "title": "Chapter 67",
+   "startPage": 7,
+   "confirmed": true
+  },
+  {
+   "n": 68,
+   "title": "Chapter 68",
+   "startPage": 8,
+   "confirmed": true
+  },
+  {
+   "n": 69,
+   "title": "Chapter 69",
+   "startPage": 10,
+   "confirmed": true
+  },
+  {
+   "n": 70,
+   "title": "Chapter 70",
+   "startPage": 11,
+   "confirmed": true
+  },
+  {
+   "n": 71,
+   "title": "Chapter 71",
+   "startPage": 14,
+   "confirmed": true
+  },
+  {
+   "n": 72,
+   "title": "Chapter 72",
+   "startPage": 15,
+   "confirmed": true
+  },
+  {
+   "n": 73,
+   "title": "Chapter 73",
+   "startPage": 16,
+   "confirmed": true
+  },
+  {
+   "n": 74,
+   "title": "Chapter 74",
+   "startPage": 18,
+   "confirmed": true
+  },
+  {
+   "n": 75,
+   "title": "Chapter 75",
+   "startPage": 20,
+   "confirmed": true
+  },
+  {
+   "n": 76,
+   "title": "Chapter 76",
+   "startPage": 21,
+   "confirmed": true
+  },
+  {
+   "n": 77,
+   "title": "Chapter 77",
+   "startPage": 23,
+   "confirmed": true
+  },
+  {
+   "n": 78,
+   "title": "Chapter 78",
+   "startPage": 25,
+   "confirmed": true
+  },
+  {
+   "n": 79,
+   "title": "Chapter 79",
+   "startPage": 26,
+   "confirmed": true
+  },
+  {
+   "n": 80,
+   "title": "Epilogue",
+   "startPage": 28,
+   "confirmed": true
+  }
+ ],
+ "pages": [
+  {
+   "n": 1,
+   "id": "b5-p001",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p001-240.2c0dca916f.avif",
+     "900": "b5-p001-900.7494d0b5f4.avif",
+     "1400": "b5-p001-1400.f632632830.avif",
+     "2115": "b5-p001-2115.ec9763174b.avif"
+    },
+    "webp": {
+     "240": "b5-p001-240.c5f680db8f.webp",
+     "900": "b5-p001-900.8be8ef539b.webp",
+     "1400": "b5-p001-1400.17605c35c2.webp",
+     "2115": "b5-p001-2115.4423fff9c7.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4842,
+      0.3058
+     ],
+     "alt": "The party climbing a bare stony path high on the mountain, snow ranges opening out behind them: Ponga and the dog at the back, the yogini with her spear, Dvij and Bhavi ahead."
+    },
+    {
+     "box": [
+      0.4842,
+      0.0,
+      0.9986,
+      0.3058
+     ],
+     "alt": "Dvij crouches at a mountain stream to drink, a torrent of white water beside him."
+    },
+    {
+     "box": [
+      0.0,
+      0.3058,
+      0.4993,
+      0.4883
+     ],
+     "alt": "The four of them strung out along the path, the yogini looking back, Ponga struggling at the rear."
+    },
+    {
+     "box": [
+      0.4993,
+      0.301,
+      0.9986,
+      0.467
+     ],
+     "alt": "Ponga hunched under his pack; Bhavi glancing back over her shoulder."
+    },
+    {
+     "box": [
+      0.0,
+      0.4883,
+      0.2345,
+      0.704
+     ],
+     "alt": "Bhavi, seen from behind, watches Dvij climbing ahead of her up the rock."
+    },
+    {
+     "box": [
+      0.2345,
+      0.4883,
+      0.4993,
+      0.7253
+     ],
+     "alt": "The yogini stops on the path and turns; Bhavi, behind her, looks up too."
+    },
+    {
+     "box": [
+      0.4993,
+      0.4622,
+      0.7527,
+      0.7917
+     ],
+     "alt": "Dvij's figure on the skyline above; then the path empty where he had been."
+    },
+    {
+     "box": [
+      0.7489,
+      0.467,
+      0.9986,
+      0.7893
+     ],
+     "alt": "Bhavi and the yogini, both wide-eyed, seeing him vanish."
+    },
+    {
+     "box": [
+      0.0,
+      0.704,
+      0.3366,
+      0.9979
+     ],
+     "alt": "The yogini sprints up the slope; Bhavi runs after her; and a dark chasm opens in the rock."
+    },
+    {
+     "box": [
+      0.3366,
+      0.7253,
+      0.6657,
+      0.9979
+     ],
+     "alt": "The two of them reach the lip of the ravine and look over."
+    },
+    {
+     "box": [
+      0.6657,
+      0.7396,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Far below, Dvij hangs from a cluster of aerial fig roots over the drop, the yogini looking down from the rim."
+    }
+   ],
+   "text": [
+    {
+     "t": "They walked on paths made by the footsteps of centuries. At each bifurcation they paused only a moment before instinct took them upward.",
+     "bbox": [
+      0.1,
+      0.2687,
+      0.9,
+      0.2967
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "The journey up till the mid-afternoon meal went eventless. They breathed in the refreshing mountain air at peace. Ponga had to be hurried along occasionally. Bhavi felt, once or twice, as if they were being watched.",
+     "bbox": [
+      0.1,
+      0.4527,
+      0.9,
+      0.4807
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "Dvij moved ahead with blithesome ease. Bhavi watched his masculine form ascend — then looked askance and saw that Yogini was watching it too. Suddenly the masculine form vanished. Yogini sprang forward. Bhavi began running.",
+     "bbox": [
+      0.1,
+      0.7216,
+      0.9,
+      0.7497
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "Dvij was hanging in a ravine below — gripping a cluster of aerial roots of a fig tree, his body suspended above the ravine's depth, his grip the only thing between him and the drop.",
+     "bbox": [
+      0.1,
+      0.9559,
+      0.9,
+      0.9839
+     ],
+     "kind": "caption",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 2,
+   "id": "b5-p002",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p002-240.7f1dcc101e.avif",
+     "900": "b5-p002-900.9ddda5f9f3.avif",
+     "1400": "b5-p002-1400.76db9ffe5a.avif",
+     "2115": "b5-p002-2115.7dee020722.avif"
+    },
+    "webp": {
+     "240": "b5-p002-240.3b95ed2638.webp",
+     "900": "b5-p002-900.967f139c85.webp",
+     "1400": "b5-p002-1400.175ba29f34.webp",
+     "2115": "b5-p002-2115.759256e8ca.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.2534,
+      0.3105
+     ],
+     "alt": "Bhavi lies flat at the edge and stretches her arm down; it falls short by inches, Dvij hanging below."
+    },
+    {
+     "box": [
+      0.2534,
+      0.0,
+      0.5031,
+      0.3105
+     ],
+     "alt": "The yogini crouches at the rim, sawing at the roots with a blunt knife."
+    },
+    {
+     "box": [
+      0.5031,
+      0.0,
+      0.7489,
+      0.3105
+     ],
+     "alt": "Bhavi and the yogini kneel face to face at the edge, their eyes meeting over the cut roots."
+    },
+    {
+     "box": [
+      0.7489,
+      0.0,
+      0.9986,
+      0.2489
+     ],
+     "alt": "Two small frames of the two women knotting the cut roots together and lowering them."
+    },
+    {
+     "box": [
+      0.0,
+      0.3105,
+      0.3139,
+      0.5736
+     ],
+     "alt": "Two frames of Dvij gripping the root rope on the rock face."
+    },
+    {
+     "box": [
+      0.3139,
+      0.3105,
+      0.6317,
+      0.5736
+     ],
+     "alt": "Dvij climbing, then hauling himself over the lip on his front, spent."
+    },
+    {
+     "box": [
+      0.6317,
+      0.2489,
+      0.9986,
+      0.6068
+     ],
+     "alt": "All three sprawled at the edge, too exhausted to move: Bhavi on her back, Dvij flat out between them, the yogini beside him."
+    },
+    {
+     "box": [
+      0.0,
+      0.5736,
+      0.2383,
+      0.7206
+     ],
+     "alt": "Ponga's face appears over the edge, white-bearded and inquisitive."
+    },
+    {
+     "box": [
+      0.2383,
+      0.5736,
+      0.696,
+      0.7514
+     ],
+     "alt": "Dvij, lying between the two women, thanks them - he never thought they would shed their differences."
+    },
+    {
+     "box": [
+      0.696,
+      0.5262,
+      0.9986,
+      0.7514
+     ],
+     "alt": "Bhavi sits up, arms folded, and the yogini stands with her spear."
+    },
+    {
+     "box": [
+      0.0,
+      0.7206,
+      0.1891,
+      0.9979
+     ],
+     "alt": "Dvij, still down, finishes it - just to save me."
+    },
+    {
+     "box": [
+      0.1891,
+      0.7206,
+      0.4426,
+      0.9979
+     ],
+     "alt": "The yogini smiles, the first time he has seen her do so; Bhavi turns away."
+    },
+    {
+     "box": [
+      0.435,
+      0.7514,
+      0.7111,
+      0.9979
+     ],
+     "alt": "Bhavi gives him her dagger-like stare and starts walking back down the slope, Dvij calling after her."
+    },
+    {
+     "box": [
+      0.7111,
+      0.7514,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Bhavi walking away down the ridge; she looks back, ever so slightly."
+    }
+   ],
+   "text": [
+    {
+     "t": "Bhavi's arm fell short by inches. She looked at Yogini — who was already working on the roots with a blunt knife. Their eyes met. Together they looped the cut roots around the ones Dvij hung from.",
+     "bbox": [
+      0.1,
+      0.2361,
+      0.9,
+      0.2641
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "Together they began pulling. With the combined effort of their grunts and gasps, Dvij inched upward. They lay sprawled at the edge, too exhausted to move —",
+     "bbox": [
+      0.1,
+      0.5312,
+      0.9,
+      0.5592
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "Thanks, girls. I never thought you’d shed your differences....",
+     "bbox": [
+      0.5464,
+      0.5623,
+      0.7087,
+      0.6001
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "- till the inquisitive stare of Ponga, who had painfully made his way up, proved too much for Dvij.",
+     "bbox": [
+      0.0137,
+      0.7243,
+      0.6883,
+      0.7408
+     ],
+     "kind": "caption",
+     "panel": 8
+    },
+    {
+     "t": "...just to save me.",
+     "bbox": [
+      0.0896,
+      0.761,
+      0.192,
+      0.7849
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Yogini smiled — the first time he had seen her do so. Bhavi gave him her dagger-like stares, huffed, and started walking back down the slope. Dvij hoped Bhavi would look back. She did, ever so slightly.",
+     "bbox": [
+      0.1,
+      0.9586,
+      0.875,
+      0.9866
+     ],
+     "kind": "caption",
+     "panel": 12
+    },
+    {
+     "t": "That's right — we'll need to go back and take the other path.",
+     "bbox": [
+      0.6687,
+      0.7628,
+      0.831,
+      0.8006
+     ],
+     "kind": "balloon",
+     "panel": 13
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 3,
+   "id": "b5-p003",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p003-240.689090fc4f.avif",
+     "900": "b5-p003-900.16ceaba412.avif",
+     "1400": "b5-p003-1400.81d5ea3ef0.avif",
+     "2115": "b5-p003-2115.acf52c6bcc.avif"
+    },
+    "webp": {
+     "240": "b5-p003-240.e0b34a3f47.webp",
+     "900": "b5-p003-900.a32acec821.webp",
+     "1400": "b5-p003-1400.b40f5ccd61.webp",
+     "2115": "b5-p003-2115.b7687f4f39.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.2875,
+      0.1896
+     ],
+     "alt": "Dvij and Bhavi facing each other on the path. A small scoreboard in the corner: Bhavi 2, Yogini 1."
+    },
+    {
+     "box": [
+      0.2875,
+      0.0,
+      0.6317,
+      0.1896
+     ],
+     "alt": "Dvij, close, says he should thank her for saving his life; and Bhavi, below, says he did thank - both of them."
+    },
+    {
+     "box": [
+      0.6317,
+      0.0,
+      0.9986,
+      0.2157
+     ],
+     "alt": "Dvij, close, says he had to, both of them helped; Bhavi answers that this time, yes, but she has saved him once already."
+    },
+    {
+     "box": [
+      0.0,
+      0.1896,
+      0.6544,
+      0.3935
+     ],
+     "alt": "A shout from behind. Three men come out of ambush with daggers in their outstretched hands; Dvij and Bhavi spin round, and the yogini has already closed with one of them."
+    },
+    {
+     "box": [
+      0.6544,
+      0.2157,
+      0.9986,
+      0.3887
+     ],
+     "alt": "The yogini has a man down, her knife at his throat."
+    },
+    {
+     "box": [
+      0.0,
+      0.3935,
+      0.5674,
+      0.6305
+     ],
+     "alt": "Dvij whips out a handgun. The thugs stop where they stand; he tells Bhavi to get behind a boulder while he holds them."
+    },
+    {
+     "box": [
+      0.5674,
+      0.3887,
+      0.9986,
+      0.6305
+     ],
+     "alt": "Dvij with the gun levelled, the three men backing off among the rocks, Bhavi behind him."
+    },
+    {
+     "box": [
+      0.0,
+      0.6305,
+      0.2988,
+      0.7846
+     ],
+     "alt": "Bhavi crouched behind the boulder as a thug comes round it with a dagger raised."
+    },
+    {
+     "box": [
+      0.2988,
+      0.6305,
+      0.6657,
+      0.7846
+     ],
+     "alt": "A tall stranger in a blue kurta and red sash appears from nowhere and knocks the thug back with a blow."
+    },
+    {
+     "box": [
+      0.6657,
+      0.6116,
+      0.9986,
+      0.7846
+     ],
+     "alt": "The stranger grapples the thug to the ground; Dvij fires past them."
+    },
+    {
+     "box": [
+      0.0,
+      0.7846,
+      0.1853,
+      0.9979
+     ],
+     "alt": "Dvij runs up the slope with an attacker after him."
+    },
+    {
+     "box": [
+      0.1853,
+      0.7396,
+      0.3934,
+      0.9979
+     ],
+     "alt": "Bhavi and the yogini, both alarmed, watching them go."
+    },
+    {
+     "box": [
+      0.3896,
+      0.7514,
+      0.5485,
+      0.9979
+     ],
+     "alt": "The two men vanish over the rim; Bhavi and the yogini run after them."
+    },
+    {
+     "box": [
+      0.5447,
+      0.7846,
+      0.7716,
+      0.9979
+     ],
+     "alt": "Bhavi and the yogini reach the edge and look down."
+    },
+    {
+     "box": [
+      0.7716,
+      0.7467,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij hanging from the same cluster of aerial roots, for the second time that day."
+    }
+   ],
+   "text": [
+    {
+     "t": "I should thank you for saving my life.",
+     "bbox": [
+      0.4909,
+      0.0002,
+      0.6423,
+      0.0354
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "You did thank — both of us.",
+     "bbox": [
+      0.3103,
+      0.1304,
+      0.4257,
+      0.1572
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "I had to - both of you helped.",
+     "bbox": [
+      0.8267,
+      0.0073,
+      0.9422,
+      0.0342
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "This time, yes. But I’ve saved you once already.",
+     "bbox": [
+      0.6427,
+      0.1194,
+      0.7928,
+      0.1544
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "A loud cry came from behind where they stood. Three men emerged from ambush, daggers shining in their outstretched hands. Yogini had already engaged one of them.",
+     "bbox": [
+      0.1146,
+      0.3853,
+      0.8896,
+      0.4134
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "Dvij whipped out a handgun from somewhere in a flash. The thugs halted in their tracks. He asked Bhavi to hide behind a boulder while he held them at bay.",
+     "bbox": [
+      0.1157,
+      0.5892,
+      0.8907,
+      0.6172
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "Bhavi saw a thug attack her as she hid behind the boulder. Suddenly, a tall stranger appeared from nowhere and faught off the thug. She had no idea who he was, but he was clearly on her side.",
+     "bbox": [
+      0.1146,
+      0.7753,
+      0.8896,
+      0.8033
+     ],
+     "kind": "caption",
+     "panel": 12
+    },
+    {
+     "t": "Dvij took off running up the slope as an attacker pursuid. Then both vanished. Bhavi and Yogini ran after them. At the rim: Dvij was hanging from the same aerial roots. For the second time that day.",
+     "bbox": [
+      0.1157,
+      0.9589,
+      0.8907,
+      0.9869
+     ],
+     "kind": "caption",
+     "panel": 12
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 4,
+   "id": "b5-p004",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p004-240.bb1367dcff.avif",
+     "900": "b5-p004-900.b9cc9e1ea8.avif",
+     "1400": "b5-p004-1400.65176f261a.avif",
+     "2115": "b5-p004-2115.5d2ba2548e.avif"
+    },
+    "webp": {
+     "240": "b5-p004-240.ec3db032b1.webp",
+     "900": "b5-p004-900.8d3b92f59c.webp",
+     "1400": "b5-p004-1400.42f3c10781.webp",
+     "2115": "b5-p004-2115.f2de46b37c.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.2496,
+      0.2465
+     ],
+     "alt": "Dvij hanging from the roots again, looking up; Bhavi and the yogini at the rim above."
+    },
+    {
+     "box": [
+      0.2496,
+      0.0,
+      0.4993,
+      0.2489
+     ],
+     "alt": "Two frames of the two women hauling on the root rope at the edge."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.7489,
+      0.2489
+     ],
+     "alt": "Two frames of Dvij climbing the rope up the rock face."
+    },
+    {
+     "box": [
+      0.7489,
+      0.0,
+      0.9986,
+      0.2276
+     ],
+     "alt": "Dvij pulling himself over the lip; and the three of them sitting together on the rocks afterwards."
+    },
+    {
+     "box": [
+      0.0,
+      0.2465,
+      0.3366,
+      0.4575
+     ],
+     "alt": "Dvij, an inset beside him showing a figure chasing another up the slope, saying he was chasing a thug away."
+    },
+    {
+     "box": [
+      0.3291,
+      0.2489,
+      0.6657,
+      0.4599
+     ],
+     "alt": "Bhavi, with a matching inset, says she saw someone chasing him - it looked as if both fell in."
+    },
+    {
+     "box": [
+      0.6657,
+      0.2276,
+      0.9986,
+      0.4385
+     ],
+     "alt": "Bhavi, chin on her hand, wonders aloud who the tall stranger was who fought on their side."
+    },
+    {
+     "box": [
+      0.0,
+      0.4575,
+      0.2988,
+      0.64
+     ],
+     "alt": "A stony gully seen from above."
+    },
+    {
+     "box": [
+      0.0,
+      0.64,
+      0.3064,
+      0.8439
+     ],
+     "alt": "Ponga lying on his back on the path where the thugs attacked him."
+    },
+    {
+     "box": [
+      0.2988,
+      0.4385,
+      0.9986,
+      0.8273
+     ],
+     "alt": "The party resting in the shade of the fig tree whose aerial roots have now saved Dvij twice: Dvij sitting against the rock, Ponga propped beside him, the dog at their feet, the yogini and Bhavi across from them, snow peaks framed in the gorge beyond."
+    },
+    {
+     "box": [
+      0.0,
+      0.8273,
+      0.2686,
+      0.9979
+     ],
+     "alt": "Dvij trickling water from a cup into Ponga's mouth to bring him round."
+    },
+    {
+     "box": [
+      0.2686,
+      0.8273,
+      0.5144,
+      0.9979
+     ],
+     "alt": "Bhavi, hand at her chin, says she gets that he lured the thug to the ravine - but why did he jump in?"
+    },
+    {
+     "box": [
+      0.5144,
+      0.8273,
+      0.7414,
+      0.9979
+     ],
+     "alt": "Dvij says he forgot about the ravine; Bhavi tells him he forgot about the ravine where he had almost died a few moments ago, and that that is stupid."
+    },
+    {
+     "box": [
+      0.7414,
+      0.8273,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij, sitting back against the rock, says not for someone who has forgotten his whole past."
+    }
+   ],
+   "text": [
+    {
+     "t": "Bhavi nodded at Yogini. No eye-contact needed this time. They went about rescuing Dvij in the same manner — having done it not too long ago. This time he offered no thanks.",
+     "bbox": [
+      0.1004,
+      0.2086,
+      0.8754,
+      0.2366
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "I was chasing a thug away.",
+     "bbox": [
+      0.0098,
+      0.2501,
+      0.1262,
+      0.2772
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "I saw someone chasing you. Looks like both fell in.",
+     "bbox": [
+      0.3162,
+      0.3399,
+      0.4567,
+      0.3727
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "I wonder who that tall stranger was who fought from our side.",
+     "bbox": [
+      0.6322,
+      0.3151,
+      0.8062,
+      0.3557
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Ponga was found lying supine where the thugs had attacked — mildly unconscious. A few drops of water revived him. They rested under the shade of the fig tree whose aerial roots had now saved Dvij twice.",
+     "bbox": [
+      0.1114,
+      0.7776,
+      0.8864,
+      0.8056
+     ],
+     "kind": "caption",
+     "panel": 9
+    },
+    {
+     "t": "I get it that you lured the thug to the ravine. But why did you jump in?",
+     "bbox": [
+      0.1517,
+      0.9294,
+      0.3331,
+      0.9716
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Actually... I forgot about the ravine.",
+     "bbox": [
+      0.3874,
+      0.8153,
+      0.5258,
+      0.8475
+     ],
+     "kind": "balloon",
+     "panel": 11
+    },
+    {
+     "t": "Yoiu forgot about the ravine where you had almost died a few moments ago? That’s stupid.",
+     "bbox": [
+      0.4428,
+      0.9145,
+      0.6475,
+      0.9622
+     ],
+     "kind": "balloon",
+     "panel": 12
+    },
+    {
+     "t": "Not for someone who has forgotten his whole past.",
+     "bbox": [
+      0.6911,
+      0.8115,
+      0.8456,
+      0.8475
+     ],
+     "kind": "balloon",
+     "panel": 13
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 5,
+   "id": "b5-p005",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p005-240.91b7edbf0a.avif",
+     "900": "b5-p005-900.9b778b9e97.avif",
+     "1400": "b5-p005-1400.d2c4695741.avif",
+     "2115": "b5-p005-2115.587bc6aa04.avif"
+    },
+    "webp": {
+     "240": "b5-p005-240.174911dd92.webp",
+     "900": "b5-p005-900.65a74c41f4.webp",
+     "1400": "b5-p005-1400.9a64286590.webp",
+     "2115": "b5-p005-2115.5497f0152f.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.9986,
+      0.1612
+     ],
+     "alt": "The quiet evening walk: the party crossing a high open field at nightfall towards a dolmen - three upright stones under a great capstone - its shadow thrown long by the last light, snow peaks all round."
+    },
+    {
+     "box": [
+      0.0,
+      0.1588,
+      0.5901,
+      0.3342
+     ],
+     "alt": "Camped under the dolmen by a small lamp, Bhavi lying propped on her elbows and Dvij sitting against the stone. He says the Mahant needs them to get him close enough to the secret of the leaf, and will keep following until then. Beside them, an inset of a line of torches winding up the mountain."
+    },
+    {
+     "box": [
+      0.5901,
+      0.1612,
+      0.9986,
+      0.3295
+     ],
+     "alt": "Dvij, close, says who knows what he might do after that."
+    },
+    {
+     "box": [
+      0.0,
+      0.3342,
+      0.3783,
+      0.5144
+     ],
+     "alt": "Bhavi, close, says he is scaring her."
+    },
+    {
+     "box": [
+      0.3783,
+      0.3295,
+      0.9986,
+      0.5144
+     ],
+     "alt": "An inset of Dvij taking a pistol from a firearm display case in the Park Commissioner's bungalow; below, Dvij sits turning the gun over by lamplight while Bhavi watches."
+    },
+    {
+     "box": [
+      0.0,
+      0.5144,
+      0.4728,
+      0.6803
+     ],
+     "alt": "Dvij, close, says he thought it would come in useful on a day like this."
+    },
+    {
+     "box": [
+      0.4728,
+      0.5144,
+      0.9986,
+      0.6803
+     ],
+     "alt": "Bhavi, close, asks how he knows so much about guns."
+    },
+    {
+     "box": [
+      0.0,
+      0.6803,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The dolmen at night under a field of stars, the lamp burning between them, Ponga asleep at the left and the dog curled up beside him. Bhavi's thought floats above her: there is a fifty percent chance that he is a good guy."
+    }
+   ],
+   "text": [
+    {
+     "t": "The quiet evening walk — and the dolmen at nightfall. Ahead in a large open field: a dolmen — three upright stones topped with a large capstone, ancient, solid, its shadow long in the last light. The party moves toward it.",
+     "bbox": [
+      0.1125,
+      0.1204,
+      0.8875,
+      0.1484
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "Mahant needs us to get him close enough to the secret of the leaf. Till then he will keep following us...",
+     "bbox": [
+      0.1279,
+      0.1574,
+      0.3395,
+      0.2067
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Who knows what he might do after that.",
+     "bbox": [
+      0.5894,
+      0.1643,
+      0.7375,
+      0.1988
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "You’re scaring me.",
+     "bbox": [
+      0.2537,
+      0.3286,
+      0.3719,
+      0.3561
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Picked it up from the firearm display case in the Park Commissioner's bungalow.",
+     "bbox": [
+      0.6859,
+      0.336,
+      0.8813,
+      0.3815
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Thought it would come in useful on a day like this.",
+     "bbox": [
+      0.1002,
+      0.6311,
+      0.2559,
+      0.6673
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "How do you know so much about guns?",
+     "bbox": [
+      0.5737,
+      0.6324,
+      0.7293,
+      0.6686
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "There’s a fifty percent chance that you are a good guy.",
+     "bbox": [
+      0.1815,
+      0.8015,
+      0.327,
+      0.8711
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 6,
+   "id": "b5-p006",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p006-240.4c2445ee5a.avif",
+     "900": "b5-p006-900.93a5626f79.avif",
+     "1400": "b5-p006-1400.70589b5893.avif",
+     "2115": "b5-p006-2115.d5046ff99a.avif"
+    },
+    "webp": {
+     "240": "b5-p006-240.a4d0ef0e96.webp",
+     "900": "b5-p006-900.ca0275e6e0.webp",
+     "1400": "b5-p006-1400.6ded135b0e.webp",
+     "2115": "b5-p006-2115.04655cd71c.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.301
+     ],
+     "alt": "A flashback in Bhavi's memory: the Park Commissioner's gun room, a rack of muskets, flintlocks, a derringer, a howdah pistol and a Colt revolver in a glass case. Dvij polishes the glass with a cloth while Bhavi stands behind him."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.9986,
+      0.301
+     ],
+     "alt": "Dvij lifts a revolver out of the case, checking its action with a fluency he cannot account for; Bhavi holds up a phone light behind him."
+    },
+    {
+     "box": [
+      0.0,
+      0.301,
+      0.4842,
+      0.5286
+     ],
+     "alt": "Dvij shoulders a rifle and explains the grooves that spin the bullet for accuracy at longer range; Bhavi stands with her arms folded."
+    },
+    {
+     "box": [
+      0.4842,
+      0.301,
+      0.9986,
+      0.5286
+     ],
+     "alt": "Dvij swings the barrel round towards her; Bhavi, unimpressed, says she would care more for that if the gun were not pointed at her face."
+    },
+    {
+     "box": [
+      0.0,
+      0.5286,
+      0.4993,
+      0.749
+     ],
+     "alt": "A second flashback, in the Professor's study: charts of the brain and a board comparing semantic memory - knowing how to drive a car, how to use a gun - with episodic memory, where and when you learned. The Professor lectures with books piled round him while Dvij listens."
+    },
+    {
+     "box": [
+      0.4993,
+      0.5286,
+      0.9986,
+      0.749
+     ],
+     "alt": "A strip of small frames: a car, a drink, a coil of rope, a figure in the forest, a rope bridge, an old book, a jigsaw with a piece missing. The Professor, finger raised, tells Dvij he has clearly retained his semantic memory - he knows about computers, mobiles, the internet, things that do not exist in this valley."
+    },
+    {
+     "box": [
+      0.0,
+      0.749,
+      0.4804,
+      0.9979
+     ],
+     "alt": "The Professor, finger up, tells him to go out and listen to the forest and the rumbling hills, and that his body will tell him what he knows until he has the complete picture of himself. Two insets below: Bhavi frowning, and Dvij half smiling."
+    },
+    {
+     "box": [
+      0.4804,
+      0.749,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Back under the dolmen at night: Bhavi lies awake beside the lamp, Dvij sitting against the stone looking out at the stars. Her thought: what picture do I have of him?"
+    }
+   ],
+   "text": [
+    {
+     "t": "In a flashback in Bhavi’s thoughts: Dvij handled the firearms with a fluency he could not account for. 'But don't ask me how,' he said, lifting the rifle in an action-hero pose.",
+     "bbox": [
+      0.1,
+      0.2577,
+      0.9,
+      0.2857
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "These grooves — they impart a spin to the bullet that improves accuracy over a longer range.",
+     "bbox": [
+      0.166,
+      0.3272,
+      0.3632,
+      0.3731
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "I would care more for that if the gun was not pointed at my face.",
+     "bbox": [
+      0.6978,
+      0.3073,
+      0.8716,
+      0.3478
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Semantic memory is memory of general things — like how to drive a car. Episodic is memory of events — where and when you learned to drive.",
+     "bbox": [
+      0.2573,
+      0.6449,
+      0.4996,
+      0.7014
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "You have clearly retained your semantic memory. You know about computers, mobiles, the internet — things that do not exist in this valley.",
+     "bbox": [
+      0.75,
+      0.6449,
+      0.9923,
+      0.7014
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "A second flashback — Professor on semantic and episodic memory. A deeper memory layer, triggered by the gun's fluency: Professor's study, the memory-test conversation.",
+     "bbox": [
+      0.1,
+      0.7113,
+      0.9,
+      0.7393
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "Go out there. Listen to the forest. Hear the rumbling hills. Do things — and your body will tell you what you know. Eventually you will have the complete picture of yourself.",
+     "bbox": [
+      0.1416,
+      0.8183,
+      0.4183,
+      0.8828
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "What picture do I have of him?",
+     "bbox": [
+      0.5999,
+      0.7947,
+      0.7133,
+      0.849
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 7,
+   "id": "b5-p007",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p007-240.ac20eab73b.avif",
+     "900": "b5-p007-900.d0fc77ddc8.avif",
+     "1400": "b5-p007-1400.d2e30b119f.avif",
+     "2115": "b5-p007-2115.b305d6c8c8.avif"
+    },
+    "webp": {
+     "240": "b5-p007-240.4c11ca0bc7.webp",
+     "900": "b5-p007-900.8525843ad1.webp",
+     "1400": "b5-p007-1400.38507294d8.webp",
+     "2115": "b5-p007-2115.38c5a7c4be.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.2648,
+      0.1399
+     ],
+     "alt": "Dvij, close, half smiling: don't worry about the gun, there are no bullets."
+    },
+    {
+     "box": [
+      0.2648,
+      0.0,
+      0.5749,
+      0.1873
+     ],
+     "alt": "Bhavi sits up, shocked - that was weighing on her mind, and good he took them out."
+    },
+    {
+     "box": [
+      0.5749,
+      0.0,
+      0.9986,
+      0.1873
+     ],
+     "alt": "Dvij, smiling to himself, says he did not take them out; there never were any."
+    },
+    {
+     "box": [
+      0.0,
+      0.1399,
+      0.3934,
+      0.3793
+     ],
+     "alt": "Bhavi rounds on him where they sit by the lamp - he was bluffing with their lives at stake?"
+    },
+    {
+     "box": [
+      0.3291,
+      0.1873,
+      0.9986,
+      0.3793
+     ],
+     "alt": "Under the dolmen at night: Ponga asleep at the left, Bhavi and Dvij sitting up talking, the yogini keeping watch at the right with her spear. Dvij says it is a good thing she is with them."
+    },
+    {
+     "box": [
+      0.0,
+      0.3793,
+      0.3896,
+      0.5665
+     ],
+     "alt": "Bhavi, close, looking away, saying that when he was brought to the lodge he was still conscious despite all the blood he had lost."
+    },
+    {
+     "box": [
+      0.3896,
+      0.3579,
+      0.9986,
+      0.6471
+     ],
+     "alt": "Bhavi and Dvij lying face to face under the stone, close together; she says that like the tantric baba said, the yogini must have done something that kept him alive - and that both of them helped."
+    },
+    {
+     "box": [
+      0.0,
+      0.5665,
+      0.4426,
+      0.7704
+     ],
+     "alt": "Dvij, close, looking up."
+    },
+    {
+     "box": [
+      0.4426,
+      0.6471,
+      0.9986,
+      0.749
+     ],
+     "alt": "The two of them lying side by side looking up at the Milky Way - shooting stars, but so many?"
+    },
+    {
+     "box": [
+      0.0,
+      0.749,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The dolmen from a distance under a vast starry sky, standing in a field thick with fireflies, its fire a small glow beneath the stone."
+    }
+   ],
+   "text": [
+    {
+     "t": "Don’t worry about the gun. There are no bullets.",
+     "bbox": [
+      0.1907,
+      0.1245,
+      0.3417,
+      0.1596
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Yes, that was weighing on my mind. Good you took them out.",
+     "bbox": [
+      0.5338,
+      0.1179,
+      0.706,
+      0.158
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "I did not take them out. There never were any.",
+     "bbox": [
+      0.8268,
+      0.1179,
+      0.9672,
+      0.1506
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "What? You were bluffing with our lives at stake?",
+     "bbox": [
+      0.1204,
+      0.1822,
+      0.2608,
+      0.2149
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "It's a good thing she's with us. I feel safe knowing she's keeping a watch.",
+     "bbox": [
+      0.5706,
+      0.2107,
+      0.7678,
+      0.2566
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "When you were brought to the lodge, you were still conscious despite all the blood you had lost.",
+     "bbox": [
+      0.2542,
+      0.3663,
+      0.46,
+      0.4143
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Like the tantric baba said - she must have done something that kept you alive. Both of us helped.",
+     "bbox": [
+      0.5727,
+      0.3663,
+      0.7785,
+      0.4143
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Shooting stars!",
+     "bbox": [
+      0.4467,
+      0.6508,
+      0.5456,
+      0.6738
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "But so many?",
+     "bbox": [
+      0.7284,
+      0.6736,
+      0.8212,
+      0.6952
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Fireflies! We are sleeping in a field of fireflies.",
+     "bbox": [
+      0.2826,
+      0.8793,
+      0.4305,
+      0.9137
+     ],
+     "kind": "balloon",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 8,
+   "id": "b5-p008",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p008-240.f8ca1a4d4d.avif",
+     "900": "b5-p008-900.c344fbef69.avif",
+     "1400": "b5-p008-1400.ff467e4462.avif",
+     "2115": "b5-p008-2115.c62c1dfbf6.avif"
+    },
+    "webp": {
+     "240": "b5-p008-240.59f43f63b9.webp",
+     "900": "b5-p008-900.8f905369c6.webp",
+     "1400": "b5-p008-1400.e261ac27ef.webp",
+     "2115": "b5-p008-2115.dcf9e6e327.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.5296,
+      0.2133
+     ],
+     "alt": "A run of narrow panels as everything goes quiet: the dolmen under the stars, the stream, the tall grass, the yogini sitting up with her spear, a bare tree, and Dvij and Bhavi awake in the dark. He asks whether she hears that."
+    },
+    {
+     "box": [
+      0.5296,
+      0.0,
+      0.9986,
+      0.2133
+     ],
+     "alt": "Dvij looking up, a column of golden light and a bright seal at the heart glowing beside him; Bhavi asleep at his shoulder. He names it - Anahata, the sound of the unstruck."
+    },
+    {
+     "box": [
+      0.0,
+      0.2133,
+      0.9986,
+      0.5428
+     ],
+     "alt": "Dvij walks out from the dolmen into the field of fireflies under the Milky Way, leaving Bhavi asleep under the stone and heading towards where the yogini lies."
+    },
+    {
+     "box": [
+      0.0,
+      0.5428,
+      0.9986,
+      0.7941
+     ],
+     "alt": "Dawn under the dolmen: Dvij wrapped in a blue blanket, Bhavi crouched over a small fire with a pot on it, Ponga sitting with the dog at the right, the mountains pale behind them. Dvij says the smell of morning coffee is good enough to wake any sleeping soul."
+    },
+    {
+     "box": [
+      0.0,
+      0.7941,
+      0.4842,
+      0.9979
+     ],
+     "alt": "Dvij, close, wrapped in the blanket, asking where she got the milk."
+    },
+    {
+     "box": [
+      0.4842,
+      0.7941,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Bhavi, stirring the pot, says no milk, no sugar - dark as the devil."
+    }
+   ],
+   "text": [
+    {
+     "t": "Bhavi, do you hear that?",
+     "bbox": [
+      0.3416,
+      0.0534,
+      0.4554,
+      0.0799
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Slowly silence descends on everything. The stream stops murmuring. The tall grass stop swishing. Yogini and the dog go still. The owl in the forest below stops calling. The great silence — and the sound of the unstruck.",
+     "bbox": [
+      0.1,
+      0.1763,
+      0.9,
+      0.2044
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "Anahata. I can hear the sound of the unstruck.",
+     "bbox": [
+      0.4758,
+      0.0337,
+      0.6147,
+      0.0661
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Much later, Dvij watched Bhavi sleeping peacefully under the ancient dolmen in a field of fireflies. Then, making sure she was asleep, he crept quietly toward where Yogini lay.",
+     "bbox": [
+      0.1352,
+      0.5106,
+      0.9352,
+      0.5386
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "Mmm...the smell of morning coffee...",
+     "bbox": [
+      0.0527,
+      0.5782,
+      0.1915,
+      0.6105
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "...good enough to wake any sleeping soul.",
+     "bbox": [
+      0.5452,
+      0.6108,
+      0.684,
+      0.6431
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Where did you get the milk?",
+     "bbox": [
+      0.2781,
+      0.7726,
+      0.3941,
+      0.7996
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "No milk, no sugar. Dark as the devil.",
+     "bbox": [
+      0.5592,
+      0.7779,
+      0.6849,
+      0.8072
+     ],
+     "kind": "balloon",
+     "panel": 3
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 9,
+   "id": "b5-p009",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p009-240.ee409bf3e2.avif",
+     "900": "b5-p009-900.875228034a.avif",
+     "1400": "b5-p009-1400.bfab867c8e.avif",
+     "2115": "b5-p009-2115.76b9d03480.avif"
+    },
+    "webp": {
+     "240": "b5-p009-240.02db91ee56.webp",
+     "900": "b5-p009-900.b43d55a811.webp",
+     "1400": "b5-p009-1400.08863a2196.webp",
+     "2115": "b5-p009-2115.c72c329af3.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.1351
+     ],
+     "alt": "Bhavi, close, says she does not see the yogini around; Dvij, wrapped in the blanket, says maybe she went back."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.9986,
+      0.1517
+     ],
+     "alt": "The two of them sitting with their coffee mugs under the dolmen at sunrise, the dog asleep between them; Bhavi asks whether she left him the mutt."
+    },
+    {
+     "box": [
+      0.0,
+      0.1351,
+      0.6544,
+      0.3721
+     ],
+     "alt": "Three frames on the trail: Ponga scrambling ahead with his staff, then walking between Dvij and Bhavi, then crouching to pick at a plant while the dog watches. Bhavi asks why her uncle wanted Ponga along; Dvij says he will help them when the time comes."
+    },
+    {
+     "box": [
+      0.6506,
+      0.1422,
+      0.8511,
+      0.3721
+     ],
+     "alt": "Dvij holds up a drawing of a single leaf to Ponga; Bhavi watches."
+    },
+    {
+     "box": [
+      0.8435,
+      0.1517,
+      0.9986,
+      0.3745
+     ],
+     "alt": "Ponga's face lights up, and the leaf drawing glows in his hands."
+    },
+    {
+     "box": [
+      0.0,
+      0.3674,
+      0.174,
+      0.6021
+     ],
+     "alt": "Bhavi, worried, asks whether the thugs will attack them again."
+    },
+    {
+     "box": [
+      0.1589,
+      0.3721,
+      0.4879,
+      0.6021
+     ],
+     "alt": "A strip of four numbered frames of Bhavi thinking, and below, Dvij telling her that in all these years she has feared for the Professor but never for herself - and asking whether she ever wondered why."
+    },
+    {
+     "box": [
+      0.4879,
+      0.3721,
+      0.9986,
+      0.6021
+     ],
+     "alt": "The Vedic ashram of Kritya Rishi: bamboo-and-thatch huts round a swept clearing, swastikas over every entrance, forest and mountains behind. The party walks in."
+    },
+    {
+     "box": [
+      0.0,
+      0.6021,
+      0.4993,
+      0.7822
+     ],
+     "alt": "Inside the altar hall: a square fire altar at the centre surrounded by three homa-kundas - square, circular and crescent - exactly as Bhavi had drawn them. An inset shows her sketch of the same three shapes beside two chakra seals."
+    },
+    {
+     "box": [
+      0.4993,
+      0.5855,
+      0.9986,
+      0.704
+     ],
+     "alt": "The ceremony beginning: priests seated round the altars, offerings laid out, the fire lit; the udgatrus start their Samaveda chants and the sound is drawn as golden ribbons curling through the air."
+    },
+    {
+     "box": [
+      0.0,
+      0.7822,
+      0.4993,
+      0.9979
+     ],
+     "alt": "More of the ceremony in small frames: singers breaking into dance, others taking up the naali and dundhubi drums, the fire building."
+    },
+    {
+     "box": [
+      0.4993,
+      0.704,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Outside the ashram, Bhavi moves through a garden in flower, going from tree to tree, a white blossom held to her face."
+    }
+   ],
+   "text": [
+    {
+     "t": "I don’t see Yogini around?",
+     "bbox": [
+      0.1552,
+      0.0038,
+      0.2678,
+      0.0301
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Maybe she went back.",
+     "bbox": [
+      0.3774,
+      0.1068,
+      0.49,
+      0.1331
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "And left you the mutt?",
+     "bbox": [
+      0.7473,
+      0.0091,
+      0.8484,
+      0.0326
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "He will help us with the time comes. I’m sure.",
+     "bbox": [
+      0.3871,
+      0.1404,
+      0.5351,
+      0.1749
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Why did uncle want Ponga to come with us?",
+     "bbox": [
+      0.2016,
+      0.1564,
+      0.3496,
+      0.1909
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Why, he seems to recognize this leaf.",
+     "bbox": [
+      0.7157,
+      0.1367,
+      0.8495,
+      0.1678
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Those thugs. Will they attack us again?",
+     "bbox": [
+      0.0728,
+      0.4828,
+      0.2208,
+      0.5172
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "In all these years, you’ve feared for Prof, but never for your own. Ever wonder why?",
+     "bbox": [
+      0.2908,
+      0.5176,
+      0.4899,
+      0.564
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Soon, they reached the Vedic ashram of Kritya Rishi. Bamboo-and-thatch huts, swastikas above every entrance.",
+     "bbox": [
+      0.5094,
+      0.562,
+      0.9879,
+      0.59
+     ],
+     "kind": "caption",
+     "panel": 7
+    },
+    {
+     "t": "The altar with the vedi at its centre, surrounded by the three homa- kundas. Square. Circular. Crescent. Exactly as Bhavi had drawn it.",
+     "bbox": [
+      0.0107,
+      0.7657,
+      0.4893,
+      0.7937
+     ],
+     "kind": "caption",
+     "panel": 8
+    },
+    {
+     "t": "Some singers, enraptured, broke into dancing. Others took up the naali and dundhubi. The ceremony had begun.",
+     "bbox": [
+      0.0117,
+      0.9636,
+      0.4902,
+      0.9916
+     ],
+     "kind": "caption",
+     "panel": 10
+    },
+    {
+     "t": "The udgatrus began. Their Samaveda chants created the cosmic vibes of the apaurusheya Vedic texts.",
+     "bbox": [
+      0.5108,
+      0.7657,
+      0.9893,
+      0.7937
+     ],
+     "kind": "caption",
+     "panel": 11
+    },
+    {
+     "t": "Just outside the ashram, Bhavi had discovered a bountiful garden. She moved from tree to tree like a buzzing bee busy collecting their nectar.",
+     "bbox": [
+      0.5108,
+      0.9636,
+      0.9893,
+      0.9916
+     ],
+     "kind": "caption",
+     "panel": 11
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 10,
+   "id": "b5-p010",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p010-240.a563b6b701.avif",
+     "900": "b5-p010-900.291ff091f7.avif",
+     "1400": "b5-p010-1400.a877a5eb06.avif",
+     "2115": "b5-p010-2115.a90179431d.avif"
+    },
+    "webp": {
+     "240": "b5-p010-240.439e54e734.webp",
+     "900": "b5-p010-900.80d8670adf.webp",
+     "1400": "b5-p010-1400.6b9c2a22f7.webp",
+     "2115": "b5-p010-2115.7f65a9421f.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4728,
+      0.2276
+     ],
+     "alt": "Dvij sits cross-legged before the fire opposite the Vedic sage - white-bearded, in white cloth, rudraksha at his throat - who tells him the Vedas are apaurusheya, ever-present and received by the ancient rishis. Other listeners sit behind."
+    },
+    {
+     "box": [
+      0.4728,
+      0.0,
+      0.9986,
+      0.2276
+     ],
+     "alt": "A vision above them of rishis seated in golden light, with panels labelled shruti and smriti - the heard and the remembered. The sage explains that they are shrauta texts preserved by oral recitation, and that the Upanishads interpret them."
+    },
+    {
+     "box": [
+      0.0,
+      0.2276,
+      0.4728,
+      0.4859
+     ],
+     "alt": "A vision of Yama enthroned, and of a river running down to the sea. The sage explains punarmrityu, re-death, and the endless cycle of samsara."
+    },
+    {
+     "box": [
+      0.4728,
+      0.2276,
+      0.9986,
+      0.4859
+     ],
+     "alt": "More visions: a boy before a fire, a dark doorway, a figure meditating, Yama again. The sage tells how Nachiketas learned to conquer the cycle from Lord Yama, and that as the river disappears into the sea, we become one with the divine."
+    },
+    {
+     "box": [
+      0.0,
+      0.4859,
+      0.4728,
+      0.7443
+     ],
+     "alt": "A vision of a horse beside a fire, and of a horse drawn in stars with the sun for its eye. The sage explains the ashwamedha - the horse is the sun, its body is time, the sacrifice is of worldly comforts."
+    },
+    {
+     "box": [
+      0.4728,
+      0.4859,
+      0.9986,
+      0.7443
+     ],
+     "alt": "A split fruit, its seeds, and a hand holding nothing. The sage gives Svetaketu's lesson: split the fruit, split its seed, keep splitting - the invisible essence left at the end is Brahman."
+    },
+    {
+     "box": [
+      0.0,
+      0.7443,
+      0.4728,
+      0.9979
+     ],
+     "alt": "A hand dropping salt into a bowl of water, Dvij tasting it, and a glowing figure seated in a starlit sea. The sage says Brahman can be experienced but not observed - tat tvam asi."
+    },
+    {
+     "box": [
+      0.4728,
+      0.7443,
+      0.9986,
+      0.9979
+     ],
+     "alt": "A chart on the wall of the four kalas of the day - morning practice, midday service and study, evening worship, night rest. Dvij thanks the sage, saying he now sees the world in a way he never had, but his mind remains restless and he will come and seek more."
+    }
+   ],
+   "text": [
+    {
+     "t": "The Vedas are apaurusheya — ever-present, all- encompassing, received by the ancient rishis.",
+     "bbox": [
+      0.1177,
+      0.0002,
+      0.335,
+      0.0508
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "They are shrauta texts, preserved by oral recitation. Upanishads act as mediums of esoteric interpretation.",
+     "bbox": [
+      0.6588,
+      0.15,
+      0.8761,
+      0.2006
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Punarmrityu — re-death. We die again in the beyond, only to be born again. The endless cycle of samsara.",
+     "bbox": [
+      0.1331,
+      0.3642,
+      0.3503,
+      0.4148
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Nachiketas learned how to conquer this cycle from Lord Yama. As the river disappears into the sea, we become one into the divine.",
+     "bbox": [
+      0.6123,
+      0.3806,
+      0.8553,
+      0.4372
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "In ashwamedha yagya, the horse is the sun. It’s body is time. The sacrifice is that of worldly comforts.",
+     "bbox": [
+      0.1118,
+      0.6324,
+      0.329,
+      0.683
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Svetaketu — split the fruit. Split its seed. Keep splitting. That invisible essence left at the end is Brahman.",
+     "bbox": [
+      0.6381,
+      0.6278,
+      0.8553,
+      0.6784
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Place salt in water. Taste it — present but invisible. Similarly Brahman can be experienced but not observed. Tat tvam asi.",
+     "bbox": [
+      0.0975,
+      0.8865,
+      0.335,
+      0.9418
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Thank you, swamiji. I now see the world in a way I had never seen before. But my mind remains restless. I shall come and seek more.",
+     "bbox": [
+      0.6311,
+      0.8454,
+      0.8686,
+      0.9007
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 11,
+   "id": "b5-p011",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p011-240.1012f34e05.avif",
+     "900": "b5-p011-900.74ef40bed1.avif",
+     "1400": "b5-p011-1400.68c367871a.avif",
+     "2115": "b5-p011-2115.82a8235cad.avif"
+    },
+    "webp": {
+     "240": "b5-p011-240.491d13e13b.webp",
+     "900": "b5-p011-900.2deaa7aa10.webp",
+     "1400": "b5-p011-1400.eb5a219a58.webp",
+     "2115": "b5-p011-2115.ca20299493.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.5674,
+      0.2465
+     ],
+     "alt": "Dvij and Bhavi in the flowering garden, she holding a lily to her face. She asks whether meeting the maharishi is that important; he says yes, else his mind will remain restless, and that she has heard him tell many that he seeks the truth but never thought he meant it."
+    },
+    {
+     "box": [
+      0.5674,
+      0.0,
+      0.9986,
+      0.2465
+     ],
+     "alt": "Bhavi, hand at her chin, considering him."
+    },
+    {
+     "box": [
+      0.0,
+      0.2465,
+      0.3972,
+      0.4954
+     ],
+     "alt": "Dvij, close among the flowers, says he did not - but now he thinks he does."
+    },
+    {
+     "box": [
+      0.3972,
+      0.237,
+      0.5976,
+      0.4954
+     ],
+     "alt": "Bhavi smiling at him; Dvij smiling back, the two of them in the garden."
+    },
+    {
+     "box": [
+      0.5976,
+      0.1991,
+      0.8132,
+      0.5476
+     ],
+     "alt": "Dvij, hand open, gives her two things to do: first, work on the next clue."
+    },
+    {
+     "box": [
+      0.7943,
+      0.2465,
+      0.9986,
+      0.4978
+     ],
+     "alt": "Bhavi listening among the lilies as he adds the second - find a safe spot away from the ashram."
+    },
+    {
+     "box": [
+      0.0,
+      0.4954,
+      0.9986,
+      0.7941
+     ],
+     "alt": "Dvij walking away down the path; Bhavi tells him to be careful."
+    },
+    {
+     "box": [
+      0.0,
+      0.7941,
+      0.3102,
+      0.9979
+     ],
+     "alt": "Bhavi stands with the dog watching his figure recede up the path between the flowering trees; at the right, Ponga comes shuffling out of the undergrowth with his staff."
+    },
+    {
+     "box": [
+      0.3102,
+      0.7941,
+      0.6619,
+      0.9979
+     ],
+     "alt": "Bhavi, hand at her chin, asks herself whether she is in love."
+    },
+    {
+     "box": [
+      0.6619,
+      0.7941,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Bhavi, eyes closed, answering herself - how can I know? And beside her, a whole column of thought bubbles crowding up the mountainside: Kurup the two-faced coward; uncle's condition; the yogini's disappearance; Dvij's strange smile; the Mahant's rage; what if his cell catches a network at the top, will he leave me for good? And at the bottom: focus, Bhavi, focus."
+    }
+   ],
+   "text": [
+    {
+     "t": "Yes, else my mind will remain restless.",
+     "bbox": [
+      0.4135,
+      0.0127,
+      0.5575,
+      0.0463
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Is meeting the maharishi that important?",
+     "bbox": [
+      0.0437,
+      0.0806,
+      0.1876,
+      0.1141
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I have heard you tell many that you seek the truth. I never thought you actually meant it.",
+     "bbox": [
+      0.4652,
+      0.1145,
+      0.6631,
+      0.1605
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I did not. But now, I think I do.",
+     "bbox": [
+      0.8224,
+      0.144,
+      0.9414,
+      0.1717
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "What’ll I do the 2 hours you are gone?",
+     "bbox": [
+      0.1366,
+      0.3834,
+      0.2806,
+      0.4169
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Two things. First - work on next clue.",
+     "bbox": [
+      0.3207,
+      0.3883,
+      0.4647,
+      0.4219
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "And second. Find a safe spot. Away from the ashram.",
+     "bbox": [
+      0.5147,
+      0.3414,
+      0.6831,
+      0.3806
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Be careful.",
+     "bbox": [
+      0.8317,
+      0.2759,
+      0.9168,
+      0.2958
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Dvij turned and walked back toward the ashram. The Maharishi would address his disciples at 4 pm. There were things he still needed to ask.",
+     "bbox": [
+      0.1,
+      0.7567,
+      0.9,
+      0.7847
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "Am I in love?",
+     "bbox": [
+      0.2293,
+      0.8923,
+      0.3206,
+      0.9135
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "How can I know?",
+     "bbox": [
+      0.5452,
+      0.8614,
+      0.6364,
+      0.8826
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "As she saw Dvij's receding figure, Bhavi was worried that the man she had barely begun to know was already becoming a different person. Then she shrugged. She looked around for Ponga.",
+     "bbox": [
+      0.1048,
+      0.9588,
+      0.9048,
+      0.9868
+     ],
+     "kind": "caption",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 12,
+   "id": "b5-p012",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p012-240.b1f20255f7.avif",
+     "900": "b5-p012-900.b7a7f41048.avif",
+     "1400": "b5-p012-1400.f01e596be8.avif",
+     "2115": "b5-p012-2115.58d8bbbbf3.avif"
+    },
+    "webp": {
+     "240": "b5-p012-240.3b1126da7d.webp",
+     "900": "b5-p012-900.b46998b893.webp",
+     "1400": "b5-p012-1400.ee7342b25f.webp",
+     "2115": "b5-p012-2115.3c3d95b8f6.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.7489,
+      0.3413
+     ],
+     "alt": "A path circling high above the ashram, the temple and huts small in the valley below. Bhavi points out three large boulders leaning together - they will rest under them tonight. Ponga sits on a rock behind her with the dog."
+    },
+    {
+     "box": [
+      0.7489,
+      0.0,
+      0.9986,
+      0.1896
+     ],
+     "alt": "Bhavi, close, telling herself to focus."
+    },
+    {
+     "box": [
+      0.0,
+      0.3413,
+      0.3707,
+      0.5926
+     ],
+     "alt": "Bhavi crouches with the parchment open beside Ponga in the shelter of the boulders, asking about the next clue - nine green eyes, and why are they splotchy?"
+    },
+    {
+     "box": [
+      0.3707,
+      0.3413,
+      0.7489,
+      0.5926
+     ],
+     "alt": "Ponga, close, mumbling incoherently."
+    },
+    {
+     "box": [
+      0.7489,
+      0.1896,
+      0.9986,
+      0.5926
+     ],
+     "alt": "Bhavi, half smiling - she will take that as a yes."
+    },
+    {
+     "box": [
+      0.0,
+      0.5807,
+      0.2534,
+      0.9979
+     ],
+     "alt": "Bhavi holds the parchment up: she says those stems in her uncle's room, the green is from pressed stem ends."
+    },
+    {
+     "box": [
+      0.2534,
+      0.5926,
+      0.4993,
+      0.9979
+     ],
+     "alt": "Bhavi, holding the parchment, with Ponga behind her: these cannot be eyes - maybe something they eat, small, round, bean-shaped."
+    },
+    {
+     "box": [
+      0.4993,
+      0.5902,
+      0.7527,
+      0.9979
+     ],
+     "alt": "Two framed images in her thought: a bundle of green stems, and one of the splotchy shapes enlarged on the parchment."
+    },
+    {
+     "box": [
+      0.73,
+      0.5926,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Bhavi, delighted, holds the parchment up with the row of green beans clear on it - beans, green beans, moong. Even the maharaj could tell that. Ponga grins beside her."
+    }
+   ],
+   "text": [
+    {
+     "t": "We will rest under the boulders tonight.",
+     "bbox": [
+      0.3317,
+      0.1366,
+      0.4802,
+      0.1711
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "They travelled on a path that circled above the ashram. Bhavi saw a safe spot between three large boulders that rested on each other. It gave them cover, a vantage point, and a clear view of the ashram below.",
+     "bbox": [
+      0.0113,
+      0.3093,
+      0.7341,
+      0.3373
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "Focus, Bhavi, focus!",
+     "bbox": [
+      0.8917,
+      0.0803,
+      0.9991,
+      0.1053
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "<incoherent mumbling>",
+     "bbox": [
+      0.0402,
+      0.4311,
+      0.16,
+      0.459
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "I will take that as a yes.",
+     "bbox": [
+      0.4842,
+      0.4579,
+      0.6041,
+      0.4858
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Now, the next clue. What are these? Nine green eyes? Why are they splotchy?",
+     "bbox": [
+      0.8094,
+      0.3095,
+      0.9989,
+      0.3537
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Wait — those stems in uncle's room. The green is from those pressed stem-ends.",
+     "bbox": [
+      0.1262,
+      0.593,
+      0.3157,
+      0.6371
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "These cannot be eyes. Maybe something we eat — small, round, bean-shaped—",
+     "bbox": [
+      0.3315,
+      0.6452,
+      0.5326,
+      0.692
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Beans! Green beans. That's moong! Even maharaj could tell that.",
+     "bbox": [
+      0.8216,
+      0.6152,
+      0.9939,
+      0.6554
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 13,
+   "id": "b5-p013",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p013-240.470f8bc1e0.avif",
+     "900": "b5-p013-900.da14ce1675.avif",
+     "1400": "b5-p013-1400.a5fb5b72b7.avif",
+     "2115": "b5-p013-2115.943069cd1e.avif"
+    },
+    "webp": {
+     "240": "b5-p013-240.8081c45259.webp",
+     "900": "b5-p013-900.43d2a86239.webp",
+     "1400": "b5-p013-1400.604dce3891.webp",
+     "2115": "b5-p013-2115.ed0cb475e6.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.5031,
+      0.211
+     ],
+     "alt": "Bhavi holds the parchment up, triumphant, beside Ponga among the boulders - I got it, Ponga."
+    },
+    {
+     "box": [
+      0.5031,
+      0.0,
+      0.9986,
+      0.2299
+     ],
+     "alt": "A large close-up of Ponga, white-bearded and wild-haired, gazing up at the sky."
+    },
+    {
+     "box": [
+      0.0,
+      0.211,
+      0.5031,
+      0.4978
+     ],
+     "alt": "Bhavi, hand open, asks him to please stop staring at the heavens and help her with why nine; the parchment lies across her knees."
+    },
+    {
+     "box": [
+      0.4993,
+      0.2299,
+      0.9986,
+      0.5404
+     ],
+     "alt": "Nine glowing spheres hang in the sky above the gorge. Bhavi, delighted, names them - the navgrahas, the nine planets - Ponga still gazing up beside her."
+    },
+    {
+     "box": [
+      0.0,
+      0.4978,
+      0.5031,
+      0.8036
+     ],
+     "alt": "Two remembered scenes: the nine grahas each on their mount in a ring, and a pujari laying out grains and offerings at a navgraha puja while a woman watches. Bhavi explains that she saw one once, that the pujari asked for green beans because it was a Wednesday, and that each navgraha has its own grain - so the clue points to Wednesday."
+    },
+    {
+     "box": [
+      0.0,
+      0.8036,
+      0.4993,
+      0.9979
+     ],
+     "alt": "Bhavi, hand at her chin, worried: but which Wednesday - what day is it today, and how long has it been since they started?"
+    },
+    {
+     "box": [
+      0.4993,
+      0.5404,
+      0.9986,
+      0.9979
+     ],
+     "alt": "A run of panels of Bhavi walking back down the mountain path towards the ashram at sunset, past Ponga sitting among the rocks - she cannot wait to see the look on Dvij's face."
+    }
+   ],
+   "text": [
+    {
+     "t": "I got it, Ponga!",
+     "bbox": [
+      0.1691,
+      0.0109,
+      0.2786,
+      0.0364
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "My dear Ponga — will you please stop staring at the heavens and help me with why nine?",
+     "bbox": [
+      0.1691,
+      0.2167,
+      0.3651,
+      0.2623
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "The heavens! Navgrahas! Nine planets! Why did I not think of it before?",
+     "bbox": [
+      0.455,
+      0.2481,
+      0.6453,
+      0.2924
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "I saw a navgraha puja once. Pujari asked for green beans as it was a Wednesday. Each navgraha has its own grain. This clue points to Wednesday.",
+     "bbox": [
+      0.0004,
+      0.6741,
+      0.2573,
+      0.7339
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "But which Wednesday? What day is it today? How long has it been since we started?",
+     "bbox": [
+      0.2122,
+      0.8157,
+      0.413,
+      0.8624
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "I can’t wait to see the look on Dvij’s face.",
+     "bbox": [
+      0.7071,
+      0.7065,
+      0.8456,
+      0.7388
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "She decided she had done enough and went back to meet Dvij in the garden — leaving Ponga continuing to ponder the heavens.",
+     "bbox": [
+      0.509,
+      0.9594,
+      0.9902,
+      0.9874
+     ],
+     "kind": "caption",
+     "panel": 6
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 14,
+   "id": "b5-p014",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p014-240.cc7a914147.avif",
+     "900": "b5-p014-900.aa8d5c0365.avif",
+     "1400": "b5-p014-1400.cafef266a9.avif",
+     "2115": "b5-p014-2115.24f6f996c7.avif"
+    },
+    "webp": {
+     "240": "b5-p014-240.a34386d695.webp",
+     "900": "b5-p014-900.de0d66b4dc.webp",
+     "1400": "b5-p014-1400.172a4e6a24.webp",
+     "2115": "b5-p014-2115.76d209a2bd.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.3102,
+      0.2963
+     ],
+     "alt": "Bhavi walking in the flowering garden at dusk, then stopping, then standing still - a circle, like the Laxman rekha."
+    },
+    {
+     "box": [
+      0.3102,
+      0.0,
+      0.6846,
+      0.2963
+     ],
+     "alt": "Three frames of Bhavi hurrying, then running, as dark clouds gather and the birds stop."
+    },
+    {
+     "box": [
+      0.6846,
+      0.0,
+      0.9986,
+      0.2963
+     ],
+     "alt": "Bhavi running full tilt through the black garden."
+    },
+    {
+     "box": [
+      0.0,
+      0.2963,
+      0.3026,
+      0.4314
+     ],
+     "alt": "She runs straight into Dvij and they both go down in a scatter of fruit from his bag."
+    },
+    {
+     "box": [
+      0.3026,
+      0.2963,
+      0.6355,
+      0.4314
+     ],
+     "alt": "Dvij on his back with his mouth open, stars round his head; Bhavi sitting up beside him."
+    },
+    {
+     "box": [
+      0.6355,
+      0.2963,
+      0.9986,
+      0.5381
+     ],
+     "alt": "Bhavi laughing with a hand at her face; Dvij rubbing his head - and he thought he was scared."
+    },
+    {
+     "box": [
+      0.0,
+      0.4314,
+      0.4993,
+      0.7467
+     ],
+     "alt": "Four frames of the two of them walking back together through the dark garden, musical notes drifting through the air, as Dvij names it - aranya gaana, someone singing sacred mantras in contemplation."
+    },
+    {
+     "box": [
+      0.0,
+      0.7467,
+      0.4993,
+      0.9979
+     ],
+     "alt": "A large close-up of Bhavi, finger raised, announcing that she has solved the next clue - and mind you, without any of his cheat sheets."
+    },
+    {
+     "box": [
+      0.4993,
+      0.4148,
+      0.7489,
+      0.7301
+     ],
+     "alt": "Bhavi and Dvij walking on among the flowers with the fruit bag."
+    },
+    {
+     "box": [
+      0.4993,
+      0.7301,
+      0.9986,
+      0.9979
+     ],
+     "alt": "By firelight among the boulders, Bhavi points along the parchment while she explains, the bag of fruit beside her."
+    },
+    {
+     "box": [
+      0.7489,
+      0.4219,
+      0.9986,
+      0.8699
+     ],
+     "alt": "Dvij crouched at the fire, listening, genuinely appreciative."
+    }
+   ],
+   "text": [
+    {
+     "t": "A circle. Like the Laxman rekha.",
+     "bbox": [
+      0.1283,
+      0.0744,
+      0.25,
+      0.1028
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Bhavi had been waiting too long. Dark clouds gathered in the west. Birds stopped chattering. She could hear a strange sound — sonorous, guttural — arriving from the depths of the woods. Before she knew it, she was running.",
+     "bbox": [
+      0.1,
+      0.2586,
+      0.9,
+      0.2866
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "Why were you running like that? I almost died of fright.",
+     "bbox": [
+      0.3923,
+      0.3029,
+      0.5635,
+      0.3428
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "And I thought I was scared.",
+     "bbox": [
+      0.7893,
+      0.314,
+      0.913,
+      0.3428
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Aranya gaana. Someone is singing sacred mantras in contemplation.",
+     "bbox": [
+      0.3001,
+      0.5427,
+      0.4823,
+      0.5851
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I’ve solved the next clue. And mind you - did not need any of your no cheat sheets.",
+     "bbox": [
+      0.0846,
+      0.9071,
+      0.2837,
+      0.9534
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "It sent shivers down my spine. Why can’t they sing to themselves?",
+     "bbox": [
+      0.5674,
+      0.5217,
+      0.7497,
+      0.5641
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "By the end of her explanation, Dvij appeared genuinely appreciative of what she had done.",
+     "bbox": [
+      0.1,
+      0.9652,
+      0.9,
+      0.9852
+     ],
+     "kind": "caption",
+     "panel": 9
+    },
+    {
+     "t": "That'll be uhya gaana — secret singing.",
+     "bbox": [
+      0.7601,
+      0.5295,
+      0.907,
+      0.5637
+     ],
+     "kind": "balloon",
+     "panel": 10
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 15,
+   "id": "b5-p015",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p015-240.c1f45a92db.avif",
+     "900": "b5-p015-900.d7eb868c48.avif",
+     "1400": "b5-p015-1400.defcbb4d7b.avif",
+     "2115": "b5-p015-2115.f0ef56e746.avif"
+    },
+    "webp": {
+     "240": "b5-p015-240.4de46dc655.webp",
+     "900": "b5-p015-900.1295ad7a9e.webp",
+     "1400": "b5-p015-1400.6a4d77300c.webp",
+     "2115": "b5-p015-2115.db07592f3a.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.1233
+     ],
+     "alt": "The two of them working by firelight over the parchment and Dvij's charts: a plate of leaves, a casket of emeralds and a compass rose, with notes that green is too broad, an emerald is not the only gem, and that direction is what they are really being told. Dvij works it through - moong maps to Budha, but also to earth, brass and emerald."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.9986,
+      0.1209
+     ],
+     "alt": "Bhavi, close: it's a leaf, and green is bound to be everywhere."
+    },
+    {
+     "box": [
+      0.0,
+      0.1233,
+      0.4993,
+      0.2418
+     ],
+     "alt": "Dvij, close, catching it - each graha presides over a direction, and Budha has north."
+    },
+    {
+     "box": [
+      0.4993,
+      0.1209,
+      0.9986,
+      0.2607
+     ],
+     "alt": "Bhavi says they need to move northwards, and suggests asking the ashram people for directions."
+    },
+    {
+     "box": [
+      0.0,
+      0.2418,
+      0.5031,
+      0.3816
+     ],
+     "alt": "Dvij says that is too risky, since the Mahant's men will force the information out of them - they need to find north themselves."
+    },
+    {
+     "box": [
+      0.5031,
+      0.2607,
+      0.9986,
+      0.3793
+     ],
+     "alt": "A diagram of a gnomon on the rock beside them: the shadow's arc through the day, the noon shortest shadow pointing true north. Dvij says they will build one."
+    },
+    {
+     "box": [
+      0.0,
+      0.3816,
+      0.2988,
+      0.5831
+     ],
+     "alt": "Three frames of them cutting a stake, uncoiling rope and marking out the ground."
+    },
+    {
+     "box": [
+      0.2988,
+      0.3793,
+      0.5749,
+      0.5855
+     ],
+     "alt": "Dvij driving the stake in and swinging the rope to scribe a circle."
+    },
+    {
+     "box": [
+      0.5749,
+      0.3793,
+      0.9986,
+      0.5855
+     ],
+     "alt": "The stake standing in its scribed circle at sunset; Dvij crouched over it, Bhavi watching with a hand at her chin."
+    },
+    {
+     "box": [
+      0.0,
+      0.5831,
+      0.4123,
+      0.851
+     ],
+     "alt": "The finished circle with the line drawn through it, marked north; the two of them crouched beside it."
+    },
+    {
+     "box": [
+      0.4047,
+      0.5855,
+      0.9986,
+      0.8462
+     ],
+     "alt": "A blazing sunset over the whole valley, Dvij marking the ground at the foot of the gnomon, Bhavi standing over him."
+    },
+    {
+     "box": [
+      0.0,
+      0.8462,
+      0.4879,
+      0.9979
+     ],
+     "alt": "A strip of frames: a figure approaching in the dusk, Ponga arriving, Ponga holding out a great lump of cow dung, and Bhavi asking what he is up to."
+    },
+    {
+     "box": [
+      0.4879,
+      0.8225,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Ponga crouched at the fire lighting the dung, Dvij laughing beside him, Bhavi at the right - it makes a good mosquito repellent, and no smell."
+    }
+   ],
+   "text": [
+    {
+     "t": "Let’s see. Moong maps to Budha — yes. But also to: the element earth, metal brass, gem emerald..",
+     "bbox": [
+      0.1121,
+      0.0629,
+      0.3112,
+      0.1093
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "It's a leaf. Green is bound to be everywhere.",
+     "bbox": [
+      0.7806,
+      0.0802,
+      0.929,
+      0.1147
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Wait. The directions. Each graha presides over a direction. Budha has north.",
+     "bbox": [
+      0.0217,
+      0.2076,
+      0.2053,
+      0.2504
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "So we need to move northwards. Let’s ask the ashram people for directions.",
+     "bbox": [
+      0.5664,
+      0.1974,
+      0.75,
+      0.2402
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Too risky. Mahant’s men will force the information out from them. We need to find north ourselves.",
+     "bbox": [
+      0.042,
+      0.3287,
+      0.25,
+      0.3772
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "And for that, we will build a gnomon.",
+     "bbox": [
+      0.6819,
+      0.3402,
+      0.8407,
+      0.3772
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Why, that’s cow dung!",
+     "bbox": [
+      0.2585,
+      0.8231,
+      0.3648,
+      0.8478
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "A gnomon. A stick, a rope, and a sharp end. The shadow at dusk marks east. Tomorrow at dawn, the shadow crosses the circle again — that marks east too. Two points. Then two arcs. They intersect. Draw the line through the intersection — that's north.",
+     "bbox": [
+      0.1,
+      0.7849,
+      0.9,
+      0.8129
+     ],
+     "kind": "caption",
+     "panel": 10
+    },
+    {
+     "t": "Ash from cow dung is a good mosquito repellent. No smell.",
+     "bbox": [
+      0.8332,
+      0.8165,
+      0.9997,
+      0.8553
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "What’s he up to?",
+     "bbox": [
+      0.4106,
+      0.925,
+      0.5169,
+      0.9497
+     ],
+     "kind": "balloon",
+     "panel": 11
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 16,
+   "id": "b5-p016",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p016-240.fa7dfb5b06.avif",
+     "900": "b5-p016-900.89483102b5.avif",
+     "1400": "b5-p016-1400.8cf2f52d9f.avif",
+     "2115": "b5-p016-2115.dcb9d65501.avif"
+    },
+    "webp": {
+     "240": "b5-p016-240.661f1d0a3d.webp",
+     "900": "b5-p016-900.40007176b4.webp",
+     "1400": "b5-p016-1400.5fb6de64d2.webp",
+     "2115": "b5-p016-2115.821cc2eb3f.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.1967,
+      0.1778
+     ],
+     "alt": "Dvij, close, smiling: for all his supposed insanity, the man sometimes seems saner than the rest of them."
+    },
+    {
+     "box": [
+      0.0,
+      0.1778,
+      0.5031,
+      0.2584
+     ],
+     "alt": "Three narrow frames of the night sky over the boulders, clouds building."
+    },
+    {
+     "box": [
+      0.1967,
+      0.0,
+      0.556,
+      0.1849
+     ],
+     "alt": "Bhavi, close, says she is tired - good night."
+    },
+    {
+     "box": [
+      0.5031,
+      0.0,
+      0.9986,
+      0.2418
+     ],
+     "alt": "The shelter under the boulders at night: Ponga tending the small fire, Bhavi asleep, Dvij lying awake. Above him on the rock, drawn in firelight: an om, a flame, a seated rishi, and a figure with the seven chakras up the spine. Dvij thinks of the power of chanting, the cleansing by Agni, the doctrine of the twice-dead, and wonders whether his kundalini has risen to vishuddha."
+    },
+    {
+     "box": [
+      0.0,
+      0.2584,
+      0.4993,
+      0.3793
+     ],
+     "alt": "Dvij asleep with a hand over his mouth, yawning."
+    },
+    {
+     "box": [
+      0.4993,
+      0.2418,
+      0.9986,
+      0.3793
+     ],
+     "alt": "Bhavi, alarmed, looking out at the ground: the gnomon - it's gone."
+    },
+    {
+     "box": [
+      0.0,
+      0.3793,
+      0.4955,
+      0.5215
+     ],
+     "alt": "The two of them out on the churned mud in the rain, the stake and rope washed away."
+    },
+    {
+     "box": [
+      0.4539,
+      0.3793,
+      0.9986,
+      0.5736
+     ],
+     "alt": "Dvij yawns; Bhavi glares at him."
+    },
+    {
+     "box": [
+      0.0,
+      0.5096,
+      0.4539,
+      0.6542
+     ],
+     "alt": "Dvij points out over the valley at people in the fields - think of the happiness of the people in the valley; Bhavi stands with her arms folded. Beside them, the flooded ground and the ruined circle."
+    },
+    {
+     "box": [
+      0.0,
+      0.6542,
+      0.4463,
+      0.7633
+     ],
+     "alt": "Dvij says it was too cloudy and would not have worked anyway; Bhavi curses the rains."
+    },
+    {
+     "box": [
+      0.4463,
+      0.5736,
+      0.9986,
+      0.8391
+     ],
+     "alt": "Dvij, hand open, says he thought they were desperate for rain; Bhavi puts a hand to her head - a day, couldn't the rains have waited just one more day?"
+    },
+    {
+     "box": [
+      0.0,
+      0.7633,
+      0.2156,
+      0.9979
+     ],
+     "alt": "Dvij, hand on his chest, tells her to chill, they'll work something out - be like Ponga, still."
+    },
+    {
+     "box": [
+      0.2156,
+      0.7633,
+      0.4652,
+      0.9979
+     ],
+     "alt": "Ponga sitting cross-legged in the mouth of the shelter, telling his beads by the fire."
+    },
+    {
+     "box": [
+      0.4539,
+      0.8391,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij and Bhavi sitting with Ponga at the fire. Above them, a diagram of the four states - waking, dreaming, deep sleep, and turiya at the centre - and a glowing rudraksha mala. Dvij asks where Ponga got the mala; then Ponga, Bhavi and Dvij in three close frames, and Dvij raises a finger: wait, I have an idea."
+    }
+   ],
+   "text": [
+    {
+     "t": "For all his supposed insanity, the man sometimes seems saner than us.",
+     "bbox": [
+      0.0003,
+      0.114,
+      0.1931,
+      0.1589
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Well, I’m tired. Good night.",
+     "bbox": [
+      0.2618,
+      0.1143,
+      0.3862,
+      0.1433
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Dvij thought of the power of chanting mantras. The acts of cleansing by Agni. The doctrine of twice-dead. Did his kundalini rise to vishuddha state?",
+     "bbox": [
+      0.5,
+      0.2071,
+      1.0,
+      0.2351
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "The gnomon! It’s gone.",
+     "bbox": [
+      0.644,
+      0.324,
+      0.75,
+      0.3487
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Washed out by the rains.",
+     "bbox": [
+      0.1649,
+      0.4056,
+      0.2893,
+      0.4346
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Think of the happiness of the people in the valley.",
+     "bbox": [
+      0.5299,
+      0.3817,
+      0.6913,
+      0.4193
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Too cloudy. It wouldn’t have worked anyways.",
+     "bbox": [
+      0.1668,
+      0.5089,
+      0.3237,
+      0.5454
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Ooh! Curse the rains!!",
+     "bbox": [
+      0.3855,
+      0.5139,
+      0.4962,
+      0.5397
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "I thought we were desperate for rains.",
+     "bbox": [
+      0.125,
+      0.6262,
+      0.2819,
+      0.6627
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "A day! Couldn’t the rains have waited just one more day?",
+     "bbox": [
+      0.3754,
+      0.6144,
+      0.5408,
+      0.6529
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Where did he get the rudraksha mala from?",
+     "bbox": [
+      0.659,
+      0.7039,
+      0.7948,
+      0.7356
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Chill, we’ll work something out. Be like Ponga. Still.",
+     "bbox": [
+      0.0699,
+      0.7717,
+      0.2268,
+      0.8082
+     ],
+     "kind": "balloon",
+     "panel": 11
+    },
+    {
+     "t": "Wait! I have an idea.",
+     "bbox": [
+      0.7741,
+      0.8294,
+      0.8848,
+      0.8552
+     ],
+     "kind": "balloon",
+     "panel": 13
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 17,
+   "id": "b5-p017",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p017-240.5ebd92119c.avif",
+     "900": "b5-p017-900.70ce4a9bdf.avif",
+     "1400": "b5-p017-1400.e872b35f05.avif",
+     "2115": "b5-p017-2115.bb34e491c1.avif"
+    },
+    "webp": {
+     "240": "b5-p017-240.7b36f00668.webp",
+     "900": "b5-p017-900.b34c816089.webp",
+     "1400": "b5-p017-1400.ffb54b939f.webp",
+     "2115": "b5-p017-2115.9f43ef6c70.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.1043
+     ],
+     "alt": "Ponga, eyes closed; and Dvij gesturing at him with both hands."
+    },
+    {
+     "box": [
+      0.0,
+      0.1043,
+      0.5031,
+      0.3295
+     ],
+     "alt": "Dvij gesticulating at Ponga with a raised finger while Ponga gestures back; Bhavi watching them, astonished."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.9986,
+      0.2868
+     ],
+     "alt": "Dvij eases the rudraksha mala out of Ponga's tightly clasped hand, the old man's fingers still closed round it."
+    },
+    {
+     "box": [
+      0.4879,
+      0.2868,
+      0.9986,
+      0.3959
+     ],
+     "alt": "Four small frames: Dvij separating the beads, cutting a length of stalk, threading the beads along it, and binding the ends."
+    },
+    {
+     "box": [
+      0.0,
+      0.3295,
+      0.4955,
+      0.5191
+     ],
+     "alt": "Dvij holds the strung bead-rod up; then it hangs from a cord; then Dvij watches it turn."
+    },
+    {
+     "box": [
+      0.4955,
+      0.3793,
+      0.9986,
+      0.5333
+     ],
+     "alt": "Dvij holding the rod in the cave mouth, Ponga sitting behind him."
+    },
+    {
+     "box": [
+      0.0,
+      0.5191,
+      0.3783,
+      0.7206
+     ],
+     "alt": "Bhavi and Dvij watching it, Bhavi wide-eyed."
+    },
+    {
+     "box": [
+      0.3783,
+      0.5191,
+      0.9986,
+      0.7206
+     ],
+     "alt": "The rod hanging on its cord in the cave mouth, one rudraksha swinging beneath it with magnetic field lines drawn round it, the valley beyond. Dvij explains that rudraksha has magnetic properties and a stalk full of them will align along the earth's magnetic field."
+    },
+    {
+     "box": [
+      0.0,
+      0.7206,
+      0.9986,
+      0.9979
+     ],
+     "alt": "A wide view down into the valley: a straight path running between two lines of pale flowering trees, deep forest either side, a temple spire in the distance. Bhavi points along it - so the path they must take is that one, the one flanked by bakul trees."
+    }
+   ],
+   "text": [
+    {
+     "t": "Bhavi watched the two men gesticulate wildly and could only imagine the words being exchanged. The charade ended when Dvij extracted the rosary from Ponga's tightly clasped hand.",
+     "bbox": [
+      0.1,
+      0.2475,
+      0.9,
+      0.2755
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "Rudraksha has magnetic properties. A stalk full of them must align along the earth's magnetic field.",
+     "bbox": [
+      0.1896,
+      0.2832,
+      0.403,
+      0.3329
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Which means the path we have to take is that one — the one flanked by bakul trees.",
+     "bbox": [
+      0.3695,
+      0.7646,
+      0.5829,
+      0.8143
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 18,
+   "id": "b5-p018",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p018-240.47b24d767e.avif",
+     "900": "b5-p018-900.832636a025.avif",
+     "1400": "b5-p018-1400.5b9c6889bd.avif",
+     "2115": "b5-p018-2115.09819d9ce7.avif"
+    },
+    "webp": {
+     "240": "b5-p018-240.3ed33a2ef6.webp",
+     "900": "b5-p018-900.b054da71bb.webp",
+     "1400": "b5-p018-1400.900692d944.webp",
+     "2115": "b5-p018-2115.58433c1a87.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4728,
+      0.2536
+     ],
+     "alt": "Dvij and Bhavi lie on the ridge above the ashram with Ponga behind them, looking down into the compound as sharp cries rise from below."
+    },
+    {
+     "box": [
+      0.4123,
+      0.0,
+      0.9986,
+      0.128
+     ],
+     "alt": "Armed men with sticks charge in and haul the bamboo huts down, the swastika over a doorway splintering."
+    },
+    {
+     "box": [
+      0.4728,
+      0.1256,
+      0.9986,
+      0.256
+     ],
+     "alt": "Frightened faces at a window; the ashram dwellers wrestled down and herded together in the open."
+    },
+    {
+     "box": [
+      0.0,
+      0.2536,
+      0.4993,
+      0.5073
+     ],
+     "alt": "The compound from above, the huts collapsed and the people penned in groups. The Mahant walks in flanked by the moustached man."
+    },
+    {
+     "box": [
+      0.4993,
+      0.256,
+      0.9986,
+      0.5073
+     ],
+     "alt": "The Mahant strides through the seated captives towards the great banyan while a sadhu falls at his feet beseeching him; the moustached man follows at his heel."
+    },
+    {
+     "box": [
+      0.0,
+      0.5073,
+      0.3745,
+      0.723
+     ],
+     "alt": "From the ridge, the banyan and the wrecked ashram below. Dvij says it is good they did not tell the ashram people where they were going."
+    },
+    {
+     "box": [
+      0.3745,
+      0.5049,
+      0.7527,
+      0.7609
+     ],
+     "alt": "The Mahant kneels over the copied parchment spread on the ground, tracing its rows with both hands, three lines of ash on his brow."
+    },
+    {
+     "box": [
+      0.7035,
+      0.5073,
+      0.9986,
+      0.7609
+     ],
+     "alt": "Bhavi, close, watching from the rocks: he is working out the direction from the clues himself."
+    },
+    {
+     "box": [
+      0.0,
+      0.723,
+      0.5031,
+      0.9979
+     ],
+     "alt": "The Mahant's party filing out of the ashram gates in a column, heading away south. Bhavi says it looks as though he has worked it out - but why are they headed south?"
+    },
+    {
+     "box": [
+      0.4123,
+      0.7609,
+      0.6733,
+      0.9979
+     ],
+     "alt": "Dvij, close: green maps to north, he is sure of it."
+    },
+    {
+     "box": [
+      0.6733,
+      0.7609,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij looks again at his own parchment, where the row of beans is drawn in black rather than green - that's odd, his parchment has black beans, not green."
+    }
+   ],
+   "text": [
+    {
+     "t": "Sharp cries rose from over the ridge. Armed men with lathis had charged inside the ashram. The huts started collapsing. The ashram dwellers were rounded up. The first act of vandalism was complete.",
+     "bbox": [
+      0.1,
+      0.2129,
+      0.9,
+      0.2409
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "Mahant entered flanked by Baldev. The sadhu had fallen at his feet in beseeching. Mahant kicked him and stormed off to beneath the large banyan tree. Baldev tagged behind like a monkey's tail.",
+     "bbox": [
+      0.1,
+      0.4638,
+      0.9,
+      0.4918
+     ],
+     "kind": "caption",
+     "panel": 4
+    },
+    {
+     "t": "Good we did not tell the ashram people about our whereabouts.",
+     "bbox": [
+      0.0806,
+      0.6413,
+      0.2651,
+      0.6842
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "He is working out the direction from the clues himself.",
+     "bbox": [
+      0.7454,
+      0.6689,
+      0.9103,
+      0.7073
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Looks like he’s worked it out. But why are they headed south?",
+     "bbox": [
+      0.1374,
+      0.8294,
+      0.3121,
+      0.8701
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Green maps to north. I’m sure of it.",
+     "bbox": [
+      0.4477,
+      0.928,
+      0.5958,
+      0.9624
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "That’s odd. My parchment has black beans, not green.",
+     "bbox": [
+      0.8185,
+      0.8887,
+      0.9801,
+      0.9264
+     ],
+     "kind": "balloon",
+     "panel": 10
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 19,
+   "id": "b5-p019",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p019-240.2d44a6a3aa.avif",
+     "900": "b5-p019-900.6137338074.avif",
+     "1400": "b5-p019-1400.82959ee853.avif",
+     "2115": "b5-p019-2115.f75f8f3ebe.avif"
+    },
+    "webp": {
+     "240": "b5-p019-240.6586a329e2.webp",
+     "900": "b5-p019-900.dd0bd6ef34.webp",
+     "1400": "b5-p019-1400.0dd560eee9.webp",
+     "2115": "b5-p019-2115.d54d0600aa.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.6544,
+      0.3081
+     ],
+     "alt": "Dvij and Bhavi crouched over the parchment among the rocks, the green beans clear on it. He asks why she is smiling; she says the original parchment has green beans. Below, a three-part diagram: Bhavi inking the copies at a table; a chart comparing the original, Dvij's copy and Kurup's copy with their bean colours and the directions north, west and south; and the Mahant's men marching off under a red arrow."
+    },
+    {
+     "box": [
+      0.6544,
+      0.0,
+      0.9986,
+      0.2015
+     ],
+     "alt": "Bhavi, close, explaining that she changed the colour on each copy to sniff out their treachery."
+    },
+    {
+     "box": [
+      0.6544,
+      0.2015,
+      0.9986,
+      0.3058
+     ],
+     "alt": "Dvij, close, working it through: so his is black, and Kurup's must be red - which maps to south."
+    },
+    {
+     "box": [
+      0.0,
+      0.3081,
+      0.4199,
+      0.4551
+     ],
+     "alt": "The two of them looking down from the rocks at the column leaving the ashram. That is why they are heading south."
+    },
+    {
+     "box": [
+      0.4199,
+      0.3058,
+      0.9986,
+      0.4788
+     ],
+     "alt": "A long line of men winding away down the valley path."
+    },
+    {
+     "box": [
+      0.0,
+      0.4551,
+      0.5031,
+      0.6993
+     ],
+     "alt": "Dvij, delighted, snaps his fingers at her - this is brilliant, now they can never catch us."
+    },
+    {
+     "box": [
+      0.4993,
+      0.4788,
+      0.9986,
+      0.6993
+     ],
+     "alt": "A large close-up of Bhavi, pleased with herself: we have the Mahant out of our way."
+    },
+    {
+     "box": [
+      0.0,
+      0.6874,
+      0.4539,
+      0.8936
+     ],
+     "alt": "Dvij, close: then what are they waiting for - let's go."
+    },
+    {
+     "box": [
+      0.0,
+      0.8936,
+      0.4388,
+      0.9979
+     ],
+     "alt": "Bhavi smiling to herself; and below, three frames of Ponga being roused from his meditation and the two of them shouldering their packs."
+    },
+    {
+     "box": [
+      0.4388,
+      0.6993,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The party sets off up the path that runs north from the ashram, bakul trees in white flower on either side, a temple spire below and the mountain waiting above: Dvij leading, Bhavi behind, Ponga with his bundle and staff, the dog at the rear."
+    }
+   ],
+   "text": [
+    {
+     "t": "Why are you smiling?",
+     "bbox": [
+      0.1875,
+      0.0589,
+      0.294,
+      0.0837
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Original parchment has green beans.",
+     "bbox": [
+      0.5081,
+      0.0605,
+      0.6562,
+      0.095
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I changed it to different colors when I created copies. To sniff our treachery.",
+     "bbox": [
+      0.622,
+      0.1006,
+      0.8227,
+      0.1474
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "So mine is black, and Kurup’s must be red. Which maps to south.",
+     "bbox": [
+      0.683,
+      0.2527,
+      0.8602,
+      0.294
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "That’s why they are heading south.",
+     "bbox": [
+      0.1044,
+      0.3432,
+      0.2498,
+      0.3771
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "This is brillant. Now they can never catch us.",
+     "bbox": [
+      0.6564,
+      0.3711,
+      0.8018,
+      0.4049
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "We have Mahant out of our way.",
+     "bbox": [
+      0.058,
+      0.6212,
+      0.1913,
+      0.6522
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Then what are we waiting for — let's go!",
+     "bbox": [
+      0.6179,
+      0.6416,
+      0.7513,
+      0.6726
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Rousing Ponga from his meditative state, they quickly embarked on the path that radiated northwards from the Vedic ashram. The bakul trees stood on either side. The mountain waited above.",
+     "bbox": [
+      0.1,
+      0.9593,
+      0.9,
+      0.9873
+     ],
+     "kind": "caption",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 20,
+   "id": "b5-p020",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p020-240.14e857a303.avif",
+     "900": "b5-p020-900.d034cf6022.avif",
+     "1400": "b5-p020-1400.724974d9f4.avif",
+     "2115": "b5-p020-2115.fbe96ea425.avif"
+    },
+    "webp": {
+     "240": "b5-p020-240.0e489109ff.webp",
+     "900": "b5-p020-900.bcac4aaf25.webp",
+     "1400": "b5-p020-1400.f1ce0cca00.webp",
+     "2115": "b5-p020-2115.750961af19.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.9986,
+      0.3627
+     ],
+     "alt": "Five tall frames of the climb: the path rising steeply beside a waterfall, the vegetation thinning, the air getting rarer, Dvij and Bhavi ahead and Ponga labouring behind with the dog. Dvij says the climb is like trying to find the end of Shiva's column of fire - unending; Bhavi's worry is that they are looking for a plant and have left most of them behind."
+    },
+    {
+     "box": [
+      0.0,
+      0.3484,
+      0.5031,
+      0.4551
+     ],
+     "alt": "Ponga struggling under his bundle; Bhavi looking back at him - how does the old man keep going?"
+    },
+    {
+     "box": [
+      0.0,
+      0.4551,
+      0.4161,
+      0.5428
+     ],
+     "alt": "Dvij, half turning: his sense of purpose, he supposes. Bhavi, exhausted, says she needs a rest stop."
+    },
+    {
+     "box": [
+      0.4161,
+      0.3627,
+      0.9986,
+      0.5665
+     ],
+     "alt": "Dvij points up the slope. Far above, on a rocky spur, stands a small white shrine with a red base. Bhavi looks up; Ponga and the dog come up behind."
+    },
+    {
+     "box": [
+      0.0,
+      0.5428,
+      0.4993,
+      0.7775
+     ],
+     "alt": "The shrine close to: white with a vermillion base, a brass Hanuman face set in its niche, a trident with a damroo at its nape planted beside it, and a great spreading tree over it. Beneath the tree an orange-robed monk sits in meditative stillness, a langur on the rock above. Dvij, Bhavi, Ponga and the dog come up the last steps."
+    },
+    {
+     "box": [
+      0.4993,
+      0.5665,
+      0.9986,
+      0.7348
+     ],
+     "alt": "The monk opens his eyes and raises a hand - come forth. Dvij is already climbing towards him; Bhavi and Ponga behind."
+    },
+    {
+     "box": [
+      0.0,
+      0.7775,
+      0.4993,
+      0.8178
+     ],
+     "alt": "A close-up of the monk's face, shaven-headed and calm."
+    },
+    {
+     "box": [
+      0.0,
+      0.8178,
+      0.5031,
+      0.9979
+     ],
+     "alt": "The monk again, faintly smiling - do not hide from yourself. Below, Dvij and Bhavi exchange a startled look."
+    },
+    {
+     "box": [
+      0.4993,
+      0.7348,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij stands before the seated monk under the tree, Bhavi coming up the steps behind him, the shrine and the langur at the right."
+    }
+   ],
+   "text": [
+    {
+     "t": "This climb is like trying to find the end of Shiva’s column of fire... unending.",
+     "bbox": [
+      0.4597,
+      0.1119,
+      0.6571,
+      0.1579
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "My worry is that we are looking for a plant... and we have left most of them behind.",
+     "bbox": [
+      0.6922,
+      0.1579,
+      0.8896,
+      0.2038
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "The path ascended so rapidly it appeared to be headed toward the heavens. Most vegetation had been left behind. The air was getting rarer.",
+     "bbox": [
+      0.1,
+      0.3224,
+      0.9,
+      0.3504
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "How does the old man keep going?",
+     "bbox": [
+      0.2057,
+      0.3505,
+      0.3378,
+      0.3813
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "His sense of purpose, I suppose.",
+     "bbox": [
+      0.1605,
+      0.5208,
+      0.3108,
+      0.5558
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Look — up there. A small temple. We can rest there.",
+     "bbox": [
+      0.5748,
+      0.4741,
+      0.7284,
+      0.5099
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "I need a rest stop.",
+     "bbox": [
+      0.376,
+      0.5231,
+      0.4869,
+      0.5489
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Come forth.",
+     "bbox": [
+      0.6702,
+      0.5812,
+      0.7623,
+      0.6027
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Do not hide from yourself.",
+     "bbox": [
+      0.2941,
+      0.7924,
+      0.4098,
+      0.8193
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Dvij looked quizzically at an equally surprised Bhavi. He walked around and humbly addressed the perfectly seated monk. Bhavi knelt beside him. The monk's words fell like rain on dry ground.",
+     "bbox": [
+      0.1,
+      0.9637,
+      0.9,
+      0.9917
+     ],
+     "kind": "caption",
+     "panel": 7
+    },
+    {
+     "t": "A small Hanuman temple, white with a vermillion base. A trident with a damroo at its nape. And beside it, under the spreading tree: a monk in meditative stillness, his face carrying an aura of enlightenment.",
+     "bbox": [
+      0.1,
+      0.7459,
+      0.9,
+      0.774
+     ],
+     "kind": "caption",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 21,
+   "id": "b5-p021",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p021-240.d5563db360.avif",
+     "900": "b5-p021-900.eea86fac19.avif",
+     "1400": "b5-p021-1400.cfee382f76.avif",
+     "2115": "b5-p021-2115.6a459f34e3.avif"
+    },
+    "webp": {
+     "240": "b5-p021-240.18b38d9406.webp",
+     "900": "b5-p021-900.095ae1ac57.webp",
+     "1400": "b5-p021-1400.67d968f944.webp",
+     "2115": "b5-p021-2115.54e4108da2.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.3329,
+      0.2987
+     ],
+     "alt": "An inset of Dvij reaching towards a blazing light with a small glowing figure at his own chest. Below, the monk tells him he seeks the Absolute Truth and does not know that he already possesses it; Dvij and Bhavi sit listening."
+    },
+    {
+     "box": [
+      0.3329,
+      0.0,
+      0.6657,
+      0.2987
+     ],
+     "alt": "An inset of Dvij, bandaged, surrounded by cloudy faces he cannot place. The monk says he has forgotten - just as an accident makes a man forget his own past."
+    },
+    {
+     "box": [
+      0.6657,
+      0.0,
+      0.9986,
+      0.3793
+     ],
+     "alt": "An inset of Dvij with his palms joined before a glowing four-armed deity. The monk says it is like a devotee who seeks God and does not know God is already within him."
+    },
+    {
+     "box": [
+      0.0,
+      0.2987,
+      0.556,
+      0.5855
+     ],
+     "alt": "Two insets: a luminous figure floating in a starfield beside a drawn brain; and monks walking towards a great light while Dvij and Bhavi watch. Below, the monk explains that he is a reflection of a soul wandering in vacuum, having lost its association with the mind that makes it realise its purpose."
+    },
+    {
+     "box": [
+      0.556,
+      0.3793,
+      0.9986,
+      0.4741
+     ],
+     "alt": "Dvij asks how one can renounce the world - what else is there but feelings? The monk answers: the Truth."
+    },
+    {
+     "box": [
+      0.556,
+      0.4741,
+      0.9986,
+      0.6044
+     ],
+     "alt": "Dvij asks whether the monk can teach him the Truth; the monk says he can show him the way."
+    },
+    {
+     "box": [
+      0.0,
+      0.5855,
+      0.4993,
+      0.7467
+     ],
+     "alt": "Dvij asks how he can reach it; the monk says he has to look within."
+    },
+    {
+     "box": [
+      0.4993,
+      0.5831,
+      0.9986,
+      0.7467
+     ],
+     "alt": "Later under the tree: Bhavi asleep on the rock, Dvij sitting with his phone out, the shrine beyond. The climb had drained her and she slept through most of the discourse."
+    },
+    {
+     "box": [
+      0.0,
+      0.7467,
+      0.174,
+      0.9979
+     ],
+     "alt": "Bhavi, waking, asks where the monk is; Dvij, phone in hand, says he left - and no signal either."
+    },
+    {
+     "box": [
+      0.174,
+      0.7467,
+      0.5749,
+      0.9979
+     ],
+     "alt": "Dvij, close: he asked me to look within."
+    },
+    {
+     "box": [
+      0.5749,
+      0.7467,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Bhavi, close: not before you look at the next clue. And the two of them bend over the parchment together, Bhavi pointing at the bull with two legs - oh, she knows this one, that is Dwaparayuga."
+    }
+   ],
+   "text": [
+    {
+     "t": "You seek the Absolute Truth. And yet you do not know that you already possess it.",
+     "bbox": [
+      0.0904,
+      0.124,
+      0.2895,
+      0.1704
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "You have forgotten — just like an accident makes the a man forget his own past.",
+     "bbox": [
+      0.3916,
+      0.1467,
+      0.5907,
+      0.1931
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Just like a devotee who seeks God but does not know God is already within him.",
+     "bbox": [
+      0.7336,
+      0.1151,
+      0.9328,
+      0.1614
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "The Truth.",
+     "bbox": [
+      0.779,
+      0.3527,
+      0.8598,
+      0.3715
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "How can one renounce the world? What else is there but feelings?",
+     "bbox": [
+      0.4511,
+      0.2867,
+      0.6283,
+      0.328
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "I am a reflection of your soul that has been wandering in vacuum...",
+     "bbox": [
+      0.0015,
+      0.484,
+      0.1796,
+      0.5254
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "...having lost its association with the mind that makes it realise its purpose.",
+     "bbox": [
+      0.1979,
+      0.484,
+      0.397,
+      0.5304
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Can you teach me the Truth?",
+     "bbox": [
+      0.5398,
+      0.4545,
+      0.6547,
+      0.4813
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "I can show you the way.",
+     "bbox": [
+      0.779,
+      0.461,
+      0.8939,
+      0.4877
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "How can I reach it?",
+     "bbox": [
+      0.5285,
+      0.5507,
+      0.6435,
+      0.5775
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "You have to look within.",
+     "bbox": [
+      0.7741,
+      0.5507,
+      0.8891,
+      0.5775
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Where’s the monk?",
+     "bbox": [
+      0.4822,
+      0.6683,
+      0.5971,
+      0.6951
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "He left. No signal either.",
+     "bbox": [
+      0.7449,
+      0.6655,
+      0.8598,
+      0.6923
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "The climb had drained Bhavi. The cool breeze and the monk's discourse had calmed her into sleep. She had missed most of what was discussed.",
+     "bbox": [
+      0.1,
+      0.712,
+      0.9,
+      0.74
+     ],
+     "kind": "caption",
+     "panel": 7
+    },
+    {
+     "t": "Not before you look at the next clue.",
+     "bbox": [
+      0.2723,
+      0.9181,
+      0.4127,
+      0.9508
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "He asked me to look within.",
+     "bbox": [
+      0.1183,
+      0.9316,
+      0.2333,
+      0.9584
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "Oh, I know this one. A bull with two legs is Dwaparyuga.",
+     "bbox": [
+      0.6498,
+      0.8321,
+      0.8186,
+      0.8714
+     ],
+     "kind": "balloon",
+     "panel": 10
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 22,
+   "id": "b5-p022",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p022-240.fa97f27aae.avif",
+     "900": "b5-p022-900.bb44bdb378.avif",
+     "1400": "b5-p022-1400.e9b3bea3fc.avif",
+     "2115": "b5-p022-2115.46d9e23bf7.avif"
+    },
+    "webp": {
+     "240": "b5-p022-240.ffe2e6012e.webp",
+     "900": "b5-p022-900.bda05eb9dd.webp",
+     "1400": "b5-p022-1400.4ad0996b11.webp",
+     "2115": "b5-p022-2115.cbfa7418e5.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.3026,
+      0.1825
+     ],
+     "alt": "Dvij and Bhavi crouched over the parchment under the tree, her finger on the bull."
+    },
+    {
+     "box": [
+      0.3026,
+      0.0,
+      0.6468,
+      0.1825
+     ],
+     "alt": "A plate of the four yuga bulls - Satyuga with four legs, Treta with three, Dwapara with two, Kali with one - as Bhavi explains that Satyuga is the complete bull."
+    },
+    {
+     "box": [
+      0.6468,
+      0.0,
+      0.9986,
+      0.1849
+     ],
+     "alt": "Dvij, close, asks how she knows this; Bhavi answers that he is not the only one who reads her uncle's books."
+    },
+    {
+     "box": [
+      0.0,
+      0.1825,
+      0.2875,
+      0.3627
+     ],
+     "alt": "A diagram of the Vastu Purusha: the sprawled cosmic man laid over a square, the directions round the edge and his organs labelled."
+    },
+    {
+     "box": [
+      0.2875,
+      0.1825,
+      0.8208,
+      0.3627
+     ],
+     "alt": "Bhavi and Dvij over the parchment - this man forms a perfect square, head at north-east, feet at south-west - and Dvij, fingers at his brow, names it: vaastu purusha, the cosmic man."
+    },
+    {
+     "box": [
+      0.8208,
+      0.1849,
+      0.9986,
+      0.3627
+     ],
+     "alt": "Bhavi asks what about the fish - Mina, Pisces?"
+    },
+    {
+     "box": [
+      0.0,
+      0.3627,
+      0.4993,
+      0.5262
+     ],
+     "alt": "Dvij leans over the parchment while Bhavi watches: the rashis preside over specific organs, Mesha the head."
+    },
+    {
+     "box": [
+      0.2875,
+      0.3627,
+      0.7338,
+      0.5144
+     ],
+     "alt": "A table of the zodiac against the body - Mesha head, Vrishabha neck, Mithuna arms, Karka chest, Simha heart, Kanya stomach, Tula navel, Vrischika genitals, Dhanu thighs, Makara knees, Kumbha ankles, Mina feet - and Dvij, finger raised, carrying it through to Mina the feet."
+    },
+    {
+     "box": [
+      0.7338,
+      0.3627,
+      0.9986,
+      0.5144
+     ],
+     "alt": "Bhavi, eyes wide: the feet of the vaastu purusha."
+    },
+    {
+     "box": [
+      0.0,
+      0.5262,
+      0.4993,
+      0.768
+     ],
+     "alt": "The two of them with the charts spread out: a Vaastu Purusha Mandala with the south-west zone marked armoury or library, and a disc of the Vedic day divided into four prahars. Bhavi holds up the mandala - vaastu places a library where the feet are, and says to be there from three to six in the pursuit of knowledge."
+    },
+    {
+     "box": [
+      0.4993,
+      0.512,
+      0.9986,
+      0.7277
+     ],
+     "alt": "The same charts with the four yuga bulls and the zodiac table. Dvij adds that the Dwaparyuga bull also maps to the afternoon kala at the Vedic ashram - the third prahara, three to six."
+    },
+    {
+     "box": [
+      0.4426,
+      0.7277,
+      0.8095,
+      0.8604
+     ],
+     "alt": "Bhavi, chin on her hand: but what?"
+    },
+    {
+     "box": [
+      0.8095,
+      0.7277,
+      0.9986,
+      0.8557
+     ],
+     "alt": "Dvij, hand at his chin, asks what could happen under the shade of this tree."
+    },
+    {
+     "box": [
+      0.0,
+      0.768,
+      0.4955,
+      0.9979
+     ],
+     "alt": "A chain of linked cards running down the page: two-legged bull, Dwaparyuga, third kala, 3 pm to 6 pm; fish, Mina, feet, feet of vaastu purusha, south-west zone, library - resolving at the bottom to Library, 3 pm to 6 pm. Dvij says that is double confirmation: something will happen here between three and six."
+    },
+    {
+     "box": [
+      0.4955,
+      0.8557,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij, struck by it - shadows, they will elongate and point the way. Four small frames show the sun lowering and a shadow stretching across the ground."
+    }
+   ],
+   "text": [
+    {
+     "t": "Satyuga is a complete bull — four legs. Treta has three, Dwapar two, Kali one.",
+     "bbox": [
+      0.2979,
+      0.0008,
+      0.4975,
+      0.0472
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "How do you know this?",
+     "bbox": [
+      0.6111,
+      0.1249,
+      0.7221,
+      0.1507
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "You’re not the only one who reads uncle’s books.",
+     "bbox": [
+      0.7525,
+      0.1249,
+      0.908,
+      0.1611
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Now, this man forms a perfect square — head at north-east, feet at south-west.",
+     "bbox": [
+      0.3061,
+      0.2701,
+      0.4975,
+      0.3146
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "This has to be vaastu purusha - the cosmic man.",
+     "bbox": [
+      0.592,
+      0.3008,
+      0.7411,
+      0.3355
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Good. But what about the fish? Mina - pisces?",
+     "bbox": [
+      0.7743,
+      0.3079,
+      0.9171,
+      0.3411
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "The rashis preside over specific organs. Like, Mesha controls the head...",
+     "bbox": [
+      0.1364,
+      0.4283,
+      0.3199,
+      0.471
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "...Karka the chest, Makara the knees... and Mina the feet.",
+     "bbox": [
+      0.5471,
+      0.4705,
+      0.702,
+      0.5065
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "The feet of the vaastu purusha!",
+     "bbox": [
+      0.7949,
+      0.4687,
+      0.9232,
+      0.4986
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Vaastu places a library where the feet are. And it says to be there from 3 to 6 pm in the pursuit of knowledge.",
+     "bbox": [
+      0.1838,
+      0.6837,
+      0.4016,
+      0.7344
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "And the Dwaparyuga bull — it also maps to the afternoon kala at the Vedic ashram. The third prahara. 3 to 6 pm.",
+     "bbox": [
+      0.6114,
+      0.5959,
+      0.8292,
+      0.6467
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "But what?",
+     "bbox": [
+      0.624,
+      0.8108,
+      0.7144,
+      0.8318
+     ],
+     "kind": "balloon",
+     "panel": 11
+    },
+    {
+     "t": "What could happen under the shade of this tree?",
+     "bbox": [
+      0.8447,
+      0.7996,
+      0.9967,
+      0.835
+     ],
+     "kind": "balloon",
+     "panel": 12
+    },
+    {
+     "t": "That’s double confirmation! Something will happen here between 3 to 6 pm.",
+     "bbox": [
+      0.196,
+      0.8469,
+      0.3894,
+      0.8919
+     ],
+     "kind": "balloon",
+     "panel": 13
+    },
+    {
+     "t": "I know... shadows. They will elongate and point us in the right direction.",
+     "bbox": [
+      0.65,
+      0.9018,
+      0.8301,
+      0.9437
+     ],
+     "kind": "balloon",
+     "panel": 14
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 23,
+   "id": "b5-p023",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p023-240.30886cef25.avif",
+     "900": "b5-p023-900.4c9ba874ab.avif",
+     "1400": "b5-p023-1400.67f5668745.avif",
+     "2115": "b5-p023-2115.2a315f028b.avif"
+    },
+    "webp": {
+     "240": "b5-p023-240.fc09185d5d.webp",
+     "900": "b5-p023-900.23080440fe.webp",
+     "1400": "b5-p023-1400.45c45cadd4.webp",
+     "2115": "b5-p023-2115.46adf79af1.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.1043
+     ],
+     "alt": "Dvij and Bhavi crouched on the rock, looking out at the ground."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.9986,
+      0.1233
+     ],
+     "alt": "The two of them looking across at the white shrine on its spur, then back at each other."
+    },
+    {
+     "box": [
+      0.0,
+      0.1043,
+      0.5031,
+      0.3745
+     ],
+     "alt": "The shrine with the trident planted beside it, the sun high, its shadow lying across the bare ground. Bhavi, seeing it: why, it's the shadow of the trishul."
+    },
+    {
+     "box": [
+      0.4917,
+      0.1233,
+      0.9986,
+      0.3769
+     ],
+     "alt": "Sunset behind the shrine. Bhavi flings out an arm along the shadow - it's Lord Shiva, he will show them the way. Dvij crouches beside her."
+    },
+    {
+     "box": [
+      0.0,
+      0.3745,
+      0.4993,
+      0.7514
+     ],
+     "alt": "Five tall frames as the light goes: Dvij spreading a bedspread, Bhavi laying out food, Ponga arriving, the two of them sitting to eat, and the trident's shadow lengthening across the ground in each."
+    },
+    {
+     "box": [
+      0.4652,
+      0.3745,
+      0.9986,
+      0.6281
+     ],
+     "alt": "Ponga sits on the spread eating wild berries by the handful and spitting the kernels out in a practised arc; Bhavi and Dvij watch him without trying to understand."
+    },
+    {
+     "box": [
+      0.4993,
+      0.621,
+      0.9986,
+      0.7514
+     ],
+     "alt": "Bhavi, annoyed; Dvij, amused, at the edge of the frame."
+    },
+    {
+     "box": [
+      0.0,
+      0.7514,
+      0.4615,
+      0.9979
+     ],
+     "alt": "Bhavi, hand at her chin, asks why he is punching holes in that bottle; Ponga sits working at a plastic bottle with the dog beside him."
+    },
+    {
+     "box": [
+      0.4615,
+      0.7514,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Bhavi turns, delighted - look at the beautiful butterflies. Moths crowd the flowers in the foreground while Dvij and Ponga look on."
+    }
+   ],
+   "text": [
+    {
+     "t": "The they looked at the shadows. The afternoon light was already angling westward. The shadows were beginning to lengthen.",
+     "bbox": [
+      0.1,
+      0.0994,
+      0.9,
+      0.1159
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "Why...it's...it's the shadow of the trishul!",
+     "bbox": [
+      0.1204,
+      0.2564,
+      0.2644,
+      0.2899
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "It's Lord Shiva! He will show us the way!!",
+     "bbox": [
+      0.6468,
+      0.1541,
+      0.7908,
+      0.1877
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Dvij folded out a bedspread. Bhavi laid out food. Ponga plucked wild berries from shrubs, popping handfuls into his mouth, spat out the kernels in a well-practiced arc. They sat in the sun, watching Ponga without trying to understand him.",
+     "bbox": [
+      0.1,
+      0.7132,
+      0.9,
+      0.7412
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "Why is he punching holes in this bottle?",
+     "bbox": [
+      0.1,
+      0.827,
+      0.244,
+      0.8605
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Look at the beautiful butterflies.",
+     "bbox": [
+      0.6466,
+      0.8439,
+      0.7906,
+      0.8775
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 24,
+   "id": "b5-p024",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p024-240.d6a22da64c.avif",
+     "900": "b5-p024-900.9a48f8567c.avif",
+     "1400": "b5-p024-1400.d3caca4c80.avif",
+     "2115": "b5-p024-2115.4af63d9493.avif"
+    },
+    "webp": {
+     "240": "b5-p024-240.38548e58b3.webp",
+     "900": "b5-p024-900.0c7c554c0d.webp",
+     "1400": "b5-p024-1400.24f2c998b0.webp",
+     "2115": "b5-p024-2115.61beed62b8.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.5,
+      0.15
+     ],
+     "alt": "Three close frames: Dvij saying they're moths, Bhavi saying and beautiful, Dvij smiling at her."
+    },
+    {
+     "box": [
+      0.5,
+      0.0,
+      1.0,
+      0.15
+     ],
+     "alt": "Three more: Dvij, a hand to his mouth, saying he knows what the secret is; Bhavi asking how he can know that; Dvij answering - whose temple are they sitting next to?"
+    },
+    {
+     "box": [
+      0.0,
+      0.15,
+      0.47,
+      0.42
+     ],
+     "alt": "Dvij flings out an arm, pointing, and Bhavi turns to look. The trident's shadow is stretched right across the stony ground, its tip resting in the mouth of a narrow path."
+    },
+    {
+     "box": [
+      0.47,
+      0.15,
+      1.0,
+      0.34
+     ],
+     "alt": "Three frames of Ponga's hands punching more holes in the plastic bottle with a spike."
+    },
+    {
+     "box": [
+      0.47,
+      0.34,
+      1.0,
+      0.57
+     ],
+     "alt": "Bhavi and Dvij down on their knees among the rocks searching the scrub, the dog between them, the path winding away behind."
+    },
+    {
+     "box": [
+      0.0,
+      0.42,
+      0.51,
+      0.71
+     ],
+     "alt": "Bhavi holds up a frond of leaves, frowning; Dvij crouches with his phone beside another plant, the Professor's leaf drawing on the screen. None of them match."
+    },
+    {
+     "box": [
+      0.47,
+      0.57,
+      1.0,
+      0.81
+     ],
+     "alt": "Dvij gestures at a three-step diagram - a healthy plant, the weed beside it, the weed choking it out - saying the plant must have been here earlier and this invasive species wiped it out. Bhavi sits on the ground beside him."
+    },
+    {
+     "box": [
+      0.0,
+      0.71,
+      0.47,
+      1.0
+     ],
+     "alt": "A close view of the weed growing thick among the stones; Bhavi with a hand to her head, dismayed; and Dvij standing with his phone, thinking."
+    },
+    {
+     "box": [
+      0.47,
+      0.81,
+      1.0,
+      1.0
+     ],
+     "alt": "Bhavi, close: it's not here. Dvij, close, looking down: we're doomed."
+    }
+   ],
+   "text": [
+    {
+     "t": "They’re moths.",
+     "bbox": [
+      0.1,
+      0.0854,
+      0.2021,
+      0.1092
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "And beautiful.",
+     "bbox": [
+      0.3444,
+      0.0918,
+      0.4465,
+      0.1156
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I know what the secret is.",
+     "bbox": [
+      0.4927,
+      0.0846,
+      0.5982,
+      0.1092
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "How can you know that?",
+     "bbox": [
+      0.6445,
+      0.0953,
+      0.75,
+      0.1199
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "I can. Whose temple are we sitting next to—",
+     "bbox": [
+      0.7769,
+      0.0974,
+      0.9236,
+      0.1316
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Look — there!",
+     "bbox": [
+      0.083,
+      0.2824,
+      0.185,
+      0.3062
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "The shadow's tip was clearly in the middle of a narrow path leading into the field of rocks. They leapt up and ran.",
+     "bbox": [
+      0.0107,
+      0.3771,
+      0.4911,
+      0.4051
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "None of the plants had leaves that matched Professor's drawing. Bhavi was rapidly getting worked up being faced with the prospect of failure.",
+     "bbox": [
+      0.0121,
+      0.6734,
+      0.4926,
+      0.7014
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "The plant must have been here earlier. This wild weed - it’s an invasive species. Maybe it wiped it out.",
+     "bbox": [
+      0.7377,
+      0.7145,
+      0.9451,
+      0.7628
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "It’s not here.",
+     "bbox": [
+      0.5983,
+      0.8985,
+      0.7105,
+      0.9247
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "We’re doomed.",
+     "bbox": [
+      0.7855,
+      0.9101,
+      0.8978,
+      0.9362
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 25,
+   "id": "b5-p025",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p025-240.893708e556.avif",
+     "900": "b5-p025-900.ead2fd7bac.avif",
+     "1400": "b5-p025-1400.c3baf0f055.avif",
+     "2115": "b5-p025-2115.2412e75ed1.avif"
+    },
+    "webp": {
+     "240": "b5-p025-240.97dedee041.webp",
+     "900": "b5-p025-900.83f8e6d92b.webp",
+     "1400": "b5-p025-1400.34db3663d3.webp",
+     "2115": "b5-p025-2115.621b5a737b.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4123,
+      0.1612
+     ],
+     "alt": "Bhavi sits slumped among the rocks with her head on her hand; Dvij stands looking out over the mountains, wishing they could take the whole mountain, like Lord Hanuman."
+    },
+    {
+     "box": [
+      0.4123,
+      0.0,
+      0.9986,
+      0.2347
+     ],
+     "alt": "The dog barks up at something. Dvij turns, and high in the tree above, Ponga is sitting on a branch with a plastic bottle dangling on a string beneath him."
+    },
+    {
+     "box": [
+      0.0,
+      0.1612,
+      0.5031,
+      0.4243
+     ],
+     "alt": "Ponga knots the string to the branch; below, Dvij and Bhavi stand looking up at the bottle, where a large moth is caught inside."
+    },
+    {
+     "box": [
+      0.3934,
+      0.2347,
+      0.6468,
+      0.4646
+     ],
+     "alt": "Dvij, close, looking up: he's got a moth in a bottle?"
+    },
+    {
+     "box": [
+      0.6468,
+      0.2347,
+      0.9986,
+      0.467
+     ],
+     "alt": "Bhavi, close: looks like - she wonders why."
+    },
+    {
+     "box": [
+      0.0,
+      0.4243,
+      0.5031,
+      0.5736
+     ],
+     "alt": "A big close-up of Bhavi, finger raised, mouth open: pheromone trap."
+    },
+    {
+     "box": [
+      0.0,
+      0.5736,
+      0.5031,
+      0.8083
+     ],
+     "alt": "Dvij, close, asks how she knew this."
+    },
+    {
+     "box": [
+      0.4955,
+      0.4646,
+      0.9986,
+      0.7348
+     ],
+     "alt": "Three illustrated panels - ants trailing a scent from a plant, a moth against a moonlit sky with ribbons of scent curling from it, and the bottle with moths gathering round it - while Bhavi explains that the trapped male will release chemicals like a brassy perfume and the females will come to the bottle. Dvij stands beside her with the bottle hanging in the foreground."
+    },
+    {
+     "box": [
+      0.0,
+      0.7087,
+      0.4085,
+      0.9695
+     ],
+     "alt": "Bhavi, close: because she has studied biology."
+    },
+    {
+     "box": [
+      0.0,
+      0.9695,
+      0.4047,
+      0.9979
+     ],
+     "alt": "Dvij, wide-eyed: oh, right - so the Professor knew they would need Ponga for this."
+    },
+    {
+     "box": [
+      0.4047,
+      0.7348,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Five frames in a row: the bottle hanging with its moth, and moths arriving in ones and twos, then in dozens, then in a dark cloud, while Dvij and Bhavi watch from below."
+    }
+   ],
+   "text": [
+    {
+     "t": "I wish we could take the whole mountain - like Lord Hanuman.",
+     "bbox": [
+      0.1203,
+      0.0981,
+      0.2799,
+      0.1353
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "What’s he doing up in the tree?",
+     "bbox": [
+      0.682,
+      0.1186,
+      0.8013,
+      0.1464
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "It’s a moth.",
+     "bbox": [
+      0.0266,
+      0.2524,
+      0.1099,
+      0.2719
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "He’s got a moth in a bottle?",
+     "bbox": [
+      0.5099,
+      0.378,
+      0.624,
+      0.4046
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Looks like. I wonder why...",
+     "bbox": [
+      0.7902,
+      0.381,
+      0.9043,
+      0.4076
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Pheromone trap!",
+     "bbox": [
+      0.1219,
+      0.5466,
+      0.2268,
+      0.571
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "How’d you know this?",
+     "bbox": [
+      0.1101,
+      0.6955,
+      0.2138,
+      0.7197
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "The trapped male moth will release chemicals - like a brassy perfume. Females will come to the bottle.",
+     "bbox": [
+      0.407,
+      0.6199,
+      0.6188,
+      0.6692
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Because I’ve studied biology.",
+     "bbox": [
+      0.0861,
+      0.8436,
+      0.2041,
+      0.8711
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Oh, right! So prof knew that we will need Ponga for this...",
+     "bbox": [
+      0.0267,
+      0.957,
+      0.1927,
+      0.9956
+     ],
+     "kind": "balloon",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 26,
+   "id": "b5-p026",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p026-240.e67e5aec47.avif",
+     "900": "b5-p026-900.9fd3af3c3b.avif",
+     "1400": "b5-p026-1400.435f7bcc8f.avif",
+     "2115": "b5-p026-2115.b832c68dfc.avif"
+    },
+    "webp": {
+     "240": "b5-p026-240.09c4a681bf.webp",
+     "900": "b5-p026-900.b90f0aeb67.webp",
+     "1400": "b5-p026-1400.80c9e42854.webp",
+     "2115": "b5-p026-2115.4515fd1894.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.2496,
+      0.2607
+     ],
+     "alt": "A dark swarm of moths streaming over the rocks, Dvij and Bhavi small beneath the tree."
+    },
+    {
+     "box": [
+      0.2496,
+      0.0,
+      0.4842,
+      0.2607
+     ],
+     "alt": "Bhavi and Dvij running uphill through the stones with the dog, the bottle still hanging behind them and the swarm pouring overhead."
+    },
+    {
+     "box": [
+      0.4842,
+      0.0,
+      0.6392,
+      0.2631
+     ],
+     "alt": "Bhavi hauls Dvij up a boulder by the hand as the swarm streams past."
+    },
+    {
+     "box": [
+      0.6392,
+      0.0,
+      0.8095,
+      0.2631
+     ],
+     "alt": "Bhavi climbing, Ponga struggling up behind her."
+    },
+    {
+     "box": [
+      0.8095,
+      0.0,
+      0.9986,
+      0.2631
+     ],
+     "alt": "Dvij reaching back down to pull her up the last of the rocks."
+    },
+    {
+     "box": [
+      0.0,
+      0.2607,
+      0.469,
+      0.5239
+     ],
+     "alt": "The four of them and the dog reach the top of the ridge and stop: below them the swarm pours away down the chasm, and around them a whole field of white lilies is swaying in the wind."
+    },
+    {
+     "box": [
+      0.469,
+      0.2607,
+      0.9986,
+      0.5239
+     ],
+     "alt": "Bhavi runs out into the field of white flowers with her arms flung wide - we did it, we did it - Dvij and the dog behind her, snow ranges beyond."
+    },
+    {
+     "box": [
+      0.0,
+      0.5239,
+      0.4993,
+      0.8273
+     ],
+     "alt": "Dvij and Bhavi standing together among the lilies at sunset, she with her hands at her chest."
+    },
+    {
+     "box": [
+      0.3291,
+      0.5239,
+      0.5863,
+      0.7893
+     ],
+     "alt": "An inset of Hanuman flying through the clouds carrying a whole mountain. Dvij asks what herb Lord Hanuman was looking for when he carried the mountain away."
+    },
+    {
+     "box": [
+      0.5863,
+      0.5239,
+      0.9986,
+      0.7893
+     ],
+     "alt": "Bhavi, eyes huge, shouts the name - sanjeevani; and Dvij, smiling: exactly, the miracle plant."
+    },
+    {
+     "box": [
+      0.0,
+      0.8273,
+      0.4993,
+      0.9979
+     ],
+     "alt": "Bhavi, close, asks who the tall stranger was who fought the thugs; Dvij, close, half smiling."
+    },
+    {
+     "box": [
+      0.4993,
+      0.7799,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Two insets: the old pujari of the Mahavidya temples seated in his shrine, and the tall stranger knocking a thug down. Below, Dvij tells her he was sent by the pujari to protect her, that he is the doyen of the shakta tradition - she embodies the Goddess, and he would not let her be harmed."
+    }
+   ],
+   "text": [
+    {
+     "t": "Nervous minutes passed that felt like a lifespan. Then the moths arrived — at first few, then many, then a swarm streaming from over the boulder wall. They stumbled over the boulders, helping each other upward as quickly as they could.",
+     "bbox": [
+      0.1,
+      0.2263,
+      0.9167,
+      0.2543
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "We did it! We did it!!",
+     "bbox": [
+      0.7046,
+      0.3102,
+      0.8093,
+      0.3345
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "They found themselves at the top of the hammock, looking at a field where white flowers swayed in the winds that rushed in from the chasm beyond.",
+     "bbox": [
+      0.1,
+      0.4792,
+      0.9167,
+      0.5072
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "What herb was Lord Hanuman looking for when he carried away the whole mountain?",
+     "bbox": [
+      0.3064,
+      0.6764,
+      0.4997,
+      0.7215
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Sanjeevani!!!",
+     "bbox": [
+      0.5355,
+      0.6993,
+      0.6313,
+      0.7216
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Exactly! The miracle plant.",
+     "bbox": [
+      0.8556,
+      0.7141,
+      0.979,
+      0.7429
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "Who the tall stranger who fought the thugs...?",
+     "bbox": [
+      0.0223,
+      0.9422,
+      0.1767,
+      0.9782
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Sent by the pujari to protect of Mahavidya temples you. He's the doyen of the shakta tradition.",
+     "bbox": [
+      0.3688,
+      0.946,
+      0.583,
+      0.9958
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "You embody the Goddess. He would not let you be harmed.",
+     "bbox": [
+      0.8333,
+      0.9487,
+      0.9998,
+      0.9875
+     ],
+     "kind": "balloon",
+     "panel": 11
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 27,
+   "id": "b5-p027",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p027-240.c253e2a78a.avif",
+     "900": "b5-p027-900.c876f37f66.avif",
+     "1400": "b5-p027-1400.3ec6599974.avif",
+     "2115": "b5-p027-2115.c81b4ab612.avif"
+    },
+    "webp": {
+     "240": "b5-p027-240.3a3483ca7d.webp",
+     "900": "b5-p027-900.734a81e3a1.webp",
+     "1400": "b5-p027-1400.33e3d14875.webp",
+     "2115": "b5-p027-2115.1381ee430e.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.2043,
+      0.3319
+     ],
+     "alt": "Bhavi, close, asks who he really is."
+    },
+    {
+     "box": [
+      0.2043,
+      0.0,
+      0.4085,
+      0.3319
+     ],
+     "alt": "Dvij, close, before he can reply - his phone is ringing, the sound carrying out into the vastness."
+    },
+    {
+     "box": [
+      0.4085,
+      0.0,
+      0.9986,
+      0.3532
+     ],
+     "alt": "Five tall frames: Dvij takes the phone out at the cliff edge, looks at it, turns away, stands with it in his hand, and lets it slip from his palm. Bhavi watches him from below in each one."
+    },
+    {
+     "box": [
+      0.0,
+      0.3319,
+      0.3556,
+      0.6566
+     ],
+     "alt": "The phone falling away down the sheer walls of the chasm, Dvij standing tiny on the lip above: there goes my past."
+    },
+    {
+     "box": [
+      0.3556,
+      0.2607,
+      0.9986,
+      0.6566
+     ],
+     "alt": "Bhavi runs to him through the flowers, then stops; she reaches out a hand and asks why; and then she has hold of his arm at the edge."
+    },
+    {
+     "box": [
+      0.0,
+      0.6566,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij and Bhavi holding each other among the white flowers on the cliff top, rain clouds moving in over range after range of mountains. The phone is gone. The past is gone. What remains is this."
+    }
+   ],
+   "text": [
+    {
+     "t": "Who are you really?",
+     "bbox": [
+      0.0002,
+      0.2164,
+      0.1028,
+      0.2403
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Before Dvij could reply, his phone rang, the shrill ringtone reverberating in the vastness. Bhavi saw him lift the phone, and then letting it slip from his palm. She could almost hear it crash against rock, then tumble down and vanish.",
+     "bbox": [
+      0.0969,
+      0.2938,
+      0.9,
+      0.3218
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "There goes my past.",
+     "bbox": [
+      0.1695,
+      0.3645,
+      0.2721,
+      0.3884
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "But why?",
+     "bbox": [
+      0.6273,
+      0.3654,
+      0.7299,
+      0.3893
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Bhavi looked at his face eager to detect any emotion. All she found was serenity — as if enwrapped by a translucent layer of bliss. Anandmaya kosha, she thought.",
+     "bbox": [
+      0.1,
+      0.6434,
+      0.9,
+      0.6714
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "The rain clouds moved toward the valley. The white flowers swayed in the wind from the chasm. The phone was gone. The past was gone. What remained was this.",
+     "bbox": [
+      0.0969,
+      0.9599,
+      0.8969,
+      0.9879
+     ],
+     "kind": "caption",
+     "panel": 5
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 28,
+   "id": "b5-p028",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p028-240.79bb0bcc43.avif",
+     "900": "b5-p028-900.be350ae0a8.avif",
+     "1400": "b5-p028-1400.780eda02e3.avif",
+     "2115": "b5-p028-2115.45514f9f94.avif"
+    },
+    "webp": {
+     "240": "b5-p028-240.dc01f7899b.webp",
+     "900": "b5-p028-900.97b4912f8c.webp",
+     "1400": "b5-p028-1400.0dc544c01f.webp",
+     "2115": "b5-p028-2115.a6d02b97d7.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.9986,
+      0.2536
+     ],
+     "alt": "A wide cliff-top view at dusk: Bhavi stands alone under the overhanging tree among the white flowers while Dvij stands apart at the edge, looking out at range after range of snow peaks."
+    },
+    {
+     "box": [
+      0.0,
+      0.2418,
+      0.5031,
+      0.3674
+     ],
+     "alt": "Three close frames: Dvij turning to her, Bhavi looking up at him, Dvij looking back."
+    },
+    {
+     "box": [
+      0.0,
+      0.3674,
+      0.5031,
+      0.4954
+     ],
+     "alt": "Bhavi, both hands open, asks whether he is going to leave her alone; Dvij, seen from behind, faces her."
+    },
+    {
+     "box": [
+      0.4993,
+      0.2536,
+      0.9986,
+      0.4907
+     ],
+     "alt": "Dvij talks with an open hand among the flowers, Bhavi beside him. At the right, a diagram of the five sheaths: a serene face at the centre labelled atman, ringed by the annamaya, pranamaya, manomaya, vijnanamaya and anandamaya koshas."
+    },
+    {
+     "box": [
+      0.0,
+      0.4954,
+      0.3329,
+      0.787
+     ],
+     "alt": "A thought-cloud of the yogini with her spear and of the old Mahavidya pujari among his people. Dvij tells her that in the yogini she will find a true friend, and in the Mahavidya priest the strongest of allies."
+    },
+    {
+     "box": [
+      0.3329,
+      0.4907,
+      0.6657,
+      0.787
+     ],
+     "alt": "A thought-cloud of the Professor addressing a gathering of tribespeople and villagers. Dvij tells her she is the only one who can stop the Mahant."
+    },
+    {
+     "box": [
+      0.6657,
+      0.4907,
+      0.9986,
+      0.8154
+     ],
+     "alt": "A thought-cloud of the drainpipe, of Bhavi gathering the herb, of villagers being treated, of green fields restored, and of the Mahant. Dvij lists it: close the drainpipe, rally the peasants, heal them with this herb."
+    },
+    {
+     "box": [
+      0.0,
+      0.787,
+      0.3366,
+      0.9979
+     ],
+     "alt": "A thought-cloud of villagers, of the yogini, and of Bhavi among them. Bhavi stands with her hands pressed together, listening."
+    },
+    {
+     "box": [
+      0.3366,
+      0.787,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Two insets: Bhavi holding a sprig of the herb over the sleeping Professor, and Dvij walking away towards the mountain. Below, Dvij tells her he is a seeker, and seekers do not become good healers - she, on the other hand, is selfless."
+    }
+   ],
+   "text": [
+    {
+     "t": "Bhavi was reminded of the stories of the nymphatic apsara and the ascetic rishi that she had heard as a child. She had the strange feeling of being alone in the entire world sweep over her.",
+     "bbox": [
+      0.1,
+      0.216,
+      0.9,
+      0.244
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "Are you going to leave me alone?",
+     "bbox": [
+      0.1798,
+      0.415,
+      0.3187,
+      0.4474
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "In Yogini you shall find a true friend. In the Mahavidya priest, the strongest of allies.",
+     "bbox": [
+      0.1303,
+      0.6949,
+      0.3186,
+      0.7388
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "You are the only one who can stop Mahant.",
+     "bbox": [
+      0.4737,
+      0.7055,
+      0.6438,
+      0.7451
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Close the drainpipe. Rally the peasants. Heal them with this herb.",
+     "bbox": [
+      0.7705,
+      0.7255,
+      0.9406,
+      0.7651
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I am a seeker. Seekers do not become good healers. You, on the other hand, are selfless.",
+     "bbox": [
+      0.5124,
+      0.9345,
+      0.712,
+      0.981
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 29,
+   "id": "b5-p029",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b5-p029-240.d8aa2e15a0.avif",
+     "900": "b5-p029-900.eab44ce24a.avif",
+     "1400": "b5-p029-1400.9dfebd2d62.avif",
+     "2115": "b5-p029-2115.c6563228d1.avif"
+    },
+    "webp": {
+     "240": "b5-p029-240.8d95b0353a.webp",
+     "900": "b5-p029-900.2af94b0ecc.webp",
+     "1400": "b5-p029-1400.6f3cdac2be.webp",
+     "2115": "b5-p029-2115.578f834f7c.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.4196
+     ],
+     "alt": "Dvij sits among the flowers with his eyes closed, Bhavi holding his arm. Above him rises a figure of light with the seven chakras up the spine and a column of glowing points going up into the clouds. He says his kundalini has risen to ajna, the brow chakra - but there are seven extra-sensory chakras, and he has to keep moving towards the Truth."
+    },
+    {
+     "box": [
+      0.4955,
+      0.0,
+      0.9986,
+      0.211
+     ],
+     "alt": "Three frames: Bhavi watching Dvij walk away down the path, the path itself running on through the flowers into the light, and Bhavi's face with tears in her eyes."
+    },
+    {
+     "box": [
+      0.4993,
+      0.1967,
+      0.9986,
+      0.4361
+     ],
+     "alt": "Dvij walking up the valley path through the white flowers, the dog following, the last of the sun ahead of him."
+    },
+    {
+     "box": [
+      0.0,
+      0.4196,
+      0.9986,
+      0.7182
+     ],
+     "alt": "Rain sweeping across the flowers and the dark ranges beyond."
+    },
+    {
+     "box": [
+      0.0,
+      0.7182,
+      0.6922,
+      0.9979
+     ],
+     "alt": "The village in the rain: people walking out into the flooded lanes; and then a woman and a man with their arms flung up, children and villagers laughing with their faces turned to the sky."
+    },
+    {
+     "box": [
+      0.6922,
+      0.7182,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The valley under gathering storm clouds, a last band of gold along the horizon; and a slim black-and-white chatak bird flying up into the darkness, calling."
+    }
+   ],
+   "text": [
+    {
+     "t": "My kundalini has risen to ajna — the brow chakra. But there are seven extra-sensory chakras. I have to keep moving towards the Truth.",
+     "bbox": [
+      0.3234,
+      0.229,
+      0.564,
+      0.285
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Dvij turned before the tearful face of his beloved Bhavi became a deterrent to his tireless pursuit. He climbed down the boulders. He started walking up the path through the valley of the white flowers that seemed to reach out into nothingness.",
+     "bbox": [
+      0.1,
+      0.3732,
+      0.9,
+      0.4012
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "A slim black and white chatak made a string of whistling notes as it flapped its wings and merged into the darkness of the gathering clouds. The faithful dog followed him like certain Death.",
+     "bbox": [
+      0.1,
+      0.959,
+      0.9,
+      0.987
+     ],
+     "kind": "caption",
+     "panel": 4
+    }
+   ],
+   "reviewed": true
+  }
+ ]
+}

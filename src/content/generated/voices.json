@@ -1,0 +1,106 @@
+{
+ "mahant": {
+  "firstSeen": {
+   "book": 1,
+   "page": 6
+  },
+  "portrait": {
+   "file": "voice-mahant.webp",
+   "w": 640,
+   "h": 906,
+   "page": "b1-p006",
+   "fromLettering": true
+  }
+ },
+ "mahavidya-pujari": {
+  "firstSeen": {
+   "book": 4,
+   "page": 10
+  },
+  "portrait": {
+   "file": "voice-mahavidya-pujari.webp",
+   "w": 640,
+   "h": 445,
+   "page": "b4-p010",
+   "fromLettering": true
+  }
+ },
+ "round-nosed-man": {
+  "firstSeen": {
+   "book": 4,
+   "page": 22
+  },
+  "portrait": {
+   "file": "voice-round-nosed-man.webp",
+   "w": 421,
+   "h": 513,
+   "page": "b4-p022",
+   "fromLettering": true
+  }
+ },
+ "tantric-baba": {
+  "firstSeen": {
+   "book": 1,
+   "page": 40
+  },
+  "portrait": {
+   "file": "voice-tantric-baba.webp",
+   "w": 640,
+   "h": 593,
+   "page": "b1-p040",
+   "fromLettering": true
+  }
+ },
+ "the-monk": {
+  "firstSeen": {
+   "book": 5,
+   "page": 21
+  },
+  "portrait": {
+   "file": "voice-the-monk.webp",
+   "w": 425,
+   "h": 331,
+   "page": "b5-p021",
+   "fromLettering": true
+  }
+ },
+ "the-professor": {
+  "firstSeen": {
+   "book": 1,
+   "page": 5
+  },
+  "portrait": {
+   "file": "voice-the-professor.webp",
+   "w": 539,
+   "h": 665,
+   "page": "b4-p004",
+   "fromLettering": true
+  }
+ },
+ "vedic-sage": {
+  "firstSeen": {
+   "book": 5,
+   "page": 10
+  },
+  "portrait": {
+   "file": "voice-vedic-sage.webp",
+   "w": 353,
+   "h": 523,
+   "page": "b5-p010",
+   "fromLettering": true
+  }
+ },
+ "yogini": {
+  "firstSeen": {
+   "book": 1,
+   "page": 42
+  },
+  "portrait": {
+   "file": "voice-yogini.webp",
+   "w": 640,
+   "h": 540,
+   "page": "b1-p042",
+   "fromLettering": true
+  }
+ }
+}

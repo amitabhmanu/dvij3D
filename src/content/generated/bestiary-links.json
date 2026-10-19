@@ -1,0 +1,205 @@
+{
+ "apsara": {
+  "firstSeen": {
+   "book": 5,
+   "page": 28
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b5-p028"
+  ],
+  "art": null
+ },
+ "ashtomi": {
+  "firstSeen": {
+   "book": 4,
+   "page": 19
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b4-p019"
+  ],
+  "art": {
+   "file": "beast-ashtomi.webp",
+   "w": 640,
+   "h": 167,
+   "page": "b4-p019"
+  }
+ },
+ "banmanus": {
+  "firstSeen": {
+   "book": 1,
+   "page": 18
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p018"
+  ],
+  "art": {
+   "file": "beast-banmanus.webp",
+   "w": 305,
+   "h": 378,
+   "page": "b1-p018"
+  }
+ },
+ "bhoot-pret": {
+  "firstSeen": {
+   "book": 1,
+   "page": 36
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p036",
+   "b3-p034"
+  ],
+  "art": null
+ },
+ "gandharva": {
+  "firstSeen": {
+   "book": 4,
+   "page": 17
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b4-p017"
+  ],
+  "art": null
+ },
+ "giants": {
+  "firstSeen": {
+   "book": 1,
+   "page": 30
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p030"
+  ],
+  "art": {
+   "file": "beast-giants.webp",
+   "w": 450,
+   "h": 473,
+   "page": "b1-p030"
+  }
+ },
+ "kimpurusha": {
+  "firstSeen": {
+   "book": 1,
+   "page": 18
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p018"
+  ],
+  "art": {
+   "file": "beast-kimpurusha.webp",
+   "w": 125,
+   "h": 243,
+   "page": "b1-p018"
+  }
+ },
+ "kinnara": {
+  "firstSeen": {
+   "book": 1,
+   "page": 18
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p018"
+  ],
+  "art": null
+ },
+ "pichhal-peri": {
+  "firstSeen": {
+   "book": 1,
+   "page": 18
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p018"
+  ],
+  "art": {
+   "file": "beast-pichhal-peri.webp",
+   "w": 281,
+   "h": 371,
+   "page": "b1-p018"
+  }
+ },
+ "pishacha": {
+  "firstSeen": {
+   "book": 1,
+   "page": 18
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p018"
+  ],
+  "art": {
+   "file": "beast-pishacha.webp",
+   "w": 207,
+   "h": 303,
+   "page": "b1-p018"
+  }
+ },
+ "rakshasa": {
+  "firstSeen": {
+   "book": 1,
+   "page": 30
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p030"
+  ],
+  "art": {
+   "file": "beast-rakshasa.webp",
+   "w": 550,
+   "h": 473,
+   "page": "b1-p030"
+  }
+ },
+ "shesha": {
+  "firstSeen": {
+   "book": 2,
+   "page": 3
+  },
+  "firstSeenFrom": "override",
+  "mentions": [],
+  "art": {
+   "file": "beast-shesha.webp",
+   "w": 297,
+   "h": 198,
+   "page": "b2-p003"
+  }
+ },
+ "vyala": {
+  "firstSeen": {
+   "book": 1,
+   "page": 39
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p039"
+  ],
+  "art": {
+   "file": "beast-vyala.webp",
+   "w": 550,
+   "h": 658,
+   "page": "b1-p039"
+  }
+ },
+ "yaksha": {
+  "firstSeen": {
+   "book": 1,
+   "page": 11
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p011"
+  ],
+  "art": {
+   "file": "beast-yaksha.webp",
+   "w": 440,
+   "h": 199,
+   "page": "b1-p011"
+  }
+ }
+}

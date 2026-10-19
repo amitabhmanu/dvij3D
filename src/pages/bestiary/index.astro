@@ -1,0 +1,85 @@
+---
+import Base from "../../layouts/Base.astro";
+import VeilNotice from "../../components/VeilNotice.astro";
+import VeilScript from "../../components/VeilScript.astro";
+import { beastEntries, CLASSES } from "../../lib/bestiary";
+import { artFile } from "../../lib/manifest";
+
+const beasts = await beastEntries();
+const used = [...new Set(beasts.map((b) => b.data.class))]
+  .sort((a, b) => Object.keys(CLASSES).indexOf(a) - Object.keys(CLASSES).indexOf(b));
+---
+<Base title="Bestiary" description="The nagas, yakshas, vyalas and forest-road ghouls named and drawn in The Twice Born — what they are, and who in the book doubts them.">
+  <div class="wrap">
+    <p class="eyebrow">A companion gallery</p>
+    <h1>Bestiary</h1>
+    <p class="prose">A cook warns of spirits in the trees, a driver names five things in the dark before he has
+      finished the sentence, and a temple keeps two of them carved on the steps. Here is every creature the book
+      names or draws — what it is, where it appears, and who in the story refuses to believe in it.</p>
+
+    <div class="filters" role="group" aria-label="Filter by kind">
+      <button type="button" class="chip" data-filter="all" aria-pressed="true">All {beasts.length}</button>
+      {used.map((c) => <button type="button" class="chip" data-filter={c} aria-pressed="false">{CLASSES[c]}</button>)}
+    </div>
+
+    <ul class="gallery">
+      {beasts.map((b) => (
+        <li class="beast" data-class={b.data.class} data-first-book={b.firstSeen?.book} data-first-page={b.firstSeen?.page}>
+          <a href={`/bestiary/${b.id}/`}>
+            <div class={`card-art${b.art ? "" : " no-art"}`}>
+              {b.art
+                ? <img src={artFile(b.art.file)} alt="" loading="lazy" width={b.art.w} height={b.art.h} />
+                : <span class="unseen" aria-hidden="true">Never drawn</span>}
+            </div>
+            <p class="kind">{CLASSES[b.data.class]}</p>
+            <h2>{b.data.title}</h2>
+          </a>
+          {b.firstSeen && <VeilNotice book={b.firstSeen.book} page={b.firstSeen.page} />}
+          <p class="summary veil-content">{b.data.summary}</p>
+        </li>
+      ))}
+    </ul>
+
+    <p class="prose note">
+      <strong>Not in here:</strong> the <em>Nagas</em>. The word turns up all through the book, but in this valley it
+      names a hill, and a people — "home of the violent Nagas", "she is a Naga tribal" — not a serpent. They are a
+      real people and they get a <a href="/codex/nagas/">Codex entry</a>, not a place in a bestiary. The one serpent
+      the book actually draws is <a href="/bestiary/shesha/">Shesha</a>, and he is never named in the lettering at all.
+    </p>
+  </div>
+  <VeilScript />
+</Base>
+
+<style>
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 4px; }
+  .chip { font: 600 0.85rem var(--font-ui); padding: 7px 13px; border-radius: 999px; border: 2px solid var(--paper-3);
+          background: transparent; color: var(--ink-2); cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .gallery { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; margin-top: 24px; }
+  .beast { background: var(--paper-2); border: 1px solid var(--paper-3); border-radius: 8px; overflow: hidden; padding-bottom: 12px; }
+  .beast[hidden] { display: none; }
+  .beast > a { color: inherit; text-decoration: none; display: block; }
+  .card-art { aspect-ratio: 4 / 3; background: #15110d; overflow: hidden; display: grid; place-items: center; }
+  .card-art img { width: 100%; height: 100%; object-fit: cover; }
+  .card-art.no-art { background: repeating-linear-gradient(135deg, #1d1813 0 10px, #241e18 10px 20px); }
+  .unseen { font: 600 0.72rem var(--font-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--sepia); }
+  .beast[data-veiled] .card-art img { filter: blur(10px) grayscale(1); }
+  .kind { font: 700 0.7rem var(--font-ui); text-transform: uppercase; letter-spacing: 0.1em; color: var(--sepia); margin: 12px 14px 0; }
+  .beast h2 { margin: 2px 14px 4px; font-size: 1.3rem; }
+  .beast > a:hover h2 { color: var(--accent); }
+  .summary, .beast :global(.veil-notice) { margin: 4px 14px; font-size: 0.94rem; color: var(--ink-2); }
+  .note { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--paper-3); font-size: 0.95rem; color: var(--ink-2); }
+</style>
+
+<script>
+  // Filter by class. Plain DOM so the cards stay server-rendered and searchable.
+  const chips = document.querySelectorAll<HTMLButtonElement>(".chip");
+  const cards = document.querySelectorAll<HTMLLIElement>(".beast");
+  chips.forEach((chip) =>
+    chip.addEventListener("click", () => {
+      const want = chip.dataset.filter;
+      chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+      cards.forEach((card) => { card.hidden = want !== "all" && card.dataset.class !== want; });
+    }),
+  );
+</script>

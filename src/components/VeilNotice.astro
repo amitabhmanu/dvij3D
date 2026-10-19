@@ -1,0 +1,10 @@
+---
+// Shown only while the enclosing [data-first-book] element is veiled.
+interface Props { book: number; page: number }
+const { book, page } = Astro.props;
+---
+<p class="veil-notice" role="note">
+  <span>Spoiler: this first comes up in <strong>Book {book}, page {page}</strong>, further than you've read.</span>
+  <button type="button" data-reveal-one>Show it</button>
+  <button type="button" data-reveal-all>Show all spoilers</button>
+</p>

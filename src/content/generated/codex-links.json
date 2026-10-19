@@ -1,0 +1,287 @@
+{
+ "ashtadhyayi": {
+  "firstSeen": {
+   "book": 1,
+   "page": 28
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p028"
+  ]
+ },
+ "ashtalakshmi": {
+  "firstSeen": {
+   "book": 3,
+   "page": 6
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b3-p006",
+   "b4-p021"
+  ]
+ },
+ "avadhana": {
+  "firstSeen": {
+   "book": 2,
+   "page": 8
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b2-p008",
+   "b2-p025"
+  ]
+ },
+ "bacteriophages": {
+  "firstSeen": {
+   "book": 2,
+   "page": 26
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b2-p026",
+   "b4-p024"
+  ]
+ },
+ "bija-mantras": {
+  "firstSeen": {
+   "book": 4,
+   "page": 29
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b4-p029"
+  ]
+ },
+ "chakras": {
+  "firstSeen": {
+   "book": 3,
+   "page": 24
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b3-p024",
+   "b3-p034",
+   "b4-p018",
+   "b4-p021",
+   "b4-p023",
+   "b4-p029",
+   "b4-p031",
+   "b4-p032",
+   "b5-p008",
+   "b5-p016",
+   "b5-p029"
+  ]
+ },
+ "charvaka": {
+  "firstSeen": {
+   "book": 4,
+   "page": 4
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b4-p004",
+   "b4-p022"
+  ]
+ },
+ "dikpalas": {
+  "firstSeen": {
+   "book": 3,
+   "page": 3
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b3-p003",
+   "b3-p007"
+  ]
+ },
+ "gnomon": {
+  "firstSeen": {
+   "book": 5,
+   "page": 15
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b5-p015",
+   "b5-p016"
+  ]
+ },
+ "harihara": {
+  "firstSeen": {
+   "book": 3,
+   "page": 24
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b3-p024"
+  ]
+ },
+ "kanchukas": {
+  "firstSeen": {
+   "book": 4,
+   "page": 29
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b4-p029"
+  ]
+ },
+ "katapayadi": {
+  "firstSeen": {
+   "book": 2,
+   "page": 25
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b2-p025",
+   "b2-p026"
+  ]
+ },
+ "kaula": {
+  "firstSeen": {
+   "book": 1,
+   "page": 41
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p041",
+   "b2-p002"
+  ]
+ },
+ "kundalini": {
+  "firstSeen": {
+   "book": 3,
+   "page": 34
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b3-p034",
+   "b4-p018",
+   "b4-p023",
+   "b5-p016",
+   "b5-p029"
+  ]
+ },
+ "mahavidyas": {
+  "firstSeen": {
+   "book": 5,
+   "page": 26
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b5-p026",
+   "b5-p028"
+  ]
+ },
+ "matrikas": {
+  "firstSeen": {
+   "book": 1,
+   "page": 7
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p007",
+   "b4-p030",
+   "b4-p031"
+  ]
+ },
+ "nagas": {
+  "firstSeen": {
+   "book": 1,
+   "page": 11
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p011",
+   "b1-p042",
+   "b2-p002",
+   "b4-p005"
+  ]
+ },
+ "nakshatras": {
+  "firstSeen": {
+   "book": 3,
+   "page": 25
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b3-p025",
+   "b3-p026"
+  ]
+ },
+ "navagrahas": {
+  "firstSeen": {
+   "book": 2,
+   "page": 9
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b2-p009",
+   "b2-p033",
+   "b3-p014"
+  ]
+ },
+ "shaivite-renunciation": {
+  "firstSeen": {
+   "book": 2,
+   "page": 2
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b2-p002",
+   "b2-p004",
+   "b3-p020"
+  ]
+ },
+ "soma": {
+  "firstSeen": {
+   "book": 1,
+   "page": 25
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p025",
+   "b1-p026",
+   "b1-p028",
+   "b3-p013",
+   "b3-p014",
+   "b3-p015"
+  ]
+ },
+ "tattvas": {
+  "firstSeen": {
+   "book": 3,
+   "page": 25
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b3-p025",
+   "b4-p022",
+   "b4-p029"
+  ]
+ },
+ "vaastu-purusha-mandala": {
+  "firstSeen": {
+   "book": 1,
+   "page": 21
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b1-p021",
+   "b1-p022",
+   "b5-p022"
+  ]
+ },
+ "vedic-pathas": {
+  "firstSeen": {
+   "book": 2,
+   "page": 8
+  },
+  "firstSeenFrom": "lettering",
+  "mentions": [
+   "b2-p008",
+   "b2-p025",
+   "b5-p009",
+   "b5-p010"
+  ]
+ }
+}

@@ -1,0 +1,25 @@
+# dependencies & build output
+node_modules/
+dist/
+.astro/
+.netlify/
+
+# pipeline scratch output (compress.json records the quality gate, so keep it;
+# the run logs are noise)
+pipeline/__pycache__/
+pipeline/reports/*.log
+*.pyc
+
+# local env
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# test output
+test-results/
+playwright-report/

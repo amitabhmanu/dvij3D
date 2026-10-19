@@ -1,0 +1,1026 @@
+{
+ "map": {
+  "art": "valley-map",
+  "alt": "A hand-drawn contour map of the valley, its hills ringed with contour lines and its temples, huts and roads marked in ink.\n"
+ },
+ "epigraph": {
+  "text": "In its microcosm it is a replica of the entire universe... it could have been anywhere. But this valley lies forgotten to the outside world. Thus it is nowhere.",
+  "who": "The Professor"
+ },
+ "places": [
+  {
+   "id": "fort-ruins",
+   "name": "Fort Ruins",
+   "fiction": "Daundagarh Fort, on Keval hill",
+   "rects": [
+    [
+     0.164,
+     0.548,
+     0.24,
+     0.585
+    ]
+   ],
+   "book": "Built by the Maharaja of Kamboj in the era of the Mongol invasions and thought impregnable: five gates, an approach whose bends look like dead ends, a doorless royal gym attackers could enter only one at a time, and a math whose sage vanished when the fort fell.",
+   "pages": [
+    {
+     "id": "b1-p029",
+     "book": 1,
+     "page": 29
+    },
+    {
+     "id": "b1-p031",
+     "book": 1,
+     "page": 31
+    },
+    {
+     "id": "b2-p021",
+     "book": 2,
+     "page": 21
+    },
+    {
+     "id": "b2-p023",
+     "book": 2,
+     "page": 23
+    },
+    {
+     "id": "b3-p003",
+     "book": 3,
+     "page": 3
+    }
+   ],
+   "real": {
+    "name": "Daulatabad (Devagiri) Fort",
+    "pin": "Daulatabad Fort",
+    "region": "Maharashtra",
+    "confidence": "high",
+    "why": "Deceptive gates and false doors built to confuse attackers, the labyrinthine Andheri passage, and layered walls with spiked gates. It fell to Khalji in 1296, the right era, and its saint-commander Janardan Swami has a samadhi in a cave inside it, a close echo of the fort's sage. Even the name echoes.",
+    "lat": 19.942724,
+    "lng": 75.213164,
+    "alsoFrom": "Harihar Fort, Nashik - 117 rock-cut steps at 75-80 degrees, for the turret the soldiers had to climb",
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "fort-ruins",
+      "alt": "The dark rock-cut entrance of the Andheri passage at Daulatabad, a single low doorway in a carved stone face.",
+      "file": "real-fort-ruins.webp",
+      "w": 1400,
+      "h": 933,
+      "artist": "Amitabha Gupta",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Andheri_or_Dark_Passage_located_inside_Daulatabad_Fort_or_Deogiri_Fort,_Daulatabad,_Maharashtra_01.jpg",
+      "commons": "Andheri or Dark Passage located inside Daulatabad Fort or Deogiri Fort, Daulatabad, Maharashtra 01.jpg"
+     },
+     {
+      "id": "fort-turret",
+      "alt": "Near-vertical steps cut into the bare rock of Harihar fort, climbing out of shot.",
+      "file": "real-fort-turret.webp",
+      "w": 823,
+      "h": 1400,
+      "artist": "Elroy Serrao",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Harihar_-_Rock_cut_steps_(11253864766).jpg",
+      "commons": "Harihar - Rock cut steps (11253864766).jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "pushkarini",
+   "name": "The pushkarini below the fort",
+   "fiction": "The stepped tank below Daundagarh",
+   "rects": [],
+   "book": "\"A series of symmetric steps cascading inwards, much like an inverted temple vimana\", with a square platform at the centre surrounded by water.",
+   "pages": [
+    {
+     "id": "b1-p032",
+     "book": 1,
+     "page": 32
+    },
+    {
+     "id": "b4-p002",
+     "book": 4,
+     "page": 2
+    },
+    {
+     "id": "b4-p005",
+     "book": 4,
+     "page": 5
+    }
+   ],
+   "real": {
+    "name": "Stepped Tank, Royal Enclosure, Hampi",
+    "pin": "Stepped Tank, Royal Enclosure, Hampi",
+    "region": "Karnataka",
+    "confidence": "high",
+    "why": "A five-tier symmetrical tank of chlorite schist whose steps form a pyramid on all four sides - the inverted vimana exactly. The central platform surrounded by water is the one part Hampi does not supply.",
+    "lat": 15.33444444,
+    "lng": 76.46222222,
+    "alsoFrom": "Vandiyur Mariamman Teppakulam, Madurai - for the island platform",
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "pushkarini",
+      "alt": "The stepped tank at Hampi, tiers of dark stone steps descending on all four sides to green water.",
+      "file": "real-pushkarini.webp",
+      "w": 1400,
+      "h": 886,
+      "artist": "Mourya06",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Pushkarani_step_wells_at_Hampi.jpg",
+      "commons": "Pushkarani step wells at Hampi.jpg"
+     },
+     {
+      "id": "pushkarini-platform",
+      "alt": "A 19th-century photograph of the Teppakulam at Madurai: a broad temple tank with a pillared mandapam on an island at its centre.",
+      "file": "real-pushkarini-platform.webp",
+      "w": 1400,
+      "h": 1059,
+      "artist": "Rijksmuseum",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "source": "https://commons.wikimedia.org/wiki/File:Vandiyur_Mariamman_Teppakulam_bij_Madurai,_RP-F-00-5347-78.jpg",
+      "commons": "Vandiyur Mariamman Teppakulam bij Madurai, RP-F-00-5347-78.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "stepwell",
+   "name": "The chained stepwell",
+   "fiction": "The stepwell of the tunnel mystery",
+   "rects": [],
+   "book": "At night, a stepwell whose short flight of steps leads to a vertical opening in the wall, covered by a metal frame chained from the far side.",
+   "pages": [
+    {
+     "id": "b1-p037",
+     "book": 1,
+     "page": 37
+    },
+    {
+     "id": "b1-p038",
+     "book": 1,
+     "page": 38
+    },
+    {
+     "id": "b2-p004",
+     "book": 2,
+     "page": 4
+    },
+    {
+     "id": "b4-p025",
+     "book": 4,
+     "page": 25
+    }
+   ],
+   "real": {
+    "name": "Chand Baori, Abhaneri",
+    "pin": "Chand Baori, Abhaneri",
+    "region": "Rajasthan",
+    "confidence": "medium",
+    "why": "The archetypal Indian stepwell - thirteen storeys, some 3,500 steps, an inverted pyramid - with gallery openings in its walls, standing beside the Harshat Mata temple. The chained opening itself is generic, so any gated stepwell would fit.",
+    "lat": 27.0073,
+    "lng": 76.6065,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "stepwell",
+      "alt": "The inverted pyramid of Chand Baori, thousands of narrow steps zig-zagging down three walls to the water.",
+      "file": "real-stepwell.webp",
+      "w": 1400,
+      "h": 1050,
+      "artist": "Gryffindor",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "source": "https://commons.wikimedia.org/wiki/File:Chand_Baori_2019_(3).jpg",
+      "commons": "Chand Baori 2019 (3).jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "bhoodara-caves",
+   "name": "The Bhoodara caves",
+   "fiction": "The cave labyrinth under the valley",
+   "rects": [],
+   "book": "\"A veritable chakravyuha inside the belly of the earth\" - nobody who goes in is known to have come out - with mesolithic red-and-green paintings of hunting and foraging deep inside.",
+   "pages": [
+    {
+     "id": "b2-p021",
+     "book": 2,
+     "page": 21
+    },
+    {
+     "id": "b4-p004",
+     "book": 4,
+     "page": 4
+    }
+   ],
+   "real": {
+    "name": "Bhimbetka's paintings in a Belum-like labyrinth",
+    "pin": "Bhimbetka's paintings in a Belum-like labyrinth",
+    "region": "Madhya Pradesh and Andhra Pradesh",
+    "confidence": "high",
+    "why": "A composite. Bhimbetka holds the earliest art in South Asia, Mesolithic hunting scenes painted mostly in red and white and occasionally in green. Belum supplies the maze: India's second-longest cave system, 3.2 km of passages mapped as a chakravyuha.",
+    "lat": 22.938415,
+    "lng": 77.613085,
+    "alsoFrom": "Belum Caves, Nandyal - for the labyrinth",
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "bhoodara-paintings",
+      "alt": "Faded red figures of animals and hunters painted on the curved rock of a shelter wall at Bhimbetka.",
+      "file": "real-bhoodara-paintings.webp",
+      "w": 1400,
+      "h": 933,
+      "artist": "Bernard Gagnon",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Rock_Shelter_8,_Bhimbetka_02.jpg",
+      "commons": "Rock Shelter 8, Bhimbetka 02.jpg"
+     },
+     {
+      "id": "bhoodara-labyrinth",
+      "alt": "A lit passage inside the Belum caves, the limestone glowing orange where the lamps catch it.",
+      "file": "real-bhoodara-labyrinth.webp",
+      "w": 1400,
+      "h": 930,
+      "artist": "Naga Praveena Sharma P",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:The_Main_Caves,_Belum,_Andhra_Pradesh.jpg",
+      "commons": "The Main Caves, Belum, Andhra Pradesh.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "kaal-bhairava",
+   "name": "Bhoothnath Temple",
+   "fiction": "The Kaal Bhairava temple, on Bhootnath taal",
+   "rects": [
+    [
+     0.553,
+     0.15,
+     0.678,
+     0.182
+    ]
+   ],
+   "book": "North-west of the valley at the foot of the forested Naga hill, \"the only work in the valley made of soft stones... which lend well to carving\", appearing to float on a natural lake. The seat of the aghori Keshav Bharan.",
+   "pages": [
+    {
+     "id": "b1-p038",
+     "book": 1,
+     "page": 38
+    },
+    {
+     "id": "b1-p039",
+     "book": 1,
+     "page": 39
+    },
+    {
+     "id": "b3-p020",
+     "book": 3,
+     "page": 20
+    }
+   ],
+   "real": {
+    "name": "Kal Bhairav, Ujjain, in Halebidu's stone",
+    "pin": "Kal Bhairav, Ujjain",
+    "region": "Madhya Pradesh and Karnataka",
+    "confidence": "medium",
+    "why": "Another composite. Ujjain's Kal Bhairav is chief of the eight Bhairavas, tied to the Kapalika and Aghora sects, with liquor still offered as one of the panchamakara - the left path the tantric baba teaches. Halebidu supplies the stone: soft chloritic schist, beside a lake.",
+    "lat": 23.218174,
+    "lng": 75.768618,
+    "alsoFrom": "Hoysaleswara Temple, Halebidu - for the soft carved stone beside a lake",
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "kaal-bhairava",
+      "alt": "The gateway of the Kal Bhairav temple at Ujjain, whitewashed and painted, with worshippers in the arch.",
+      "file": "real-kaal-bhairava.webp",
+      "w": 1400,
+      "h": 933,
+      "artist": "Utcursch",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kal_Bhairav_Ujjain_-_entrance.jpg",
+      "commons": "Kal Bhairav Ujjain - entrance.jpg"
+     },
+     {
+      "id": "kaal-bhairava-stone",
+      "alt": "The Hoysaleswara temple at Halebidu, its low soapstone walls carved in bands from plinth to eaves.",
+      "file": "real-kaal-bhairava-stone.webp",
+      "w": 1400,
+      "h": 788,
+      "artist": "Rohit Sharma",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Hoysaleswara_Temple_at_Halebidu.jpg",
+      "commons": "Hoysaleswara Temple at Halebidu.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "mahavidya-temples",
+   "name": "Mahavidya Temples",
+   "fiction": "The temples of the ten Mahavidyas",
+   "rects": [
+    [
+     0.466,
+     0.303,
+     0.532,
+     0.35
+    ]
+   ],
+   "book": "A close-knit group of temples in a thicket where the mountain's boulders meet the plains: plain outside, richly adorned within, with a Sri Chakra yantra and a panel of the ten Mahavidyas, revered by a small Shakta community.",
+   "pages": [
+    {
+     "id": "b5-p026",
+     "book": 5,
+     "page": 26
+    },
+    {
+     "id": "b5-p028",
+     "book": 5,
+     "page": 28
+    }
+   ],
+   "real": {
+    "name": "Kamakhya, on Nilachal hill",
+    "pin": "Kamakhya",
+    "region": "Assam",
+    "confidence": "high",
+    "why": "The main temple complex of the ten Mahavidyas, each with its own shrine grouped around the central temple, and regarded as the birthplace of Shakta tantrism. The book's secondary character is even named Kamakhya.",
+    "lat": 26.166426,
+    "lng": 91.705509,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "mahavidya-temples",
+      "alt": "The Kamakhya temple's beehive dome above its plastered walls, red pennants flying from the shrines around it.",
+      "file": "real-mahavidya-temples.webp",
+      "w": 1050,
+      "h": 1400,
+      "artist": "Arpandhar",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kamakhya_temple.jpg",
+      "commons": "Kamakhya temple.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "mukteshwar-temple",
+   "name": "Sri Mukteshwar temple",
+   "fiction": "The Mahant's seat, the centre of culture in the valley",
+   "rects": [],
+   "book": "Headed for generations by the Mahant's family of pujaris. Its amalaka and kalasha, atop the vimana, are visible from every part of the village.",
+   "pages": [
+    {
+     "id": "b2-p004",
+     "book": 2,
+     "page": 4
+    }
+   ],
+   "real": {
+    "name": "Mukteshvara Temple, Bhubaneswar",
+    "pin": "Mukteshvara Temple, Bhubaneswar",
+    "region": "Odisha",
+    "confidence": "medium-high",
+    "why": "The same name. A 10th-century Kalinga-style Shiva temple whose curved tower is crowned by an amalaka and kalasha, and a landmark of Odishan temple architecture.",
+    "lat": 20.2427,
+    "lng": 85.84039167,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "mukteshwar-temple",
+      "alt": "The Mukteshvara temple at Bhubaneswar, its carved sandstone tower rising behind the arched torana at its gate.",
+      "file": "real-mukteshwar-temple.webp",
+      "w": 1400,
+      "h": 961,
+      "artist": "Bernard Gagnon",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Mukteshvara_Temple,_Bhubaneswar.jpg",
+      "commons": "Mukteshvara Temple, Bhubaneswar.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "gaumukh-hill",
+   "name": "Gaumukh Hill and the Ram temples",
+   "fiction": "The langoors' hill, with its hilltop Hanuman shrine",
+   "rects": [
+    [
+     0.198,
+     0.15,
+     0.292,
+     0.188
+    ],
+    [
+     0.31,
+     0.25,
+     0.392,
+     0.283
+    ]
+   ],
+   "book": "Gaumukh hill, \"the home of langoors\", carries a Hanuman shrine on top and Ram temples along its base. On the trek it appears as a muddy lotus pushkarini beside a small white Hanuman mandir, grey langurs in the trees.",
+   "pages": [],
+   "real": {
+    "name": "Anjanadri hill, Anegundi",
+    "pin": "Anjanadri hill",
+    "region": "Karnataka",
+    "confidence": "high",
+    "why": "Revered as Hanuman's birthplace: a white hilltop temple reached by some 575 steps, monkeys everywhere, and Rama and Sita shrines below - which is the Ram temples along the base as well.",
+    "lat": null,
+    "lng": null,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "gaumukh-hill",
+      "alt": "The small whitewashed Hanuman temple on top of Anjanadri hill, an orange flag streaming from its spire above the valley.",
+      "file": "real-gaumukh-hill.webp",
+      "w": 916,
+      "h": 1400,
+      "artist": "Ingo Mehling",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Anegundi_-_Anjaneya_Hill_-_Hanuman_Temple_-_2.jpg",
+      "commons": "Anegundi - Anjaneya Hill - Hanuman Temple - 2.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "kamal-taal",
+   "name": "Kamal Taal",
+   "fiction": "The lotus lake beside Gaumukh hill",
+   "rects": [
+    [
+     0.668,
+     0.252,
+     0.717,
+     0.298
+    ]
+   ],
+   "book": "The lake beside the hill; the name is simply \"lotus lake\".",
+   "pages": [],
+   "real": {
+    "name": "Pampa Sarovar",
+    "pin": "Pampa Sarovar",
+    "region": "Karnataka",
+    "confidence": "high",
+    "why": "A sacred lotus-filled pond of the Ramayana, directly below Anjanadri - the same pairing of hill and water the map has.",
+    "lat": 15.35376389,
+    "lng": 76.477375,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "kamal-taal",
+      "alt": "Pampa Sarovar seen from the hill above: a rectangular green tank fringed by palms, with boulder country beyond.",
+      "file": "real-kamal-taal.webp",
+      "w": 1400,
+      "h": 933,
+      "artist": "iMahesh",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Pampa_Sarovar_from_the_hill.jpg",
+      "commons": "Pampa Sarovar from the hill.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "naga-forest",
+   "name": "Naga Forest and Nagadwara Hill",
+   "fiction": "The realm of the Nagas, who worship Dhumavati",
+   "rects": [
+    [
+     0.504,
+     0.052,
+     0.587,
+     0.082
+    ],
+    [
+     0.724,
+     0.082,
+     0.83,
+     0.112
+    ]
+   ],
+   "book": "The most ardent tantrics gather around the Bhootnath temple at the foot of Nagadwara hill, and the forest beyond is \"the realm of the Nagas who worship Dhumavati\".",
+   "pages": [
+    {
+     "id": "b1-p039",
+     "book": 1,
+     "page": 39
+    }
+   ],
+   "real": {
+    "name": "Nagdwari, Pachmarhi",
+    "pin": "Nagdwari",
+    "region": "Madhya Pradesh",
+    "confidence": "medium",
+    "why": "A complex of naga cave shrines deep in forest and cliffs, reached by a hard three-day pilgrimage at Nag Panchami. The name matches almost exactly. The Dhumavati connection is the book's own.",
+    "lat": 22.4667,
+    "lng": 78.411,
+    "alsoFrom": null,
+    "noPhoto": "No freely licensed photograph of Nagdwari could be credited honestly - the one file on Commons names its uploader as \"Don't Know\". The shrines are photographed mostly during the pilgrimage itself.",
+    "images": []
+   }
+  },
+  {
+   "id": "forest-temple",
+   "name": "The ancient temple of the forest",
+   "fiction": "Where the Kaula rites are held",
+   "rects": [],
+   "book": "The site of the Kaula left-path rites, the panchamakara, whose aftermath Dvij links to his kundalini rising to svadhishthana.",
+   "pages": [
+    {
+     "id": "b1-p041",
+     "book": 1,
+     "page": 41
+    },
+    {
+     "id": "b2-p002",
+     "book": 2,
+     "page": 2
+    }
+   ],
+   "real": {
+    "name": "Chausath Yogini temple, Hirapur",
+    "pin": "Chausath Yogini temple, Hirapur",
+    "region": "Odisha",
+    "confidence": "medium-high",
+    "why": "A hypaethral - roofless - circular shrine of the Kaula and Kapalika sects, forgotten until it was rediscovered in 1953. Mitaoli and Bhedaghat are the same form in remoter settings.",
+    "lat": 20.226515,
+    "lng": 85.87559472,
+    "alsoFrom": "Chausath Yogini, Mitaoli and Bhedaghat - the same circle, remoter",
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "forest-temple",
+      "alt": "The low circular outer wall of the Chausath Yogini temple at Hirapur, open to the sky.",
+      "file": "real-forest-temple.webp",
+      "w": 1400,
+      "h": 931,
+      "artist": "Sudeep1996",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Chausathi_jogini_temple.jpg",
+      "commons": "Chausathi jogini temple.jpg"
+     },
+     {
+      "id": "forest-temple-alt",
+      "alt": "The circular Chausath Yogini temple at Mitaoli, a ring of pillared cells around an open court on a hilltop.",
+      "file": "real-forest-temple-alt.webp",
+      "w": 1067,
+      "h": 1400,
+      "artist": "Ms Sarah Welch",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "source": "https://commons.wikimedia.org/wiki/File:0121621_Chausath_Yogini_and_Shiva_Temple,_Mitaoli_Madhya_Pradesh.jpg",
+      "commons": "0121621 Chausath Yogini and Shiva Temple, Mitaoli Madhya Pradesh.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "vidgati-shrine",
+   "name": "Vidgati's shrine and the cave settlement",
+   "fiction": "The Charvaka semi-saint's shrine, half way up Dronagiri",
+   "rects": [],
+   "book": "A plateau flattened centuries ago by a vanished Buddhist settlement, caves along the ridge used as dwellings, the largest probably a monastery with ruined chaityas, a rock-cut Harihara \"maybe 12th century\", and Jain monks once living there.",
+   "pages": [
+    {
+     "id": "b4-p020",
+     "book": 4,
+     "page": 20
+    }
+   ],
+   "real": {
+    "name": "Badami's Harihara and Jain cave, on an Ellora-like ridge",
+    "pin": "Badami's Harihara and Jain cave, on an Ellora-like ridge",
+    "region": "Karnataka and Maharashtra",
+    "confidence": "medium-high",
+    "why": "Badami holds some of India's earliest Harihara reliefs, in caves 1 and 3, next door to a Jain cave. Ellora supplies the rest: Buddhist, Hindu and Jain caves side by side along one escarpment, with monasteries and chaitya halls. The Charvaka shrine itself has no counterpart - Charvaka left almost no sites, which is the book's point.",
+    "lat": 15.91833333,
+    "lng": 75.68416667,
+    "alsoFrom": "Ellora - for the Buddhist settlement along the ridge",
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "vidgati-harihara",
+      "alt": "The Harihara relief in Badami cave 3, one figure whose left half is Shiva and right half Vishnu, carved in red sandstone.",
+      "file": "real-vidgati-harihara.webp",
+      "w": 844,
+      "h": 1400,
+      "artist": "Ms Sarah Welch",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "source": "https://commons.wikimedia.org/wiki/File:578_CE_Harihara_panel_Badami_Cave_3.jpg",
+      "commons": "578 CE Harihara panel Badami Cave 3.jpg"
+     },
+     {
+      "id": "vidgati-jain",
+      "alt": "The pillared entrance of the Jain cave at Badami, cave 4, cut into the cliff face.",
+      "file": "real-vidgati-jain.webp",
+      "w": 1400,
+      "h": 1050,
+      "artist": "Ms Sarah Welch",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "source": "https://commons.wikimedia.org/wiki/File:7th_to_8th_century_Digambara_Jain_cave_entrance,_Badami_cave_4,_Karnataka.jpg",
+      "commons": "7th to 8th century Digambara Jain cave entrance, Badami cave 4, Karnataka.jpg"
+     },
+     {
+      "id": "vidgati-caves",
+      "alt": "A 19th-century photograph of the Vishvakarma chaitya at Ellora, its carved gallery and arched window above the entrance.",
+      "file": "real-vidgati-caves.webp",
+      "w": 1062,
+      "h": 1400,
+      "artist": "Lala Deen Dayal",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "source": "https://commons.wikimedia.org/wiki/File:Exterior_of_Sootar_Ki_Jhonpri,_Ellora.jpg",
+      "commons": "Exterior of Sootar Ki Jhonpri, Ellora.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "dolmen-field",
+   "name": "The dolmen in the field of fireflies",
+   "fiction": "Where the party shelters on the anahata night",
+   "rects": [],
+   "book": "The party shelters under an ancient dolmen in a large open field.",
+   "pages": [
+    {
+     "id": "b5-p005",
+     "book": 5,
+     "page": 5
+    },
+    {
+     "id": "b5-p008",
+     "book": 5,
+     "page": 8
+    }
+   ],
+   "real": {
+    "name": "Hire Benakal, Koppal",
+    "pin": "Hire Benakal, Koppal",
+    "region": "Karnataka",
+    "confidence": "high",
+    "why": "India's largest megalithic necropolis - some 400 monuments, many of them dolmens, dated 800-200 BCE - and on UNESCO's tentative list.",
+    "lat": 15.43781111,
+    "lng": 76.45600278,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "dolmen-field",
+      "alt": "Dolmens standing among boulders on the hillside at Hire Benakal, their capstones tilted, under a grey sky.",
+      "file": "real-dolmen-field.webp",
+      "w": 1400,
+      "h": 1050,
+      "artist": "Krishnakulkarni36",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Overview_of_Hirebenakal_megalithic_site.jpg",
+      "commons": "Overview of Hirebenakal megalithic site.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "vedic-ashram",
+   "name": "The Vedic ashram of Kritya Rishi",
+   "fiction": "Near the top of Dronagiri, where the rites are still done faithfully",
+   "rects": [],
+   "book": "The round-nosed man identifies Bhavi's diagram as a Vedic altar of homa-kundas, and mentions bird-shaped altars.",
+   "pages": [
+    {
+     "id": "b4-p032",
+     "book": 4,
+     "page": 32
+    },
+    {
+     "id": "b5-p009",
+     "book": 5,
+     "page": 9
+    }
+   ],
+   "real": {
+    "name": "The Agnicayana at Panjal",
+    "pin": "The Agnicayana at Panjal",
+    "region": "Kerala",
+    "confidence": "medium",
+    "why": "The 1975 Athirathram at Panjal, documented by Frits Staal, is the most famous living example of the altar geometry the book describes: a twelve-day rite built around a falcon-shaped altar of thousands of bricks. This pairs the ritual, not the Himalayan setting.",
+    "lat": 10.7215,
+    "lng": 76.3055,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "vedic-altar",
+      "alt": "A replica of the falcon-shaped citi laid out in terracotta bricks, with the ritual vessels and implements arranged beside it.",
+      "file": "real-vedic-altar.webp",
+      "w": 1400,
+      "h": 837,
+      "artist": "Arayilpdas at Malayalam Wikipedia .",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:%E0%B4%9A%E0%B4%BF%E0%B4%A4%E0%B4%BF%E0%B4%AF%E0%B5%81%E0%B4%9F%E0%B5%86%E0%B4%AF%E0%B5%81%E0%B4%82-%E0%B4%89%E0%B4%AA%E0%B4%95%E0%B4%B0%E0%B4%A3%E0%B4%99%E0%B5%8D%E0%B4%99%E0%B4%B3%E0%B5%81%E0%B4%9F%E0%B5%86%E0%B4%AF%E0%B5%81%E0%B4%82_%E0%B4%AE%E0%B4%BE%E0%B4%A4%E0%B5%83%E0%B4%95.jpg",
+      "commons": "ചിതിയുടെയും-ഉപകരണങ്ങളുടെയും മാതൃക.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "mount-dronagiri",
+   "name": "Mount Dronagiri",
+   "fiction": "The tallest peak around the valley, where the plant is found",
+   "rects": [
+    [
+     0.77,
+     0.262,
+     0.835,
+     0.316
+    ]
+   ],
+   "book": "The trek up it is the second half of the story.",
+   "pages": [
+    {
+     "id": "b2-p014",
+     "book": 2,
+     "page": 14
+    },
+    {
+     "id": "b3-p023",
+     "book": 3,
+     "page": 23
+    },
+    {
+     "id": "b3-p028",
+     "book": 3,
+     "page": 28
+    },
+    {
+     "id": "b4-p002",
+     "book": 4,
+     "page": 2
+    },
+    {
+     "id": "b4-p005",
+     "book": 4,
+     "page": 5
+    },
+    {
+     "id": "b4-p008",
+     "book": 4,
+     "page": 8
+    },
+    {
+     "id": "b4-p011",
+     "book": 4,
+     "page": 11
+    }
+   ],
+   "real": {
+    "name": "Dunagiri, Chamoli",
+    "pin": "Dunagiri",
+    "region": "Uttarakhand",
+    "confidence": "high",
+    "why": "Named directly. By legend the mountain Hanuman carried off for the Sanjeevani herb - and the villagers there famously do not worship Hanuman, for breaking their deity, which sits oddly and well against the book's Hanuman shrines lower down.",
+    "lat": 30.5325,
+    "lng": 79.83388889,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "mount-dronagiri",
+      "alt": "The snow summit of Dunagiri seen from Kuari Pass at dawn, pink light on the ridge above dark forested slopes.",
+      "file": "real-mount-dronagiri.webp",
+      "w": 1400,
+      "h": 930,
+      "artist": "Sumodm",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Dunagiri_from_Kuari_Pass.jpg",
+      "commons": "Dunagiri from Kuari Pass.jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "white-flowers",
+   "name": "The valley of white flowers",
+   "fiction": "Where Dvij walks alone in the Epilogue",
+   "rects": [],
+   "book": "Dvij walks alone \"through the valley of the white flowers that seemed to be reaching out into nothingness\".",
+   "pages": [
+    {
+     "id": "b5-p026",
+     "book": 5,
+     "page": 26
+    },
+    {
+     "id": "b5-p027",
+     "book": 5,
+     "page": 27
+    },
+    {
+     "id": "b5-p029",
+     "book": 5,
+     "page": 29
+    }
+   ],
+   "real": {
+    "name": "Valley of Flowers National Park",
+    "pin": "Valley of Flowers National Park",
+    "region": "Uttarakhand",
+    "confidence": "high",
+    "why": "In the same district as Dunagiri, and in some traditions identified with the mountain of herbs itself. A fitting last real place for the last page.",
+    "lat": 30.73,
+    "lng": 79.6175,
+    "alsoFrom": null,
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "white-flowers",
+      "alt": "The Valley of Flowers in bloom, a meadow of small flowers running up to steep green mountainsides and cloud.",
+      "file": "real-white-flowers.webp",
+      "w": 1400,
+      "h": 933,
+      "artist": "Original: Rohit Sharma Derivative work: UnpetitproleX",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Valley_of_flowers_national_park,_Uttarakhand,_India_03_(edit).jpg",
+      "commons": "Valley of flowers national park, Uttarakhand, India 03 (edit).jpg"
+     }
+    ]
+   }
+  },
+  {
+   "id": "sheetal-lake",
+   "name": "Sheetal Lake",
+   "fiction": "Fed by the Vaitarna, its water once said to cure illness",
+   "rects": [
+    [
+     0.432,
+     0.424,
+     0.502,
+     0.479
+    ]
+   ],
+   "book": "Dvij explains the cure with the bacteriophage research on the Ganga.",
+   "pages": [
+    {
+     "id": "b2-p026",
+     "book": 2,
+     "page": 26
+    }
+   ],
+   "real": {
+    "name": "The Ganga, and what was found in its water",
+    "pin": "The Ganga",
+    "region": "Uttar Pradesh",
+    "confidence": "medium",
+    "why": "The antibacterial power of Ganga water, first reported by Ernest Hankin in the 1890s and later explained by bacteriophages, is real history and is exactly the move Dvij makes. The Vaitarna is a real river in Maharashtra and, in myth, the river the dead cross - a name, and nothing more.",
+    "lat": 25.31888889,
+    "lng": 83.01277778,
+    "alsoFrom": "The Vaitarna, Maharashtra - the name only",
+    "noPhoto": null,
+    "images": [
+     {
+      "id": "sheetal-lake",
+      "alt": "The ghats of Varanasi seen from the Ganga, stone steps and temple buildings rising from the water with boats moored below.",
+      "file": "real-sheetal-lake.webp",
+      "w": 1400,
+      "h": 976,
+      "artist": "Marcin Białek",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Varanasi_Munshi_Ghat3.jpg",
+      "commons": "Varanasi Munshi Ghat3.jpg"
+     },
+     {
+      "id": "sheetal-lake-science",
+      "alt": "An electron micrograph of a T2 bacteriophage, its angular head and tail fibres in grey against the stain.",
+      "file": "real-sheetal-lake-science.webp",
+      "w": 1400,
+      "h": 1400,
+      "artist": "SnaxMikn",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Enterobacteria_phage_T2_transmission_electron_micrograph.jpg",
+      "commons": "Enterobacteria phage T2 transmission electron micrograph.jpg"
+     },
+     {
+      "id": "vaitarna",
+      "alt": "The Vaitarna river in Palghar, brown water between wooded banks.",
+      "file": "real-vaitarna.webp",
+      "w": 1400,
+      "h": 1050,
+      "artist": "KartikMistry",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Vaitarna_River.jpg",
+      "commons": "Vaitarna River.jpg"
+     }
+    ]
+   }
+  }
+ ],
+ "fictional": [
+  {
+   "id": "village-bazaar",
+   "name": "Village Bazaar",
+   "rects": [
+    [
+     0.343,
+     0.536,
+     0.437,
+     0.565
+    ]
+   ],
+   "note": null
+  },
+  {
+   "id": "tavern",
+   "name": "Tavern",
+   "rects": [
+    [
+     0.438,
+     0.618,
+     0.492,
+     0.646
+    ]
+   ],
+   "note": null
+  },
+  {
+   "id": "professors-lodge",
+   "name": "Professor's Lodge",
+   "rects": [
+    [
+     0.643,
+     0.565,
+     0.706,
+     0.612
+    ]
+   ],
+   "note": "At most a colonial-era forest rest house as a type, rather than a building."
+  },
+  {
+   "id": "forest-officers-bungalow",
+   "name": "Forest Officer's Bungalow",
+   "rects": [
+    [
+     0.657,
+     0.385,
+     0.717,
+     0.457
+    ]
+   ],
+   "note": "At most a colonial-era forest rest house as a type, rather than a building."
+  },
+  {
+   "id": "madangi-van",
+   "name": "Madangi Van",
+   "rects": [
+    [
+     0.758,
+     0.524,
+     0.848,
+     0.552
+    ]
+   ],
+   "note": "Where the Somasuras dwell. Best left fictional."
+  },
+  {
+   "id": "access-road",
+   "name": "Access Road",
+   "rects": [
+    [
+     0.578,
+     0.679,
+     0.662,
+     0.707
+    ]
+   ],
+   "note": null
+  }
+ ]
+}

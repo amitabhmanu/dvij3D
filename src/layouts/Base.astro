@@ -1,0 +1,95 @@
+---
+import "../styles/global.css";
+import Analytics from "../components/Analytics.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string; // absolute or site-relative share image
+  bodyClass?: string;
+  chrome?: boolean; // site header/footer; the reader turns it off
+}
+const {
+  title,
+  description = "The Twice Born — an illustrated adventure in five books. Read the complete comic online.",
+  image,
+  bodyClass,
+  chrome = true,
+} = Astro.props;
+const fullTitle = title ? `${title} · The Twice Born` : "The Twice Born";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const nav = [
+  { href: "/read/", label: "Read" },
+  { href: "/codex/", label: "Codex" },
+  { href: "/bestiary/", label: "Bestiary" },
+  { href: "/parchment/", label: "Puzzles" },
+  { href: "/avadhana/", label: "Memory" },
+  { href: "/journey/", label: "Journey" },
+  { href: "/voices/", label: "Voices" },
+  { href: "/valley/", label: "Valley" },
+  { href: "/search/", label: "Search" },
+  { href: "/about/", label: "About" },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+    <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Noto+Serif+Devanagari:wght@400;600&family=Yatra+One&display=swap"
+    />
+    <slot name="head" />
+    <Analytics />
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {chrome && (
+      <header class="site-header">
+        <div class="wrap bar">
+          <a class="brand" href="/">The Twice Born</a>
+          <nav aria-label="Site">
+            <ul>
+              {nav.map((n) => (
+                <li><a href={n.href} aria-current={Astro.url.pathname.startsWith(n.href) ? "page" : undefined}>{n.label}</a></li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </header>
+    )}
+    <main id="main">
+      <slot />
+    </main>
+    {chrome && (
+      <footer class="site-footer">
+        <div class="wrap">
+          <p>© Amitabh Manu. All rights reserved.</p>
+        </div>
+      </footer>
+    )}
+  </body>
+</html>
+
+<style>
+  .site-header { border-bottom: 1px solid var(--paper-3); background: var(--paper); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 60px; }
+  .brand { font-family: var(--font-display); font-size: 1.5rem; color: var(--ink); text-decoration: none; }
+  nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; margin: 0; padding: 0; justify-content: flex-end; }
+  nav a { font-family: var(--font-ui); font-weight: 600; font-size: 0.95rem; color: var(--ink-2); text-decoration: none; }
+  nav a:hover, nav a[aria-current="page"] { color: var(--accent); }
+  .site-footer { margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--paper-3); font-family: var(--font-ui); font-size: 0.85rem; color: var(--ink-3); }
+</style>

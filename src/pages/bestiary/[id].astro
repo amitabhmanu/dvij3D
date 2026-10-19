@@ -1,0 +1,113 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import VeilNotice from "../../components/VeilNotice.astro";
+import VeilScript from "../../components/VeilScript.astro";
+import { beastEntries, CLASSES } from "../../lib/bestiary";
+import { codexEntries, allHotspots, pageRef } from "../../lib/codex";
+import { artFile } from "../../lib/manifest";
+
+export async function getStaticPaths() {
+  const beasts = await beastEntries();
+  const codex = await codexEntries();
+  return beasts.map((beast) => ({ params: { id: beast.id }, props: { beast, beasts, codex } }));
+}
+
+const { beast, beasts, codex } = Astro.props;
+const { Content } = await render(beast);
+const codexById = new Map(codex.map((e) => [e.id, e]));
+const beastById = new Map(beasts.map((b) => [b.id, b]));
+const related = beast.data.related.map((id) => codexById.get(id)).filter(Boolean);
+const kin = beast.data.kin.map((id) => beastById.get(id)).filter(Boolean);
+// Named in the lettering here, plus any drawing we marked by hand.
+const pages = [...new Set([
+  ...beast.mentions,
+  ...allHotspots().filter((h) => h.targets.includes(`beast:${beast.id}`)).map((h) => h.page),
+])].sort().map(pageRef);
+const fs = beast.firstSeen;
+const SOURCE = {
+  lettering: "Named in the comic's own lettering.",
+  art: "Drawn in the comic, never named in the lettering.",
+};
+---
+<Base title={beast.data.title} description={beast.data.summary}>
+  <article class="wrap entry" data-first-book={fs?.book} data-first-page={fs?.page}
+           data-pagefind-body data-pagefind-meta={`title:Bestiary · ${beast.data.title}`}>
+    <p class="eyebrow"><a href="/bestiary/">Bestiary</a></p>
+    <h1>{beast.data.title}</h1>
+    <p class="kind">{CLASSES[beast.data.class]}{beast.data.alsoKnownAs.length > 0 && <> · also <em>{beast.data.alsoKnownAs.join(", ")}</em></>}</p>
+    {fs && <VeilNotice book={fs.book} page={fs.page} />}
+    <div class="veil-content">
+      <p class="summary">{beast.data.summary}</p>
+      <div class="layout">
+        <div class="prose body"><Content /></div>
+        <aside class="figure">
+          {beast.art
+            ? <figure>
+                <img src={artFile(beast.art.file)} alt={`From the comic: ${beast.data.appearance}`} loading="lazy" width={beast.art.w} height={beast.art.h} />
+                <figcaption>{beast.data.appearance} <a href={pageRef(beast.art.page).href}>{pageRef(beast.art.page).label}</a></figcaption>
+              </figure>
+            : <p class="no-art"><strong>Never drawn.</strong> {beast.data.appearance}</p>}
+        </aside>
+      </div>
+
+      {pages.length > 0 && (
+        <section>
+          <h2>In the comic</h2>
+          <ul class="pages">
+            {pages.map((p) => <li data-first-book={p.book} data-first-page={p.page}><a href={p.href}>{p.label}</a></li>)}
+          </ul>
+        </section>
+      )}
+
+      {kin.length > 0 && (
+        <section>
+          <h2>Others like it</h2>
+          <ul class="related">
+            {kin.map((k) => (
+              <li data-first-book={k!.firstSeen?.book} data-first-page={k!.firstSeen?.page}>
+                <a href={`/bestiary/${k!.id}/`}>{k!.data.title}</a>
+                <span class="veil-content muted"> — {k!.data.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {related.length > 0 && (
+        <section>
+          <h2>In the Codex</h2>
+          <ul class="related">
+            {related.map((r) => (
+              <li data-first-book={r!.firstSeen?.book} data-first-page={r!.firstSeen?.page}>
+                <a href={`/codex/${r!.id}/`}>{r!.data.title}</a>
+                <span class="veil-content muted"> — {r!.data.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      <p class="source muted">{SOURCE[beast.data.source]} The traditional material is written from outside the book.</p>
+    </div>
+  </article>
+  <VeilScript />
+</Base>
+
+<style>
+  .kind { font: 700 0.72rem var(--font-ui); text-transform: uppercase; letter-spacing: 0.1em; color: var(--sepia); margin: -8px 0 16px; }
+  .kind em { text-transform: none; letter-spacing: 0; font-size: 0.95rem; }
+  .summary { font-size: 1.2rem; color: var(--ink-2); max-width: 60ch; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 40px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .figure figure { margin: 0; background: #15110d; border: 1px solid var(--paper-3); border-radius: var(--radius); overflow: hidden; }
+  .figure img { display: block; width: 100%; height: auto; }
+  .figure figcaption { font: 0.82rem/1.5 var(--font-ui); color: var(--paper-2); padding: 10px 12px; background: #15110d; }
+  .figure figcaption a { color: var(--gold); }
+  .no-art { font-size: 0.95rem; color: var(--ink-2); border-left: 3px solid var(--paper-3); padding-left: 14px; }
+  .body :global(h2) { font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sepia); margin-top: 2rem; }
+  .pages { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; font-family: var(--font-ui); }
+  .pages li[data-veiled] { display: none; }
+  .related { padding-left: 1.2em; }
+  .source { font-family: var(--font-ui); font-size: 0.85rem; margin-top: 3rem; }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .figure { order: -1; } }
+</style>

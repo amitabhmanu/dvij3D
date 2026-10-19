@@ -1,0 +1,36 @@
+{
+  "name": "twice-born-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test:e2e": "playwright test",
+    "pipeline": "python pipeline/run_all.py",
+    "variants": "node pipeline/make_variants.mjs",
+    "upload": "node pipeline/upload_assets.mjs",
+    "verify-assets": "node pipeline/upload_assets.mjs --verify",
+    "manifests": "python pipeline/build_manifests.py",
+    "build:local": "node scripts/build-local.mjs",
+    "validate": "python pipeline/validate_content.py",
+    "codex": "python pipeline/link_codex.py",
+    "bestiary": "python pipeline/link_bestiary.py",
+    "memory": "python pipeline/link_memory.py",
+    "places": "python pipeline/link_places.py"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@aws-sdk/client-s3": "^3.1136.0",
+    "@playwright/test": "^1.63.0",
+    "pagefind": "^1.5.2",
+    "sharp": "^0.35.4",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@astrojs/preact": "^6.0.5",
+    "astro": "^7.3.3",
+    "preact": "^10.29.8"
+  }
+}

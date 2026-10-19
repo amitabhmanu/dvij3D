@@ -1,0 +1,237 @@
+---
+// The valley map and the Real India layer (design §10, Layer 4).
+import Base from "../layouts/Base.astro";
+import PlaceCredit from "../components/PlaceCredit.astro";
+import VeilNotice from "../components/VeilNotice.astro";
+import VeilScript from "../components/VeilScript.astro";
+import { artFile } from "../lib/manifest";
+import { valley, places, fictional, located, rectStyle, pinStyle, osmUrl } from "../lib/places";
+
+const withPhotos = places.filter((p) => p.real.images.length > 0).length;
+const CONFIDENCE: Record<string, string> = {
+  high: "Close match", "medium-high": "Good match", medium: "Partial match", low: "Name only",
+};
+---
+<Base
+  title="The Valley"
+  description="The map of the valley, and the real Indian places it is stitched from — forts, stepwells, cave paintings and a Himalayan peak, with the reasoning behind each pairing."
+>
+  <div class="wrap">
+    <p class="eyebrow">Layer 4</p>
+    <h1>The Valley</h1>
+
+    <blockquote class="epigraph">
+      <p>{valley.epigraph.text}</p>
+      <cite>{valley.epigraph.who}</cite>
+    </blockquote>
+
+    <p class="prose">The valley is nowhere. It is also, piece by piece, somewhere: a fort in Maharashtra, a
+      stepwell in Rajasthan, painted rock shelters in Madhya Pradesh, a hill of monkeys near Hampi, a peak in
+      Chamoli. Turn the layer on and the map says what each place most resembles.</p>
+
+    <div class="toolbar">
+      <button type="button" id="toggle" class="chip" aria-pressed="false">Real India</button>
+      <p class="hint" id="hint">Off: the valley as the book draws it.</p>
+    </div>
+
+    <figure class="mapfig">
+      <div class="map" id="map">
+        <img src={artFile("valley-map.webp")} alt={valley.map.alt} width="686" height="465" />
+        {located.map((p) => p.rects.map((r) => (
+          <a class="spot" href={`#${p.id}`} style={rectStyle(r)}
+             aria-label={`${p.name} — ${p.real.name}`} data-place={p.id}>
+            <span class="sr">{p.name}</span>
+          </a>
+        )))}
+        {fictional.map((f) => f.rects.map((r) => (
+          <span class="spot nowhere" style={rectStyle(r)} title={`${f.name} — left fictional`}></span>
+        )))}
+        {located.map((p, i) => (
+          <span class="pin" style={pinStyle(p.rects[0])} data-pin={p.id}>
+            <i class="n">{i + 1}</i><span class="pn">{p.real.pin}</span>
+          </span>
+        ))}
+      </div>
+      <figcaption>
+        The valley map from the book. {located.length} of its labels have a real counterpart below; the rest of
+        the pairings are places the map never draws.
+      </figcaption>
+      {/* On a phone the names would cover the map, so the pins become numbers
+          and the names move into this list. */}
+      <ol class="legend">
+        {located.map((p) => (
+          <li><a href={`#${p.id}`}>{p.name} <span aria-hidden="true">&rarr;</span> {p.real.pin}</a></li>
+        ))}
+      </ol>
+    </figure>
+
+    <p class="prose caveat"><strong>These are resemblances, not sources.</strong> The manuscript never names a
+      real counterpart for anything in the valley. Each pairing below matches what the book describes against
+      real sites, and says how close the match is. Where the book invents, it is left inventing.</p>
+
+    <h2 class="section">The pairings</h2>
+    <p class="count">{places.length} places · {withPhotos} with photographs</p>
+
+    <ul class="places">
+      {places.map((p) => (
+        <li class="place" id={p.id} data-first-book={p.pages[0]?.book} data-first-page={p.pages[0]?.page}>
+          <div class="head">
+            <h3>{p.name}</h3>
+            <p class="fiction">{p.fiction}</p>
+          </div>
+
+          {p.pages[0] && <VeilNotice book={p.pages[0].book} page={p.pages[0].page} />}
+
+          <div class="body veil-content">
+            <p class="book">{p.book}</p>
+
+            <div class="real">
+              <p class="arrow" aria-hidden="true">is most like</p>
+              <h4>
+                {p.real.lat !== null && p.real.lng !== null
+                  ? <a href={osmUrl(p.real.lat, p.real.lng)} rel="noopener nofollow">{p.real.name}</a>
+                  : p.real.name}
+              </h4>
+              <p class="where">{p.real.region} · <span class={`conf c-${p.real.confidence}`}>{CONFIDENCE[p.real.confidence] ?? p.real.confidence}</span></p>
+              <p class="why">{p.real.why}</p>
+              {p.real.alsoFrom && <p class="also"><strong>Also from:</strong> {p.real.alsoFrom}</p>}
+              {p.real.noPhoto && <p class="nophoto">{p.real.noPhoto}</p>}
+            </div>
+
+            {p.real.images.length > 0 && (
+              <ul class="shots">
+                {p.real.images.map((pic) => (
+                  <li>
+                    <img src={artFile(pic.file)} alt={pic.alt} width={pic.w} height={pic.h} loading="lazy" />
+                    <PlaceCredit pic={pic} />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {p.pages.length > 0 && (
+              <p class="pages">In the comic:{" "}
+                {p.pages.map((pg, i) => (
+                  <>{i > 0 && <span aria-hidden="true"> · </span>}<a href={`/read/b${pg.book}/${pg.page}`}>B{pg.book} p{pg.page}</a></>
+                ))}
+              </p>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="section">Left nowhere on purpose</h2>
+    <p class="prose">Some of the valley has no counterpart and should not be given one. The layer is stronger if
+      part of the map stays fictional.</p>
+    <ul class="nowhere-list">
+      {fictional.map((f) => (
+        <li><strong>{f.name}</strong>{f.note && <> — {f.note}</>}</li>
+      ))}
+    </ul>
+
+    <p class="prose note">
+      <strong>The photographs</strong> are other people's, reused under their licences and credited under each
+      one. They are reproduced at reduced size; nothing else about them has been changed. Where a photograph is
+      CC0 its credit is courtesy rather than obligation, and it says so. Three pairings have no usable free
+      photograph yet and carry their reasoning without one.
+    </p>
+  </div>
+  <VeilScript />
+</Base>
+
+<style>
+  .epigraph { margin: 22px 0 26px; padding-left: 18px; border-left: 3px solid var(--paper-3); }
+  .epigraph p { font: italic 1.12rem/1.6 var(--font-body); color: var(--ink-2); margin: 0; }
+  .epigraph cite { display: block; margin-top: 6px; font: 600 0.8rem var(--font-ui); font-style: normal;
+                   letter-spacing: 0.08em; text-transform: uppercase; color: var(--sepia); }
+
+  .toolbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 26px 0 10px; }
+  .chip { font: 600 0.85rem var(--font-ui); padding: 8px 16px; border-radius: 999px; border: 2px solid var(--paper-3);
+          background: transparent; color: var(--ink-2); cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .hint { margin: 0; font: 0.85rem var(--font-ui); color: var(--sepia); }
+
+  .mapfig { margin: 0 0 30px; }
+  .map { position: relative; background: #fff; border: 1px solid var(--paper-3); border-radius: 8px; overflow: hidden; }
+  .map img { display: block; width: 100%; height: auto; }
+  .spot { position: absolute; border: 2px solid transparent; border-radius: 4px; }
+  a.spot:hover, a.spot:focus-visible { border-color: var(--accent); background: rgb(191 122 58 / 18%); outline: none; }
+  .map[data-real="on"] a.spot { border-color: rgb(191 122 58 / 55%); }
+  .spot.nowhere { border-style: dashed; border-color: transparent; }
+  .map[data-real="on"] .spot.nowhere { border-color: rgb(120 110 100 / 45%); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+  .pin { position: absolute; transform: translate(-50%, -140%); display: none; white-space: nowrap;
+         font: 600 0.68rem var(--font-ui); background: var(--ink); color: var(--paper);
+         padding: 3px 7px; border-radius: 4px; pointer-events: none; }
+  .map[data-real="on"] .pin { display: block; }
+
+  figcaption { margin-top: 8px; font: 0.85rem/1.5 var(--font-ui); color: var(--sepia); }
+  .caveat { margin-top: 18px; padding: 14px 16px; background: var(--paper-2); border: 1px solid var(--paper-3);
+            border-radius: 8px; font-size: 0.95rem; }
+
+  .section { margin: 44px 0 2px; }
+  .count { margin: 0 0 18px; font: 0.85rem var(--font-ui); color: var(--sepia); }
+
+  .places { list-style: none; padding: 0; margin: 0; display: grid; gap: 26px; }
+  .place { background: var(--paper-2); border: 1px solid var(--paper-3); border-radius: 8px; padding: 20px 22px; scroll-margin-top: 20px; }
+  .place:target { border-color: var(--accent); }
+  .head h3 { margin: 0; font-size: 1.35rem; }
+  .fiction { margin: 2px 0 0; font: 0.9rem var(--font-ui); color: var(--sepia); }
+  .book { margin: 14px 0 0; font-size: 0.97rem; color: var(--ink-2); }
+
+  .real { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--paper-3); }
+  .arrow { margin: 0; font: 700 0.68rem var(--font-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--sepia); }
+  .real h4 { margin: 2px 0 0; font-size: 1.15rem; }
+  .real h4 a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--paper-3); }
+  .real h4 a:hover { color: var(--accent); }
+  .where { margin: 3px 0 0; font: 0.84rem var(--font-ui); color: var(--sepia); }
+  .conf { font-weight: 700; }
+  .c-high { color: var(--accent); }
+  .why { margin: 10px 0 0; font-size: 0.95rem; color: var(--ink-2); }
+  .also, .nophoto { margin: 8px 0 0; font-size: 0.88rem; color: var(--sepia); }
+  .nophoto { font-style: italic; }
+
+  .shots { list-style: none; padding: 0; margin: 16px 0 0; display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+  .shots img { width: 100%; height: 220px; object-fit: cover; border-radius: 6px; background: #15110d; }
+
+  .pages { margin: 14px 0 0; font: 0.85rem var(--font-ui); color: var(--sepia); }
+  .pages a { color: var(--ink-2); }
+
+  .place[data-veiled] .body { filter: blur(6px); user-select: none; }
+  .place :global(.veil-notice) { margin: 12px 0 0; font-size: 0.9rem; }
+
+  .nowhere-list { margin: 14px 0 0; padding-left: 20px; color: var(--ink-2); font-size: 0.95rem; }
+  .nowhere-list li { margin-bottom: 6px; }
+  .note { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--paper-3); font-size: 0.92rem; color: var(--ink-2); }
+
+  .pin .n { display: none; font-style: normal; }
+  .legend { display: none; }
+
+  @media (max-width: 640px) {
+    .pin .pn { display: none; }
+    .pin .n { display: block; min-width: 1.25em; text-align: center; font-size: 0.7rem; }
+    .pin { padding: 2px 4px; border-radius: 999px; }
+    .map[data-real="on"] ~ .legend { display: block; }
+    .legend { margin: 10px 0 0; padding-left: 26px; font: 0.86rem/1.7 var(--font-ui); color: var(--ink-2); }
+    .legend a { color: inherit; }
+    .shots img { height: 180px; }
+  }
+</style>
+
+<script>
+  // The Real India toggle: pins on the map, and a line saying which way it is.
+  const btn = document.getElementById("toggle") as HTMLButtonElement | null;
+  const map = document.getElementById("map");
+  const hint = document.getElementById("hint");
+  btn?.addEventListener("click", () => {
+    const on = btn.getAttribute("aria-pressed") !== "true";
+    btn.setAttribute("aria-pressed", String(on));
+    map?.setAttribute("data-real", on ? "on" : "off");
+    if (hint) hint.textContent = on
+      ? "On: what each place most resembles. Tap a label for the reasoning."
+      : "Off: the valley as the book draws it.";
+  });
+</script>

@@ -1,0 +1,58 @@
+---
+// Dev-only tools. getStaticPaths returns nothing in production, so none of
+// this is ever built or deployed. Run `npm run dev`, open /dev/review.
+import DevReview from "../../islands/DevReview.tsx";
+import { books } from "../../lib/manifest";
+import "../../styles/global.css";
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { tool: "review" } }] : [];
+}
+const info = books.map((b) => ({
+  slug: b.slug, book: b.book, title: b.title, pageCount: b.pageCount, chapters: b.chapters,
+}));
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Review · The Twice Born (dev)</title>
+  </head>
+  <body>
+    <DevReview client:only="preact" books={info} />
+  </body>
+</html>
+
+<style is:global>
+  body { margin: 0; font-family: var(--font-ui); background: #f5f1e8; }
+  .review header { position: sticky; top: 0; z-index: 3; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    padding: 8px 12px; background: #2b241c; color: #efe3c8; }
+  .review header input { width: 56px; }
+  .review header .count { margin-left: 12px; opacity: 0.8; }
+  .review header .primary { background: #c8961e; border: 0; padding: 6px 12px; font-weight: 600; cursor: pointer; }
+  .review header .msg { color: #9fd49f; }
+  .review .body { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 16px; padding: 12px; }
+  .review .canvas { position: relative; max-width: 720px; touch-action: none; user-select: none; cursor: crosshair; }
+  .review .canvas img { width: 100%; display: block; pointer-events: none; }
+  .review .unit { position: absolute; outline: 1px dashed rgba(30, 90, 200, 0.6); pointer-events: none; }
+  .review .box { position: absolute; border: 2px solid #e0302a; background: rgba(224, 48, 42, 0.06); cursor: move; }
+  .review .box.sel { border-color: #1f5fbf; background: rgba(31, 95, 191, 0.12); }
+  .review .box .num { position: absolute; left: 2px; top: 0; font: 700 18px/1 system-ui; color: #e0302a; background: rgba(255,255,255,0.85); padding: 2px 4px; }
+  .review .box.sel .num { color: #1f5fbf; }
+  .review .box .handle { position: absolute; right: -6px; bottom: -6px; width: 12px; height: 12px; background: #1f5fbf; cursor: nwse-resize; }
+  .review aside { font-size: 14px; }
+  .review aside .hint { color: #7a6348; }
+  .review .panels { padding-left: 0; list-style: none; }
+  .review .panels li { border: 1px solid #dcc79c; background: #fff; padding: 6px; margin-bottom: 6px; }
+  .review .panels li.sel { border-color: #1f5fbf; }
+  .review .panels .row { display: flex; gap: 4px; align-items: center; }
+  .review .panels .lettering { font-size: 12px; color: #7a6348; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .review .panels textarea { width: 100%; margin-top: 4px; font: inherit; }
+  .review .tools button[aria-pressed="true"] { background: #c8961e; font-weight: 600; }
+  .review .hs { position: absolute; cursor: pointer; }
+  .review .hs.auto { border: 2px dashed #e07a1f; background: rgba(224, 122, 31, 0.12); }
+  .review .hs.auto.off { border-color: #999; background: rgba(0, 0, 0, 0.15); opacity: 0.5; }
+  .review .hs.manual { border: 2px solid #2e9e4f; background: rgba(46, 158, 79, 0.15); }
+  .review .hs.draft { border: 2px dashed #1f5fbf; pointer-events: none; }
+</style>

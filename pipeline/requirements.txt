@@ -1,0 +1,6 @@
+# Content pipeline (site/pipeline). Python 3.13.
+pymupdf>=1.25.5
+pillow>=11.2
+numpy>=2.0
+scipy>=1.14
+rapidfuzz>=3.13

@@ -1,0 +1,101 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import VeilNotice from "../../components/VeilNotice.astro";
+import VeilScript from "../../components/VeilScript.astro";
+import { codexEntries, allHotspots, pageRef } from "../../lib/codex";
+import { artFile } from "../../lib/manifest";
+import { diagramFor } from "../../components/diagrams";
+
+export async function getStaticPaths() {
+  const entries = await codexEntries();
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry, entries } }));
+}
+
+const { entry, entries } = Astro.props;
+const { Content } = await render(entry);
+const byId = new Map(entries.map((e) => [e.id, e]));
+const related = entry.data.related.map((id) => byId.get(id)).filter(Boolean);
+// Pages this entry appears on: lettering mentions plus any manual hotspots pointing here.
+const pages = [...new Set([
+  ...entry.mentions,
+  ...allHotspots().filter((h) => h.targets.includes(`codex:${entry.id}`)).map((h) => h.page),
+])].sort().map(pageRef);
+const fs = entry.firstSeen;
+const Diagram = diagramFor(entry.data.diagram);
+---
+<Base title={entry.data.title} description={entry.data.summary}>
+  <article class="wrap entry" data-first-book={fs?.book} data-first-page={fs?.page} data-pagefind-body data-pagefind-meta={`title:Codex · ${entry.data.title}`}>
+    <p class="eyebrow"><a href="/codex/">Codex</a></p>
+    <h1>{entry.data.title}</h1>
+    {fs && <VeilNotice book={fs.book} page={fs.page} />}
+    <div class="veil-content">
+      <p class="summary">{entry.data.summary}</p>
+      <div class="layout">
+        <div class="prose body"><Content /></div>
+        {(Diagram || entry.data.images.length > 0) && (
+          <aside class="figures">
+            {Diagram && <Diagram />}
+            {entry.data.images.map((img) => (
+              <figure>
+                <img src={artFile(`${img}.webp`)} alt={entry.data.imageAlt ?? `Diagram: ${entry.data.title}`} loading="lazy" />
+                {entry.data.imageCredit && <figcaption>{entry.data.imageCredit}</figcaption>}
+              </figure>
+            ))}
+          </aside>
+        )}
+      </div>
+
+      {pages.length > 0 && (
+        <section>
+          <h2>In the comic</h2>
+          <ul class="pages">
+            {pages.map((p) => (
+              <li data-first-book={p.book} data-first-page={p.page}>
+                <a href={p.href}>{p.label}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {related.length > 0 && (
+        <section>
+          <h2>Related</h2>
+          <ul class="related">
+            {related.map((r) => (
+              <li data-first-book={r!.firstSeen?.book} data-first-page={r!.firstSeen?.page}>
+                <a href={`/codex/${r!.id}/`}>{r!.data.title}</a>
+                <span class="veil-content muted"> — {r!.data.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      <p class="source muted">
+        Source: {entry.data.source.startsWith("endnote") ? `the book's notes (${entry.data.source.replace("-", " ")})` : "the story and its characters' explanations"}.
+      </p>
+    </div>
+  </article>
+  <VeilScript />
+</Base>
+
+<style>
+  .summary { font-size: 1.2rem; color: var(--ink-2); max-width: 60ch; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: start; }
+  /* Grid items default to min-width:auto, so the wide "book's notes" tables were
+     forcing the 1fr track past the viewport and scrolling the whole page sideways
+     on phones. Capping the items lets the tables scroll inside themselves instead. */
+  .layout > * { min-width: 0; }
+  .figures figure { margin: 0 0 16px; background: #fff; border: 1px solid var(--paper-3); border-radius: var(--radius); padding: 10px; }
+  .figures img { margin: 0 auto; max-height: 420px; width: auto; }
+  .figures figcaption { font: 0.78rem/1.45 var(--font-ui); color: var(--ink-3); margin-top: 8px; }
+  .body :global(table) { border-collapse: collapse; font-family: var(--font-ui); font-size: 0.85rem; margin: 16px 0; display: block; overflow-x: auto; max-width: 100%; }
+  .body :global(th), .body :global(td) { border: 1px solid var(--paper-3); padding: 5px 8px; text-align: left; vertical-align: top; }
+  .body :global(th) { background: var(--paper-2); }
+  .pages { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; font-family: var(--font-ui); }
+  .pages li[data-veiled] { display: none; }
+  .related { padding-left: 1.2em; }
+  .source { font-family: var(--font-ui); font-size: 0.85rem; margin-top: 3rem; }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .figures { order: -1; } }
+</style>

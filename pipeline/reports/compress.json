@@ -1,0 +1,102 @@
+{
+  "b1": {
+    "book": 1,
+    "quality": 80,
+    "images": 360,
+    "source_mb": 633.8,
+    "compressed_mb": 66.1,
+    "seconds": 37,
+    "pages": 42,
+    "text_mismatch_pages": [],
+    "ssim_min": 0.972,
+    "ssim_min_page": 13,
+    "ssim_mean": 0.9895,
+    "checks": {
+      "page_count": true,
+      "text_identical": true,
+      "ssim": true
+    },
+    "passed": true,
+    "ratio_pct": 10.4
+  },
+  "b2": {
+    "book": 2,
+    "quality": 80,
+    "images": 367,
+    "source_mb": 365.5,
+    "compressed_mb": 37.9,
+    "seconds": 24,
+    "pages": 34,
+    "text_mismatch_pages": [],
+    "ssim_min": 0.9748,
+    "ssim_min_page": 31,
+    "ssim_mean": 0.9843,
+    "checks": {
+      "page_count": true,
+      "text_identical": true,
+      "ssim": true
+    },
+    "passed": true,
+    "ratio_pct": 10.4
+  },
+  "b3": {
+    "book": 3,
+    "quality": 80,
+    "images": 375,
+    "source_mb": 327.3,
+    "compressed_mb": 31.1,
+    "seconds": 22,
+    "pages": 34,
+    "text_mismatch_pages": [],
+    "ssim_min": 0.9735,
+    "ssim_min_page": 32,
+    "ssim_mean": 0.9821,
+    "checks": {
+      "page_count": true,
+      "text_identical": true,
+      "ssim": true
+    },
+    "passed": true,
+    "ratio_pct": 9.5
+  },
+  "b4": {
+    "book": 4,
+    "quality": 80,
+    "images": 299,
+    "source_mb": 336.2,
+    "compressed_mb": 34.2,
+    "seconds": 20,
+    "pages": 32,
+    "text_mismatch_pages": [],
+    "ssim_min": 0.9729,
+    "ssim_min_page": 28,
+    "ssim_mean": 0.9842,
+    "checks": {
+      "page_count": true,
+      "text_identical": true,
+      "ssim": true
+    },
+    "passed": true,
+    "ratio_pct": 10.2
+  },
+  "b5": {
+    "book": 5,
+    "quality": 80,
+    "images": 300,
+    "source_mb": 322.6,
+    "compressed_mb": 33.2,
+    "seconds": 25,
+    "pages": 29,
+    "text_mismatch_pages": [],
+    "ssim_min": 0.9775,
+    "ssim_min_page": 13,
+    "ssim_mean": 0.9857,
+    "checks": {
+      "page_count": true,
+      "text_identical": true,
+      "ssim": true
+    },
+    "passed": true,
+    "ratio_pct": 10.3
+  }
+}

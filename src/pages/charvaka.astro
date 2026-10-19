@@ -1,0 +1,66 @@
+---
+// The Charvaka thread (design §9.1). Unlisted: no nav entry. The page only
+// opens for readers who have found all five fragments hidden in the comic.
+import Base from "../layouts/Base.astro";
+import { fragments } from "../lib/companions";
+import { codexEntries } from "../lib/codex";
+
+const charvaka = (await codexEntries()).find((e) => e.id === "charvaka");
+---
+<Base title="The suppressed thread" description="A thread running under the whole book, for readers who went looking.">
+  <div class="wrap">
+    <div id="locked" hidden>
+      <p class="eyebrow">Not yet</p>
+      <h1>Something is missing</h1>
+      <p class="prose">You have found <strong id="count">0</strong> of {fragments.length} fragments. They are hidden in the pages of the comic,
+        marked like this: <span class="mark">✦</span> — turn on <em>Notes</em> in the reader and look where the Professor is at his most careless.</p>
+      <p><a class="btn" href="/read/">Back to the books</a></p>
+    </div>
+
+    <article id="unlocked" hidden>
+      <p class="eyebrow">A thread you had to look for</p>
+      <h1>Charvaka: the suppressed thread</h1>
+      <p class="lede prose">Every other tradition in the valley gets a temple, a shrine or an ashram. This one gets a rumour, a burned reputation
+        and a scholar who will not let it go. You found all {fragments.length} pieces of it.</p>
+
+      <ol class="found">
+        {fragments.map((f) => (
+          <li>
+            <h2>{f.title}</h2>
+            <p>{f.text}</p>
+            <p class="source muted">{f.source} · <a href={`/read/${f.page.slice(0, 2)}/${Number(f.page.split("-p")[1])}`}>see the page →</a></p>
+          </li>
+        ))}
+      </ol>
+
+      <section class="prose">
+        <h2>What it adds up to</h2>
+        <p>The Charvakas, or Lokayatas, denied the afterlife, the authority of the Vedas and the point of ritual. Almost nothing of theirs survives:
+          what we know comes mostly from opponents quoting them in order to refute them. In the valley that pattern repeats in miniature.
+          The one philosophy with no monument has left only a half-hidden shrine, a greeting, and a set of manuscripts that a scholar has been
+          quietly collecting.</p>
+        <p>It also sets up the book's own question. The Mahant's authority rests on ritual and prophecy, exactly what Charvaka denounced as
+          "a work of fools." And the Professor, who has found the texts, wonders aloud whether that puts him "under grave peril."</p>
+        {charvaka && <p><a class="btn" href="/codex/charvaka/">The Codex entry on Charvaka</a></p>}
+      </section>
+    </article>
+  </div>
+</Base>
+
+<script>
+  import { foundFragments, FRAGMENT_COUNT } from "../lib/fragments";
+  const found = foundFragments();
+  const done = found.length >= FRAGMENT_COUNT;
+  document.getElementById(done ? "unlocked" : "locked")!.hidden = false;
+  const count = document.getElementById("count");
+  if (count) count.textContent = String(found.length);
+</script>
+
+<style>
+  .lede { font-size: 1.2rem; }
+  .mark { font-size: 1.2rem; color: var(--sepia); }
+  .found { list-style: none; padding: 0; display: grid; gap: 18px; margin: 28px 0; }
+  .found li { background: var(--paper-2); border-left: 4px solid var(--sepia); border-radius: 6px; padding: 14px 18px; }
+  .found h2 { margin: 0 0 6px; font-size: 1.25rem; }
+  .source { font-family: var(--font-ui); font-size: 0.85rem; }
+</style>

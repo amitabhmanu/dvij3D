@@ -1,0 +1,30 @@
+---
+// Full-text search over every page's lettering, via Pagefind (built after
+// `astro build`; see netlify.toml). Runs entirely in the browser.
+import Base from "../layouts/Base.astro";
+---
+<Base title="Search" description="Search the captions and dialogue of The Twice Born.">
+  <link slot="head" rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <div class="wrap">
+    <h1>Search</h1>
+    <p class="muted">Search every caption and line of dialogue in all five books.</p>
+    <div id="search"></div>
+    <noscript><p>Search needs JavaScript.</p></noscript>
+  </div>
+</Base>
+
+<script is:inline>
+  window.addEventListener("DOMContentLoaded", async () => {
+    try {
+      await import("/pagefind/pagefind-ui.js");
+      new PagefindUI({ element: "#search", showSubResults: false, showImages: false, resetStyles: false });
+    } catch {
+      document.getElementById("search").textContent = "Search index not built yet (run the full build).";
+    }
+  });
+</script>
+
+<style is:global>
+  #search { --pagefind-ui-font: var(--font-ui); --pagefind-ui-primary: var(--accent); --pagefind-ui-text: var(--ink);
+    --pagefind-ui-background: var(--paper); --pagefind-ui-border: var(--paper-3); --pagefind-ui-tag: var(--paper-2); margin-top: 24px; }
+</style>

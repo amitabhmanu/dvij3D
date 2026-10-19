@@ -1,0 +1,44 @@
+---
+// The book's PDF, behind a short "read online first" flow (design §18.13).
+//
+// The file is free and unrestricted - this only asks you to open the book
+// online before it hands you 66 MB, and reading a few pages is the whole gate.
+// The real link is in the HTML, so it works with JavaScript off and crawlers
+// see it; the script below swaps it for the invitation when the reader has not
+// started this book yet.
+import { formatMB, pdfUrl, type Book } from "../lib/manifest";
+
+interface Props { book: Book; pages?: number }
+const { book, pages = 3 } = Astro.props;
+---
+{book.pdf.bytes && (
+  <span class="pdf-download" data-book={book.slug} data-pages={pages}>
+    <a class="btn secondary" href={pdfUrl(book)} download>Download PDF ({formatMB(book.pdf.bytes)})</a>
+    <span class="locked" hidden>
+      <a class="btn secondary" href={`/read/${book.slug}/1`}>Read it online first</a>
+      <span class="why">The PDF is {formatMB(book.pdf.bytes)}. It unlocks here once you have read {pages} pages of this book.</span>
+    </span>
+  </span>
+)}
+
+<style>
+  .pdf-download { display: inline-flex; align-items: center; gap: 10px; }
+  /* .btn sets its own display, which plain [hidden] would lose to */
+  .pdf-download [hidden] { display: none; }
+  .locked { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .locked[hidden] { display: none; }
+  .why { font: 0.82rem/1.4 var(--font-ui); color: var(--sepia); max-width: 34ch; }
+</style>
+
+<script>
+  import { getProgress } from "../lib/progress";
+
+  const furthest = getProgress().furthest ?? {};
+  document.querySelectorAll<HTMLElement>(".pdf-download").forEach((el) => {
+    const slug = el.dataset.book!;
+    const needed = Number(el.dataset.pages ?? 3);
+    if ((furthest[slug] ?? 0) >= needed) return; // read enough: leave the link alone
+    el.querySelector("a[download]")?.setAttribute("hidden", "");
+    el.querySelector(".locked")?.removeAttribute("hidden");
+  });
+</script>

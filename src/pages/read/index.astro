@@ -1,0 +1,18 @@
+---
+import Base from "../../layouts/Base.astro";
+import BookCard from "../../components/BookCard.astro";
+import { books } from "../../lib/manifest";
+---
+<Base title="Read" description="The Twice Born in five books: Valley, Parchment, Leaf, Ascent and Discovery.">
+  <div class="wrap">
+    <h1>The five books</h1>
+    <p class="muted prose">Read online, one page or two at a time, or panel by panel on a phone. Each book is also available as a PDF.</p>
+    <div class="grid">
+      {books.map((book) => <BookCard book={book} />)}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px 40px; margin-top: 32px; }
+</style>

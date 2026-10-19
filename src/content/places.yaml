@@ -1,0 +1,529 @@
+# The valley map and the Real India layer (design §10).
+#
+# `rects` are label boxes on images/artifacts/map.jpg, normalised 0-1 and
+# measured off the map itself. A place can carry more than one, where the map
+# labels one place twice (Gaumukh hill and its Ram temples, the Naga forest and
+# Nagadwara hill).
+#
+# The pairings are RESEARCHED RESEMBLANCES, not the author's stated sources:
+# each one's full reasoning, confidence and citations are in
+# docs/real-india-pairings.md, and the page says so plainly.
+#
+# Credits are deliberately not written here. pipeline/fetch_real_india.py reads
+# the photographer, licence and file page from Wikimedia Commons into
+# generated/places-images.json, so the attribution cannot drift from the source.
+# Image ids below are keys in that file; `alt` is ours to write.
+
+map:
+  art: valley-map
+  alt: >
+    A hand-drawn contour map of the valley, its hills ringed with contour lines
+    and its temples, huts and roads marked in ink.
+
+# The Professor's line, which is what the whole layer answers.
+epigraph:
+  text: >
+    In its microcosm it is a replica of the entire universe... it could have
+    been anywhere. But this valley lies forgotten to the outside world. Thus it
+    is nowhere.
+  who: The Professor
+
+places:
+  - id: fort-ruins
+    name: Fort Ruins
+    fiction: Daundagarh Fort, on Keval hill
+    rects: [[0.164, 0.548, 0.240, 0.585]]
+    book: >
+      Built by the Maharaja of Kamboj in the era of the Mongol invasions and
+      thought impregnable: five gates, an approach whose bends look like dead
+      ends, a doorless royal gym attackers could enter only one at a time, and a
+      math whose sage vanished when the fort fell.
+    terms: [Daundagarh, Keval hill, fort]
+    real:
+      name: Daulatabad (Devagiri) Fort
+      pin: Daulatabad Fort
+      region: Maharashtra
+      confidence: high
+      lat: 19.942724
+      lng: 75.213164
+      why: >
+        Deceptive gates and false doors built to confuse attackers, the
+        labyrinthine Andheri passage, and layered walls with spiked gates. It
+        fell to Khalji in 1296, the right era, and its saint-commander Janardan
+        Swami has a samadhi in a cave inside it, a close echo of the fort's
+        sage. Even the name echoes.
+      images:
+        - id: fort-ruins
+          alt: >
+            The dark rock-cut entrance of the Andheri passage at Daulatabad,
+            a single low doorway in a carved stone face.
+        - id: fort-turret
+          alt: >
+            Near-vertical steps cut into the bare rock of Harihar fort, climbing
+            out of shot.
+      alsoFrom: Harihar Fort, Nashik - 117 rock-cut steps at 75-80 degrees, for the turret the soldiers had to climb
+
+  - id: pushkarini
+    name: The pushkarini below the fort
+    fiction: The stepped tank below Daundagarh
+    rects: []
+    book: >
+      "A series of symmetric steps cascading inwards, much like an inverted
+      temple vimana", with a square platform at the centre surrounded by water.
+    terms: [pushkarini]
+    real:
+      name: Stepped Tank, Royal Enclosure, Hampi
+      region: Karnataka
+      confidence: high
+      lat: 15.33444444
+      lng: 76.46222222
+      why: >
+        A five-tier symmetrical tank of chlorite schist whose steps form a
+        pyramid on all four sides - the inverted vimana exactly. The central
+        platform surrounded by water is the one part Hampi does not supply.
+      images:
+        - id: pushkarini
+          alt: >
+            The stepped tank at Hampi, tiers of dark stone steps descending on
+            all four sides to green water.
+        - id: pushkarini-platform
+          alt: >
+            A 19th-century photograph of the Teppakulam at Madurai: a broad
+            temple tank with a pillared mandapam on an island at its centre.
+      alsoFrom: Vandiyur Mariamman Teppakulam, Madurai - for the island platform
+
+  - id: stepwell
+    name: The chained stepwell
+    fiction: The stepwell of the tunnel mystery
+    rects: []
+    book: >
+      At night, a stepwell whose short flight of steps leads to a vertical
+      opening in the wall, covered by a metal frame chained from the far side.
+    terms: [tunnel]  # the chained opening is the far end of the bungalow tunnel
+    real:
+      name: Chand Baori, Abhaneri
+      region: Rajasthan
+      confidence: medium
+      lat: 27.0073
+      lng: 76.6065
+      why: >
+        The archetypal Indian stepwell - thirteen storeys, some 3,500 steps, an
+        inverted pyramid - with gallery openings in its walls, standing beside
+        the Harshat Mata temple. The chained opening itself is generic, so any
+        gated stepwell would fit.
+      images:
+        - id: stepwell
+          alt: >
+            The inverted pyramid of Chand Baori, thousands of narrow steps
+            zig-zagging down three walls to the water.
+
+  - id: bhoodara-caves
+    name: The Bhoodara caves
+    fiction: The cave labyrinth under the valley
+    rects: []
+    book: >
+      "A veritable chakravyuha inside the belly of the earth" - nobody who goes
+      in is known to have come out - with mesolithic red-and-green paintings of
+      hunting and foraging deep inside.
+    terms: [Bhoodara]
+    real:
+      name: Bhimbetka's paintings in a Belum-like labyrinth
+      region: Madhya Pradesh and Andhra Pradesh
+      confidence: high
+      lat: 22.938415
+      lng: 77.613085
+      why: >
+        A composite. Bhimbetka holds the earliest art in South Asia, Mesolithic
+        hunting scenes painted mostly in red and white and occasionally in
+        green. Belum supplies the maze: India's second-longest cave system, 3.2
+        km of passages mapped as a chakravyuha.
+      images:
+        - id: bhoodara-paintings
+          alt: >
+            Faded red figures of animals and hunters painted on the curved rock
+            of a shelter wall at Bhimbetka.
+        - id: bhoodara-labyrinth
+          alt: >
+            A lit passage inside the Belum caves, the limestone glowing orange
+            where the lamps catch it.
+      alsoFrom: Belum Caves, Nandyal - for the labyrinth
+
+  - id: kaal-bhairava
+    name: Bhoothnath Temple
+    fiction: The Kaal Bhairava temple, on Bhootnath taal
+    rects: [[0.553, 0.150, 0.678, 0.182]]
+    book: >
+      North-west of the valley at the foot of the forested Naga hill, "the only
+      work in the valley made of soft stones... which lend well to carving",
+      appearing to float on a natural lake. The seat of the aghori Keshav
+      Bharan.
+    terms: [Kaal Bhairava, Bhootnath, Bhoothnath]
+    real:
+      name: Kal Bhairav, Ujjain, in Halebidu's stone
+      pin: Kal Bhairav, Ujjain
+      region: Madhya Pradesh and Karnataka
+      confidence: medium
+      lat: 23.218174
+      lng: 75.768618
+      why: >
+        Another composite. Ujjain's Kal Bhairav is chief of the eight
+        Bhairavas, tied to the Kapalika and Aghora sects, with liquor still
+        offered as one of the panchamakara - the left path the tantric baba
+        teaches. Halebidu supplies the stone: soft chloritic schist, beside a
+        lake.
+      images:
+        - id: kaal-bhairava
+          alt: >
+            The gateway of the Kal Bhairav temple at Ujjain, whitewashed and
+            painted, with worshippers in the arch.
+        - id: kaal-bhairava-stone
+          alt: >
+            The Hoysaleswara temple at Halebidu, its low soapstone walls carved
+            in bands from plinth to eaves.
+      alsoFrom: Hoysaleswara Temple, Halebidu - for the soft carved stone beside a lake
+
+  - id: mahavidya-temples
+    name: Mahavidya Temples
+    fiction: The temples of the ten Mahavidyas
+    rects: [[0.466, 0.303, 0.532, 0.350]]
+    book: >
+      A close-knit group of temples in a thicket where the mountain's boulders
+      meet the plains: plain outside, richly adorned within, with a Sri Chakra
+      yantra and a panel of the ten Mahavidyas, revered by a small Shakta
+      community.
+    terms: [Mahavidya]
+    real:
+      name: Kamakhya, on Nilachal hill
+      pin: Kamakhya
+      region: Assam
+      confidence: high
+      lat: 26.166426
+      lng: 91.705509
+      why: >
+        The main temple complex of the ten Mahavidyas, each with its own shrine
+        grouped around the central temple, and regarded as the birthplace of
+        Shakta tantrism. The book's secondary character is even named Kamakhya.
+      images:
+        - id: mahavidya-temples
+          alt: >
+            The Kamakhya temple's beehive dome above its plastered walls, red
+            pennants flying from the shrines around it.
+
+  - id: mukteshwar-temple
+    name: Sri Mukteshwar temple
+    fiction: The Mahant's seat, the centre of culture in the valley
+    rects: []
+    book: >
+      Headed for generations by the Mahant's family of pujaris. Its amalaka and
+      kalasha, atop the vimana, are visible from every part of the village.
+    terms: [Mukteshwar]
+    real:
+      name: Mukteshvara Temple, Bhubaneswar
+      region: Odisha
+      confidence: medium-high
+      lat: 20.2427
+      lng: 85.84039167
+      why: >
+        The same name. A 10th-century Kalinga-style Shiva temple whose curved
+        tower is crowned by an amalaka and kalasha, and a landmark of Odishan
+        temple architecture.
+      images:
+        - id: mukteshwar-temple
+          alt: >
+            The Mukteshvara temple at Bhubaneswar, its carved sandstone tower
+            rising behind the arched torana at its gate.
+
+  - id: gaumukh-hill
+    name: Gaumukh Hill and the Ram temples
+    fiction: The langoors' hill, with its hilltop Hanuman shrine
+    rects: [[0.198, 0.150, 0.292, 0.188], [0.310, 0.250, 0.392, 0.283]]
+    book: >
+      Gaumukh hill, "the home of langoors", carries a Hanuman shrine on top and
+      Ram temples along its base. On the trek it appears as a muddy lotus
+      pushkarini beside a small white Hanuman mandir, grey langurs in the trees.
+    terms: [Gaumukh, langur]  # the trek meets it again as the white mandir with langurs
+    real:
+      name: Anjanadri hill, Anegundi
+      pin: Anjanadri hill
+      region: Karnataka
+      confidence: high
+      why: >
+        Revered as Hanuman's birthplace: a white hilltop temple reached by some
+        575 steps, monkeys everywhere, and Rama and Sita shrines below - which
+        is the Ram temples along the base as well.
+      images:
+        - id: gaumukh-hill
+          alt: >
+            The small whitewashed Hanuman temple on top of Anjanadri hill, an
+            orange flag streaming from its spire above the valley.
+
+  - id: kamal-taal
+    name: Kamal Taal
+    fiction: The lotus lake beside Gaumukh hill
+    rects: [[0.668, 0.252, 0.717, 0.298]]
+    book: >
+      The lake beside the hill; the name is simply "lotus lake".
+    terms: [Kamal Taal]
+    real:
+      name: Pampa Sarovar
+      pin: Pampa Sarovar
+      region: Karnataka
+      confidence: high
+      lat: 15.35376389
+      lng: 76.477375
+      why: >
+        A sacred lotus-filled pond of the Ramayana, directly below Anjanadri -
+        the same pairing of hill and water the map has.
+      images:
+        - id: kamal-taal
+          alt: >
+            Pampa Sarovar seen from the hill above: a rectangular green tank
+            fringed by palms, with boulder country beyond.
+
+  - id: naga-forest
+    name: Naga Forest and Nagadwara Hill
+    fiction: The realm of the Nagas, who worship Dhumavati
+    rects: [[0.504, 0.052, 0.587, 0.082], [0.724, 0.082, 0.830, 0.112]]
+    book: >
+      The most ardent tantrics gather around the Bhootnath temple at the foot of
+      Nagadwara hill, and the forest beyond is "the realm of the Nagas who
+      worship Dhumavati".
+    terms: [Nagadwara, Naga hill]
+    real:
+      name: Nagdwari, Pachmarhi
+      pin: Nagdwari
+      region: Madhya Pradesh
+      confidence: medium
+      lat: 22.4667
+      lng: 78.411
+      why: >
+        A complex of naga cave shrines deep in forest and cliffs, reached by a
+        hard three-day pilgrimage at Nag Panchami. The name matches almost
+        exactly. The Dhumavati connection is the book's own.
+      images: []
+      noPhoto: >
+        No freely licensed photograph of Nagdwari could be credited honestly -
+        the one file on Commons names its uploader as "Don't Know". The shrines
+        are photographed mostly during the pilgrimage itself.
+
+  - id: forest-temple
+    name: The ancient temple of the forest
+    fiction: Where the Kaula rites are held
+    rects: []
+    book: >
+      The site of the Kaula left-path rites, the panchamakara, whose aftermath
+      Dvij links to his kundalini rising to svadhishthana.
+    terms: [Kaula]
+    real:
+      name: Chausath Yogini temple, Hirapur
+      region: Odisha
+      confidence: medium-high
+      lat: 20.226515
+      lng: 85.87559472
+      why: >
+        A hypaethral - roofless - circular shrine of the Kaula and Kapalika
+        sects, forgotten until it was rediscovered in 1953. Mitaoli and
+        Bhedaghat are the same form in remoter settings.
+      images:
+        - id: forest-temple
+          alt: >
+            The low circular outer wall of the Chausath Yogini temple at
+            Hirapur, open to the sky.
+        - id: forest-temple-alt
+          alt: >
+            The circular Chausath Yogini temple at Mitaoli, a ring of pillared
+            cells around an open court on a hilltop.
+      alsoFrom: Chausath Yogini, Mitaoli and Bhedaghat - the same circle, remoter
+
+  - id: vidgati-shrine
+    name: Vidgati's shrine and the cave settlement
+    fiction: The Charvaka semi-saint's shrine, half way up Dronagiri
+    rects: []
+    book: >
+      A plateau flattened centuries ago by a vanished Buddhist settlement, caves
+      along the ridge used as dwellings, the largest probably a monastery with
+      ruined chaityas, a rock-cut Harihara "maybe 12th century", and Jain monks
+      once living there.
+    terms: [Vidgati]
+    real:
+      name: Badami's Harihara and Jain cave, on an Ellora-like ridge
+      region: Karnataka and Maharashtra
+      confidence: medium-high
+      lat: 15.91833333
+      lng: 75.68416667
+      why: >
+        Badami holds some of India's earliest Harihara reliefs, in caves 1 and
+        3, next door to a Jain cave. Ellora supplies the rest: Buddhist, Hindu
+        and Jain caves side by side along one escarpment, with monasteries and
+        chaitya halls. The Charvaka shrine itself has no counterpart - Charvaka
+        left almost no sites, which is the book's point.
+      images:
+        - id: vidgati-harihara
+          alt: >
+            The Harihara relief in Badami cave 3, one figure whose left half is
+            Shiva and right half Vishnu, carved in red sandstone.
+        - id: vidgati-jain
+          alt: >
+            The pillared entrance of the Jain cave at Badami, cave 4, cut into
+            the cliff face.
+        - id: vidgati-caves
+          alt: >
+            A 19th-century photograph of the Vishvakarma chaitya at Ellora, its
+            carved gallery and arched window above the entrance.
+      alsoFrom: Ellora - for the Buddhist settlement along the ridge
+
+  - id: dolmen-field
+    name: The dolmen in the field of fireflies
+    fiction: Where the party shelters on the anahata night
+    rects: []
+    book: >
+      The party shelters under an ancient dolmen in a large open field.
+    terms: [dolmen]
+    real:
+      name: Hire Benakal, Koppal
+      region: Karnataka
+      confidence: high
+      lat: 15.43781111
+      lng: 76.45600278
+      why: >
+        India's largest megalithic necropolis - some 400 monuments, many of them
+        dolmens, dated 800-200 BCE - and on UNESCO's tentative list.
+      images:
+        - id: dolmen-field
+          alt: >
+            Dolmens standing among boulders on the hillside at Hire Benakal,
+            their capstones tilted, under a grey sky.
+
+  - id: vedic-ashram
+    name: The Vedic ashram of Kritya Rishi
+    fiction: Near the top of Dronagiri, where the rites are still done faithfully
+    rects: []
+    book: >
+      The round-nosed man identifies Bhavi's diagram as a Vedic altar of
+      homa-kundas, and mentions bird-shaped altars.
+    terms: [Kritya]
+    real:
+      name: The Agnicayana at Panjal
+      region: Kerala
+      confidence: medium
+      lat: 10.7215
+      lng: 76.3055
+      why: >
+        The 1975 Athirathram at Panjal, documented by Frits Staal, is the most
+        famous living example of the altar geometry the book describes: a
+        twelve-day rite built around a falcon-shaped altar of thousands of
+        bricks. This pairs the ritual, not the Himalayan setting.
+      images:
+        - id: vedic-altar
+          alt: >
+            A replica of the falcon-shaped citi laid out in terracotta bricks,
+            with the ritual vessels and implements arranged beside it.
+
+  - id: mount-dronagiri
+    name: Mount Dronagiri
+    fiction: The tallest peak around the valley, where the plant is found
+    rects: [[0.770, 0.262, 0.835, 0.316]]
+    book: >
+      The trek up it is the second half of the story.
+    terms: [Dronagiri]
+    real:
+      name: Dunagiri, Chamoli
+      pin: Dunagiri
+      region: Uttarakhand
+      confidence: high
+      lat: 30.5325
+      lng: 79.83388889
+      why: >
+        Named directly. By legend the mountain Hanuman carried off for the
+        Sanjeevani herb - and the villagers there famously do not worship
+        Hanuman, for breaking their deity, which sits oddly and well against the
+        book's Hanuman shrines lower down.
+      images:
+        - id: mount-dronagiri
+          alt: >
+            The snow summit of Dunagiri seen from Kuari Pass at dawn, pink light
+            on the ridge above dark forested slopes.
+
+  - id: white-flowers
+    name: The valley of white flowers
+    fiction: Where Dvij walks alone in the Epilogue
+    rects: []
+    book: >
+      Dvij walks alone "through the valley of the white flowers that seemed to
+      be reaching out into nothingness".
+    terms: ["white flowers"]
+    real:
+      name: Valley of Flowers National Park
+      region: Uttarakhand
+      confidence: high
+      lat: 30.73
+      lng: 79.6175
+      why: >
+        In the same district as Dunagiri, and in some traditions identified with
+        the mountain of herbs itself. A fitting last real place for the last
+        page.
+      images:
+        - id: white-flowers
+          alt: >
+            The Valley of Flowers in bloom, a meadow of small flowers running up
+            to steep green mountainsides and cloud.
+
+  - id: sheetal-lake
+    name: Sheetal Lake
+    fiction: Fed by the Vaitarna, its water once said to cure illness
+    rects: [[0.432, 0.424, 0.502, 0.479]]
+    book: >
+      Dvij explains the cure with the bacteriophage research on the Ganga.
+    terms: [Sheetal, Vaitarna, Ghatiya Ghat]
+    real:
+      name: The Ganga, and what was found in its water
+      pin: The Ganga
+      region: Uttar Pradesh
+      confidence: medium
+      lat: 25.31888889
+      lng: 83.01277778
+      why: >
+        The antibacterial power of Ganga water, first reported by Ernest Hankin
+        in the 1890s and later explained by bacteriophages, is real history and
+        is exactly the move Dvij makes. The Vaitarna is a real river in
+        Maharashtra and, in myth, the river the dead cross - a name, and
+        nothing more.
+      images:
+        - id: sheetal-lake
+          alt: >
+            The ghats of Varanasi seen from the Ganga, stone steps and temple
+            buildings rising from the water with boats moored below.
+        - id: sheetal-lake-science
+          alt: >
+            An electron micrograph of a T2 bacteriophage, its angular head and
+            tail fibres in grey against the stain.
+        - id: vaitarna
+          alt: >
+            The Vaitarna river in Palghar, brown water between wooded banks.
+      alsoFrom: The Vaitarna, Maharashtra - the name only
+
+# Deliberately left nowhere (design §10). These carry a hotspot that says so
+# rather than a pairing, because the layer is stronger if part of the valley
+# stays fictional.
+fictional:
+  - id: village-bazaar
+    name: Village Bazaar
+    rects: [[0.343, 0.536, 0.437, 0.565]]
+  - id: tavern
+    name: Tavern
+    rects: [[0.438, 0.618, 0.492, 0.646]]
+  - id: professors-lodge
+    name: Professor's Lodge
+    rects: [[0.643, 0.565, 0.706, 0.612]]
+    note: At most a colonial-era forest rest house as a type, rather than a building.
+  - id: forest-officers-bungalow
+    name: Forest Officer's Bungalow
+    rects: [[0.657, 0.385, 0.717, 0.457]]
+    note: At most a colonial-era forest rest house as a type, rather than a building.
+  - id: madangi-van
+    name: Madangi Van
+    rects: [[0.758, 0.524, 0.848, 0.552]]
+    note: Where the Somasuras dwell. Best left fictional.
+  - id: access-road
+    name: Access Road
+    rects: [[0.578, 0.679, 0.662, 0.707]]

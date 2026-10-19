@@ -1,0 +1,111 @@
+---
+// The chakra column: the seven centres up the spine, drawn from the same
+// numbers as the table in src/content/codex/chakras.md. Petal counts, colours
+// and order are the book's; nothing here is invented.
+const NODES = [
+  { name: "Sahasrara", where: "Crown of the head", petals: 1000, draw: 36, hue: "purple", element: "—" },
+  { name: "Ajna", where: "Between the eyes", petals: 2, draw: 2, hue: "indigo", element: "Sankalpa" },
+  { name: "Vishuddha", where: "Base of the throat", petals: 16, draw: 16, hue: "blue", element: "Shabda — sound" },
+  { name: "Anahata", where: "Heart", petals: 12, draw: 12, hue: "green", element: "Sparsha — touch" },
+  { name: "Manipura", where: "Navel", petals: 10, draw: 10, hue: "yellow", element: "Rupa — form" },
+  { name: "Svadhishthana", where: "Beneath the loins", petals: 6, draw: 6, hue: "orange", element: "Ras — taste" },
+  { name: "Muladhara", where: "Base of the spine", petals: 4, draw: 4, hue: "red", element: "Gandha — smell" },
+];
+
+const TOP = 46;
+const STEP = 84;
+const SPINE = 74;
+const LABEL = 122;
+const H = TOP + STEP * (NODES.length - 1) + 74;
+
+const petal = (i: number, n: number, long: boolean) =>
+  `<ellipse cx="0" cy="${long ? -27 : -26}" rx="${n > 20 ? 1.7 : n > 12 ? 2.8 : 4.2}" ry="${long ? 12 : 10}" transform="rotate(${(i * 360) / n})" />`;
+---
+
+<figure class="diagram">
+  <svg viewBox={`0 0 300 ${H}`} role="img" aria-labelledby="chakra-t chakra-d" width="100%">
+    <title id="chakra-t">The seven chakras along the spine</title>
+    <desc id="chakra-d">
+      A vertical column of seven lotuses, from muladhara at the base of the spine to
+      sahasrara at the crown, each drawn with its traditional number of petals and its
+      colour. Kundalini rises through them from the base upward.
+    </desc>
+
+    <!-- the spine, and kundalini's direction of travel -->
+    <line class="spine" x1={SPINE} y1={TOP} x2={SPINE} y2={TOP + STEP * (NODES.length - 1)} />
+    <path
+      class="rise"
+      d={`M ${SPINE} ${TOP + STEP * (NODES.length - 1)} L ${SPINE} ${TOP}`}
+      marker-end="url(#rise-tip)"
+    />
+    <defs>
+      <marker id="rise-tip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" class="tip" />
+      </marker>
+    </defs>
+
+    {NODES.map((n, i) => {
+      const y = TOP + STEP * i;
+      return (
+        <g class={`node hue-${n.hue}`} transform={`translate(${SPINE} ${y})`}>
+          <g class="petals" set:html={Array.from({ length: n.draw }, (_, k) => petal(k, n.draw, n.draw <= 12)).join("")} />
+          <circle class="core" r="17" />
+          <text class="count" y="4.5">{n.draw === n.petals ? n.petals : "1000"}</text>
+        </g>
+      );
+    })}
+
+    {NODES.map((n, i) => {
+      const y = TOP + STEP * i;
+      return (
+        <g class="label" transform={`translate(${LABEL} ${y})`}>
+          <text class="d-name" y="-4">{n.name}</text>
+          <text class="d-sub" y="11">{n.where}</text>
+          <text class="d-note" y="24">{n.element}</text>
+        </g>
+      );
+    })}
+
+    <text class="d-foot" x={SPINE} y={TOP + STEP * (NODES.length - 1) + 54} text-anchor="middle">kundalini rises ↑</text>
+  </svg>
+  <figcaption>
+    The seven chakras, with each lotus drawn at its traditional petal count.
+    Kundalini rises from muladhara at the base to sahasrara at the crown.
+  </figcaption>
+</figure>
+
+<style>
+  .spine { stroke: var(--paper-3); stroke-width: 7; stroke-linecap: round; }
+  .rise { stroke: var(--ink-3); stroke-width: 1.2; stroke-dasharray: 3 5; fill: none; opacity: 0.85; }
+  .tip { fill: var(--ink-3); }
+
+  .petals { fill: var(--hue); stroke: var(--ink); stroke-width: 0.6; opacity: 0.92; }
+  .core { fill: var(--paper); stroke: var(--ink); stroke-width: 1.3; }
+  .count { font-family: var(--font-ui); font-size: 11px; font-weight: 600; fill: var(--ink-2); text-anchor: middle; }
+
+  /* The book's colour per chakra, lifted for legibility on the dark parchment. */
+  .hue-red { --hue: #c0392b; }
+  .hue-orange { --hue: #d97b2b; }
+  .hue-yellow { --hue: #d8b02a; }
+  .hue-green { --hue: #4f9d69; }
+  .hue-blue { --hue: #3d7fb8; }
+  .hue-indigo { --hue: #3f4f9d; }
+  .hue-purple { --hue: #8a5fae; }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .hue-red { --hue: #e0685a; }
+    :root:not([data-theme="light"]) .hue-orange { --hue: #eb9a55; }
+    :root:not([data-theme="light"]) .hue-yellow { --hue: #e4c75a; }
+    :root:not([data-theme="light"]) .hue-green { --hue: #6fc18c; }
+    :root:not([data-theme="light"]) .hue-blue { --hue: #66a8de; }
+    :root:not([data-theme="light"]) .hue-indigo { --hue: #7b8ad6; }
+    :root:not([data-theme="light"]) .hue-purple { --hue: #b287d4; }
+  }
+  :root[data-theme="dark"] .hue-red { --hue: #e0685a; }
+  :root[data-theme="dark"] .hue-orange { --hue: #eb9a55; }
+  :root[data-theme="dark"] .hue-yellow { --hue: #e4c75a; }
+  :root[data-theme="dark"] .hue-green { --hue: #6fc18c; }
+  :root[data-theme="dark"] .hue-blue { --hue: #66a8de; }
+  :root[data-theme="dark"] .hue-indigo { --hue: #7b8ad6; }
+  :root[data-theme="dark"] .hue-purple { --hue: #b287d4; }
+</style>

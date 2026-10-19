@@ -1,0 +1,53 @@
+---
+import Base from "../layouts/Base.astro";
+import { books, pick, srcset } from "../lib/manifest";
+
+const cover = books[0]?.pages[0];
+---
+<Base image={cover ? pick(cover.src.webp, 900) : undefined}>
+  <section class="hero wrap">
+    <div class="copy">
+      <p class="eyebrow">An illustrated adventure in five books</p>
+      <h1>The Twice Born</h1>
+      <!-- Synopsis: draft for the author to revise. -->
+      <p class="lede">
+        A man wakes in a crumbling lodge with no memory of who he is. The valley that took him in has
+        been forgotten by the world, and it has its own ideas about him: a prophecy, a priest who wants
+        a saviour, and a professor's parchment of puzzles that points to a plant high on Mount Dronagiri.
+      </p>
+      <p class="actions">
+        <a class="btn" href="/read/b1/1" id="start">Start reading</a>
+        <a class="btn secondary" href="/read/">All five books</a>
+      </p>
+    </div>
+    {cover && (
+      <a class="cover" href="/read/b1/1" aria-label="Start reading Book 1">
+        <picture>
+          <source type="image/avif" srcset={srcset(cover.src.avif)} sizes="(min-width: 900px) 420px, 80vw" />
+          <img src={pick(cover.src.webp, 900)} width={cover.w} height={cover.h} alt="Cover of Book 1, Valley" fetchpriority="high" />
+        </picture>
+      </a>
+    )}
+  </section>
+</Base>
+
+<style>
+  .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; padding-top: 48px; }
+  .lede { font-size: 1.2rem; max-width: 36ch; color: var(--ink-2); }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .cover img { width: 100%; max-width: 420px; margin-left: auto; box-shadow: 0 16px 40px rgba(0,0,0,0.35); border-radius: 3px; }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; padding-top: 24px; }
+    .cover img { margin: 0 auto; max-width: 320px; }
+  }
+</style>
+
+<script>
+  import { getProgress } from "../lib/progress";
+  const last = getProgress().lastRead;
+  const start = document.getElementById("start") as HTMLAnchorElement | null;
+  if (last && start) {
+    start.href = `/read/${last.book}/${last.page}${last.panel != null ? `#p${last.panel + 1}` : ""}`;
+    start.textContent = "Continue reading";
+  }
+</script>

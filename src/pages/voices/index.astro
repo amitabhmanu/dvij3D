@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+import VeilNotice from "../../components/VeilNotice.astro";
+import VeilScript from "../../components/VeilScript.astro";
+import { voiceEntries } from "../../lib/companions";
+import { artFile } from "../../lib/manifest";
+
+const voices = await voiceEntries();
+const ROLE: Record<string, string> = { teacher: "Teacher", guide: "Guide", antagonist: "Antagonist", survey: "Field guide" };
+---
+<Base title="Council of Voices" description="The teachers, guides and one antagonist Dvij meets, each speaking for a different Indian tradition.">
+  <div class="wrap">
+    <p class="eyebrow">A companion gallery</p>
+    <h1>Council of Voices</h1>
+    <p class="prose">Almost every stop on Dvij's journey is a meeting with someone who speaks for a tradition: tantra, the Goddess, the Vedas,
+      renunciation, Samkhya, the Charvakas' love of life. One of them uses faith as a weapon.</p>
+    <ul class="gallery">
+      {voices.map((v) => (
+        <li class={`voice role-${v.data.role}`} data-first-book={v.firstSeen?.book} data-first-page={v.firstSeen?.page}>
+          <a href={`/voices/${v.id}/`}>
+            <div class="portrait">{v.portrait && <img src={artFile(v.portrait.file)} alt="" loading="lazy" width={v.portrait.w} height={v.portrait.h} />}</div>
+            <p class="role">{ROLE[v.data.role]}</p>
+            <h2>{v.data.name}</h2>
+          </a>
+          {v.firstSeen && <VeilNotice book={v.firstSeen.book} page={v.firstSeen.page} />}
+          <div class="veil-content">
+            <p class="tradition">{v.data.tradition}</p>
+            <blockquote>{v.data.excerpt}</blockquote>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <VeilScript />
+</Base>
+
+<style>
+  .gallery { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; margin-top: 28px; }
+  .voice { background: var(--paper-2); border: 1px solid var(--paper-3); border-radius: 8px; overflow: hidden; padding-bottom: 12px; }
+  .voice > a { color: inherit; text-decoration: none; display: block; }
+  .portrait { aspect-ratio: 4 / 3; background: #1d1813; overflow: hidden; }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+  .voice[data-veiled] .portrait img { filter: blur(10px) grayscale(1); }
+  .role { font: 700 0.7rem var(--font-ui); text-transform: uppercase; letter-spacing: 0.1em; color: var(--sepia); margin: 12px 14px 0; }
+  .voice h2 { margin: 2px 14px 4px; font-size: 1.35rem; }
+  .voice > a:hover h2 { color: var(--accent); }
+  .tradition, .voice :global(.veil-notice) { margin: 4px 14px; font-size: 0.92rem; color: var(--ink-2); }
+  blockquote { margin: 8px 14px 0; padding-left: 10px; border-left: 3px solid var(--gold); font-style: italic; font-size: 0.95rem; }
+  .role-antagonist { border-color: var(--accent); background: linear-gradient(var(--paper-2), var(--paper-2)) padding-box; box-shadow: inset 0 3px 0 var(--accent); }
+  .role-antagonist .role { color: var(--accent); }
+  .role-antagonist blockquote { border-left-color: var(--accent); }
+</style>

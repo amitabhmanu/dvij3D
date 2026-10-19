@@ -1,0 +1,202 @@
+{
+ "nodes": [
+  {
+   "id": "muladhara",
+   "title": "At the base of a bottomless pit",
+   "quote": "That's where I am...at the base of a bottomless pit",
+   "chakra": {
+    "name": "Muladhara",
+    "where": "the base of the spine",
+    "state": "lit"
+   },
+   "teacher": {
+    "voice": "tantric-baba",
+    "text": "The tantric baba's teaching comes back to him: kundalini lies coiled at the base, and to reach God it must rise."
+   },
+   "note": "The night before the trek, disgusted by the greed and blind faith around him, Dvij places himself at the very bottom.",
+   "at": {
+    "book": 3,
+    "page": 34,
+    "pageId": "b3-p034",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "svadhishthana",
+   "title": "The ancient temple of the forest",
+   "quote": "his kundalini must have risen to the next level...that of svadhishthana",
+   "chakra": {
+    "name": "Svadhishthana",
+    "where": "the sacral chakra, beneath the loins",
+    "state": "lit"
+   },
+   "teacher": {
+    "voice": "tantric-baba",
+    "text": "The Kaula rites, 'the left path', follow the body in a spiritual universe."
+   },
+   "note": "After what happened at the ancient temple hidden in the forest, Dvij is sure his kundalini has risen a level.",
+   "codex": "kaula",
+   "at": {
+    "book": 4,
+    "page": 17,
+    "pageId": "b4-p017",
+    "confidence": "reviewed"
+   }
+  },
+  {
+   "id": "manipura",
+   "title": "A feast at Vidgati's shrine",
+   "quote": "The effect reminded him of his kundalini that had risen up to manipura",
+   "chakra": {
+    "name": "Manipura",
+    "where": "the solar plexus",
+    "state": "lit"
+   },
+   "teacher": {
+    "voice": "round-nosed-man",
+    "text": "\"While life is yours, live joyously.\" The Charvaka host feeds them; Dvij names the feeling: hedonism."
+   },
+   "note": "Stuffed from the feast, Dvij feels his kundalini at the fire of the belly.",
+   "at": {
+    "book": 4,
+    "page": 23,
+    "pageId": "b4-p023",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "kurup-falls",
+   "title": "Kurup is gone",
+   "quote": "If Kurup was Mahant's man, it means that Mahant knows about our expedition",
+   "party": {
+    "change": "Kurup leaves",
+    "text": "Kurup has defected to the Mahant, taking his copy of the parchment. He is the one companion who falls through a flaw of his own: greed and treachery."
+   },
+   "epic": "In the Mahaprasthanika Parva, the Pandavas fall one by one on the ascent, each through a personal flaw. Kurup's fall fits that pattern exactly.",
+   "at": {
+    "book": 4,
+    "page": 23,
+    "pageId": "b4-p023",
+    "confidence": "chapter-only"
+   }
+  },
+  {
+   "id": "anahata",
+   "title": "The field of fireflies",
+   "quote": "Anahata! I can hear the sound of the unstruck",
+   "chakra": {
+    "name": "Anahata",
+    "where": "the heart",
+    "state": "lit"
+   },
+   "note": "Under an ancient dolmen, beside the sleeping Bhavi, Dvij hears 'the sound of the unstruck': anahata, the heart chakra.",
+   "at": {
+    "book": 5,
+    "page": 8,
+    "pageId": "b5-p008",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "yogini-leaves",
+   "title": "Yogini's gift",
+   "quote": "And she left her dog as a gift to you, I suppose?",
+   "party": {
+    "change": "Yogini leaves; the dog stays with Dvij",
+    "text": "The next morning Yogini has gone back of her own accord. Her dog stays, and from now on follows Dvij."
+   },
+   "epic": "The dog changes hands here, not at the end. In the epic, the dog that walks with Yudhishthira to the last is Dharma, whom some tellings link with Yama.",
+   "at": {
+    "book": 5,
+    "page": 9,
+    "pageId": "b5-p009",
+    "confidence": "reviewed"
+   }
+  },
+  {
+   "id": "vishuddha",
+   "title": "Chanting at the Vedic ashram",
+   "quote": "Has my kundalini risen to vishuddha state?",
+   "chakra": {
+    "name": "Vishuddha",
+    "where": "the throat: speech, chant, vibration",
+    "state": "questioned"
+   },
+   "teacher": {
+    "voice": "vedic-sage",
+    "text": "The Vedas, the Upanishads, and the voice harmonising with the cosmos: \"That you are.\""
+   },
+   "note": "Dvij only asks the question as the first drops of rain lull him to sleep. The book never answers it.",
+   "at": {
+    "book": 5,
+    "page": 16,
+    "pageId": "b5-p016",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "ponga-rests",
+   "title": "Ponga's work is done",
+   "quote": "It's as if he has done what he came here to do",
+   "party": {
+    "change": "Ponga sits down",
+    "text": "Ponga finishes the one task he came up the mountain for, sits against a tree and closes his eyes."
+   },
+   "teacher": {
+    "voice": "the-monk",
+    "text": "Under the tree by the Hanuman temple: \"You seek the Absolute Truth. And yet you do not know that you possess it… You have to look within.\""
+   },
+   "epic": "The party narrows to Dvij, Bhavi and the dog.",
+   "at": {
+    "book": 5,
+    "page": 25,
+    "pageId": "b5-p025",
+    "confidence": "chapter-only"
+   }
+  },
+  {
+   "id": "ajna",
+   "title": "Towards infinity",
+   "quote": "My kundalini has risen to ajna, the brow chakra",
+   "chakra": {
+    "name": "Ajna",
+    "where": "the brow, the 'third eye'",
+    "state": "lit"
+   },
+   "party": {
+    "change": "Bhavi stays",
+    "text": "Bhavi stays behind to lead the valley. Dvij walks on alone, and \"the faithful dog followed him like certain Death.\""
+   },
+   "epic": "The solitary ascent watched over by a dog echoes the Pandavas' last journey. But Bhavi's parting is a handing-over of the mission, not a fall.",
+   "note": "\"There are seven extra-sensory chakras that reside above the head. I have to keep moving on. Towards infinity.\"",
+   "at": {
+    "book": 5,
+    "page": 29,
+    "pageId": "b5-p029",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "sahasrara",
+   "title": "Sahasrara",
+   "chakra": {
+    "name": "Sahasrara",
+    "where": "the crown of the head",
+    "state": "unlit"
+   },
+   "note": "Never reached. The book leaves the ascent open, and so does this rail."
+  }
+ ],
+ "range": {
+  "from": {
+   "book": 3,
+   "page": 34,
+   "pageId": "b3-p034",
+   "confidence": "high"
+  },
+  "to": {
+   "book": 5,
+   "page": 29
+  }
+ }
+}

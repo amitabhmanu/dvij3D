@@ -1,0 +1,144 @@
+{
+ "anchors": {
+  "teaches": {
+   "page": 8,
+   "match": "Techniques of memorization",
+   "book": 2,
+   "pageId": "b2-p008",
+   "rect": [
+    0.374,
+    0.3428,
+    0.6766,
+    0.4133
+   ],
+   "text": "Techniques of memorization! The entire Vedas handed down orally through millenniums! Students learned forward sequence, backward, skipping syllables - remember it forever!",
+   "score": 100.0
+  },
+  "names": {
+   "page": 8,
+   "match": "Avadhan. That's what this is called",
+   "book": 2,
+   "pageId": "b2-p008",
+   "rect": [
+    0.5596,
+    0.0194,
+    0.8354,
+    0.0836
+   ],
+   "text": "Avadhan. That's what this is called. Many people ask questions. Expert has to remember all of them, then respond to each in verses following rules of rasa and alankara.",
+   "score": 100.0
+  },
+  "payoff": {
+   "page": 25,
+   "match": "Professor explained their memorization technique to me",
+   "book": 2,
+   "pageId": "b2-p025",
+   "rect": [
+    0.5431,
+    0.3219,
+    0.7508,
+    0.3703
+   ],
+   "text": "Professor explained their memorization technique to me. I tried it on a shloka and it worked.",
+   "score": 100.0
+  }
+ },
+ "verses": [
+  {
+   "id": "gopi-bhagya",
+   "title": "The pi shloka",
+   "subtitle": "gopī bhāgya madhuvrāta…",
+   "source": "Attributed to Jagadguru Swami Sri Bharati Krishna Tirthaji Maharaja, *Vedic Mathematics* — the verse quoted in the book's own notes.",
+   "note": "This is the one Dvij drills. Built as a mnemonic, so its surface sense is strained: it is carrying digits, not making an argument.",
+   "codex": "katapayadi",
+   "words": [
+    {
+     "deva": "गोपी",
+     "iast": "gopī",
+     "gloss": "cowherd women"
+    },
+    {
+     "deva": "भाग्य",
+     "iast": "bhāgya",
+     "gloss": "fortune"
+    },
+    {
+     "deva": "मधुव्रात",
+     "iast": "madhuvrāta",
+     "gloss": "swarm of bees"
+    },
+    {
+     "deva": "शृङ्गिशो",
+     "iast": "śṛṅgiśo",
+     "gloss": "the horned one's"
+    },
+    {
+     "deva": "दधि",
+     "iast": "dadhi",
+     "gloss": "curd"
+    },
+    {
+     "deva": "सन्धिग",
+     "iast": "sandhiga",
+     "gloss": "joined together"
+    }
+   ]
+  },
+  {
+   "id": "ekam-sat",
+   "title": "One being, many names",
+   "subtitle": "ekaṃ sad viprā bahudhā vadanti",
+   "source": "Rigveda 1.164.46 — one of the oldest verses carried by exactly this method.",
+   "note": "\"Truth is one; the wise call it by many names.\" The book reaches for the same idea when it wonders how the Rigveda's 33 gods became thirty-three *koti*.",
+   "at": "b3-p014",
+   "words": [
+    {
+     "deva": "एकम्",
+     "iast": "ekam",
+     "gloss": "one"
+    },
+    {
+     "deva": "सत्",
+     "iast": "sat",
+     "gloss": "being; what is"
+    },
+    {
+     "deva": "विप्राः",
+     "iast": "viprāḥ",
+     "gloss": "the inspired, the wise"
+    },
+    {
+     "deva": "बहुधा",
+     "iast": "bahudhā",
+     "gloss": "in many ways"
+    },
+    {
+     "deva": "वदन्ति",
+     "iast": "vadanti",
+     "gloss": "they call it"
+    }
+   ]
+  }
+ ],
+ "ring": {
+  "items": [
+   "conch",
+   "kalasha",
+   "navaratnas",
+   "navadhanyas",
+   "navakhanijas",
+   "ghee",
+   "lamp",
+   "garland",
+   "foundation stone",
+   "sacred water",
+   "brass vessel",
+   "bolster"
+  ],
+  "distractions": [
+   "SHHHH! The dignitaries turn and glare. How many of them?",
+   "A conch sounds. Brahmakaal has arrived. How many blasts?",
+   "The priest adds ghee to the fire. How many ladles?"
+  ]
+ }
+}

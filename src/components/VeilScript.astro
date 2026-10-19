@@ -1,0 +1,19 @@
+---
+// Include once per page that has veiled content.
+---
+<script>
+  import { applyVeils, revealAll, hideAgain } from "../lib/spoilers";
+  applyVeils();
+  document.addEventListener("click", (e) => {
+    const t = e.target as HTMLElement;
+    if (t.closest("[data-reveal-one]")) {
+      t.closest("[data-first-book]")?.removeAttribute("data-veiled");
+    } else if (t.closest("[data-reveal-all]")) {
+      revealAll();
+      applyVeils();
+    } else if (t.closest("[data-hide-again]")) {
+      hideAgain();
+      applyVeils();
+    }
+  });
+</script>

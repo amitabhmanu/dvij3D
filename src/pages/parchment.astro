@@ -1,0 +1,72 @@
+---
+import Base from "../layouts/Base.astro";
+import Parchment from "../islands/Parchment.tsx";
+import VeilScript from "../components/VeilScript.astro";
+import data from "../content/generated/parchment.json";
+import { ASSET_BASE, artFile } from "../lib/manifest";
+
+const kalasha = data.intro.kalashaPage;
+const intro = data.intro.page;
+---
+<Base title="The Parchment of Puzzles" description="Five rows of drawings left by the Professor. Can you solve them before Dvij and Bhavi do?"
+  image={artFile("parchment.webp")}>
+  <div class="wrap">
+    <p class="eyebrow">A companion game</p>
+    <h1>The Parchment of Puzzles</h1>
+    <div class="prose lede" data-first-book={kalasha.book} data-first-page={kalasha.page}>
+      <p class="veil-content">
+        Deep inside the golden kalasha, beneath the foundation stone, nine pieces of wrapped parchment sat on nine mounds of grain.
+        All but one had mantras written inside. The only exception had a tiny knot drawn on it. That was the Professor's parchment:
+        crudely drawn shapes that, as Dvij realised, "form five rows… with each row a puzzle by itself."
+      </p>
+      <p class="muted small">
+        Each puzzle opens when the story reaches it, so you can try to beat the characters to the answer.
+        Choose <em>Solve it myself</em> for hints when you're stuck, or <em>Show me how they did it</em> to walk through their reasoning.
+        <a href={`/read/b${intro.book}/${intro.page}`}>Where the puzzles begin in the comic →</a>
+      </p>
+    </div>
+    <Parchment client:load puzzles={data.puzzles as any} parchmentSrc={artFile("parchment.webp")} cropBase={`${ASSET_BASE}/art`} />
+    <p class="more-puzzles"><a href="/caves/">Also: find your way through the Bhoodara caves →</a></p>
+  </div>
+  <VeilScript />
+</Base>
+
+<style is:global>
+  .lede { margin-bottom: 1.5rem; }
+  .small { font-size: 0.92rem; }
+  .parchment-game .toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin: 8px 0 16px; }
+  .parchment-game .modes { display: flex; gap: 6px; }
+  .parchment-game .modes button { font: 600 0.9rem var(--font-ui); padding: 8px 12px; border-radius: var(--radius); border: 2px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+  .parchment-game .modes button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .parchment-game .score { font-family: var(--font-ui); font-weight: 600; margin: 0; }
+  .parchment-game .board { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+  .parchment-game .sheet { position: relative; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  .parchment-game .sheet img { width: 100%; }
+  .parchment-game .region { position: absolute; border: 2px dashed transparent; background: transparent; border-radius: 10px; cursor: pointer; padding: 0; }
+  .parchment-game .region:hover, .parchment-game .region:focus-visible, .parchment-game .region.active { border-color: var(--accent); background: rgba(179, 38, 30, 0.08); }
+  .parchment-game .region.locked { background: rgba(40, 30, 20, 0.35); cursor: help; }
+  .parchment-game .region.solved { border-color: #2e7d32; border-style: solid; background: rgba(46, 125, 50, 0.1); }
+  .parchment-game .region .tag { position: absolute; left: 6px; top: 6px; font: 700 0.85rem/1 var(--font-ui); background: var(--ink); color: var(--paper); border-radius: 999px; padding: 5px 9px; }
+  .parchment-game .region.solved .tag { background: #2e7d32; }
+  .parchment-game .solve { background: var(--paper-2); border: 1px solid var(--paper-3); border-radius: 8px; padding: 18px 20px; min-height: 320px; }
+  .parchment-game .solve h2 { margin-top: 0; }
+  .parchment-game .crop { max-height: 150px; width: auto; background: #fff; border-radius: 4px; padding: 6px; margin: 4px 0 12px; }
+  .parchment-game .progress { font: 600 0.8rem var(--font-ui); color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; margin: 0; }
+  .parchment-game .prompt { font-size: 1.15rem; }
+  .parchment-game .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+  .parchment-game .choices button { font: 1rem var(--font-text); text-align: left; padding: 10px 12px; border-radius: var(--radius); border: 2px solid var(--paper-3); background: var(--paper); color: var(--ink); cursor: pointer; }
+  .parchment-game .choices button:hover:not(:disabled) { border-color: var(--ink-3); }
+  .parchment-game .choices button.right { border-color: #2e7d32; background: #e3f1e3; color: #1b3d1c; }
+  .parchment-game .choices button.wrong { border-color: var(--accent); background: #f6e0dd; color: #5c1410; }
+  .parchment-game .feedback { margin-top: 14px; padding: 10px 14px; border-radius: var(--radius); }
+  .parchment-game .feedback.right { background: #e3f1e3; color: #1b3d1c; }
+  .parchment-game .feedback.hint { background: var(--paper); border: 1px dashed var(--ink-3); }
+  .parchment-game .answer { font-size: 1.2rem; }
+  .parchment-game .outcome { font-size: 1.15rem; }
+  .parchment-game .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .parchment-game .adds-up { margin-top: 2rem; padding: 18px 22px; border: 2px solid var(--gold); border-radius: 8px; background: var(--paper-2); }
+  .parchment-game .list { padding-left: 1.2em; }
+  .linklike { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+  .more-puzzles { margin-top: 2rem; font-family: var(--font-ui); font-weight: 600; }
+  @media (max-width: 860px) { .parchment-game .board { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,111 @@
+---
+import Base from "../layouts/Base.astro";
+import Memory from "../islands/Memory.tsx";
+import VeilNotice from "../components/VeilNotice.astro";
+import VeilScript from "../components/VeilScript.astro";
+import { memory, verses } from "../lib/memory";
+
+const at = memory.anchors.teaches;
+---
+<Base title="The Memory Hall" description="The recitation technique Dvij learns at the ceremony: the Vedic pathas, the avadhana ring, and why the method works.">
+  <div class="wrap" data-first-book={at.book} data-first-page={at.page}>
+    <p class="eyebrow">A companion game</p>
+    <h1>The Memory Hall</h1>
+    <VeilNotice book={at.book} page={at.page} />
+    <div class="veil-content">
+      <p class="prose">"Techniques of memorization! The entire Vedas handed down orally through millenniums! Students
+        learned forward sequence, backward, skipping syllables — remember it forever!" Dvij watched the show, tried
+        the method on one shloka, and three books later it got him out of a cave. Here is the method.</p>
+      <Memory verses={verses} ring={memory.ring} client:load />
+      <p class="more-puzzles"><a href="/caves/">The caves, where Dvij uses it →</a></p>
+    </div>
+  </div>
+  <VeilScript />
+</Base>
+
+<style is:global>
+  .memory-hall .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .memory-hall .modes { display: flex; gap: 6px; }
+  .memory-hall .modes button { font: 600 0.9rem var(--font-ui); padding: 8px 12px; border-radius: var(--radius); border: 2px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+  .memory-hall .modes button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .memory-hall .linklike { font: 600 0.9rem var(--font-ui); color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+  .memory-hall section { margin: 24px 0 8px; }
+  .memory-hall h2 { font-size: 1.5rem; margin: 0 0 8px; }
+  .memory-hall .rule, .memory-hall .reading, .memory-hall p { max-width: 62ch; }
+  .memory-hall .eyebrow { font: 700 0.7rem var(--font-ui); text-transform: uppercase; letter-spacing: 0.1em; color: var(--sepia); }
+  .memory-hall .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+  .memory-hall .muted { color: var(--ink-3); }
+  .memory-hall .small { font-size: 0.88rem; }
+
+  /* verse picker */
+  .memory-hall .verse-pick { border: 1px solid var(--paper-3); border-radius: var(--radius); padding: 10px 14px 14px; margin: 20px 0; max-width: 62ch; }
+  .memory-hall .verse-pick legend { font: 700 0.7rem var(--font-ui); text-transform: uppercase; letter-spacing: 0.1em; color: var(--sepia); padding: 0 6px; }
+  .memory-hall .verse-pick label { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: baseline; padding: 6px 0; cursor: pointer; }
+  .memory-hall .verse-pick .t { font-weight: 600; }
+  .memory-hall .verse-pick .s { grid-column: 2; font-family: var(--font-text); font-style: italic; color: var(--ink-2); }
+
+  /* the ladder */
+  .memory-hall .rungs { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 20px; }
+  .memory-hall .rungs li { display: grid; padding: 6px 12px; border: 1px solid var(--paper-3); border-radius: var(--radius); background: var(--paper-2); opacity: 0.55; }
+  .memory-hall .rungs li.now { opacity: 1; border-color: var(--ink); box-shadow: inset 0 3px 0 var(--gold); }
+  .memory-hall .rungs li.done { opacity: 0.85; }
+  .memory-hall .rungs .iast { font-weight: 700; }
+  .memory-hall .rungs .en { font: 0.75rem var(--font-ui); color: var(--ink-3); }
+
+  .memory-hall .building { display: flex; flex-direction: column; gap: 6px; margin: 18px 0 10px; }
+  .memory-hall .slots { display: flex; flex-wrap: wrap; gap: 6px; }
+  .memory-hall .slot { font-family: var(--font-text); padding: 6px 10px; border-radius: var(--radius); background: var(--paper-2); border: 1px dashed var(--paper-3); min-width: 2.4em; text-align: center; }
+  .memory-hall .slot.filled { border-style: solid; border-color: var(--ink-3); background: var(--paper); }
+  .memory-hall .slot.next { border-color: var(--gold); border-style: solid; }
+
+  .memory-hall .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+  .memory-hall .chip { display: grid; justify-items: center; gap: 2px; font: inherit; cursor: pointer;
+    padding: 8px 14px; border: 2px solid var(--paper-3); border-radius: var(--radius); background: var(--paper-2); color: var(--ink); }
+  .memory-hall .chip:hover { border-color: var(--ink-3); }
+  .memory-hall .chip .deva { font-family: "Noto Serif Devanagari", var(--font-text); font-size: 1.25rem; line-height: 1.35; }
+  .memory-hall .chip .iast { font-family: var(--font-text); font-style: italic; }
+  .memory-hall .chip .num { font: 700 0.65rem var(--font-ui); color: var(--sepia); }
+  .memory-hall .chip.hint { border-color: var(--gold); background: #fff8e6; }
+  .memory-hall .chip.wrong { border-color: var(--accent); animation: mh-shake 0.25s; }
+  .memory-hall .chip.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .memory-hall .chip.off { opacity: 0.55; text-decoration: line-through; }
+  .memory-hall .chip.empty { border-style: dashed; color: var(--ink-3); }
+  .memory-hall .chips.small .chip { padding: 5px 10px; }
+  @keyframes mh-shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+  .memory-hall .miss { color: var(--accent); font-size: 0.95rem; }
+  .memory-hall .right strong { color: var(--ink); }
+
+  /* a rendered pattern */
+  .memory-hall .pattern { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 14px 0; max-width: none; }
+  .memory-hall .utt { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 5px 9px; border-radius: var(--radius);
+    background: var(--paper-2); border: 1px solid var(--paper-3); font-family: var(--font-text); font-style: italic;
+    /* a ghana group is longer than the line: let it wrap inside its own box
+       instead of running off the right edge */
+    max-width: 100%; min-width: 0; }
+  .memory-hall .utt.lit { background: #fff1d6; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(200, 160, 60, 0.25); }
+  .memory-hall .utt .w + .w::before { content: "·"; color: var(--ink-3); margin-right: 4px; }
+
+  .memory-hall .controls { display: flex; flex-wrap: wrap; gap: 24px; margin: 18px 0; }
+  .memory-hall .count { background: var(--paper-2); border-left: 3px solid var(--gold); padding: 10px 14px; border-radius: 0 var(--radius) var(--radius) 0; }
+
+  /* the ring */
+  .memory-hall .ring-fig { display: block; width: 100%; max-width: 340px; margin: 16px auto; }
+  .memory-hall .ring-fig .avadhani { fill: var(--ink); }
+  .memory-hall .ring-fig .mid { fill: var(--paper); font: 600 0.8rem var(--font-ui); }
+  .memory-hall .ring-fig .questioner circle { fill: var(--paper-2); stroke: var(--paper-3); stroke-width: 2; }
+  .memory-hall .ring-fig .questioner text { fill: var(--ink-3); font: 600 0.8rem var(--font-ui); }
+  .memory-hall .ring-fig .questioner.asking circle { fill: var(--gold); stroke: var(--ink); }
+  .memory-hall .ring-fig .questioner.asking text { fill: var(--ink); }
+  .memory-hall .ring-fig .questioner.given circle { fill: var(--ink-3); stroke: var(--ink-3); }
+  .memory-hall .ring-fig .questioner.given text { fill: var(--paper); }
+  .memory-hall .item { font-size: 1.15rem; }
+  .memory-hall .held { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .memory-hall .held .chip { display: inline-block; padding: 5px 10px; }
+
+  .memory-hall .result, .memory-hall .recall-offer { border-radius: var(--radius); padding: 12px 16px; margin: 16px 0; }
+  .memory-hall .result.right { background: #eef6e8; border: 1px solid #b8d3a4; }
+  .memory-hall .result.partial { background: var(--paper-2); border: 1px solid var(--paper-3); }
+  .memory-hall .recall-offer { background: #fff8e6; border: 1px dashed var(--gold); font-family: var(--font-ui); font-size: 0.92rem; }
+  .memory-hall blockquote { margin: 16px 0; padding-left: 14px; border-left: 3px solid var(--gold); font-style: italic; }
+</style>

@@ -1,0 +1,23 @@
+---
+// /read/b1/ch/12 -> the chapter's first page. A static redirect page, so it
+// works on any host; Netlify also serves it without a function.
+import { books } from "../../../../lib/manifest";
+
+export function getStaticPaths() {
+  return books.flatMap((book) =>
+    book.chapters.map((c) => ({ params: { book: book.slug, n: String(c.n) }, props: { target: `/read/${book.slug}/${c.startPage}` } }))
+  );
+}
+const { target } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <meta name="robots" content="noindex" />
+    <title>Redirecting…</title>
+  </head>
+  <body><a href={target}>Continue to the chapter</a></body>
+</html>

@@ -1,0 +1,543 @@
+{
+ "intro": {
+  "quote": "They form five rows...with each row a puzzle by itself. The 5 puzzles will lead to 5 different solutions. The solutions will eventually add up.",
+  "kalashaQuote": "nine pieces of wrapped parchment, all neatly wrapped arranged in a 3x3 grid",
+  "page": {
+   "book": 3,
+   "page": 17,
+   "pageId": "b3-p017",
+   "confidence": "chapter-only"
+  },
+  "kalashaPage": {
+   "book": 2,
+   "page": 33,
+   "pageId": "b2-p033",
+   "confidence": "high"
+  }
+ },
+ "puzzles": [
+  {
+   "id": "p1",
+   "title": "The tree with an eye",
+   "row": 1,
+   "rect": [
+    0.13,
+    0.04,
+    0.44,
+    0.36
+   ],
+   "crop": "puzzle-1",
+   "availableQuote": "That's the only image in the first row",
+   "solvedQuote": "is where we will find our elusive plant",
+   "outcome": "Mount Dronagiri. The eye on Kaal Bhairava's linga looks straight at it: \"That is where we will find our elusive plant.\"",
+   "stages": [
+    {
+     "prompt": "A vertical eye is a well-known aniconic symbol. Whose?",
+     "choices": [
+      "Shiva",
+      "Vishnu",
+      "Indra",
+      "Surya"
+     ],
+     "answer": "Shiva",
+     "hint": "Think of the god whose third eye showers wisdom on creation when it opens.",
+     "explain": "The vertical eye is Shiva's third eye."
+    },
+    {
+     "prompt": "Which form of Shiva is shown meditating under the wish-granting Kalpataru tree?",
+     "choices": [
+      "Gyaneshwar",
+      "Nataraja",
+      "Neelkanth",
+      "Bhairava"
+     ],
+     "answer": "Gyaneshwar",
+     "hint": "A vertical eye embedded in a tree: Shiva in meditation, under the boon-granting tree.",
+     "explain": "An eye in the Kalpataru makes Gyaneshwar. But the valley has 108 temples and not one to Gyaneshwar."
+    },
+    {
+     "prompt": "So where in the valley is there a vertical eye on Shiva?",
+     "choices": [
+      "Kaal Bhairava temple",
+      "Sri Mukteshwar temple",
+      "The Mahavidya temples",
+      "The Bhootnath temple"
+     ],
+     "answer": "Kaal Bhairava temple",
+     "hint": "The most important of Shiva's temples in the valley, home of the tantric.",
+     "explain": "Through the bars of the garbhagriha, the linga of Kaal Bhairava has a vertical eye drawn over it."
+    },
+    {
+     "prompt": "Vaastu likens a temple to a tree: the buried kalasha is its roots, the kapotha ceiling its branches. So the trunk, where the eye sits, is the…",
+     "choices": [
+      "garbhagriha",
+      "gopura",
+      "mantapa",
+      "dhwajastambha"
+     ],
+     "answer": "garbhagriha",
+     "codex": "vaastu-purusha-mandala",
+     "hint": "Where is the idol installed?",
+     "explain": "The whole temple is the tree, and the garbhagriha is its trunk."
+    },
+    {
+     "prompt": "An idol's line of sight runs past the flagstaff and the eastern gopura. What stands beyond them?",
+     "choices": [
+      "Mount Dronagiri",
+      "The Bhoodara caves",
+      "Sheetal Lake",
+      "The fort ruins"
+     ],
+     "answer": "Mount Dronagiri",
+     "hint": "Step out onto the front porch and look past the gopura.",
+     "explain": "Dwarfing everything else: Dronagiri Parvat, the tallest of the hills."
+    }
+   ],
+   "available": {
+    "book": 3,
+    "page": 19,
+    "pageId": "b3-p019",
+    "confidence": "high"
+   },
+   "solved": {
+    "book": 3,
+    "page": 23,
+    "pageId": "b3-p023",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "p2",
+   "title": "The moon and three wheels",
+   "row": 2,
+   "rect": [
+    0.52,
+    0.02,
+    0.98,
+    0.33
+   ],
+   "crop": "puzzle-2",
+   "availableQuote": "A sickle shaped moon is followed by three rings with serrated edges",
+   "solvedQuote": "That makes Ponga",
+   "outcome": "Ponga, the dotty mendicant. The Professor wants him on the expedition.",
+   "stages": [
+    {
+     "prompt": "The three rings have serrated edges. Whose weapon are they?",
+     "choices": [
+      "Vishnu's Sudarshan chakra",
+      "Shiva's trishul",
+      "Indra's vajra",
+      "Brahma's lotus"
+     ],
+     "answer": "Vishnu's Sudarshan chakra",
+     "hint": "The spinning discus of Krishna, the most charismatic avatar of Vishnu.",
+     "explain": "They are Sudarshan chakras."
+    },
+    {
+     "prompt": "In jyotisha, the Sudarshan chakra stands for Kaal Purusha, the celestial man in time. In the sky, it is the band that holds the…",
+     "choices": [
+      "twelve rashis (the zodiac)",
+      "nine grahas",
+      "eight dikpalas",
+      "seven sages"
+     ],
+     "answer": "twelve rashis (the zodiac)",
+     "hint": "Our ancestors joined its brightest stars into twelve shapes.",
+     "explain": "The Sudarshan chakra is the band that contains the rashis."
+    },
+    {
+     "prompt": "Where does the crescent moon come in?",
+     "choices": [
+      "Through the nakshatras, the moon's 27 lunar houses",
+      "It is Shiva's moon, so this is Harihara",
+      "It marks an eclipse",
+      "It stands for the tides"
+     ],
+     "answer": "Through the nakshatras, the moon's 27 lunar houses",
+     "codex": "nakshatras",
+     "hint": "Kurup's first guess (Harihara) is tempting. But what does the moon occupy at a child's birth?",
+     "explain": "Each ring holds the symbol of one nakshatra, one of the moon's 27 wives."
+    },
+    {
+     "prompt": "The 'key' is really a yoni; then a teardrop; then a flute. Which three nakshatras are they?",
+     "choices": [
+      "Bharani, Aridra, Dhanishta",
+      "Ashwini, Rohini, Revati",
+      "Krittika, Pushya, Shravana",
+      "Bharani, Magha, Swati"
+     ],
+     "answer": "Bharani, Aridra, Dhanishta",
+     "codex": "nakshatras",
+     "hint": "Look them up on the Professor's chart of nakshatra symbols.",
+     "explain": "The yoni is Bharani, the teardrop Aridra and the flute Dhanishta."
+    },
+    {
+     "prompt": "Pundits give each nakshatra its naming syllables. Take one syllable from each of the three. Whose name do they spell?",
+     "choices": [
+      "Ponga",
+      "Lekugi",
+      "Pochhage",
+      "Gotilal"
+     ],
+     "answer": "Ponga",
+     "hint": "Not Kurup's sacral name. Think of someone in the valley.",
+     "explain": "Po… ng… ga: Ponga!"
+    }
+   ],
+   "available": {
+    "book": 3,
+    "page": 24,
+    "pageId": "b3-p024",
+    "confidence": "chapter-only"
+   },
+   "solved": {
+    "book": 3,
+    "page": 27,
+    "pageId": "b3-p027",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "p3",
+   "title": "The serpent and three chakras",
+   "row": 3,
+   "rect": [
+    0.03,
+    0.37,
+    0.51,
+    0.72
+   ],
+   "crop": "puzzle-3",
+   "availableQuote": "All I noticed was a coiled serpent",
+   "availablePage": "b4-p016",
+   "solvedQuote": "This is a Vedic altar",
+   "outcome": "A Vedic altar, and the ashram of Kritya Rishi higher up the path, the one place where Vedic rites are still practised.",
+   "guide": "the round-nosed man",
+   "stages": [
+    {
+     "prompt": "As with the moon in the last puzzle, the first image names the category. A coiled serpent is…",
+     "choices": [
+      "Kundalini",
+      "Sheshnag",
+      "Vasuki",
+      "a Naga guardian"
+     ],
+     "answer": "Kundalini",
+     "codex": "kundalini",
+     "hint": "Not Sheshnag: no Krishna dances on its head. Think of energy coiled at the base of the spine.",
+     "explain": "Kundalini, so the three pictures after it are chakras."
+    },
+    {
+     "prompt": "Look closely at the elephant: it has seven trunks. Which chakra's animal is it?",
+     "choices": [
+      "Muladhara",
+      "Vishuddha",
+      "Anahata",
+      "Manipura"
+     ],
+     "answer": "Muladhara",
+     "codex": "chakras",
+     "hint": "Two chakras have an elephant. Count the trunks before you answer (Bhavi did, eventually).",
+     "explain": "An elephant with seven trunks is muladhara, the base chakra. Vishuddha's elephant was the first, wrong guess."
+    },
+    {
+     "prompt": "Eight small figures, the last one underlined. Eight of a kind?",
+     "choices": [
+      "Ashtamatrikas",
+      "Ashtalakshmis",
+      "Ashtamangalas",
+      "Ashtamurtis"
+     ],
+     "answer": "Ashtamatrikas",
+     "codex": "matrikas",
+     "guideHint": "The seven mothers each rule a group of consonants. Add Yogeshwari and you have eight.",
+     "hint": "Mother goddesses: seven in the Puranas, eight in the Varaha Purana.",
+     "explain": "The Ashtamatrikas, and the underlined eighth is the one that matters."
+    },
+    {
+     "prompt": "The eighth matrika rules the group of vowels. Which chakra's lotus carries all the vowels on its petals?",
+     "choices": [
+      "Vishuddha",
+      "Anahata",
+      "Ajna",
+      "Sahasrara"
+     ],
+     "answer": "Vishuddha",
+     "codex": "chakras",
+     "hint": "Sixteen petals, sixteen vowels: the throat chakra.",
+     "explain": "The vowels all sit on the petals of vishuddha."
+    },
+    {
+     "prompt": "The stopwatch, with its single hand, is one of the five kanchukas, the sheaths of illusion. Which?",
+     "choices": [
+      "Kaala: the limit of time",
+      "Niyati: the limit of space",
+      "Raaga: desire",
+      "Kalaa: the limit of power"
+     ],
+     "answer": "Kaala: the limit of time",
+     "codex": "kanchukas",
+     "guideHint": "From Mahat to mind to the senses: the energies of Prakriti unfold in stages. Time is only a sheath.",
+     "hint": "What does a stopwatch measure?",
+     "explain": "Kaala, the sheath of time."
+    },
+    {
+     "prompt": "On the Periodic Table of the Tattvas, kaala maps to the letter ज (ja). On the Professor's cheat sheet, it is the bija akshara of…",
+     "choices": [
+      "Svadhishthana",
+      "Manipura",
+      "Muladhara",
+      "Ajna"
+     ],
+     "answer": "Svadhishthana",
+     "codex": "bija-mantras",
+     "hint": "The sacral chakra, beneath the loins.",
+     "explain": "Svadhishthana. So the three chakras are muladhara, svadhishthana and vishuddha."
+    },
+    {
+     "prompt": "Draw the three chakras' shapes as an upside-down triangle: the square of muladhara, the crescent of svadhishthana and the circle of vishuddha. What is it?",
+     "choices": [
+      "A Vedic altar of homa-kundas",
+      "A funny face",
+      "A vaastu mandala",
+      "A Sri Chakra yantra"
+     ],
+     "answer": "A Vedic altar of homa-kundas",
+     "guideHint": "The crescent is tilted wrongly, but otherwise it is exactly how a Vedic altar should be designed.",
+     "hint": "Dvij thought it looked like a funny face. The round-nosed man knew better.",
+     "explain": "A Vedic altar. Its fire pits, the homa-kundas, can be seen at the ashram of Kritya Rishi."
+    }
+   ],
+   "available": {
+    "book": 4,
+    "page": 16,
+    "pageId": "b4-p016",
+    "confidence": "reviewed"
+   },
+   "solved": {
+    "book": 4,
+    "page": 32,
+    "pageId": "b4-p032",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "p4",
+   "title": "Nine green eyes",
+   "row": 4,
+   "rect": [
+    0.52,
+    0.31,
+    0.92,
+    0.74
+   ],
+   "crop": "puzzle-4",
+   "availableQuote": "All I can see are nine green eyes",
+   "availablePage": "b5-p012",
+   "solvedQuote": "Each graha presides over a direction, and Budha has north",
+   "outcome": "The northern path from the Vedic altar, found precisely with a gnomon. Bhavi coloured the other copies differently, so the Mahant's men went south.",
+   "stages": [
+    {
+     "prompt": "Nine splotchy green shapes, coloured by pressing plant stems. They look like eyes, but they are…",
+     "choices": [
+      "Green beans (moong)",
+      "Emeralds",
+      "Leaves",
+      "The eyes of the Nagas"
+     ],
+     "answer": "Green beans (moong)",
+     "hint": "Small, round and bean-shaped. Even Maharaj would know.",
+     "explain": "Green beans: moong."
+    },
+    {
+     "prompt": "Why nine?",
+     "choices": [
+      "Navagrahas",
+      "Navaratnas",
+      "Nine mounds of grain",
+      "Navadurga"
+     ],
+     "answer": "Navagrahas",
+     "codex": "navagrahas",
+     "hint": "Look up: nine influences in the heavens that govern human destiny.",
+     "explain": "The navagrahas, and each graha has its own grain."
+    },
+    {
+     "prompt": "Moong is offered to which graha, on his day, Wednesday (Budhwar)?",
+     "choices": [
+      "Budha (Mercury)",
+      "Shani (Saturn)",
+      "Mangala (Mars)",
+      "Shukra (Venus)"
+     ],
+     "answer": "Budha (Mercury)",
+     "codex": "navagrahas",
+     "hint": "Budhwar is his day.",
+     "explain": "Budha, whose day is Wednesday."
+    },
+    {
+     "prompt": "Budha's gem is emerald, his metal brass, his colour green. Which of his attributes can guide a search on a mountain?",
+     "choices": [
+      "His direction: north",
+      "His colour: green",
+      "His metal: brass",
+      "His element: earth"
+     ],
+     "answer": "His direction: north",
+     "codex": "dikpalas",
+     "hint": "Almost every leaf is green. What else does each graha preside over?",
+     "explain": "North, taken from the Vedic altar of the last puzzle."
+    },
+    {
+     "prompt": "Many paths radiate from the ashram. How do Dvij and Bhavi find true north?",
+     "choices": [
+      "With a gnomon: a stick, a rope and two shadows",
+      "They ask the ashram dwellers",
+      "By the pole star",
+      "They follow the stream"
+     ],
+     "answer": "With a gnomon: a stick, a rope and two shadows",
+     "codex": "gnomon",
+     "hint": "Asking would leave a trail for the Mahant.",
+     "explain": "A gnomon, with shadows marked at dusk and at dawn."
+    },
+    {
+     "prompt": "Twist: Bhavi coloured each copy differently to catch a traitor. Kurup's copy had red beans. Red maps to…",
+     "choices": [
+      "South",
+      "West",
+      "East",
+      "North"
+     ],
+     "answer": "South",
+     "hint": "The Mahant's men took the southern trail.",
+     "explain": "South, so the Mahant sent his goons the wrong way. (Dvij's copy was black: sesame, west.)"
+    }
+   ],
+   "available": {
+    "book": 5,
+    "page": 12,
+    "pageId": "b5-p012",
+    "confidence": "reviewed"
+   },
+   "solved": {
+    "book": 5,
+    "page": 15,
+    "pageId": "b5-p015",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "p5",
+   "title": "The cosmic man and the lame bull",
+   "row": 5,
+   "rect": [
+    0.2,
+    0.73,
+    0.83,
+    0.98
+   ],
+   "crop": "puzzle-5",
+   "availableQuote": "The second one is a bull with its two hind feet missing",
+   "solvedQuote": "it's the shadow of the trishul",
+   "outcome": "At the hour the puzzle names, the shadow of Shiva's trishul beside the Hanuman temple points down a narrow path.",
+   "stages": [
+    {
+     "prompt": "A bull with its two hind legs missing. In the allegory of the four yugas, that is…",
+     "choices": [
+      "Dwapara yuga",
+      "Kali yuga",
+      "Treta yuga",
+      "Satya yuga"
+     ],
+     "answer": "Dwapara yuga",
+     "hint": "Satya has four legs, Treta three, Kali one.",
+     "explain": "Dwapara: two legs."
+    },
+    {
+     "prompt": "A square figure, head to the north-east and feet to the south-west, 'digesting a fish'. The man is…",
+     "choices": [
+      "The Vaastu Purusha",
+      "Kaal Purusha",
+      "Purusha of Samkhya",
+      "Hanuman"
+     ],
+     "answer": "The Vaastu Purusha",
+     "codex": "vaastu-purusha-mandala",
+     "hint": "The cosmic man pinned down by the gods, the root of vaastu shastra.",
+     "explain": "The Vaastu Purusha."
+    },
+    {
+     "prompt": "The fish is Mina (Pisces). In medical astrology, each rashi governs an organ. Mina governs…",
+     "choices": [
+      "the feet",
+      "the head",
+      "the chest",
+      "the knees"
+     ],
+     "answer": "the feet",
+     "hint": "Mesha is the head, Karka the chest, Makara the knees…",
+     "explain": "The feet of the Vaastu Purusha, in the south-west."
+    },
+    {
+     "prompt": "Vaastu places a room at the purusha's feet, and a time of day to spend there. Which?",
+     "choices": [
+      "The library, from 3 to 6 pm",
+      "The kitchen, at dawn",
+      "The shrine, at noon",
+      "The bedroom, at night"
+     ],
+     "answer": "The library, from 3 to 6 pm",
+     "hint": "The Professor spends exactly those hours in his library.",
+     "explain": "The library (or the armoury), from 3 to 6 pm, in pursuit of knowledge."
+    },
+    {
+     "prompt": "The bull's yuga also maps to a part of the day: two legs means the afternoon, after the midday meal. What happens between 3 and 6 pm?",
+     "choices": [
+      "Shadows lengthen",
+      "The stars come out",
+      "The monks chant",
+      "The stream floods"
+     ],
+     "answer": "Shadows lengthen",
+     "hint": "The sun dips west…",
+     "explain": "The shadows lengthen, and one of them will point the way."
+    },
+    {
+     "prompt": "Which shadow has stayed fixed in place all these years?",
+     "choices": [
+      "The trishul by the Hanuman temple",
+      "The meditating monk's",
+      "The spreading tree's",
+      "The boulder's"
+     ],
+     "answer": "The trishul by the Hanuman temple",
+     "hint": "You look everywhere but at your feet.",
+     "explain": "Shiva's trident, firmly set atop the boulder. Its shadow creeps to Bhavi's toes."
+    }
+   ],
+   "available": {
+    "book": 5,
+    "page": 21,
+    "pageId": "b5-p021",
+    "confidence": "chapter-only"
+   },
+   "solved": {
+    "book": 5,
+    "page": 23,
+    "pageId": "b5-p023",
+    "confidence": "high"
+   }
+  }
+ ],
+ "caves": {
+  "availableQuote": "Before entering each of the caves I counted the number of exits following the sequence of the value of pi",
+  "digits": "31415926",
+  "available": {
+   "book": 2,
+   "page": 26,
+   "pageId": "b2-p026",
+   "confidence": "high"
+  }
+ }
+}

@@ -1,0 +1,8747 @@
+{
+ "book": 1,
+ "slug": "b1",
+ "title": "Valley",
+ "pageCount": 42,
+ "cover": "b1-p001",
+ "pdf": {
+  "file": "pdf/the-twice-born-b1.pdf",
+  "bytes": 66094228
+ },
+ "parts": [
+  {
+   "n": 1,
+   "startPage": 1,
+   "endPage": 12
+  },
+  {
+   "n": 2,
+   "startPage": 13,
+   "endPage": 20
+  },
+  {
+   "n": 3,
+   "startPage": 21,
+   "endPage": 26
+  },
+  {
+   "n": 4,
+   "startPage": 27,
+   "endPage": 35
+  },
+  {
+   "n": 5,
+   "startPage": 36,
+   "endPage": 42
+  }
+ ],
+ "chapters": [
+  {
+   "n": 0,
+   "title": "Prologue",
+   "startPage": 2,
+   "confirmed": true
+  },
+  {
+   "n": 1,
+   "title": "Chapter 1",
+   "startPage": 4,
+   "confirmed": true
+  },
+  {
+   "n": 2,
+   "title": "Chapter 2",
+   "startPage": 5,
+   "confirmed": true
+  },
+  {
+   "n": 3,
+   "title": "Chapter 3",
+   "startPage": 7,
+   "confirmed": true
+  },
+  {
+   "n": 4,
+   "title": "Chapter 4",
+   "startPage": 8,
+   "confirmed": true
+  },
+  {
+   "n": 5,
+   "title": "Chapter 5",
+   "startPage": 10,
+   "confirmed": true
+  },
+  {
+   "n": 6,
+   "title": "Chapter 6",
+   "startPage": 11,
+   "confirmed": true
+  },
+  {
+   "n": 7,
+   "title": "Chapter 7",
+   "startPage": 12,
+   "confirmed": true
+  },
+  {
+   "n": 8,
+   "title": "Chapter 8",
+   "startPage": 13,
+   "confirmed": true
+  },
+  {
+   "n": 9,
+   "title": "Chapter 9",
+   "startPage": 14,
+   "confirmed": true
+  },
+  {
+   "n": 10,
+   "title": "Chapter 10",
+   "startPage": 16,
+   "confirmed": true
+  },
+  {
+   "n": 11,
+   "title": "Chapter 11",
+   "startPage": 17,
+   "confirmed": true
+  },
+  {
+   "n": 12,
+   "title": "Chapter 12",
+   "startPage": 19,
+   "confirmed": true
+  },
+  {
+   "n": 13,
+   "title": "Chapter 13",
+   "startPage": 21,
+   "confirmed": true
+  },
+  {
+   "n": 14,
+   "title": "Chapter 14",
+   "startPage": 23,
+   "confirmed": true
+  },
+  {
+   "n": 15,
+   "title": "Chapter 15",
+   "startPage": 24,
+   "confirmed": true
+  },
+  {
+   "n": 16,
+   "title": "Chapter 16",
+   "startPage": 25,
+   "confirmed": true
+  },
+  {
+   "n": 17,
+   "title": "Chapter 17",
+   "startPage": 27,
+   "confirmed": true
+  },
+  {
+   "n": 18,
+   "title": "Chapter 18",
+   "startPage": 29,
+   "confirmed": true
+  },
+  {
+   "n": 19,
+   "title": "Chapter 19",
+   "startPage": 31,
+   "confirmed": true
+  },
+  {
+   "n": 20,
+   "title": "Chapter 20",
+   "startPage": 33,
+   "confirmed": true
+  },
+  {
+   "n": 21,
+   "title": "Chapter 21",
+   "startPage": 35,
+   "confirmed": true
+  },
+  {
+   "n": 22,
+   "title": "Chapter 22",
+   "startPage": 36,
+   "confirmed": true
+  },
+  {
+   "n": 23,
+   "title": "Chapter 23",
+   "startPage": 39,
+   "confirmed": true
+  },
+  {
+   "n": 24,
+   "title": "Chapter 24",
+   "startPage": 40,
+   "confirmed": true
+  }
+ ],
+ "pages": [
+  {
+   "n": 1,
+   "id": "b1-p001",
+   "w": 2115,
+   "h": 1680,
+   "src": {
+    "avif": {
+     "240": "b1-p001-240.f839dffa4c.avif",
+     "900": "b1-p001-900.17f7bb181c.avif",
+     "1400": "b1-p001-1400.9a43e88bbf.avif",
+     "2115": "b1-p001-2115.623cd4b6f0.avif"
+    },
+    "webp": {
+     "240": "b1-p001-240.95a3d39e3c.webp",
+     "900": "b1-p001-900.501c80aca1.webp",
+     "1400": "b1-p001-1400.4f40cddbef.webp",
+     "2115": "b1-p001-2115.2f82180a57.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.9986,
+      1.0
+     ],
+     "alt": "A hand-drawn map of the valley on aged parchment. Forested ridges ring a central plain: Gaumukh Hill and the Fort Ruins west, Nagadvaja Hill and Mount Dronagiri east, Naga Forest along the north. Between them lie the Village Bazaar and huts, Sheetal Lake, the Mahavidya Temples, Bhoothnath Temple, the Tavern, the Forest Officer's Bungalow and the Professor's Lodge, linked by dashed tracks and the Access Road. A compass rose sits in the lower right."
+    }
+   ],
+   "text": [],
+   "reviewed": true
+  },
+  {
+   "n": 2,
+   "id": "b1-p002",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p002-240.cda395c990.avif",
+     "900": "b1-p002-900.f2cdd43e34.avif",
+     "1400": "b1-p002-1400.4182f147ea.avif",
+     "2115": "b1-p002-2115.7db9216c60.avif"
+    },
+    "webp": {
+     "240": "b1-p002-240.1c0fe4260f.webp",
+     "900": "b1-p002-900.724b1a4ae2.webp",
+     "1400": "b1-p002-1400.cdd86810e8.webp",
+     "2115": "b1-p002-2115.f1598bfd97.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4009,
+      0.2276
+     ],
+     "alt": "A wolf stands silhouetted on a cliff edge beneath a full moon, ranges of mountains receding behind it."
+    },
+    {
+     "box": [
+      0.4009,
+      0.0,
+      0.9986,
+      0.2062
+     ],
+     "alt": "A young man at the wheel of a car at night, eyes wide, pressing a folded cloth to his forehead. The windscreen beside him is spidered with cracks."
+    },
+    {
+     "box": [
+      0.4009,
+      0.2062,
+      0.9986,
+      0.4646
+     ],
+     "alt": "Seen from high above, a road coils down a forested mountainside in hairpin after hairpin, a single car's headlights drawing a thread of light through the dark."
+    },
+    {
+     "box": [
+      0.0,
+      0.2276,
+      0.4009,
+      0.9979
+     ],
+     "alt": "Close on the driver mopping sweat from his face, one eye screwed shut. An inset panel shows a boulder sitting in the road ahead, lit by the headlamps."
+    },
+    {
+     "box": [
+      0.3366,
+      0.4646,
+      0.9986,
+      0.749
+     ],
+     "alt": "The car strikes the boulder and sparks burst from the impact, the dark valley and a river far below."
+    },
+    {
+     "box": [
+      0.4009,
+      0.7467,
+      0.9986,
+      0.9979
+     ],
+     "alt": "A cutaway technical diagram of the car's drivetrain headed Chain Reaction of Failure, with six numbered callouts, repeated underneath as six small panels showing each part giving way in turn."
+    }
+   ],
+   "text": [
+    {
+     "t": "\"It watched the twin beams twist and turn up the dangerously circuitous route...\"",
+     "bbox": [
+      0.0162,
+      0.1829,
+      0.3859,
+      0.2229
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "Lost... I've been driving too long.",
+     "bbox": [
+      0.4133,
+      0.0054,
+      0.5994,
+      0.0487
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "No—!",
+     "bbox": [
+      0.8394,
+      0.2465,
+      0.9226,
+      0.2762
+     ],
+     "kind": "sfx",
+     "panel": 2
+    },
+    {
+     "t": "RATTLE RATTLE CRASH",
+     "bbox": [
+      0.4641,
+      0.5001,
+      0.6799,
+      0.5974
+     ],
+     "kind": "sfx",
+     "panel": 4
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 3,
+   "id": "b1-p003",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p003-240.41eadfe332.avif",
+     "900": "b1-p003-900.f3ab253f7b.avif",
+     "1400": "b1-p003-1400.e0e9188153.avif",
+     "2115": "b1-p003-2115.48bab3c320.avif"
+    },
+    "webp": {
+     "240": "b1-p003-240.153fc90822.webp",
+     "900": "b1-p003-900.1c394e24b4.webp",
+     "1400": "b1-p003-1400.3a115966dc.webp",
+     "2115": "b1-p003-2115.d68137f93c.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.9986,
+      0.3176
+     ],
+     "alt": "The car stands skewed across the mountain road at night, front bumper torn loose and hanging, one headlamp still burning. Ridges fall away into the valley behind."
+    },
+    {
+     "box": [
+      0.0,
+      0.2679,
+      0.5409,
+      0.6376
+     ],
+     "alt": "The car comes on down the road towards us, one headlight blazing, its grille punched inward."
+    },
+    {
+     "box": [
+      0.0,
+      0.6376,
+      0.4274,
+      0.9979
+     ],
+     "alt": "A tall night panel. A shaggy figure hangs by one arm from a branch, black against the full moon. Below, at the foot of an enormous tree trunk, the crumpled car lies still."
+    },
+    {
+     "box": [
+      0.4274,
+      0.3176,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The moment of impact: the driver is thrown out through the windscreen in a spray of glass, the car folding against the tree."
+    }
+   ],
+   "text": [
+    {
+     "t": "At the point when the driver was most assured, he had lost complete control.",
+     "bbox": [
+      0.1701,
+      0.2727,
+      0.7699,
+      0.3025
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "CRUNCH!!! CRASH!!!\"",
+     "bbox": [
+      0.12,
+      0.6143,
+      0.2834,
+      0.704
+     ],
+     "kind": "sfx",
+     "panel": 2
+    },
+    {
+     "t": "Nothing stirred for a long time. Then someone descended from the tree.",
+     "bbox": [
+      0.5558,
+      0.943,
+      0.9783,
+      0.9806
+     ],
+     "kind": "caption",
+     "panel": 3
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 4,
+   "id": "b1-p004",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p004-240.d3ba44e829.avif",
+     "900": "b1-p004-900.e5ae05cf16.avif",
+     "1400": "b1-p004-1400.90c9f97bc8.avif",
+     "2115": "b1-p004-2115.495a7a59b4.avif"
+    },
+    "webp": {
+     "240": "b1-p004-240.03462fc101.webp",
+     "900": "b1-p004-900.2ec29dd492.webp",
+     "1400": "b1-p004-1400.25c594875e.webp",
+     "2115": "b1-p004-2115.6cf6b69672.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.1541
+     ],
+     "alt": "Extreme close-up of an open eye, unfocused, with peeling plaster filling the rest of the frame."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.9986,
+      0.1754
+     ],
+     "alt": "The ceiling he is staring at: damp-stained plaster between dark beams, a four-blade fan hanging motionless."
+    },
+    {
+     "box": [
+      0.0,
+      0.1399,
+      0.3404,
+      0.3532
+     ],
+     "alt": "He reaches out from the bed towards a glass of water, his right forearm in a plaster cast and his head wrapped in bandage."
+    },
+    {
+     "box": [
+      0.3366,
+      0.1541,
+      0.6619,
+      0.3532
+     ],
+     "alt": "He drinks clumsily, water spilling down his chin and bare chest."
+    },
+    {
+     "box": [
+      0.6279,
+      0.1754,
+      0.9986,
+      0.3532
+     ],
+     "alt": "He sits up on the edge of the bed. A large room with shuttered windows, an armchair and framed pictures - nothing like a hospital."
+    },
+    {
+     "box": [
+      0.0,
+      0.3532,
+      0.2913,
+      0.531
+     ],
+     "alt": "Seen from behind, he stands at an open window and stretches both arms wide into the green light outside."
+    },
+    {
+     "box": [
+      0.0,
+      0.531,
+      0.2913,
+      0.7064
+     ],
+     "alt": "Through an archway, a wide sunlit courtyard with a colonnade running round it and a planted square at its centre."
+    },
+    {
+     "box": [
+      0.2913,
+      0.3532,
+      0.9986,
+      0.7064
+     ],
+     "alt": "A study crowded to the ceiling with books, specimen jars and loose papers, a long-necked stringed instrument propped by the window and a bronze figure on a stand. He steps in through the open door, barefoot, his bandaged arm held close."
+    },
+    {
+     "box": [
+      0.0,
+      0.7064,
+      0.4917,
+      0.9695
+     ],
+     "alt": "His own reflection in a window pane: a bearded face under a heavily bandaged head, eyes wide."
+    },
+    {
+     "box": [
+      0.4917,
+      0.7064,
+      0.9986,
+      0.9695
+     ],
+     "alt": "The study again, from the doorway. He lies collapsed face down on the floor among scattered papers and a toppled pot."
+    }
+   ],
+   "text": [
+    {
+     "t": "He had been staring at the ceiling for a long time before he realized he was awake.",
+     "bbox": [
+      0.3363,
+      0.1355,
+      0.6873,
+      0.1601
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "Glug... splash... clatter...\"",
+     "bbox": [
+      0.2613,
+      0.201,
+      0.4146,
+      0.2553
+     ],
+     "kind": "sfx",
+     "panel": 2
+    },
+    {
+     "t": "His weakened arm found the glass too heavy and spilled most of the water...",
+     "bbox": [
+      0.3363,
+      0.3088,
+      0.6586,
+      0.3449
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "He sat up. The plaster on his right arm. His legs intact. The room was \\not clinical...",
+     "bbox": [
+      0.6599,
+      0.3088,
+      1.0,
+      0.3449
+     ],
+     "kind": "caption",
+     "panel": 4
+    },
+    {
+     "t": "The brilliance of sunlight blinded him momentarily...",
+     "bbox": [
+      0.0033,
+      0.487,
+      0.333,
+      0.5151
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "The room opened into a large wonderfully sunlit courtyard.",
+     "bbox": [
+      0.0098,
+      0.667,
+      0.3461,
+      0.6995
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "A study! There were books everywhere. As if antiquity was preserved there, albeit a bit haphazardly.",
+     "bbox": [
+      0.3515,
+      0.667,
+      0.9887,
+      0.699
+     ],
+     "kind": "caption",
+     "panel": 7
+    },
+    {
+     "t": "Window panes revealed the reflection of a bearded face with a heavily bandaged head",
+     "bbox": [
+      0.0127,
+      0.9114,
+      0.5291,
+      0.9509
+     ],
+     "kind": "caption",
+     "panel": 8
+    },
+    {
+     "t": "The reflection of a stranger. He collapsed with a swoon, knocking artefacts over as he hit the hard floor.",
+     "bbox": [
+      0.5616,
+      0.9114,
+      0.9802,
+      0.9509
+     ],
+     "kind": "caption",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 5,
+   "id": "b1-p005",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p005-240.d675b37514.avif",
+     "900": "b1-p005-900.a7ebc39699.avif",
+     "1400": "b1-p005-1400.c4ae142c56.avif",
+     "2115": "b1-p005-2115.66436378de.avif"
+    },
+    "webp": {
+     "240": "b1-p005-240.9e38b16126.webp",
+     "900": "b1-p005-900.b72326501a.webp",
+     "1400": "b1-p005-1400.62cb73ac78.webp",
+     "2115": "b1-p005-2115.95066eb0bc.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.51,
+      0.32
+     ],
+     "alt": "The lodge in high summer: a low tiled-roof house behind a parched lawn and a row of tall pale trunks, the sun burning white overhead. The Professor kneels in the dust settling a sapling into a bed of flowers."
+    },
+    {
+     "box": [
+      0.51,
+      0.0,
+      1.0,
+      0.14
+     ],
+     "alt": "Close on the Professor turning one leaf of the sapling between his fingers."
+    },
+    {
+     "box": [
+      0.51,
+      0.14,
+      1.0,
+      0.32
+     ],
+     "alt": "He lunges forward with his hand outstretched as a sandalled foot comes down on the sapling. STOMP bursts across the panel."
+    },
+    {
+     "box": [
+      0.0,
+      0.32,
+      0.51,
+      0.64
+     ],
+     "alt": "Over the Professor's shoulder: three men have walked into his compound. A heavy man with a moustache in a dark red lungi, and beside him a tall bare-chested ascetic in white, topknot bound, three lines of ash drawn across his forehead, one hand raised."
+    },
+    {
+     "box": [
+      0.51,
+      0.32,
+      1.0,
+      0.64
+     ],
+     "alt": "Two faces side by side. A stout man in white with a folded shawl, looking uneasy; and the ascetic, his face filling the frame, brows level and eyes fixed."
+    },
+    {
+     "box": [
+      0.0,
+      0.64,
+      0.645,
+      0.81
+     ],
+     "alt": "The ascetic and the Professor close together in profile, the ascetic's hand raised between them."
+    },
+    {
+     "box": [
+      0.645,
+      0.64,
+      1.0,
+      0.81
+     ],
+     "alt": "Villagers stand in a loose half circle under a spreading kadamba tree, where a dishevelled man has both arms flung up."
+    },
+    {
+     "box": [
+      0.0,
+      0.81,
+      0.645,
+      1.0
+     ],
+     "alt": "The ascetic turns his head to the Professor; the Professor looks back at him, mouth open."
+    },
+    {
+     "box": [
+      0.645,
+      0.81,
+      1.0,
+      1.0
+     ],
+     "alt": "The villagers hurl stones. The man under the tree is down on the ground among them."
+    }
+   ],
+   "text": [
+    {
+     "t": "Summer was at its peak. The professor had been planting trees, despite the drought. 'They are always around when you want to talk to someone,' he would say.",
+     "bbox": [
+      0.0112,
+      0.2705,
+      0.5,
+      0.3166
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "Now, now professor! Must you really plant trees when people are dying of thirst?",
+     "bbox": [
+      0.5647,
+      0.4443,
+      0.8076,
+      0.5009
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "A man stood under the kadamba tree, raving that the Gods are angry.",
+     "bbox": [
+      0.2989,
+      0.6277,
+      0.5417,
+      0.6843
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "The villagers pelted him with stones until he died. Fear descended... because they knew hatred was amongst them.",
+     "bbox": [
+      0.3884,
+      0.7955,
+      0.665,
+      0.8599
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 6,
+   "id": "b1-p006",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p006-240.6429bd12cc.avif",
+     "900": "b1-p006-900.98af949d12.avif",
+     "1400": "b1-p006-1400.9039ec0f6a.avif",
+     "2115": "b1-p006-2115.dd30e3a72d.avif"
+    },
+    "webp": {
+     "240": "b1-p006-240.00707715dd.webp",
+     "900": "b1-p006-900.384cd23d21.webp",
+     "1400": "b1-p006-1400.53a2aa4479.webp",
+     "2115": "b1-p006-2115.e937260600.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.31,
+      0.32
+     ],
+     "alt": "The moustached man holds a rolled scroll out in both hands; beside him the ascetic stands bare-chested in white, the sun flaring behind the lodge roof."
+    },
+    {
+     "box": [
+      0.31,
+      0.0,
+      0.65,
+      0.31
+     ],
+     "alt": "The ascetic offers the scroll down to the Professor, who leans in with his hand out to take it."
+    },
+    {
+     "box": [
+      0.65,
+      0.0,
+      1.0,
+      0.32
+     ],
+     "alt": "The Professor unrolls the document and reads it at arm's length, the ascetic watching beside him."
+    },
+    {
+     "box": [
+      0.0,
+      0.32,
+      0.3,
+      0.64
+     ],
+     "alt": "The Professor holds the open sheet out, still reading, the ascetic close at his shoulder."
+    },
+    {
+     "box": [
+      0.3,
+      0.32,
+      0.49,
+      0.64
+     ],
+     "alt": "The moustached man pushes the scroll back at the Professor, shouting into his face."
+    },
+    {
+     "box": [
+      0.49,
+      0.32,
+      1.0,
+      0.64
+     ],
+     "alt": "The ascetic lays a hand on the Professor's shoulder and leans in to speak by his ear, his face filling the right of the frame."
+    },
+    {
+     "box": [
+      0.0,
+      0.64,
+      1.0,
+      0.99
+     ],
+     "alt": "Wide shot of the courtyard. The Professor walks away towards the steps of the lodge, his hat slung on his back; the ascetic, the moustached man and the stout man stand together watching him go."
+    }
+   ],
+   "text": [
+    {
+     "t": "How does the wounded one do?",
+     "bbox": [
+      0.478,
+      0.0023,
+      0.6232,
+      0.0361
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Oh, him? He's fine. I can't be sure. He's not woken up, really.\"",
+     "bbox": [
+      0.3687,
+      0.0963,
+      0.5705,
+      0.1433
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Of course he sleeps. I have seen everything. I predicted the exact date of his arrival.",
+     "bbox": [
+      0.646,
+      0.0024,
+      0.8807,
+      0.0571
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "A temple is to be constructed. The foundation ceremony is exactly two weeks from now. The Wounded One MUST attend.",
+     "bbox": [
+      0.5381,
+      0.2691,
+      0.8164,
+      0.3339
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "The Wounded One with No Past will become our saviour!",
+     "bbox": [
+      0.0003,
+      0.3198,
+      0.2021,
+      0.3668
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Read it, professor, and burn the date in this muddled head of yours!",
+     "bbox": [
+      0.3779,
+      0.3283,
+      0.5881,
+      0.3772
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "I am forced to return indoors, as the sun is overhead and my hat is missing.",
+     "bbox": [
+      0.258,
+      0.6906,
+      0.4776,
+      0.7418
+     ],
+     "kind": "balloon",
+     "panel": 6
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 7,
+   "id": "b1-p007",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p007-240.17025c3c64.avif",
+     "900": "b1-p007-900.cb278dae92.avif",
+     "1400": "b1-p007-1400.5a27c7a2c2.avif",
+     "2115": "b1-p007-2115.563731879c.avif"
+    },
+    "webp": {
+     "240": "b1-p007-240.fb2dcf568a.webp",
+     "900": "b1-p007-900.a4d2ad38a0.webp",
+     "1400": "b1-p007-1400.3370de21b9.webp",
+     "2115": "b1-p007-2115.c423d99224.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.2913,
+      0.1896
+     ],
+     "alt": "The Professor tips a bowl of water over the bandaged man's head. Splash! Splash!"
+    },
+    {
+     "box": [
+      0.2913,
+      0.0,
+      0.6355,
+      0.1944
+     ],
+     "alt": "In the study, the young man sits on the floor propped against a long-necked instrument while the Professor stands over him holding out a glass."
+    },
+    {
+     "box": [
+      0.6355,
+      0.0,
+      0.9986,
+      0.1944
+     ],
+     "alt": "He drinks. In the foreground a pair of hands turns a dark bronze figure with a boar's head and several arms."
+    },
+    {
+     "box": [
+      0.0,
+      0.1896,
+      0.522,
+      0.4693
+     ],
+     "alt": "The book-lined study. The man sits on the floor at the left; the Professor stands in the middle of the room holding the bronze figure up to the light."
+    },
+    {
+     "box": [
+      0.3858,
+      0.1944,
+      0.7149,
+      0.4693
+     ],
+     "alt": "The man pushes himself upright, one hand pressed to his bandaged head, frowning."
+    },
+    {
+     "box": [
+      0.7149,
+      0.1944,
+      0.9986,
+      0.4693
+     ],
+     "alt": "The Professor holds up a battered leather book lettered De Rerum Veterum Mysteriis, a crate of loose manuscripts open beside him."
+    },
+    {
+     "box": [
+      0.0,
+      0.4693,
+      0.4993,
+      0.6945
+     ],
+     "alt": "The Professor opens an old palm-leaf manuscript wide in both hands; the man sits below him, hand still at his head."
+    },
+    {
+     "box": [
+      0.4993,
+      0.4693,
+      0.9986,
+      0.6945
+     ],
+     "alt": "The Professor stands holding a small worn volume, talking down to the seated man."
+    },
+    {
+     "box": [
+      0.0,
+      0.6779,
+      0.3934,
+      0.832
+     ],
+     "alt": "Close on the Professor's face, one finger raised, mouth open mid-sentence."
+    },
+    {
+     "box": [
+      0.0,
+      0.832,
+      0.3934,
+      0.9979
+     ],
+     "alt": "Close on the man's face, eyes wide, sweat on his forehead."
+    },
+    {
+     "box": [
+      0.3669,
+      0.6945,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The study again. The man has collapsed face down on the floor, a chair tipping over behind him, papers everywhere, the Professor lunging forward with both hands out."
+    }
+   ],
+   "text": [
+    {
+     "t": "Splash! Splash!!",
+     "bbox": [
+      0.0577,
+      0.1012,
+      0.1472,
+      0.1488
+     ],
+     "kind": "sfx",
+     "panel": 0
+    },
+    {
+     "t": "She is Varahi, one of the saptamatrikas. Her fourth arm would have formed the abhay-mudra but that is missing. It was found damaged when Kurup found it in the ancient temples.",
+     "bbox": [
+      0.3438,
+      0.142,
+      0.6738,
+      0.2189
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Read these books, my young friend, for they will help you put together your past.",
+     "bbox": [
+      0.1003,
+      0.4404,
+      0.3278,
+      0.4933
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Why is my head bandaged?",
+     "bbox": [
+      0.5737,
+      0.2369,
+      0.725,
+      0.2721
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Because of the accident, I should think. Must you fret about those things when we are in the midst of such secret knowledge?",
+     "bbox": [
+      0.5295,
+      0.4335,
+      0.8135,
+      0.4997
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "You were in a coma. It's impossible to find anything intact, really, including our history.",
+     "bbox": [
+      0.6896,
+      0.1887,
+      0.9154,
+      0.2413
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Why? Why was I in a coma??",
+     "bbox": [
+      0.116,
+      0.5053,
+      0.2587,
+      0.5385
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I am Doctor Vidyasagar Parthasarathi, owner of this room and the rest of the lodge.What's your name? Come on, out with it.",
+     "bbox": [
+      0.0004,
+      0.6428,
+      0.2729,
+      0.7062
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I...I don’t know!!",
+     "bbox": [
+      0.2729,
+      0.8308,
+      0.4156,
+      0.864
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "And he collapsed for the second time in the same day.",
+     "bbox": [
+      0.4721,
+      0.9703,
+      0.9608,
+      0.991
+     ],
+     "kind": "caption",
+     "panel": 10
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 8,
+   "id": "b1-p008",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p008-240.2d1e0841bc.avif",
+     "900": "b1-p008-900.dc508758a4.avif",
+     "1400": "b1-p008-1400.7e1f8de723.avif",
+     "2115": "b1-p008-2115.da3a2bb2d3.avif"
+    },
+    "webp": {
+     "240": "b1-p008-240.5f4da19647.webp",
+     "900": "b1-p008-900.dac183add8.webp",
+     "1400": "b1-p008-1400.b648691513.webp",
+     "2115": "b1-p008-2115.fdc1969f9f.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.27,
+      0.51
+     ],
+     "alt": "Seen from behind, the man walks out along the veranda, head bandaged and his right forearm wrapped, into the glare of the dry garden."
+    },
+    {
+     "box": [
+      0.27,
+      0.0,
+      1.0,
+      0.3
+     ],
+     "alt": "The lodge from the road: a long white colonial house with a red tiled roof and a deep pillared veranda, seen through tall wrought-iron gates, its lawn burnt brown and potted plants set out along the drive."
+    },
+    {
+     "box": [
+      0.27,
+      0.3,
+      1.0,
+      0.52
+     ],
+     "alt": "He stands in the garden shading his eyes. Far down the drive, between the gateposts, a figure stands black against the low sun."
+    },
+    {
+     "box": [
+      0.0,
+      0.52,
+      0.65,
+      0.76
+     ],
+     "alt": "He starts back with a shout beside a low circular stone well. A young woman in a long printed kurta sits on the rim with her feet over the edge."
+    },
+    {
+     "box": [
+      0.65,
+      0.52,
+      1.0,
+      1.0
+     ],
+     "alt": "Close: he leans over the well's parapet, his bandaged forearm flat on the stone, looking down the shaft."
+    },
+    {
+     "box": [
+      0.0,
+      0.76,
+      0.65,
+      1.0
+     ],
+     "alt": "The two of them by the well, the lodge behind. He stands with a hand out, talking; she balances barefoot along the rim."
+    }
+   ],
+   "text": [
+    {
+     "t": "The decaying magnificence of the building - a relic of the raj, a symmetrical square squatting in the middle of sprawling environs.",
+     "bbox": [
+      0.3534,
+      0.2692,
+      0.9655,
+      0.295
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "He could see someone up ahead. Sun made the figure a dark silhouette surrounded by brilliance.",
+     "bbox": [
+      0.3437,
+      0.5,
+      0.9558,
+      0.5258
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "Whoa!!!",
+     "bbox": [
+      0.1914,
+      0.5644,
+      0.2717,
+      0.5943
+     ],
+     "kind": "sfx",
+     "panel": 3
+    },
+    {
+     "t": "That is a well! A very deep well!",
+     "bbox": [
+      0.8434,
+      0.5519,
+      0.9998,
+      0.5884
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Are you? You already died once.",
+     "bbox": [
+      0.272,
+      0.7948,
+      0.4409,
+      0.8341
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Aren't you afraid?",
+     "bbox": [
+      0.0156,
+      0.8255,
+      0.1573,
+      0.8585
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "You mean my accident? So you know about me?",
+     "bbox": [
+      0.1731,
+      0.8452,
+      0.3434,
+      0.8849
+     ],
+     "kind": "balloon",
+     "panel": 5
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 9,
+   "id": "b1-p009",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p009-240.b7df68cff4.avif",
+     "900": "b1-p009-900.4af103841c.avif",
+     "1400": "b1-p009-1400.e32f3616ad.avif",
+     "2115": "b1-p009-2115.e24aa76064.avif"
+    },
+    "webp": {
+     "240": "b1-p009-240.14dae64642.webp",
+     "900": "b1-p009-900.dc34382644.webp",
+     "1400": "b1-p009-1400.0b449d896a.webp",
+     "2115": "b1-p009-2115.fd89fb983f.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4652,
+      0.3247
+     ],
+     "alt": "He stands on the burnt lawn with a hand raised, explaining. She walks along the well's rim above him, looking away."
+    },
+    {
+     "box": [
+      0.4652,
+      0.0,
+      0.9986,
+      0.3034
+     ],
+     "alt": "Close on his face, bandage round his head, looking up and answering."
+    },
+    {
+     "box": [
+      0.0,
+      0.3247,
+      0.4728,
+      0.6921
+     ],
+     "alt": "Close on him again, her dark curls falling across the edge of the frame."
+    },
+    {
+     "box": [
+      0.4615,
+      0.3034,
+      0.9986,
+      0.6945
+     ],
+     "alt": "Close on her: a mass of dark curly hair, small gold earrings, watching him steadily."
+    },
+    {
+     "box": [
+      0.0,
+      0.6921,
+      0.5712,
+      0.9979
+     ],
+     "alt": "He looks up at her from the grass while she stands barefoot on the rim of the well, the lodge and blue hills behind."
+    },
+    {
+     "box": [
+      0.4615,
+      0.6945,
+      0.9986,
+      0.9979
+     ],
+     "alt": "He bends over the well and looks down into the water. Behind him she walks away towards the veranda."
+    }
+   ],
+   "text": [
+    {
+     "t": "Everyone around here knows about you. You're The Wounded One with No Past, right?",
+     "bbox": [
+      0.0417,
+      0.0056,
+      0.2856,
+      0.0624
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I don’t know.",
+     "bbox": [
+      0.1429,
+      0.0798,
+      0.2643,
+      0.1081
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "The what is your name?",
+     "bbox": [
+      0.151,
+      0.1163,
+      0.3007,
+      0.1512
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I don’t know.",
+     "bbox": [
+      0.1946,
+      0.1715,
+      0.316,
+      0.1998
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I can't remember. The knock on the head must have done it. That’s what the doctor said.",
+     "bbox": [
+      0.7579,
+      0.0085,
+      0.9893,
+      0.0624
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "What doctor?",
+     "bbox": [
+      0.8646,
+      0.0856,
+      0.986,
+      0.1138
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Doctor Parthasarathi. The old man who lives here. Likable, but loony. Do you know him?",
+     "bbox": [
+      0.2353,
+      0.3277,
+      0.479,
+      0.3845
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Why have you come to this valley? Nobody ever comes here anymore. Why did you?",
+     "bbox": [
+      0.1135,
+      0.6498,
+      0.3574,
+      0.7066
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Do I know a loony old Dr. Parthasarathi? Can't be sure about that.",
+     "bbox": [
+      0.5631,
+      0.3684,
+      0.7704,
+      0.4167
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "I don't know.",
+     "bbox": [
+      0.1141,
+      0.7639,
+      0.2447,
+      0.7943
+     ],
+     "kind": "balloon",
+     "panel": 4
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 10,
+   "id": "b1-p010",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p010-240.3b21c37a9c.avif",
+     "900": "b1-p010-900.f2cefd9604.avif",
+     "1400": "b1-p010-1400.aeee62235f.avif",
+     "2115": "b1-p010-2115.1279ca1b5f.avif"
+    },
+    "webp": {
+     "240": "b1-p010-240.220afd0719.webp",
+     "900": "b1-p010-900.a308ae1ce8.webp",
+     "1400": "b1-p010-1400.d32a9e815e.webp",
+     "2115": "b1-p010-2115.60bd7930e4.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.3631,
+      0.1944
+     ],
+     "alt": "From behind, he walks back towards the pillared veranda of the lodge."
+    },
+    {
+     "box": [
+      0.3631,
+      0.0,
+      0.9986,
+      0.2631
+     ],
+     "alt": "The lodge kitchen. A stout cook in a white cap and a checked towel presses his palms together and bows; the young man stands at the worktop among jars and brass vessels, bright god-prints pinned to the wall behind."
+    },
+    {
+     "box": [
+      0.0,
+      0.1944,
+      0.5144,
+      0.4836
+     ],
+     "alt": "The cook stands with a finger raised, explaining; the young man sits with his back to us, listening."
+    },
+    {
+     "box": [
+      0.3783,
+      0.2631,
+      0.9986,
+      0.4836
+     ],
+     "alt": "The two of them with glasses of tea among the brass pots, heads turned to each other."
+    },
+    {
+     "box": [
+      0.0,
+      0.4836,
+      0.5031,
+      0.7372
+     ],
+     "alt": "Close on the cook's face, hand half over his mouth, eyes sliding sideways."
+    },
+    {
+     "box": [
+      0.4993,
+      0.4693,
+      0.9986,
+      0.6756
+     ],
+     "alt": "The two seated together, the cook talking with his free hand open, a small cramped balloon behind him."
+    },
+    {
+     "box": [
+      0.0,
+      0.7372,
+      0.4993,
+      0.9979
+     ],
+     "alt": "A high view over the valley: forested ridges folding away on every side with the settlement small in the middle. A little inset map headed The Valley notes that it is ringed by the Himalayan range."
+    },
+    {
+     "box": [
+      0.4993,
+      0.6756,
+      0.9986,
+      0.9979
+     ],
+     "alt": "A montage around the cook, who mops his forehead: a steam train trailing smoke, a bus on a hill road, a white car on a mountain bend."
+    }
+   ],
+   "text": [
+    {
+     "t": "Back inside, sounds could be heard coming from the kitchen.",
+     "bbox": [
+      0.014,
+      0.1541,
+      0.3674,
+      0.1818
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "What are you doing?",
+     "bbox": [
+      0.6606,
+      0.0233,
+      0.7912,
+      0.0537
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Are you really an incarnation, sahib?",
+     "bbox": [
+      0.6534,
+      0.1119,
+      0.8078,
+      0.1479
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Mahantji is very learned, sahib. If he has said you are an incarnation, then you must be.",
+     "bbox": [
+      0.5667,
+      0.2671,
+      0.7912,
+      0.3194
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "You believe everything he says?",
+     "bbox": [
+      0.6098,
+      0.3232,
+      0.7598,
+      0.3581
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "People are scared of Mahantji. But I do not fear anyone above God. Mahantji is an evil man. He has many vices.",
+     "bbox": [
+      0.0004,
+      0.4613,
+      0.2624,
+      0.5223
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "All I know is that we are in a valley surrounded by mountains.",
+     "bbox": [
+      0.2754,
+      0.6814,
+      0.5,
+      0.7337
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Tell me about this valley. What is this place? Where are we?",
+     "bbox": [
+      0.6703,
+      0.4865,
+      0.866,
+      0.5321
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "How does one go out from this valley?",
+     "bbox": [
+      0.014,
+      0.7997,
+      0.1904,
+      0.8408
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Nobody goes out, Sahib!",
+     "bbox": [
+      0.3288,
+      0.9086,
+      0.4879,
+      0.9456
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "We went by train, then bus, then car up and down the hills. I was so sick I threw up and slept. I don't know how we got here. But once I did, I have never gone out.",
+     "bbox": [
+      0.5824,
+      0.7283,
+      0.8867,
+      0.7991
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 11,
+   "id": "b1-p011",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p011-240.93011d1b53.avif",
+     "900": "b1-p011-900.1de9400992.avif",
+     "1400": "b1-p011-1400.720cc962ff.avif",
+     "2115": "b1-p011-2115.6f041bb8cf.avif"
+    },
+    "webp": {
+     "240": "b1-p011-240.9bdb2017c3.webp",
+     "900": "b1-p011-900.7e15c986dd.webp",
+     "1400": "b1-p011-1400.963f30a419.webp",
+     "2115": "b1-p011-2115.02ae664fe9.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.33,
+      0.3
+     ],
+     "alt": "The cook talks with his eyes wide. Behind him hangs a painted forest scene: a tiger, a lion and horned figures half hidden among the trees."
+    },
+    {
+     "box": [
+      0.33,
+      0.0,
+      0.52,
+      0.29
+     ],
+     "alt": "Close on the cook's face, moustache, eyes turned anxiously to one side."
+    },
+    {
+     "box": [
+      0.52,
+      0.0,
+      1.0,
+      0.29
+     ],
+     "alt": "The young man stands in the kitchen doorway looking out at a wall of blue mountains."
+    },
+    {
+     "box": [
+      0.0,
+      0.29,
+      0.43,
+      0.56
+     ],
+     "alt": "A bare stony field under a white midday sun. Dozens of volunteers stoop in rows clearing stones from the ground."
+    },
+    {
+     "box": [
+      0.43,
+      0.29,
+      1.0,
+      0.56
+     ],
+     "alt": "Inside a grand cloth pavilion at the edge of the field, the Mahant reclines against a bolster in white robes, one hand raised in explanation. The moustached man stands behind his couch."
+    },
+    {
+     "box": [
+      0.0,
+      0.56,
+      0.5,
+      0.73
+     ],
+     "alt": "The moustached man tips a whisky bottle; the Mahant sits holding out a glass."
+    },
+    {
+     "box": [
+      0.5,
+      0.55,
+      1.0,
+      0.73
+     ],
+     "alt": "The moustached man drinks while the Mahant talks, one hand open."
+    },
+    {
+     "box": [
+      0.0,
+      0.73,
+      0.16,
+      1.0
+     ],
+     "alt": "A narrow panel: the moustached man draining his glass."
+    },
+    {
+     "box": [
+      0.16,
+      0.73,
+      0.31,
+      1.0
+     ],
+     "alt": "The Mahant turns, hand extended."
+    },
+    {
+     "box": [
+      0.31,
+      0.73,
+      0.61,
+      1.0
+     ],
+     "alt": "Close on the bottle pouring another measure into a glass on the low table."
+    },
+    {
+     "box": [
+      0.61,
+      0.73,
+      1.0,
+      1.0
+     ],
+     "alt": "Outside the pavilion, a working man stands with his brow furrowed, the tents and the sunlit site behind him."
+    }
+   ],
+   "text": [
+    {
+     "t": "There are wild animals! Nagas in the forests, and Yakshas hide in the trees. Nobody dares, sahib",
+     "bbox": [
+      0.0768,
+      0.0659,
+      0.302,
+      0.1184
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "You will not leave us, sahib?",
+     "bbox": [
+      0.316,
+      0.0087,
+      0.4751,
+      0.0458
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "He could not respond. Somewhere beyond the mountains that surrounded the valley hid his past, his identity.",
+     "bbox": [
+      0.6416,
+      0.2444,
+      0.9889,
+      0.2825
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "Mahant surveyed the temple site from the shade. Outside, sweltering in the midday sun, volunteers cleansed the land in the ritual Shalyodhara.",
+     "bbox": [
+      0.0433,
+      0.5127,
+      0.6149,
+      0.5442
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "That's a good piece of land you've chosen there, Mahant.",
+     "bbox": [
+      0.6664,
+      0.2921,
+      0.8507,
+      0.3351
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "All governed by divya vaastu. The Lord dictates what he wants.",
+     "bbox": [
+      0.7271,
+      0.3448,
+      0.9218,
+      0.3902
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Faith needs miracles. He is my miracle. A fool who dropped into my lap like a blessing.",
+     "bbox": [
+      0.6419,
+      0.5186,
+      0.8614,
+      0.5697
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Why do we need this wounded guy? Who is he anyway?",
+     "bbox": [
+      0.1896,
+      0.5493,
+      0.3567,
+      0.5882
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Le’ts raise a toast to that!",
+     "bbox": [
+      0.3376,
+      0.7101,
+      0.4779,
+      0.7428
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "The Wounded One will have to forget everything else and don a new avatar.",
+     "bbox": [
+      0.0437,
+      0.7047,
+      0.2632,
+      0.7558
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "The common man knows the truth but is powerless. His silent disapproval speaks volumes.",
+     "bbox": [
+      0.702,
+      0.9455,
+      0.9999,
+      0.9845
+     ],
+     "kind": "caption",
+     "panel": 10
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 12,
+   "id": "b1-p012",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p012-240.cdb7ee3d46.avif",
+     "900": "b1-p012-900.2dba9393a4.avif",
+     "1400": "b1-p012-1400.9b3b6be22b.avif",
+     "2115": "b1-p012-2115.71374669dc.avif"
+    },
+    "webp": {
+     "240": "b1-p012-240.68b25f2075.webp",
+     "900": "b1-p012-900.b46353d629.webp",
+     "1400": "b1-p012-1400.0c3fee6905.webp",
+     "2115": "b1-p012-2115.d1c6c489bc.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.5106,
+      0.32
+     ],
+     "alt": "A grid of small frames labelled Night One, Dawn, Night Three, Dawn, Night Five, Dawn. In each night frame he thrashes in bed with a panther and a hooded cobra looming out of the dark above him; in each dawn frame he sits awake, and between them he reads by lamplight."
+    },
+    {
+     "box": [
+      0.5069,
+      0.0,
+      0.9986,
+      0.2039
+     ],
+     "alt": "The lodge lawn. The Professor sits in a cane chair with the young woman beside him; the young man walks towards them across the burnt grass."
+    },
+    {
+     "box": [
+      0.5106,
+      0.0972,
+      0.9986,
+      0.2892
+     ],
+     "alt": "The three of them on the veranda, the young woman laughing, the young man's arm in its sling."
+    },
+    {
+     "box": [
+      0.0038,
+      0.2916,
+      0.4842,
+      0.4741
+     ],
+     "alt": "The Professor talks with his hand open; Bhavi sits beside him. Behind them the cook comes up the path carrying a brass jug."
+    },
+    {
+     "box": [
+      0.4842,
+      0.2892,
+      0.9986,
+      0.4741
+     ],
+     "alt": "The cook pours milk into steel tumblers held out by the Professor and the young man."
+    },
+    {
+     "box": [
+      0.0,
+      0.4741,
+      0.4842,
+      0.6281
+     ],
+     "alt": "The Professor talking, the young man and Bhavi on either side of him listening."
+    },
+    {
+     "box": [
+      0.4842,
+      0.4741,
+      0.9986,
+      0.6258
+     ],
+     "alt": "The Professor raises one finger, naming him. Bhavi is on his left, Dvij on his right."
+    },
+    {
+     "box": [
+      0.0,
+      0.6281,
+      0.4842,
+      0.7964
+     ],
+     "alt": "The three of them on the veranda with their tumblers."
+    },
+    {
+     "box": [
+      0.4842,
+      0.6258,
+      0.9986,
+      0.8676
+     ],
+     "alt": "Bhavi leans forward pointing, arguing across the Professor."
+    },
+    {
+     "box": [
+      0.0,
+      0.7964,
+      0.4842,
+      0.9979
+     ],
+     "alt": "Dvij, the Professor and Bhavi sitting together, Bhavi looking away."
+    },
+    {
+     "box": [
+      0.4842,
+      0.7941,
+      0.9948,
+      0.9979
+     ],
+     "alt": "The Professor holds his tumbler in both hands and answers quietly, Dvij beside him."
+    }
+   ],
+   "text": [
+    {
+     "t": "Dr. Parthasarathi, have you seen a loony old man around here?",
+     "bbox": [
+      0.7578,
+      0.1063,
+      0.9387,
+      0.1484
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "I can't say that I have. Why do you ask?",
+     "bbox": [
+      0.6281,
+      0.1948,
+      0.783,
+      0.2309
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Thank you doctor for treating me.",
+     "bbox": [
+      0.7835,
+      0.213,
+      0.9135,
+      0.2433
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Here, have this panchamrita. It will invigorate your very soul.",
+     "bbox": [
+      0.3831,
+      0.2995,
+      0.5668,
+      0.3423
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "I am a mere professor. Bhavi is the doctor. She fixed you up, my boy.",
+     "bbox": [
+      0.0751,
+      0.3146,
+      0.2585,
+      0.3573
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "You are an anomaly, young man. I do not accept prophecies, but you are a singularity forcing me to question my utmost beliefs.",
+     "bbox": [
+      0.1109,
+      0.4599,
+      0.3393,
+      0.5131
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Name? You do need a name! I have it. We will call you Dvij, young man, for you are twice- born!",
+     "bbox": [
+      0.7675,
+      0.4599,
+      0.9959,
+      0.5131
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I think you are pretending. This is all planned by that evil Mahant. He bought you with money. This is an evil scheme, uncle. We have to stop it!",
+     "bbox": [
+      0.635,
+      0.6452,
+      0.8996,
+      0.7068
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "She fears for my safety, and rightly so. Sometimes what you do can become your undoing. At other times, it's simply because of what you know.",
+     "bbox": [
+      0.6763,
+      0.8029,
+      0.9216,
+      0.86
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 13,
+   "id": "b1-p013",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p013-240.f52f311077.avif",
+     "900": "b1-p013-900.d5b5f87db5.avif",
+     "1400": "b1-p013-1400.b098586509.avif",
+     "2115": "b1-p013-2115.263485d291.avif"
+    },
+    "webp": {
+     "240": "b1-p013-240.025535b3ab.webp",
+     "900": "b1-p013-900.91629f4999.webp",
+     "1400": "b1-p013-1400.d4afe6e4c2.webp",
+     "2115": "b1-p013-2115.786dcb01e8.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4804,
+      0.2465
+     ],
+     "alt": "Bhavi dabs antiseptic on the gash above Dvij's eyebrow with a swab; the Professor watches from behind."
+    },
+    {
+     "box": [
+      0.4804,
+      0.0,
+      0.9986,
+      0.2441
+     ],
+     "alt": "She presses a plaster down onto his forehead, holding his face steady."
+    },
+    {
+     "box": [
+      0.2232,
+      0.1849,
+      0.5485,
+      0.3627
+     ],
+     "alt": "A black inset panel: a struck gong, with the word GONGGGG across it."
+    },
+    {
+     "box": [
+      0.0,
+      0.2465,
+      0.5296,
+      0.4978
+     ],
+     "alt": "The Professor turns with a hand out; Bhavi stands stiffly with her arms down; Dvij sits between them."
+    },
+    {
+     "box": [
+      0.5296,
+      0.2441,
+      0.9986,
+      0.4978
+     ],
+     "alt": "The Professor talking; Dvij seated; Bhavi turning away, her hair swinging out."
+    },
+    {
+     "box": [
+      0.0,
+      0.4954,
+      0.522,
+      0.7419
+     ],
+     "alt": "Bhavi stands with her arms folded, the Professor seated in the middle, Dvij at the right."
+    },
+    {
+     "box": [
+      0.4842,
+      0.4978,
+      0.9986,
+      0.7419
+     ],
+     "alt": "The Professor with a hand at his chin, thinking; Bhavi and Dvij both turned towards him."
+    },
+    {
+     "box": [
+      0.0,
+      0.7419,
+      0.5409,
+      0.9979
+     ],
+     "alt": "A large close-up of Dvij's face, the plaster on his brow, looking levelly out of the frame."
+    },
+    {
+     "box": [
+      0.5409,
+      0.7419,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij walks out through the open door into the bright garden. The Professor sits at his desk with his hand at his mouth; Bhavi watches him go."
+    }
+   ],
+   "text": [
+    {
+     "t": "Does it hurt? Good. It might force you to remember things.",
+     "bbox": [
+      0.0003,
+      0.0002,
+      0.211,
+      0.0493
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "The scar will remain. It will go well with that wounded image you are supposed to carry.",
+     "bbox": [
+      0.4312,
+      0.0046,
+      0.6848,
+      0.0636
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "GONGGGG!",
+     "bbox": [
+      0.3024,
+      0.2351,
+      0.4689,
+      0.3139
+     ],
+     "kind": "sfx",
+     "panel": 2
+    },
+    {
+     "t": "Will you stop bickering with your only patient and answer the door?",
+     "bbox": [
+      0.0767,
+      0.2313,
+      0.299,
+      0.2831
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "it's the Mahant's henchman. He wants the Wounded One to attend some ceremony at the main temple. Today! Guess word must have traveled that the Wounded One is Wounded No More.",
+     "bbox": [
+      0.1055,
+      0.4483,
+      0.4304,
+      0.5239
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "She's a firebrand, my niece. The wild berries have poisoned her tongue.",
+     "bbox": [
+      0.5864,
+      0.2351,
+      0.8241,
+      0.2905
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Am I not supposed to know everything? I am the Wounded One after all.",
+     "bbox": [
+      0.2938,
+      0.7096,
+      0.5444,
+      0.768
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "It's the cowherd who gets the milk. He spreads the word around.",
+     "bbox": [
+      0.7374,
+      0.4985,
+      0.9515,
+      0.5483
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "How do you know that?",
+     "bbox": [
+      0.5578,
+      0.5316,
+      0.6972,
+      0.5641
+     ],
+     "kind": "balloon",
+     "panel": 6
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 14,
+   "id": "b1-p014",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p014-240.e7aa5fce7d.avif",
+     "900": "b1-p014-900.686e88dfa4.avif",
+     "1400": "b1-p014-1400.4f68a47983.avif",
+     "2115": "b1-p014-2115.e9a14926e3.avif"
+    },
+    "webp": {
+     "240": "b1-p014-240.d3fcfe7fd0.webp",
+     "900": "b1-p014-900.e6f9d8f07d.webp",
+     "1400": "b1-p014-1400.9996499e34.webp",
+     "2115": "b1-p014-2115.ba4ebc9093.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4804,
+      0.2489
+     ],
+     "alt": "Inside the Mahant's tent. The Mahant reclines against bolsters in white, one hand raised; Dvij stands with his back to us, the moustached man beside him. A low table holds a bottle, glasses and a spread newspaper."
+    },
+    {
+     "box": [
+      0.4804,
+      0.0,
+      0.9986,
+      0.2489
+     ],
+     "alt": "Close on the Mahant, topknot bound, three stripes of ash across his forehead, smiling narrowly. Dvij's shoulder fills the foreground."
+    },
+    {
+     "box": [
+      0.0,
+      0.2489,
+      0.4804,
+      0.4978
+     ],
+     "alt": "Dvij kneels with his palms joined; the Mahant sits facing him among the cushions."
+    },
+    {
+     "box": [
+      0.4804,
+      0.2489,
+      0.9986,
+      0.4978
+     ],
+     "alt": "Close on the Mahant with his fingertips pressed together, grinning."
+    },
+    {
+     "box": [
+      0.0,
+      0.4978,
+      0.4879,
+      0.7396
+     ],
+     "alt": "Dvij kneels on the carpet while the Mahant lays a hand flat on his head. The moustached man and the stout man stand watching; a Sanskrit verse hangs on the tent wall behind."
+    },
+    {
+     "box": [
+      0.4879,
+      0.4978,
+      0.9986,
+      0.7396
+     ],
+     "alt": "Dvij stretches full length face down at the Mahant's feet. The two men watch."
+    },
+    {
+     "box": [
+      0.0,
+      0.7396,
+      0.4955,
+      0.9979
+     ],
+     "alt": "A large close-up of Dvij's face, plaster on his brow, speaking."
+    },
+    {
+     "box": [
+      0.4955,
+      0.7396,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The Mahant's face and raised hand fill the panel, eyes wide, mouth open, proclaiming."
+    }
+   ],
+   "text": [
+    {
+     "t": "Later in Mahant’s tent...",
+     "bbox": [
+      0.1353,
+      0.2039,
+      0.3646,
+      0.2347
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "No doubt you know by now that I predicted your arrival in this valley, and that you would arrive wounded.",
+     "bbox": [
+      0.5175,
+      0.0003,
+      0.7953,
+      0.065
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Yes, of course I know. It is as per His divine plan. You will fulfill your duties. Now I shall give you my blessings.",
+     "bbox": [
+      0.4521,
+      0.2108,
+      0.7299,
+      0.2755
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Yes, O wise one. Just like you predicted, I have lost my memory. Without my memory I have no past.",
+     "bbox": [
+      0.1353,
+      0.2392,
+      0.395,
+      0.2997
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "You shall have a new name. And that shall be...",
+     "bbox": [
+      0.6146,
+      0.4769,
+      0.7953,
+      0.519
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Dvij, name me Dvij, O holy one.",
+     "bbox": [
+      0.0304,
+      0.7386,
+      0.2111,
+      0.7807
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Yes, Dvij! The twice born!!",
+     "bbox": [
+      0.5156,
+      0.7246,
+      0.6963,
+      0.7667
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 15,
+   "id": "b1-p015",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p015-240.440eb4302a.avif",
+     "900": "b1-p015-900.14aabe478b.avif",
+     "1400": "b1-p015-1400.be7921aadd.avif",
+     "2115": "b1-p015-2115.768df91e7e.avif"
+    },
+    "webp": {
+     "240": "b1-p015-240.5c05e666f3.webp",
+     "900": "b1-p015-900.b98c1c32eb.webp",
+     "1400": "b1-p015-1400.2adee38a56.webp",
+     "2115": "b1-p015-2115.886256e1bd.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.7,
+      0.34
+     ],
+     "alt": "Outside in the open. A square fire altar burns before a young sapling, heaped with fruit and flowers. The Mahant strides forward with one arm out, Dvij and the two men following; rows of villagers in white sit cross-legged on the ground. A Sanskrit verse is printed on the tent behind."
+    },
+    {
+     "box": [
+      0.7,
+      0.0,
+      1.0,
+      0.34
+     ],
+     "alt": "The Mahant, seated, beckons Dvij to sit beside him where the crowd can see."
+    },
+    {
+     "box": [
+      0.0,
+      0.29,
+      0.44,
+      0.5
+     ],
+     "alt": "Dvij sits at the Mahant's side among the seated villagers, palms together."
+    },
+    {
+     "box": [
+      0.42,
+      0.34,
+      0.73,
+      0.5
+     ],
+     "alt": "Close on Dvij, eyes closed, palms pressed together. A mantra in Devanagari fills the balloon beside him."
+    },
+    {
+     "box": [
+      0.73,
+      0.34,
+      1.0,
+      0.5
+     ],
+     "alt": "Hands tip ghee from a long ladle into the fire; baskets of fruit stand at the altar's edge."
+    },
+    {
+     "box": [
+      0.0,
+      0.5,
+      0.23,
+      0.72
+     ],
+     "alt": "Close on the Mahant's face, smiling, rudraksha beads at his throat."
+    },
+    {
+     "box": [
+      0.23,
+      0.5,
+      0.36,
+      0.72
+     ],
+     "alt": "The moustached man stands to one side, arms loose, watching."
+    },
+    {
+     "box": [
+      0.36,
+      0.5,
+      0.78,
+      0.76
+     ],
+     "alt": "The Mahant rests his hand on Dvij's bowed head beside a lit lamp."
+    },
+    {
+     "box": [
+      0.78,
+      0.5,
+      1.0,
+      0.75
+     ],
+     "alt": "Close on Dvij's face, plaster on his brow, eyes turned away."
+    },
+    {
+     "box": [
+      0.0,
+      0.72,
+      1.0,
+      1.0
+     ],
+     "alt": "A wide landscape at day's end: Dvij walks alone across bare ground towards a wall of mountains, the tent, the fire and the crowd small behind him at the left."
+    }
+   ],
+   "text": [
+    {
+     "t": "Come, sit by my side. Let the people see you sitting with me.",
+     "bbox": [
+      0.7221,
+      0.1134,
+      0.9284,
+      0.1614
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "He faithfully followed all orders. By the end, Mahant was immensely pleased with how Dvij had conducted himself.",
+     "bbox": [
+      0.2177,
+      0.4642,
+      0.825,
+      0.495
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "Now go and wait till I give the word to come back, on the night when the new moon will dawn.",
+     "bbox": [
+      0.3731,
+      0.5024,
+      0.6247,
+      0.561
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Dvij walked across the barren land, satisfied with his performance. Soon his thoughts turned to his missing past, which hid somewhere beyond the tall mountains that encircled this unknown valley.",
+     "bbox": [
+      0.1,
+      0.9554,
+      0.9283,
+      0.9862
+     ],
+     "kind": "caption",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 16,
+   "id": "b1-p016",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p016-240.3a3134575c.avif",
+     "900": "b1-p016-900.72eda6d20f.avif",
+     "1400": "b1-p016-1400.3da56f5c3a.avif",
+     "2115": "b1-p016-2115.d2ee62d13f.avif"
+    },
+    "webp": {
+     "240": "b1-p016-240.fbbb671b38.webp",
+     "900": "b1-p016-900.4be9e2b63b.webp",
+     "1400": "b1-p016-1400.a52e07f7ba.webp",
+     "2115": "b1-p016-2115.f5c3d2549e.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.5,
+      0.24
+     ],
+     "alt": "Dvij walks a dirt track past a muddy pond where villagers are working waist-deep. Thatched huts, a dog, a column of smoke, a timber building up on the rise."
+    },
+    {
+     "box": [
+      0.49,
+      0.0,
+      1.0,
+      0.21
+     ],
+     "alt": "Dvij on a plank bridge as a train of laden mules crosses it. CREAK!"
+    },
+    {
+     "box": [
+      0.5,
+      0.14,
+      1.0,
+      0.33
+     ],
+     "alt": "A man lies fast asleep on his stomach along a shop counter, price boards and a hand-lettered notice on the wall behind. ZZZ."
+    },
+    {
+     "box": [
+      0.0,
+      0.24,
+      0.54,
+      0.46
+     ],
+     "alt": "A tavern at a crossroads of two dusty paths: a tumbledown shack, half brick and half bamboo and thatch, men sitting on benches outside."
+    },
+    {
+     "box": [
+      0.48,
+      0.33,
+      1.0,
+      0.48
+     ],
+     "alt": "Inside the tavern. Dvij comes through the doorway; the milkman in a red turban sits talking with two friends under the price boards."
+    },
+    {
+     "box": [
+      0.0,
+      0.46,
+      0.34,
+      0.72
+     ],
+     "alt": "Dvij flings an arm out to block a man hurrying away."
+    },
+    {
+     "box": [
+      0.34,
+      0.46,
+      0.7,
+      0.72
+     ],
+     "alt": "Dvij stands over a seated man, pointing down at him and asking."
+    },
+    {
+     "box": [
+      0.69,
+      0.48,
+      1.0,
+      0.72
+     ],
+     "alt": "Dvij leans in close, finger levelled at the moustached man, who sits back."
+    },
+    {
+     "box": [
+      0.0,
+      0.72,
+      0.35,
+      1.0
+     ],
+     "alt": "The man throws an arm out, pointing away across the room."
+    },
+    {
+     "box": [
+      0.35,
+      0.72,
+      1.0,
+      0.86
+     ],
+     "alt": "Under a thatched shelter, a gaunt man eats at a rough table while Dvij walks up from the right, bag over his shoulder."
+    },
+    {
+     "box": [
+      0.35,
+      0.86,
+      1.0,
+      1.0
+     ],
+     "alt": "The gaunt man leans over his plate, eyes up and wary, flies circling him; palms and huts in the heat behind."
+    }
+   ],
+   "text": [
+    {
+     "t": "A few days later, Dvij went in search of Viraat, the delivery man who brought supplies from over the mountains.",
+     "bbox": [
+      -0.0033,
+      0.2044,
+      0.5,
+      0.2352
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "An army of mules crossed the bridge, carrying heavy loads of brick and pebbles for the planned temple construction.",
+     "bbox": [
+      0.5,
+      0.1333,
+      0.9982,
+      0.1641
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "Inside it, Dvij found the milkman chatting with his friends.",
+     "bbox": [
+      0.5,
+      0.448,
+      0.9982,
+      0.4717
+     ],
+     "kind": "caption",
+     "panel": 4
+    },
+    {
+     "t": "A tavern stood at the crossroads of two dusty paths. A tumbledown shack, half brick, half bamboo and thatch.",
+     "bbox": [
+      0.0066,
+      0.4501,
+      0.4916,
+      0.4809
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "Hang on! What’s the rush?",
+     "bbox": [
+      0.1478,
+      0.4903,
+      0.292,
+      0.5239
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Where’s Viraat? The delivery guy.",
+     "bbox": [
+      0.475,
+      0.4875,
+      0.631,
+      0.5238
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I know you talk to Maharaj. Speak up.",
+     "bbox": [
+      0.6663,
+      0.4904,
+      0.838,
+      0.5304
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "That’s him!",
+     "bbox": [
+      0.1241,
+      0.7989,
+      0.2274,
+      0.823
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "This skeleton of a man is Viraat?",
+     "bbox": [
+      0.6204,
+      0.7019,
+      0.744,
+      0.761
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "What do you want? I can get it only next Wednesday!",
+     "bbox": [
+      0.6776,
+      0.8657,
+      0.8784,
+      0.9125
+     ],
+     "kind": "balloon",
+     "panel": 10
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 17,
+   "id": "b1-p017",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p017-240.ec8b276094.avif",
+     "900": "b1-p017-900.a7ea5a78b6.avif",
+     "1400": "b1-p017-1400.14bec760fb.avif",
+     "2115": "b1-p017-2115.f0e7d568fd.avif"
+    },
+    "webp": {
+     "240": "b1-p017-240.22d3d350d4.webp",
+     "900": "b1-p017-900.fdeba72e2c.webp",
+     "1400": "b1-p017-1400.eccdbef2b5.webp",
+     "2115": "b1-p017-2115.cdd2e77fd2.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.27,
+      0.18
+     ],
+     "alt": "A hand held out open, offering. Dvij stands at the right under the thatch."
+    },
+    {
+     "box": [
+      0.27,
+      0.0,
+      0.43,
+      0.18
+     ],
+     "alt": "Dvij in profile, listening."
+    },
+    {
+     "box": [
+      0.43,
+      0.0,
+      1.0,
+      0.18
+     ],
+     "alt": "The gaunt man, eyes wide and flies around his head, with Dvij facing him across the table."
+    },
+    {
+     "box": [
+      0.0,
+      0.18,
+      0.45,
+      0.41
+     ],
+     "alt": "The gaunt man throws both palms up in refusal, shaking his head. Dvij leans in over a plate of food and a steel tumbler."
+    },
+    {
+     "box": [
+      0.45,
+      0.18,
+      1.0,
+      0.41
+     ],
+     "alt": "The gaunt man's hands tremble in front of him; Dvij leans right across the table, close to his face."
+    },
+    {
+     "box": [
+      0.0,
+      0.41,
+      1.0,
+      0.75
+     ],
+     "alt": "A yard at sunset. A battered blue van stands among the scrub, roof rack piled with bundles, one door hanging open. Viraat stands beside it; Dvij watches from the right with his hands in his pockets. An inset at the top left shows Dvij's face."
+    },
+    {
+     "box": [
+      0.0,
+      0.71,
+      0.46,
+      1.0
+     ],
+     "alt": "Inside the van: Dvij perched on a wooden stool, gripping the frame of a shattered window, mountains showing through the broken glass."
+    },
+    {
+     "box": [
+      0.46,
+      0.75,
+      0.62,
+      1.0
+     ],
+     "alt": "Viraat hunched over the steering wheel behind a spidered windscreen."
+    },
+    {
+     "box": [
+      0.62,
+      0.75,
+      0.75,
+      1.0
+     ],
+     "alt": "A narrow strip: a misted gorge dropping away beside the road."
+    },
+    {
+     "box": [
+      0.75,
+      0.75,
+      1.0,
+      1.0
+     ],
+     "alt": "A steep stony track climbing between cliffs into cloud."
+    }
+   ],
+   "text": [
+    {
+     "t": "I don’t want anything. Rather, I want to give you gifts. Take anything from my car.",
+     "bbox": [
+      0.0003,
+      0.0087,
+      0.2206,
+      0.06
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "You want me to have your things because I brought you down?",
+     "bbox": [
+      0.4849,
+      0.008,
+      0.6857,
+      0.0547
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "That, and to take me back up there.",
+     "bbox": [
+      0.7119,
+      0.0086,
+      0.8777,
+      0.0472
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "What? Impossible! I can't do that!",
+     "bbox": [
+      0.0929,
+      0.1957,
+      0.2666,
+      0.2362
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "You don't want me to go to the mukhiya and tell him what inflated rates you charge? You are misusing your monopoly.",
+     "bbox": [
+      0.5041,
+      0.1525,
+      0.7888,
+      0.2188
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Oh, yes, it will!",
+     "bbox": [
+      0.6342,
+      0.4636,
+      0.7712,
+      0.4955
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "The slope is much steeper going out. My van will never bear both our weights.",
+     "bbox": [
+      0.163,
+      0.4857,
+      0.3987,
+      0.5406
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "I still can't believe you use this to carry loads over the mountains!",
+     "bbox": [
+      0.1988,
+      0.7412,
+      0.4102,
+      0.7904
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I’m worried about the fading sunlight. It’ll be night soon.",
+     "bbox": [
+      0.5271,
+      0.7543,
+      0.7385,
+      0.8036
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 18,
+   "id": "b1-p018",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p018-240.9dab1dfdac.avif",
+     "900": "b1-p018-900.83c3efcbab.avif",
+     "1400": "b1-p018-1400.4dd836c5bf.avif",
+     "2115": "b1-p018-2115.3185477638.avif"
+    },
+    "webp": {
+     "240": "b1-p018-240.8a7564d14d.webp",
+     "900": "b1-p018-900.d4bea734bd.webp",
+     "1400": "b1-p018-1400.28a1c3b15f.webp",
+     "2115": "b1-p018-2115.a758d7214b.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.36,
+      0.22
+     ],
+     "alt": "Inside the shaking van, Dvij and Viraat both wide-eyed. RATTLE! KNOCK!"
+    },
+    {
+     "box": [
+      0.36,
+      0.0,
+      1.0,
+      0.22
+     ],
+     "alt": "Viraat at the wheel, mouth open in fear. Behind him the dark forest is full of shapes: huge shaggy man-figures, crouching ghouls, a horse-headed being."
+    },
+    {
+     "box": [
+      0.0,
+      0.22,
+      0.5,
+      0.43
+     ],
+     "alt": "Close on Dvij, unimpressed. Beside him, as if remembered, the Mahant in white with a scorpion crawling across his robe."
+    },
+    {
+     "box": [
+      0.5,
+      0.22,
+      1.0,
+      0.43
+     ],
+     "alt": "The van labours up a rutted forest track, sound effects bursting all round it: BRRRAAA, RRRATTLE, CLANG, THUD, KLANG, CHUNK."
+    },
+    {
+     "box": [
+      0.0,
+      0.435,
+      0.34,
+      0.585
+     ],
+     "alt": "Close on Viraat, sweat running, teeth bared, both fists on the wheel. RRRATTLE!"
+    },
+    {
+     "box": [
+      0.0,
+      0.585,
+      0.34,
+      0.668
+     ],
+     "alt": "A brown boot stamping down on a worn pedal, loose bolts and bare wiring under the dash. KLANG!"
+    },
+    {
+     "box": [
+      0.0,
+      0.668,
+      0.34,
+      0.794
+     ],
+     "alt": "The view out through the cracked windscreen: a mountain road pitted with craters, a small framed deity and a tassel hanging from the dash."
+    },
+    {
+     "box": [
+      0.34,
+      0.435,
+      1.0,
+      0.794
+     ],
+     "alt": "A wide view of the forest road switchbacking up the mountainside as the light goes, the van tiny on a bend far below."
+    },
+    {
+     "box": [
+      0.0,
+      0.794,
+      0.42,
+      1.0
+     ],
+     "alt": "At twilight the van passes the wrecked blue car lying at the roadside, Viraat looking across at it."
+    },
+    {
+     "box": [
+      0.42,
+      0.794,
+      1.0,
+      1.0
+     ],
+     "alt": "Dvij turned in his seat, and his own face again in the cracked wing mirror, the wreck receding behind."
+    }
+   ],
+   "text": [
+    {
+     "t": "What are you so worried about?",
+     "bbox": [
+      0.1259,
+      0.0115,
+      0.2775,
+      0.0468
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Banmanus! And pichhal peris, pishachas, kimpurushas, kinnars",
+     "bbox": [
+      0.7063,
+      0.0949,
+      0.9321,
+      0.1475
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Age-old legends, fabricated to scare children from straying into forests. Now used by Mahant to scare peasants from escaping.",
+     "bbox": [
+      0.0,
+      0.3907,
+      0.5555,
+      0.4224
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "Night falls quickly in the mountains. The shadows of trees on one side reached midway up the trunks on the other side.",
+     "bbox": [
+      0.3924,
+      0.7485,
+      0.9479,
+      0.7803
+     ],
+     "kind": "caption",
+     "panel": 7
+    },
+    {
+     "t": "There! That's where I found you. But we can't stop now.",
+     "bbox": [
+      0.0184,
+      0.8308,
+      0.2234,
+      0.8785
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Dvij kept looking at the scene of crash till it was out of his sight.",
+     "bbox": [
+      0.5405,
+      0.9556,
+      0.959,
+      0.9874
+     ],
+     "kind": "caption",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 19,
+   "id": "b1-p019",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p019-240.2f2c3dee53.avif",
+     "900": "b1-p019-900.7175f4af99.avif",
+     "1400": "b1-p019-1400.8d18d1893c.avif",
+     "2115": "b1-p019-2115.9d846a830d.avif"
+    },
+    "webp": {
+     "240": "b1-p019-240.0b6ba6bd34.webp",
+     "900": "b1-p019-900.68e89fde11.webp",
+     "1400": "b1-p019-1400.5b29bacd6f.webp",
+     "2115": "b1-p019-2115.8911e46dfd.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.5,
+      0.13
+     ],
+     "alt": "A cutaway of the engine tearing itself apart in smoke and sparks. SPLUTTER! WHEEZE! SNAP!"
+    },
+    {
+     "box": [
+      0.5,
+      0.0,
+      1.0,
+      0.13
+     ],
+     "alt": "The van stands dead on the forest track, a wisp of smoke rising. Silence."
+    },
+    {
+     "box": [
+      0.0,
+      0.13,
+      0.5,
+      0.27
+     ],
+     "alt": "The van begins to roll backwards down the slope, both men still inside."
+    },
+    {
+     "box": [
+      0.5,
+      0.13,
+      1.0,
+      0.27
+     ],
+     "alt": "Dvij leaps out of the moving van against a burning sunset sky while Viraat scrabbles at the ground beside the wheels."
+    },
+    {
+     "box": [
+      0.0,
+      0.27,
+      0.24,
+      0.42
+     ],
+     "alt": "The two of them heave a boulder in behind a rear wheel."
+    },
+    {
+     "box": [
+      0.24,
+      0.27,
+      0.48,
+      0.42
+     ],
+     "alt": "The van stopped at last, seen side on, a figure sprawled on the ground beside it."
+    },
+    {
+     "box": [
+      0.48,
+      0.27,
+      0.62,
+      0.42
+     ],
+     "alt": "Viraat lies flat on his back on the stones, spent."
+    },
+    {
+     "box": [
+      0.62,
+      0.27,
+      0.75,
+      0.42
+     ],
+     "alt": "A narrow view past the cliff edge to dark ranges under the last of the light."
+    },
+    {
+     "box": [
+      0.75,
+      0.27,
+      1.0,
+      0.42
+     ],
+     "alt": "Dvij stands at the drop, hands at his sides, looking out over the valley."
+    },
+    {
+     "box": [
+      0.0,
+      0.42,
+      0.5,
+      0.59
+     ],
+     "alt": "Dvij sits on a roadside milestone with his chin on his fist. Viraat waits by the van; a thread of smoke still rises from it."
+    },
+    {
+     "box": [
+      0.5,
+      0.42,
+      1.0,
+      0.59
+     ],
+     "alt": "Dvij walks away down the road; Viraat throws out a hand after him."
+    },
+    {
+     "box": [
+      0.0,
+      0.59,
+      0.49,
+      0.77
+     ],
+     "alt": "Dusk on the mountain road. Viraat hurries after Dvij, the van small behind them."
+    },
+    {
+     "box": [
+      0.49,
+      0.59,
+      1.0,
+      0.78
+     ],
+     "alt": "The wrecked blue car lies nose-in against a huge tree trunk under a night sky, its front crushed and its headlights gone. The two men stand looking at it."
+    },
+    {
+     "box": [
+      0.0,
+      0.77,
+      0.48,
+      0.97
+     ],
+     "alt": "Dvij crouches at the driver's door with a light. Two insets: an intact seat belt buckle, and keys still hanging in the ignition."
+    },
+    {
+     "box": [
+      0.48,
+      0.78,
+      0.75,
+      0.97
+     ],
+     "alt": "Viraat grabs Dvij by the shoulders and hauls him back from the car."
+    },
+    {
+     "box": [
+      0.75,
+      0.78,
+      1.0,
+      0.97
+     ],
+     "alt": "Both men flinch as something gives way in a burst of splinters. CRACK!"
+    }
+   ],
+   "text": [
+    {
+     "t": "Suddenly the engine seized up, spluttered wildly and came to a standstill.",
+     "bbox": [
+      0.5405,
+      0.0943,
+      0.959,
+      0.126
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "We are rolling downhill!!!",
+     "bbox": [
+      0.0284,
+      0.1367,
+      0.1718,
+      0.1701
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Grab a bigger rock to make it stop!",
+     "bbox": [
+      0.6558,
+      0.1408,
+      0.8145,
+      0.1778
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "They jammed a large boulder behind the wheel, moments before the van was about to roll off a cliff.",
+     "bbox": [
+      0.0901,
+      0.3928,
+      0.9,
+      0.4094
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "Dvij found himself a milestone to sit on. Closest place was 129 km. Nothing close enough to traverse on foot.",
+     "bbox": [
+      0.0,
+      0.5444,
+      0.5,
+      0.5761
+     ],
+     "kind": "caption",
+     "panel": 9
+    },
+    {
+     "t": "To check out my car.",
+     "bbox": [
+      0.5299,
+      0.426,
+      0.6558,
+      0.4553
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Where are you off to?",
+     "bbox": [
+      0.8482,
+      0.4271,
+      0.9741,
+      0.4564
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Wait! Wait for me!",
+     "bbox": [
+      0.1619,
+      0.6357,
+      0.2878,
+      0.665
+     ],
+     "kind": "balloon",
+     "panel": 11
+    },
+    {
+     "t": "The accident spot was a site of carnage. The car's front was bashed in, headlights gone and front tires busted.",
+     "bbox": [
+      0.5,
+      0.7405,
+      1.0,
+      0.7722
+     ],
+     "kind": "caption",
+     "panel": 12
+    },
+    {
+     "t": "The seatbelt is intact. I must not have been wearing it. The key's still in the ignition.",
+     "bbox": [
+      0.1711,
+      0.8013,
+      0.4041,
+      0.8556
+     ],
+     "kind": "balloon",
+     "panel": 13
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 20,
+   "id": "b1-p020",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p020-240.90bb5fe45c.avif",
+     "900": "b1-p020-900.57cab31d61.avif",
+     "1400": "b1-p020-1400.8bb3f50270.avif",
+     "2115": "b1-p020-2115.8cd61701c8.avif"
+    },
+    "webp": {
+     "240": "b1-p020-240.bf79c0833e.webp",
+     "900": "b1-p020-900.49b28fb629.webp",
+     "1400": "b1-p020-1400.00669913c7.webp",
+     "2115": "b1-p020-2115.641b4a1ef2.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.49,
+      0.17
+     ],
+     "alt": "Dvij sits in the wrecked car turning the key; Viraat leans in at the passenger door. Two small insets: a hand holding the key ring, and a bundle of cut wires."
+    },
+    {
+     "box": [
+      0.49,
+      0.0,
+      1.0,
+      0.28
+     ],
+     "alt": "The two of them sitting in the car talking, the dashboard dials between them."
+    },
+    {
+     "box": [
+      0.0,
+      0.17,
+      0.51,
+      0.65
+     ],
+     "alt": "A big close shot of both faces: Dvij open-mouthed, Viraat's eyes wide, the shattered windscreen webbed with cracks behind them."
+    },
+    {
+     "box": [
+      0.51,
+      0.28,
+      1.0,
+      0.49
+     ],
+     "alt": "Dvij's face ringed by four smoky vignettes: a pair of hands, a walking silhouette, a woman's face, a blood-stained bundle."
+    },
+    {
+     "box": [
+      0.0,
+      0.65,
+      0.34,
+      0.78
+     ],
+     "alt": "Two small panels: the broken bumper being wrenched free, SCRAPE!, and Dvij passing half of it to Viraat."
+    },
+    {
+     "box": [
+      0.34,
+      0.49,
+      1.0,
+      0.78
+     ],
+     "alt": "Dvij at the wheel of the rolling car with Viraat beside him, mountains coming up through the cracked windscreen."
+    },
+    {
+     "box": [
+      0.0,
+      0.78,
+      0.5,
+      1.0
+     ],
+     "alt": "The car pitches down the slope in a shower of sparks, CRASH and BOUNCE across the panel; beside it, a man lies spread-eagled on the grass."
+    },
+    {
+     "box": [
+      0.5,
+      0.78,
+      1.0,
+      1.0
+     ],
+     "alt": "Dawn on a grassy slope. The car lies wrecked and smoking; Dvij and Viraat lie flat on their backs beside it."
+    }
+   ],
+   "text": [
+    {
+     "t": "I am scared. Can I come in with you?",
+     "bbox": [
+      0.2301,
+      0.0068,
+      0.396,
+      0.0454
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "What I found surprising was that you were undressed. Your clothes were lying by your side with blood on them.",
+     "bbox": [
+      0.6553,
+      0.0062,
+      0.9202,
+      0.0679
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "I was WHAT?! You mean I was naked... like completely?",
+     "bbox": [
+      0.2298,
+      0.2073,
+      0.433,
+      0.2546
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "How did you manage to take them off? And why?",
+     "bbox": [
+      0.2115,
+      0.3972,
+      0.4146,
+      0.4445
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Strange memories flashed in his mind.",
+     "bbox": [
+      0.5703,
+      0.4618,
+      0.9105,
+      0.4805
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "They wrenched off the broken bumper. Dvij gave one to Viraat, keeping the other as he climbed into the moving car.",
+     "bbox": [
+      0.0009,
+      0.7375,
+      0.4991,
+      0.7696
+     ],
+     "kind": "caption",
+     "panel": 4
+    },
+    {
+     "t": "The brakes are gone, and so is the gearbox. Steering wheel is jammed. Keep your arms and legs in. We are going to make it to the bottom.",
+     "bbox": [
+      0.5703,
+      0.5192,
+      0.8816,
+      0.5917
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "I will never, ever, do that again.",
+     "bbox": [
+      0.7725,
+      0.8651,
+      0.9202,
+      0.8995
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 21,
+   "id": "b1-p021",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p021-240.a2f79baf81.avif",
+     "900": "b1-p021-900.58a000ae3b.avif",
+     "1400": "b1-p021-1400.4f2e834360.avif",
+     "2115": "b1-p021-2115.9d47aded3f.avif"
+    },
+    "webp": {
+     "240": "b1-p021-240.274d279dae.webp",
+     "900": "b1-p021-900.a89570b819.webp",
+     "1400": "b1-p021-1400.d3db59dce3.webp",
+     "2115": "b1-p021-2115.e503f48918.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.48,
+      0.13
+     ],
+     "alt": "The study. The Professor stands with a hand to his chest; Dvij sits at the left with his forearm grazed and bloodied; Bhavi is curled in a chair at the right in a green dress."
+    },
+    {
+     "box": [
+      0.48,
+      0.0,
+      1.0,
+      0.25
+     ],
+     "alt": "The Professor puts a hand to his head over the desk; Bhavi leans forward from her chair, arguing; Dvij sits below."
+    },
+    {
+     "box": [
+      0.0,
+      0.13,
+      0.51,
+      0.37
+     ],
+     "alt": "Dvij leans forward answering; the Professor stands between them; Bhavi sits hugging her knees."
+    },
+    {
+     "box": [
+      0.49,
+      0.25,
+      1.0,
+      0.5
+     ],
+     "alt": "The Professor raises a hand to explain; Dvij gestures back; Bhavi watches from her chair."
+    },
+    {
+     "box": [
+      0.0,
+      0.37,
+      0.52,
+      0.61
+     ],
+     "alt": "The Professor standing between the two of them, Dvij looking up at him, Bhavi turned away."
+    },
+    {
+     "box": [
+      0.49,
+      0.5,
+      1.0,
+      0.74
+     ],
+     "alt": "Dvij talks with a hand out; the Professor bends down towards him; Bhavi rests her chin on her hand."
+    },
+    {
+     "box": [
+      0.0,
+      0.61,
+      0.53,
+      0.87
+     ],
+     "alt": "Dvij talking, with an inset above him: the Mahant reclining in his tent between the moustached man and the stout man. Bhavi listens from the right."
+    },
+    {
+     "box": [
+      0.0,
+      0.87,
+      0.48,
+      1.0
+     ],
+     "alt": "The Professor hauls a large old volume down from a high shelf; Dvij and Bhavi watch from below."
+    },
+    {
+     "box": [
+      0.48,
+      0.74,
+      1.0,
+      1.0
+     ],
+     "alt": "The Professor lays an old chart on the table - a Vaastu Purusha Mandala, a squared grid with a sprawled figure drawn across it and the directions marked round the edge. Dvij leans in at the left, Bhavi at the right."
+    }
+   ],
+   "text": [
+    {
+     "t": "Now Mahant will know and you will be in trouble.",
+     "bbox": [
+      0.2858,
+      0.0106,
+      0.4571,
+      0.0505
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Oh uncle! It was all a dumb act. It was meant to fail from the beginning!",
+     "bbox": [
+      0.6884,
+      0.0351,
+      0.8759,
+      0.0788
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "I’d love to stay in the valley - if only you stop making these allegations.",
+     "bbox": [
+      0.1871,
+      0.1441,
+      0.3713,
+      0.187
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Now Viraat is stuck, all because of you. Who will bring supplies?",
+     "bbox": [
+      0.2133,
+      0.2332,
+      0.385,
+      0.2732
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Viraat will be fine. I told him to take the engine belt from my car to replace his broken one.",
+     "bbox": [
+      0.6881,
+      0.2988,
+      0.8856,
+      0.3448
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Mahant has expectations from you, my boy.",
+     "bbox": [
+      0.1002,
+      0.3581,
+      0.25,
+      0.393
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "I know. He said that himself before yesterday's ceremony.",
+     "bbox": [
+      0.1358,
+      0.4413,
+      0.3117,
+      0.4823
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "I met Mahant in a tent at the temple site. There were a couple of other guys.",
+     "bbox": [
+      0.5861,
+      0.5113,
+      0.7764,
+      0.5556
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Baldev and Vaid! These 3 are always cooking some evil plan!",
+     "bbox": [
+      0.1609,
+      0.6878,
+      0.3438,
+      0.7304
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "They had some sort of a diagram for the temple.",
+     "bbox": [
+      0.1087,
+      0.7372,
+      0.2633,
+      0.7732
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Was the diagram anything like this?",
+     "bbox": [
+      0.7743,
+      0.7241,
+      0.925,
+      0.7592
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Yes. What is it?",
+     "bbox": [
+      0.514,
+      0.7365,
+      0.6206,
+      0.7614
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Why, the Vaastu Purusha Mandala!",
+     "bbox": [
+      0.7623,
+      0.7679,
+      0.8998,
+      0.7999
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 22,
+   "id": "b1-p022",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p022-240.19f1e84198.avif",
+     "900": "b1-p022-900.3a1d4e33a1.avif",
+     "1400": "b1-p022-1400.712b470817.avif",
+     "2115": "b1-p022-2115.3db29e87d8.avif"
+    },
+    "webp": {
+     "240": "b1-p022-240.f74af0a1be.webp",
+     "900": "b1-p022-900.78ec463699.webp",
+     "1400": "b1-p022-1400.4905d90329.webp",
+     "2115": "b1-p022-2115.3065a9a5d0.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.49,
+      0.24
+     ],
+     "alt": "The Professor throws an arm up as he tells it. Behind him, painted across the wall, gods in a starry void hold down a giant man lying face first. Dvij and Bhavi listen from the right."
+    },
+    {
+     "box": [
+      0.49,
+      0.0,
+      1.0,
+      0.24
+     ],
+     "alt": "The Professor points up at a diagram of a cosmic temple, circles inside circles with planets around them. Dvij and Bhavi look up at it."
+    },
+    {
+     "box": [
+      0.0,
+      0.24,
+      0.5,
+      0.58
+     ],
+     "alt": "The Professor talks with both hands open beside the Vaastu Purusha Mandala chart propped on the table; Dvij stands with his arms folded, the temple vision spread behind them."
+    },
+    {
+     "box": [
+      0.5,
+      0.24,
+      0.68,
+      0.45
+     ],
+     "alt": "The Professor at the window, the mandala chart lying on the table in front of him."
+    },
+    {
+     "box": [
+      0.68,
+      0.24,
+      1.0,
+      0.45
+     ],
+     "alt": "Dvij turns with a hand out, Bhavi beside him."
+    },
+    {
+     "box": [
+      0.5,
+      0.45,
+      0.68,
+      0.58
+     ],
+     "alt": "The Professor seated with the chart, answering."
+    },
+    {
+     "box": [
+      0.68,
+      0.45,
+      1.0,
+      0.58
+     ],
+     "alt": "Dvij and Bhavi sitting together, she looking at him."
+    },
+    {
+     "box": [
+      0.0,
+      0.58,
+      1.0,
+      1.0
+     ],
+     "alt": "A wide view of the study. A large hand-drawn map of the valley is spread across the table; Dvij leans over it on both fists, his grazed forearm showing. Bhavi throws her hands up at the left; the Professor stands at the right with one finger raised, mid-shout. On the floor is a book titled Architecture of the Vastu Shastra, and a jar of rudraksha beads on the shelf."
+    }
+   ],
+   "text": [
+    {
+     "t": "A giant man, the Vaastu Purusha, once roamed the void and confronted the Gods. Threatened, they attacked together and pinned it down. Facing down, the Vaastu Purusha supports the entire universe!",
+     "bbox": [
+      0.0657,
+      0.113,
+      0.3738,
+      0.1848
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "It became the sacred blueprint for temple architecture, for towns, for homes. Each level a miniature version of the level above... like fractals... cosmos within a cosmos.",
+     "bbox": [
+      0.5713,
+      0.1341,
+      0.8525,
+      0.1996
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "But I am surprised. Mahant allowed you to return. Why?",
+     "bbox": [
+      0.089,
+      0.2629,
+      0.2478,
+      0.2999
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "He asked me to wait till he sends word for the big ceremony. The thing is... I don't intend to.",
+     "bbox": [
+      0.159,
+      0.3067,
+      0.3608,
+      0.3537
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Don't intend to what?",
+     "bbox": [
+      0.7605,
+      0.2941,
+      0.8808,
+      0.3221
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Hang around in the valley.",
+     "bbox": [
+      0.7927,
+      0.4065,
+      0.913,
+      0.4345
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "How do you plan to get out?",
+     "bbox": [
+      0.62,
+      0.4318,
+      0.7403,
+      0.4598
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "By studying that map. There must be a way out of here.",
+     "bbox": [
+      0.4078,
+      0.6018,
+      0.5701,
+      0.6396
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Yes! Study the map. I need fresh legs to fetch artifacts for my research.",
+     "bbox": [
+      0.8163,
+      0.5993,
+      0.9997,
+      0.642
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 23,
+   "id": "b1-p023",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p023-240.df742e4481.avif",
+     "900": "b1-p023-900.ffb31c5a3e.avif",
+     "1400": "b1-p023-1400.06382b5971.avif",
+     "2115": "b1-p023-2115.f67bddfdcc.avif"
+    },
+    "webp": {
+     "240": "b1-p023-240.a9596c0d08.webp",
+     "900": "b1-p023-900.a0f61aecf9.webp",
+     "1400": "b1-p023-1400.4f6b9c1142.webp",
+     "2115": "b1-p023-2115.3be496a822.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.22,
+      0.16
+     ],
+     "alt": "A corner of the room by the window, with a caption about the crude razor and its stinging lather of herbs and salt."
+    },
+    {
+     "box": [
+      0.0,
+      0.16,
+      0.22,
+      0.36
+     ],
+     "alt": "A weathered board reading Ravenswood Park at the head of a stone-edged trail; a figure with a backpack comes up it."
+    },
+    {
+     "box": [
+      0.22,
+      0.0,
+      0.47,
+      0.3
+     ],
+     "alt": "Dvij's face, shaved for the first time - a few days' stubble gone, the plaster still on his brow and a healing cut on his cheek."
+    },
+    {
+     "box": [
+      0.47,
+      0.0,
+      1.0,
+      0.3
+     ],
+     "alt": "Bhavi in a printed sundress in deep forest, shafts of sun coming down through the canopy, turning a small flower in her fingers beside a stream. A carved sign points to the Scenic Trail, Overlook Point and Picnic Grounds."
+    },
+    {
+     "box": [
+      0.0,
+      0.36,
+      0.2,
+      0.6
+     ],
+     "alt": "A narrow strip of the forest path between mossy stones."
+    },
+    {
+     "box": [
+      0.2,
+      0.3,
+      1.0,
+      0.6
+     ],
+     "alt": "Bhavi walking on through the tall grass and sunlit trunks, a satchel on her shoulder."
+    },
+    {
+     "box": [
+      0.0,
+      0.6,
+      0.46,
+      0.755
+     ],
+     "alt": "Dvij stands with his hand at his chin. Bhavi is at a wooden signpost wound about with strings of cloth, beads and flowers."
+    },
+    {
+     "box": [
+      0.46,
+      0.6,
+      1.0,
+      0.755
+     ],
+     "alt": "The signpost close up, its arms reading Overlook Point 1.8 miles and Picnic Grounds 0.7 miles under the offerings tied round the post. Bhavi walks away down the path."
+    },
+    {
+     "box": [
+      0.0,
+      0.755,
+      0.47,
+      0.87
+     ],
+     "alt": "Dvij and Bhavi facing each other on the trail, he talking with a hand open."
+    },
+    {
+     "box": [
+      0.47,
+      0.755,
+      1.0,
+      0.87
+     ],
+     "alt": "The two of them walking on together under the trees."
+    },
+    {
+     "box": [
+      0.0,
+      0.87,
+      0.35,
+      1.0
+     ],
+     "alt": "Remembered frames stacked like photographs: children running in a garden, a family group, a man at the park gate. Bhavi stands in front of them."
+    },
+    {
+     "box": [
+      0.35,
+      0.87,
+      1.0,
+      1.0
+     ],
+     "alt": "More remembered frames - a crowd of faces, a woman gathering a small girl in - and Bhavi telling it, with Dvij listening beside her."
+    }
+   ],
+   "text": [
+    {
+     "t": "Several days later, when the wounds had healed...",
+     "bbox": [
+      0.1,
+      0.1572,
+      0.4226,
+      0.1747
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "They walked aimlessly through the Jambuvan forest, outskirts lined with tall trees and sparse undergrowth, intermittent clearings densely populated with tall grass.",
+     "bbox": [
+      0.1,
+      0.3332,
+      0.8342,
+      0.3581
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "These are offerings made by the tribes. They think these signposts are signs with mystical meanings, left over from the ages of Gods.",
+     "bbox": [
+      0.153,
+      0.3718,
+      0.4016,
+      0.4297
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Come along, or I will leave you to find your own way out of here!",
+     "bbox": [
+      0.667,
+      0.3787,
+      0.8297,
+      0.4166
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Because you love your uncle too much. You will not let me out of your sight.",
+     "bbox": [
+      0.4835,
+      0.5681,
+      0.6764,
+      0.613
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "You will not do that.",
+     "bbox": [
+      0.1999,
+      0.5845,
+      0.3227,
+      0.6131
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Why not?",
+     "bbox": [
+      0.2939,
+      0.6244,
+      0.3801,
+      0.6445
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I came here many years ago when this place was opened to tourists. My father worked for the national park. The first few years were amazing...",
+     "bbox": [
+      0.2464,
+      0.7373,
+      0.4996,
+      0.7963
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Then that day happened. Uncle picked me up early and bolted us us in. I kept asking for my mom and dad. They never came back.",
+     "bbox": [
+      0.5807,
+      0.7483,
+      0.8339,
+      0.8072
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "They went missing that day. Much later uncle told me they had been killed.",
+     "bbox": [
+      0.7834,
+      0.8612,
+      0.9712,
+      0.905
+     ],
+     "kind": "balloon",
+     "panel": 11
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 24,
+   "id": "b1-p024",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p024-240.cfa8cf7802.avif",
+     "900": "b1-p024-900.f1443887e6.avif",
+     "1400": "b1-p024-1400.5147c82f91.avif",
+     "2115": "b1-p024-2115.03d901b5f9.avif"
+    },
+    "webp": {
+     "240": "b1-p024-240.ea0fbe1876.webp",
+     "900": "b1-p024-900.682648e04e.webp",
+     "1400": "b1-p024-1400.4732dd6794.webp",
+     "2115": "b1-p024-2115.4b938f9a2d.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.3934,
+      0.1896
+     ],
+     "alt": "Bhavi and Dvij side by side on the forest path, she turning to look at him."
+    },
+    {
+     "box": [
+      0.3934,
+      0.0,
+      0.9986,
+      0.1896
+     ],
+     "alt": "The two of them on the sunlit trail, Dvij answering with one hand raised."
+    },
+    {
+     "box": [
+      0.0,
+      0.1896,
+      0.4123,
+      0.3698
+     ],
+     "alt": "Close on both faces, Dvij with a hand flat against his chest."
+    },
+    {
+     "box": [
+      0.4123,
+      0.1896,
+      0.9986,
+      0.3698
+     ],
+     "alt": "Seen past Dvij's backpack, Bhavi climbs a flight of old stone steps up into the trees."
+    },
+    {
+     "box": [
+      0.0,
+      0.3698,
+      0.2723,
+      0.5807
+     ],
+     "alt": "The two walking on, Dvij talking with a hand out."
+    },
+    {
+     "box": [
+      0.2723,
+      0.3698,
+      0.609,
+      0.5807
+     ],
+     "alt": "They stop face to face on the path."
+    },
+    {
+     "box": [
+      0.609,
+      0.3698,
+      0.9986,
+      0.5807
+     ],
+     "alt": "Bhavi stands with her arms folded, a signpost behind her."
+    },
+    {
+     "box": [
+      0.0,
+      0.5807,
+      0.2837,
+      0.7822
+     ],
+     "alt": "Dvij explaining, Bhavi beside him with her jaw set."
+    },
+    {
+     "box": [
+      0.2837,
+      0.5807,
+      0.6165,
+      0.7822
+     ],
+     "alt": "Dvij gestures with both hands open."
+    },
+    {
+     "box": [
+      0.6165,
+      0.5807,
+      0.9986,
+      0.7822
+     ],
+     "alt": "Bhavi rounds on him, one finger out."
+    },
+    {
+     "box": [
+      0.0,
+      0.7822,
+      0.2686,
+      0.9979
+     ],
+     "alt": "The two walking apart, Dvij pointing back at himself in disbelief."
+    },
+    {
+     "box": [
+      0.2686,
+      0.7822,
+      0.6014,
+      0.9979
+     ],
+     "alt": "Bhavi turns away; Dvij stands behind her by another signpost."
+    },
+    {
+     "box": [
+      0.6014,
+      0.7822,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Bhavi jabs a finger at him; Dvij spreads his hands."
+    }
+   ],
+   "text": [
+    {
+     "t": "You think Mahant was behind it?",
+     "bbox": [
+      0.2308,
+      0.0957,
+      0.3617,
+      0.1262
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I don’t know. But he certainly wishes evil. I will not let anything happen to my Uncle..",
+     "bbox": [
+      0.6452,
+      0.0805,
+      0.8321,
+      0.124
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "I understand why you hate me. You think I'm here to hurt your uncle. I shudder to think my memory might return and prove I really came to hurt him.",
+     "bbox": [
+      0.2018,
+      0.2968,
+      0.4558,
+      0.356
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "This valley of yours...its unreal...forgotten by the world, with no connectivity, no means to escape...",
+     "bbox": [
+      0.1184,
+      0.3581,
+      0.362,
+      0.4149
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "full of strange people with stranger stories.",
+     "bbox": [
+      0.4194,
+      0.3775,
+      0.5804,
+      0.415
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "Nothing as strange as you arriving on the exact date Mahant predicted, yet claiming to have no idea why.",
+     "bbox": [
+      0.3501,
+      0.4658,
+      0.5806,
+      0.5195
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "You did this on purpose.",
+     "bbox": [
+      0.8122,
+      0.3929,
+      0.9061,
+      0.4157
+     ],
+     "kind": "sfx",
+     "panel": 6
+    },
+    {
+     "t": "You must think I'm a total dumb to believe that.",
+     "bbox": [
+      0.7658,
+      0.4673,
+      0.9334,
+      0.5063
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I had an almost fatal accident. You said so yourself. It's perfectly possible to lose memory after an accident like that.",
+     "bbox": [
+      0.0798,
+      0.5538,
+      0.3234,
+      0.6105
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "It's also perfectly possible to make up a story. I don't care either which way the truth lies.",
+     "bbox": [
+      0.0387,
+      0.6712,
+      0.2388,
+      0.7178
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "What about my problems? I have no idea who I am, stuck in a strange place with strange people who all want something from me.",
+     "bbox": [
+      0.4784,
+      0.5559,
+      0.722,
+      0.6126
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "YOUR problems? You're a crook placed by Mahant to spy on my uncle's research!",
+     "bbox": [
+      0.7124,
+      0.6785,
+      0.9125,
+      0.7251
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "Me a SPY? Spying on what? Prof's BOOK COLLECTION?",
+     "bbox": [
+      0.1184,
+      0.778,
+      0.2849,
+      0.8168
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Now look what you have done. You've made me lose my way",
+     "bbox": [
+      0.3731,
+      0.8787,
+      0.5396,
+      0.9174
+     ],
+     "kind": "balloon",
+     "panel": 11
+    },
+    {
+     "t": "You did this on purpose.",
+     "bbox": [
+      0.7896,
+      0.7976,
+      0.9125,
+      0.8262
+     ],
+     "kind": "balloon",
+     "panel": 12
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 25,
+   "id": "b1-p025",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p025-240.c104dd76ca.avif",
+     "900": "b1-p025-900.9ded2200b5.avif",
+     "1400": "b1-p025-1400.bfac82613a.avif",
+     "2115": "b1-p025-2115.59542c6c00.avif"
+    },
+    "webp": {
+     "240": "b1-p025-240.21bba1cbe4.webp",
+     "900": "b1-p025-900.c3fad94301.webp",
+     "1400": "b1-p025-1400.2a6d6cec55.webp",
+     "2115": "b1-p025-2115.95980f709e.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.2039
+     ],
+     "alt": "Dvij's face fills the panel, alarmed, shouting a warning over the forest path."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.9986,
+      0.2039
+     ],
+     "alt": "Dvij stares while Bhavi throws her head back laughing. Behind her stands a tribesman in a tall feathered headdress and fur, holding a long staff."
+    },
+    {
+     "box": [
+      0.0,
+      0.2039,
+      0.4993,
+      0.5713
+     ],
+     "alt": "The Soma village: a clearing ringed by low thatched huts and tall trees, cooking fires smoking, people working and children running. Dvij and Bhavi walk in with the tribesman."
+    },
+    {
+     "box": [
+      0.4955,
+      0.2039,
+      0.9986,
+      0.4433
+     ],
+     "alt": "A craftsman in a feathered crown works at a forge, sifting metal in a bowl. Four insets show a dhokra peacock figure, hands pressing wax threads, molten metal being poured, and a bowl of finished gold-coloured pieces. Dvij and Bhavi watch from the right."
+    },
+    {
+     "box": [
+      0.4993,
+      0.4077,
+      0.9986,
+      0.5713
+     ],
+     "alt": "The village again, people moving in from all sides towards something; Dvij and Bhavi among them."
+    },
+    {
+     "box": [
+      0.0,
+      0.5333,
+      0.227,
+      0.7727
+     ],
+     "alt": "A shaman bursts out into the open, arms up, in a spray of white motion lines."
+    },
+    {
+     "box": [
+      0.1853,
+      0.5713,
+      0.4236,
+      0.7727
+     ],
+     "alt": "The shaman contorting in the middle of the clearing while the drums go Beat... beat... beat. Dvij and Bhavi watch from behind."
+    },
+    {
+     "box": [
+      0.4236,
+      0.5713,
+      0.9986,
+      0.7609
+     ],
+     "alt": "Dvij in profile; Bhavi beside him explaining, the shaman a blur of movement behind them."
+    },
+    {
+     "box": [
+      0.0,
+      0.7727,
+      0.3934,
+      0.9979
+     ],
+     "alt": "The shaman whirling, hoops of motion drawn round him, beside a big earthen vessel. Bhavi watches from the left. Beat... Beat... Beat..."
+    },
+    {
+     "box": [
+      0.3934,
+      0.7609,
+      0.6771,
+      0.9979
+     ],
+     "alt": "A tribesman tips a jar and pours a golden liquid into the vessel, ranks of villagers standing behind."
+    },
+    {
+     "box": [
+      0.6771,
+      0.7561,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The shaman lifts the jar over his head and drinks, the liquid running down."
+    }
+   ],
+   "text": [
+    {
+     "t": "Run, Bhavi... run for your life.",
+     "bbox": [
+      0.25,
+      0.0628,
+      0.3728,
+      0.0914
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "You are scared of HIM? Why, he's a Soma. The friendliest flock of people in the valley.",
+     "bbox": [
+      0.5912,
+      0.1032,
+      0.7813,
+      0.1475
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Soma tribe lived deep into the forest heart, where low-lying kuchcha huts lined a clearing in a circle of tall trees.",
+     "bbox": [
+      0.0059,
+      0.5375,
+      0.5,
+      0.5624
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "They are intrepid honey collectors through the ages. They learned dhokra casting when the park did well. Their images were in great demand.",
+     "bbox": [
+      0.5059,
+      0.4087,
+      1.0,
+      0.4336
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "Something's happening.",
+     "bbox": [
+      0.6861,
+      0.4943,
+      0.7943,
+      0.5195
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "A man ran out gesticulating wildly, then stood firm making wild contortions of his upper body parts, like a man possessed.",
+     "bbox": [
+      0.0029,
+      0.7365,
+      0.497,
+      0.7614
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "That's their leader? Maybe time to elect someone new.",
+     "bbox": [
+      0.4973,
+      0.5608,
+      0.6466,
+      0.5956
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "No silly. He's a shaman. Soma God descends onto him in trance. Watch what he'll do.",
+     "bbox": [
+      0.7406,
+      0.6569,
+      0.9398,
+      0.7033
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "The shaman kept wild movements to increasing tempo, in a trance of ecstatic oblivion. Without lifting his feet, he gradually inched toward the large casket and started drinking a liquid with distinctive color.",
+     "bbox": [
+      0.1,
+      0.9619,
+      0.9214,
+      0.9868
+     ],
+     "kind": "caption",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 26,
+   "id": "b1-p026",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p026-240.9b2b6e2878.avif",
+     "900": "b1-p026-900.16de0ae587.avif",
+     "1400": "b1-p026-1400.400397f608.avif",
+     "2115": "b1-p026-2115.dbfed0b288.avif"
+    },
+    "webp": {
+     "240": "b1-p026-240.597478aae6.webp",
+     "900": "b1-p026-900.62ba09ec9a.webp",
+     "1400": "b1-p026-1400.9c0c077f5b.webp",
+     "2115": "b1-p026-2115.1d181e028c.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.59,
+      0.26
+     ],
+     "alt": "Dvij and Bhavi in the crowd, she with a finger at her lips hushing him. Behind them the shaman drinks from a raised jar beside the drums."
+    },
+    {
+     "box": [
+      0.59,
+      0.0,
+      1.0,
+      0.18
+     ],
+     "alt": "The shaman spinning in the open, BEATBEATBEATBEAT across the top of the panel, drummers and villagers round him."
+    },
+    {
+     "box": [
+      0.37,
+      0.18,
+      1.0,
+      0.33
+     ],
+     "alt": "The shaman with both arms flung wide among the villagers, until he stops. Dvij and Bhavi watch from the left."
+    },
+    {
+     "box": [
+      0.0,
+      0.26,
+      0.4,
+      0.36
+     ],
+     "alt": "Dvij and Bhavi close together, watching the dancer whirl past."
+    },
+    {
+     "box": [
+      0.0,
+      0.36,
+      0.48,
+      0.56
+     ],
+     "alt": "Bhavi startled, the dancer close in front of her, his head swinging loose."
+    },
+    {
+     "box": [
+      0.4,
+      0.32,
+      1.0,
+      0.5
+     ],
+     "alt": "Dvij and Bhavi standing before ranks of villagers, a long drawn HAANAA rising on both sides."
+    },
+    {
+     "box": [
+      0.0,
+      0.56,
+      0.57,
+      0.72
+     ],
+     "alt": "Dvij with a hand up, objecting; Bhavi answering, a big earthen casket behind them."
+    },
+    {
+     "box": [
+      0.48,
+      0.5,
+      1.0,
+      0.72
+     ],
+     "alt": "Three narrow panels: a man slumped on the ground, a man stooping at the casket, a man reeling backwards."
+    },
+    {
+     "box": [
+      0.0,
+      0.72,
+      0.45,
+      0.85
+     ],
+     "alt": "The crowd pours in around the casket, cups held out, liquid slopping over the rim."
+    },
+    {
+     "box": [
+      0.0,
+      0.85,
+      0.45,
+      1.0
+     ],
+     "alt": "Dvij grinning; Bhavi turning to him, alarmed."
+    },
+    {
+     "box": [
+      0.45,
+      0.72,
+      1.0,
+      1.0
+     ],
+     "alt": "Dvij walks off through the crowd with a cup already in his hand; Bhavi puts out a hand to stop him."
+    }
+   ],
+   "text": [
+    {
+     "t": "What’s that stuff he's drinking?",
+     "bbox": [
+      0.207,
+      0.0042,
+      0.3366,
+      0.0344
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "You’re kidding, right?",
+     "bbox": [
+      0.5259,
+      0.0302,
+      0.6364,
+      0.0559
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Shh! Quiet! It's sacrilege to disturb the shaman in trance. That's Soma. The drink of the Gods.",
+     "bbox": [
+      0.0582,
+      0.1121,
+      0.2574,
+      0.1584
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "...till he stopped...",
+     "bbox": [
+      0.6446,
+      0.2986,
+      0.8554,
+      0.3153
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "The shaman unnaturally kept pace. His head swung as if unhinged. Everyone stood mesmerized - witnessing cosmic creation dance...",
+     "bbox": [
+      0.0,
+      0.3615,
+      0.5,
+      0.3864
+     ],
+     "kind": "caption",
+     "panel": 4
+    },
+    {
+     "t": "Is he doing what I'm thinking he's doing?",
+     "bbox": [
+      0.1,
+      0.3887,
+      0.2389,
+      0.421
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Yes, he is.",
+     "bbox": [
+      0.25,
+      0.4256,
+      0.3166,
+      0.4411
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "So that wild dance was about answering the call of nature?",
+     "bbox": [
+      0.0752,
+      0.4794,
+      0.2345,
+      0.5165
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "...and walked back to the casket.",
+     "bbox": [
+      0.6364,
+      0.4672,
+      0.8917,
+      0.4838
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "Stop the wisecracks! He's a human filter. His body absorbs the potent poisons, making the drink safe for others.",
+     "bbox": [
+      0.2673,
+      0.5834,
+      0.4997,
+      0.6376
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "A sober man drank the filtered liquid ceremonially. The effect was instantaneous - he swayed, transforming.",
+     "bbox": [
+      0.4985,
+      0.6876,
+      0.9985,
+      0.7125
+     ],
+     "kind": "caption",
+     "panel": 7
+    },
+    {
+     "t": "Chaos erupts as masses pour in.",
+     "bbox": [
+      0.107,
+      0.8468,
+      0.3624,
+      0.8635
+     ],
+     "kind": "caption",
+     "panel": 9
+    },
+    {
+     "t": "Imagine drinking that... that stuff!",
+     "bbox": [
+      0.3624,
+      0.8801,
+      0.4998,
+      0.9121
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "Why imagine when one can experience.",
+     "bbox": [
+      0.1776,
+      0.9473,
+      0.3151,
+      0.9793
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "Where are you off to?",
+     "bbox": [
+      0.7642,
+      0.7924,
+      0.8804,
+      0.8194
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "To find a cup!",
+     "bbox": [
+      0.6846,
+      0.8695,
+      0.7801,
+      0.8918
+     ],
+     "kind": "balloon",
+     "panel": 10
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 27,
+   "id": "b1-p027",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p027-240.796e5c8b34.avif",
+     "900": "b1-p027-900.a0eede0f5b.avif",
+     "1400": "b1-p027-1400.afc736e2d3.avif",
+     "2115": "b1-p027-2115.f4f6ce0949.avif"
+    },
+    "webp": {
+     "240": "b1-p027-240.4ee0769d42.webp",
+     "900": "b1-p027-900.8165182d81.webp",
+     "1400": "b1-p027-1400.226058d248.webp",
+     "2115": "b1-p027-2115.1d68873cfa.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.41,
+      0.12
+     ],
+     "alt": "A bedroom. Dvij rubs his eye while Bhavi pushes the shutters open on a burning sky."
+    },
+    {
+     "box": [
+      0.0,
+      0.12,
+      0.69,
+      0.37
+     ],
+     "alt": "Dvij sits up on the bed talking, pleased with himself; Bhavi stands at the window with her back to him."
+    },
+    {
+     "box": [
+      0.41,
+      0.0,
+      1.0,
+      0.25
+     ],
+     "alt": "Dvij still knuckling his eye; Bhavi laughing at the window, the sun low behind her."
+    },
+    {
+     "box": [
+      0.48,
+      0.25,
+      1.0,
+      0.36
+     ],
+     "alt": "Three remembered frames: the tribesman and Bhavi holding Dvij up between them, the three of them lurching, and all of them going down in a heap."
+    },
+    {
+     "box": [
+      0.0,
+      0.37,
+      0.33,
+      0.69
+     ],
+     "alt": "Close on Dvij, the grin gone."
+    },
+    {
+     "box": [
+      0.33,
+      0.36,
+      0.5,
+      0.69
+     ],
+     "alt": "Bhavi folds a cloth, not looking at him."
+    },
+    {
+     "box": [
+      0.5,
+      0.36,
+      0.8,
+      0.69
+     ],
+     "alt": "Dvij on the edge of the bed with both palms raised."
+    },
+    {
+     "box": [
+      0.8,
+      0.36,
+      1.0,
+      0.69
+     ],
+     "alt": "Bhavi walks out through the door into the orange light, a bundle under her arm."
+    },
+    {
+     "box": [
+      0.0,
+      0.69,
+      0.64,
+      1.0
+     ],
+     "alt": "Dvij stands alone in the bedroom. On the wall behind him a warm glow holds the shape of Bhavi's face."
+    },
+    {
+     "box": [
+      0.42,
+      0.69,
+      1.0,
+      1.0
+     ],
+     "alt": "The Professor at his desk under a wall of charts and a carved mask, manuscripts spread everywhere, pen raised, looking up sharply as Dvij comes in."
+    }
+   ],
+   "text": [
+    {
+     "t": "You won't believe the kick that stuff gives. And no hangover. No wonder they call it the drink of the Gods!",
+     "bbox": [
+      0.126,
+      0.1523,
+      0.3511,
+      0.2047
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Do you remember that you had to be carried back! You with your horrible breath. We tripped three times!",
+     "bbox": [
+      0.2216,
+      0.26,
+      0.4418,
+      0.3113
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "That's funny... I don't recall seeing the sun rise this side before.",
+     "bbox": [
+      0.4636,
+      0.0093,
+      0.63,
+      0.048
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "That's because it's sunset! You slept through the day!",
+     "bbox": [
+      0.7064,
+      0.0235,
+      0.8728,
+      0.0622
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Did I say anything? Did I? Did I ask you if you...",
+     "bbox": [
+      0.1,
+      0.5347,
+      0.2507,
+      0.5698
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "And do you recall... what you said to me?",
+     "bbox": [
+      0.3741,
+      0.3981,
+      0.5248,
+      0.4332
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "I can't understand what made me say that. It must have been the drink. I'm really sorry!",
+     "bbox": [
+      0.6745,
+      0.4547,
+      0.8725,
+      0.5008
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "That dark, beautiful face in his dreams. Was it her? A faint smile stretched across his lips as he headed to the Professor's study.",
+     "bbox": [
+      0.0423,
+      0.9571,
+      0.4634,
+      0.9826
+     ],
+     "kind": "caption",
+     "panel": 8
+    },
+    {
+     "t": "Professor sat deep in thought, manuscripts spread across his desk. He started upon seeing Dvij.",
+     "bbox": [
+      0.5397,
+      0.9584,
+      0.9608,
+      0.9839
+     ],
+     "kind": "caption",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 28,
+   "id": "b1-p028",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p028-240.5ccf3c4ab8.avif",
+     "900": "b1-p028-900.2607188e8a.avif",
+     "1400": "b1-p028-1400.0057203e96.avif",
+     "2115": "b1-p028-2115.646b70aefc.avif"
+    },
+    "webp": {
+     "240": "b1-p028-240.ee098f5bcf.webp",
+     "900": "b1-p028-900.6119b31565.webp",
+     "1400": "b1-p028-1400.53332f4306.webp",
+     "2115": "b1-p028-2115.549ba7279f.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.49,
+      0.21
+     ],
+     "alt": "The Professor leans across his desk with two fingers raised, delighted; Dvij listens at the right."
+    },
+    {
+     "box": [
+      0.49,
+      0.0,
+      1.0,
+      0.18
+     ],
+     "alt": "The Professor talking with both hands; Bhavi behind him with a palm turned up in protest; Dvij at the edge of the frame."
+    },
+    {
+     "box": [
+      0.0,
+      0.21,
+      0.38,
+      0.43
+     ],
+     "alt": "The Professor points up at a framed picture of the feathered shaman on the wall; Dvij watches."
+    },
+    {
+     "box": [
+      0.38,
+      0.18,
+      1.0,
+      0.39
+     ],
+     "alt": "The Professor in full flow, fingers spread; Bhavi with her head in her hand; Dvij thinking. On the wall behind, charts and a numbered list naming Patanjali, Panini and Katyayana."
+    },
+    {
+     "box": [
+      0.0,
+      0.43,
+      0.28,
+      0.61
+     ],
+     "alt": "The Professor with both arms up, shouting happily; Bhavi covers her face."
+    },
+    {
+     "box": [
+      0.28,
+      0.39,
+      1.0,
+      0.61
+     ],
+     "alt": "A printed plate headed The Great Panini, with a portrait of the sage and a table of his rules. Dvij looks up at it; the Professor holds up a finger at his desk."
+    },
+    {
+     "box": [
+      0.0,
+      0.61,
+      0.49,
+      0.8
+     ],
+     "alt": "The Professor at his lamp-lit desk, one hand raised, laying out his challenge."
+    },
+    {
+     "box": [
+      0.49,
+      0.61,
+      1.0,
+      0.8
+     ],
+     "alt": "Bhavi throws both hands up, asking where."
+    },
+    {
+     "box": [
+      0.0,
+      0.8,
+      0.49,
+      1.0
+     ],
+     "alt": "Bhavi and Dvij at the desk, pressing him."
+    },
+    {
+     "box": [
+      0.49,
+      0.8,
+      1.0,
+      1.0
+     ],
+     "alt": "The Professor raises a finger and answers; Bhavi turns sharply."
+    }
+   ],
+   "text": [
+    {
+     "t": "I've been informed you experienced Soma's effects. How was it?",
+     "bbox": [
+      0.1798,
+      0.009,
+      0.3575,
+      0.0504
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Absolutely heavenly!",
+     "bbox": [
+      0.266,
+      0.0579,
+      0.3757,
+      0.0834
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Yes! Soma... somatic... psychosomatic! Consider yourself blessed!",
+     "bbox": [
+      0.0056,
+      0.1059,
+      0.1951,
+      0.15
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Uncle! You're justifying what he did?!",
+     "bbox": [
+      0.7058,
+      0.0133,
+      0.8462,
+      0.046
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Of course! Soma is one of the many great discoveries of our forefathers.",
+     "bbox": [
+      0.6421,
+      0.1041,
+      0.8391,
+      0.15
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "But the drink is too potent for ordinary mortals. It takes a possessed shaman to filter out the toxic agents.",
+     "bbox": [
+      0.0129,
+      0.3361,
+      0.2407,
+      0.3892
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "But Soma is just one of them. Our great maharishis knew of many secrets. For example kust take...",
+     "bbox": [
+      0.5343,
+      0.21,
+      0.7405,
+      0.258
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "...the great Panini! He encapsulated entire grammar in so few rules! Even by a vast arrays of computers cannot do a better job! Just look at this example—",
+     "bbox": [
+      0.0689,
+      0.4303,
+      0.3526,
+      0.4964
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "But I digress again. I have translated many works. I also happen to have brought into my possession knowledge of an ancient art that would be extremely valuable to whoever lays their hands on it.",
+     "bbox": [
+      0.6375,
+      0.4221,
+      0.9434,
+      0.4934
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "But that knowledge must not fall into wrong hands. Therefore I have done it in the most ingenious manner. I have left clues, all over the place. Most ingenious clues they are. I challenge you...to find them.",
+     "bbox": [
+      0.2279,
+      0.6014,
+      0.5418,
+      0.6745
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Where? Here?",
+     "bbox": [
+      0.6941,
+      0.62,
+      0.8173,
+      0.6487
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Not in the house, my child. All over the valley.",
+     "bbox": [
+      0.5068,
+      0.6728,
+      0.6757,
+      0.7122
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "What sort of clues?",
+     "bbox": [
+      0.2345,
+      0.8334,
+      0.3577,
+      0.8621
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "You should know. You've been reading my little black book.",
+     "bbox": [
+      0.6281,
+      0.8136,
+      0.7971,
+      0.8529
+     ],
+     "kind": "balloon",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 29,
+   "id": "b1-p029",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p029-240.eab7844806.avif",
+     "900": "b1-p029-900.fbd00ad6a8.avif",
+     "1400": "b1-p029-1400.4e168e2088.avif",
+     "2115": "b1-p029-2115.99849a4154.avif"
+    },
+    "webp": {
+     "240": "b1-p029-240.16b3cf28bc.webp",
+     "900": "b1-p029-900.a6000b5f63.webp",
+     "1400": "b1-p029-1400.98714a754a.webp",
+     "2115": "b1-p029-2115.ef91770c99.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.39,
+      0.32
+     ],
+     "alt": "A vast fortress wall of cut stone with a square tower and a tall arched gate. Dvij and Bhavi are small figures at the foot of it."
+    },
+    {
+     "box": [
+      0.39,
+      0.0,
+      1.0,
+      0.16
+     ],
+     "alt": "The ramparts from inside, arched galleries running along the top of the wall."
+    },
+    {
+     "box": [
+      0.39,
+      0.16,
+      1.0,
+      0.32
+     ],
+     "alt": "Dvij and Bhavi climb the path where it bends between the walls, she pointing up at the stonework."
+    },
+    {
+     "box": [
+      0.0,
+      0.32,
+      0.5,
+      0.44
+     ],
+     "alt": "The two of them close against the wall, Bhavi with a hand raised towards it."
+    },
+    {
+     "box": [
+      0.5,
+      0.32,
+      0.7,
+      0.44
+     ],
+     "alt": "Dvij, startled, one hand going to his collar."
+    },
+    {
+     "box": [
+      0.7,
+      0.32,
+      1.0,
+      0.44
+     ],
+     "alt": "Bhavi, level and unimpressed."
+    },
+    {
+     "box": [
+      0.0,
+      0.44,
+      1.0,
+      0.68
+     ],
+     "alt": "A wide view of the open plateau beyond the gates: a small carved stone temple standing among scattered ruins, an orange flag on a pole, langurs sitting in a spreading tree. Dvij and Bhavi in the foreground."
+    },
+    {
+     "box": [
+      0.0,
+      0.68,
+      0.22,
+      0.84
+     ],
+     "alt": "Dvij and Bhavi among a stand of leafy plants."
+    },
+    {
+     "box": [
+      0.22,
+      0.68,
+      0.44,
+      0.84
+     ],
+     "alt": "The two turned away from each other."
+    },
+    {
+     "box": [
+      0.0,
+      0.84,
+      0.22,
+      1.0
+     ],
+     "alt": "Bhavi points down at the shatavari leaves."
+    },
+    {
+     "box": [
+      0.22,
+      0.84,
+      0.44,
+      1.0
+     ],
+     "alt": "Bhavi raises two fingers, explaining the name."
+    },
+    {
+     "box": [
+      0.44,
+      0.68,
+      0.72,
+      1.0
+     ],
+     "alt": "A large close-up of Dvij, eyes wide."
+    },
+    {
+     "box": [
+      0.72,
+      0.68,
+      1.0,
+      1.0
+     ],
+     "alt": "Dvij turns away with a hand at his neck and a small embarrassed smile."
+    }
+   ],
+   "text": [
+    {
+     "t": "They started the search for clues with Daundagarh fort. A huge fortress wall loomed before them, ramparts of cut-stone speaking of medieval might and lost kingdoms.",
+     "bbox": [
+      0.0395,
+      0.2673,
+      0.4605,
+      0.3051
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "The path wound through the fortress in sharp bends - a ruse to mislead invading armies into apparent dead-ends.",
+     "bbox": [
+      0.5502,
+      0.1246,
+      0.9712,
+      0.1461
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "They say some people were buried alive within these walls.",
+     "bbox": [
+      0.7252,
+      0.1636,
+      0.8997,
+      0.2043
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "No. Poor, innocent people. The spirits of the dead would keep the walls from giving away.",
+     "bbox": [
+      0.5753,
+      0.2946,
+      0.7697,
+      0.3399
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Soldiers of the enemies?",
+     "bbox": [
+      0.0683,
+      0.392,
+      0.185,
+      0.4192
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "After crossing five massive gates, they reached an open plateau. A small temple stood among scattered ruins.",
+     "bbox": [
+      0.1268,
+      0.6456,
+      0.9,
+      0.671
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "That's a group of shatavari plants. Very popular with local womenfolk.",
+     "bbox": [
+      0.0005,
+      0.6914,
+      0.1949,
+      0.7366
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "why?",
+     "bbox": [
+      0.0152,
+      0.7854,
+      0.0937,
+      0.8037
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Shatavari means 'one who has a hundred husbands.'",
+     "bbox": [
+      0.2627,
+      0.8273,
+      0.4222,
+      0.8645
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "Oh!",
+     "bbox": [
+      0.6787,
+      0.818,
+      0.7571,
+      0.8363
+     ],
+     "kind": "balloon",
+     "panel": 11
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 30,
+   "id": "b1-p030",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p030-240.55d0232f61.avif",
+     "900": "b1-p030-900.b75cda1ab3.avif",
+     "1400": "b1-p030-1400.39205eecfd.avif",
+     "2115": "b1-p030-2115.eea212e454.avif"
+    },
+    "webp": {
+     "240": "b1-p030-240.e80b1f0f34.webp",
+     "900": "b1-p030-900.67c353c814.webp",
+     "1400": "b1-p030-1400.83c8c4bd09.webp",
+     "2115": "b1-p030-2115.61db1b12fa.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.261,
+      0.3603
+     ],
+     "alt": "Dvij climbs a steep flight of stone steps up the outside of a round tower, pack on his back; Bhavi is already well above him."
+    },
+    {
+     "box": [
+      0.261,
+      0.0,
+      0.9986,
+      0.3603
+     ],
+     "alt": "From the top of the tower the whole valley opens out: boulder-strewn slopes, a lake catching the light, rain falling far off. Dvij and Bhavi stand at the parapet looking over it."
+    },
+    {
+     "box": [
+      0.0,
+      0.3603,
+      0.4085,
+      0.5191
+     ],
+     "alt": "The two close together, Dvij talking, Bhavi watching him."
+    },
+    {
+     "box": [
+      0.0,
+      0.5191,
+      0.6165,
+      0.6803
+     ],
+     "alt": "Dvij with a hand behind his head; Bhavi smiling to herself."
+    },
+    {
+     "box": [
+      0.4085,
+      0.3603,
+      0.9986,
+      0.6684
+     ],
+     "alt": "A vision behind them: giants heaving boulders over the fort walls, and a horned rakshasa riding a mountain through the sky while Indra looses the vajra at it. Bhavi explains with her hand up; Dvij listens."
+    },
+    {
+     "box": [
+      0.0,
+      0.6803,
+      0.5901,
+      0.9979
+     ],
+     "alt": "More of the vision - giants flinging rocks, and a meteor breaking into burning fragments over the valley. Bhavi and Dvij stand below it."
+    },
+    {
+     "box": [
+      0.4842,
+      0.6684,
+      0.9986,
+      0.915
+     ],
+     "alt": "A large close-up of Bhavi, half smiling; Dvij in the panel below, looking out."
+    },
+    {
+     "box": [
+      0.5901,
+      0.915,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij with a hand at his chest; Bhavi glancing back at him."
+    }
+   ],
+   "text": [
+    {
+     "t": "How are you able to climb so quickly?",
+     "bbox": [
+      0.1424,
+      0.1555,
+      0.2861,
+      0.189
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Soldiers were made to climb here laden with armaments. Some claim cavalry rode horses up. A test of skill and fitness.",
+     "bbox": [
+      0.5649,
+      0.1172,
+      0.8001,
+      0.172
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "From the tower's edge, the entire valley spread below. Massive boulders scattered everywhere spoke of ancient mysteries.",
+     "bbox": [
+      0.1,
+      0.3226,
+      0.9,
+      0.3409
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "I would have thought Mahant would hire a more robust guy.",
+     "bbox": [
+      0.1623,
+      0.3442,
+      0.338,
+      0.3851
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Yesterday you didn't want me around. Today you have me roaming with you. Change of heart?",
+     "bbox": [
+      0.1166,
+      0.4527,
+      0.3294,
+      0.5022
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "The myth says giants lived here. A legend tells of rakshasa Vraktaasura riding a mountain to fight Indra, who struck it down with his vajra. These boulders are the shattered remains.",
+     "bbox": [
+      0.4225,
+      0.5609,
+      0.7116,
+      0.6283
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Don't even think about it. I only want you away from my uncle.",
+     "bbox": [
+      0.1405,
+      0.6023,
+      0.3162,
+      0.6432
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Or it could be that an asteroid broke apart right above, scattering pieces across the hill.",
+     "bbox": [
+      0.1292,
+      0.8711,
+      0.3394,
+      0.92
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "How can we know if that is true?",
+     "bbox": [
+      0.5831,
+      0.7072,
+      0.722,
+      0.7395
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Scientists deride ancient beliefs as myths...",
+     "bbox": [
+      0.6684,
+      0.8185,
+      0.822,
+      0.8543
+     ],
+     "kind": "balloon",
+     "panel": 6
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 31,
+   "id": "b1-p031",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p031-240.b0ebbb8158.avif",
+     "900": "b1-p031-900.72a3480a6c.avif",
+     "1400": "b1-p031-1400.eb4d62ca1e.avif",
+     "2115": "b1-p031-2115.0384f245c2.avif"
+    },
+    "webp": {
+     "240": "b1-p031-240.3e8c6f60fd.webp",
+     "900": "b1-p031-900.9e2f1c6b2b.webp",
+     "1400": "b1-p031-1400.ec35bcd19d.webp",
+     "2115": "b1-p031-2115.726af91fdd.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4085,
+      0.3176
+     ],
+     "alt": "Dvij and Bhavi standing close at the parapet, he looking away, she watching him, the sunlit valley behind."
+    },
+    {
+     "box": [
+      0.4085,
+      0.0,
+      0.9986,
+      0.3176
+     ],
+     "alt": "The sky has gone black with rain. Dvij puts a hand up to his head; Bhavi turns her face to the downpour with her arms opening, delighted."
+    },
+    {
+     "box": [
+      0.0,
+      0.3176,
+      0.4917,
+      0.4978
+     ],
+     "alt": "The two of them running along the top of the ramparts in the rain."
+    },
+    {
+     "box": [
+      0.4917,
+      0.2916,
+      0.9986,
+      0.4907
+     ],
+     "alt": "They scramble down a grassy slope towards an isolated pillared temple among the rocks."
+    },
+    {
+     "box": [
+      0.0,
+      0.4978,
+      0.3972,
+      0.6803
+     ],
+     "alt": "Under the temple's stone portico they look out at the rain sheeting over the valley."
+    },
+    {
+     "box": [
+      0.3972,
+      0.4907,
+      0.9986,
+      0.6803
+     ],
+     "alt": "Inside the ruin, Bhavi stands with her arms crossed while Dvij holds a phone up towards a window, hunting for a signal."
+    },
+    {
+     "box": [
+      0.0,
+      0.6803,
+      0.3593,
+      0.9979
+     ],
+     "alt": "Dvij at a broken archway, face turned up; the clouds are breaking and blue is coming back."
+    },
+    {
+     "box": [
+      0.3593,
+      0.6803,
+      0.6582,
+      0.9979
+     ],
+     "alt": "Bhavi stands in the ruin looking down at the phone in her hands."
+    },
+    {
+     "box": [
+      0.6582,
+      0.6187,
+      0.9986,
+      0.9979
+     ],
+     "alt": "A hand holding the phone: the photo app, image 312 of 487, showing a girl with long curly hair turned to the camera against a stone wall."
+    }
+   ],
+   "text": [
+    {
+     "t": "...but their explanations are equally madcap sometimes. Most often it's a toss-up what to believe.",
+     "bbox": [
+      0.1538,
+      0.0037,
+      0.3612,
+      0.052
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I believe a drop of rain just pattered on my head.",
+     "bbox": [
+      0.6136,
+      0.0774,
+      0.7588,
+      0.1113
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "First showers of the season! I hope they last. Quick, hit the covers!",
+     "bbox": [
+      0.6572,
+      0.1254,
+      0.8333,
+      0.1664
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "They ran across the fort's ramparts like soldiers once did when the fort came under attack - this time fleeing not arrows, but rain. They scampered through the rain to an isolated temple, seeking shelter as the storm intensified.",
+     "bbox": [
+      0.1134,
+      0.4627,
+      0.8866,
+      0.4882
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "Don't bother trying. No cellphone towers around. Did you check messages and pics?",
+     "bbox": [
+      0.431,
+      0.5194,
+      0.6304,
+      0.5658
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "I did. Messages, contacts, even pictures. But I don't recall any of the names or photos.",
+     "bbox": [
+      0.7987,
+      0.6069,
+      0.9997,
+      0.6537
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "The clouds are clearing already.",
+     "bbox": [
+      0.1982,
+      0.7148,
+      0.3357,
+      0.7468
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "That's been the problem. The rains stop before they even start. Who’s this girl?",
+     "bbox": [
+      0.5599,
+      0.731,
+      0.7538,
+      0.7762
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 32,
+   "id": "b1-p032",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p032-240.da963a7901.avif",
+     "900": "b1-p032-900.557bf65b6e.avif",
+     "1400": "b1-p032-1400.6b1e53923a.avif",
+     "2115": "b1-p032-2115.ba74e04388.avif"
+    },
+    "webp": {
+     "240": "b1-p032-240.59ec0893a4.webp",
+     "900": "b1-p032-900.9267ceae83.webp",
+     "1400": "b1-p032-1400.a732382212.webp",
+     "2115": "b1-p032-2115.fd090e3349.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4955,
+      0.2323
+     ],
+     "alt": "Bhavi in the foreground holding the phone; behind her Dvij runs his hand over a carved stone doorframe."
+    },
+    {
+     "box": [
+      0.4955,
+      0.0,
+      0.9986,
+      0.237
+     ],
+     "alt": "Dvij points at a shape cut into the wall - a hanging loop like a noose - with Bhavi close at his shoulder."
+    },
+    {
+     "box": [
+      0.0,
+      0.2323,
+      0.5106,
+      0.467
+     ],
+     "alt": "Three narrow panels: Dvij photographing the carving, Dvij standing back to frame it, Dvij holding the phone up with the flash firing."
+    },
+    {
+     "box": [
+      0.4955,
+      0.237,
+      0.9986,
+      0.467
+     ],
+     "alt": "Dvij has gone over backwards in a puddle, legs up, phone still held high, stars spinning round his head. Bhavi crouches beside him, entirely unsympathetic."
+    },
+    {
+     "box": [
+      0.0,
+      0.467,
+      0.9986,
+      0.7727
+     ],
+     "alt": "A great stepped tank: tier upon tier of stone steps descending on every side to green water, with a small stepped shrine standing in the middle and temple towers around the rim. Dvij points it out; Bhavi looks over the edge beside him."
+    },
+    {
+     "box": [
+      0.0,
+      0.7727,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The two of them bent almost double, crawling into a low stone underpass where a channel runs down into the tank."
+    }
+   ],
+   "text": [
+    {
+     "t": "If I told you that, I'd hardly hold on to my claim of memory loss.",
+     "bbox": [
+      0.2019,
+      0.0173,
+      0.3741,
+      0.0574
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I think it's a pasha, a weapon of one of the Gods. I saw a drawing of it in Prof's black book.",
+     "bbox": [
+      0.098,
+      0.2034,
+      0.2973,
+      0.2498
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "See this. Looks like etched by hand.",
+     "bbox": [
+      0.4729,
+      0.0047,
+      0.6122,
+      0.0372
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Looks like a noose.",
+     "bbox": [
+      0.7738,
+      0.0311,
+      0.8773,
+      0.0552
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Looking for ways to have another accident?",
+     "bbox": [
+      0.7544,
+      0.3511,
+      0.9042,
+      0.386
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Hey, look at that tank ? Simply breathtaking.",
+     "bbox": [
+      0.2732,
+      0.5694,
+      0.4233,
+      0.6043
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "It's a pushkarini - a sacred place for ceremonial bathing. There's a fun way down there. Follow me.",
+     "bbox": [
+      0.4235,
+      0.7742,
+      0.6495,
+      0.8268
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "They bent low to crawl through an underpass across the channel that flowed into the tank.",
+     "bbox": [
+      0.1978,
+      0.9685,
+      0.8645,
+      0.9862
+     ],
+     "kind": "caption",
+     "panel": 5
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 33,
+   "id": "b1-p033",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p033-240.ceb11f2815.avif",
+     "900": "b1-p033-900.ac886c4c17.avif",
+     "1400": "b1-p033-1400.22f4b959f8.avif",
+     "2115": "b1-p033-2115.34c51afe90.avif"
+    },
+    "webp": {
+     "240": "b1-p033-240.4e057c9cfe.webp",
+     "900": "b1-p033-900.38a9d76127.webp",
+     "1400": "b1-p033-1400.1edf7faa69.webp",
+     "2115": "b1-p033-2115.8bf613e679.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.9986,
+      0.1256
+     ],
+     "alt": "Dvij and Bhavi on hands and knees at the mouth of the underpass, looking out along a shallow channel of clear running water."
+    },
+    {
+     "box": [
+      0.0,
+      0.1256,
+      0.9986,
+      0.2679
+     ],
+     "alt": "They come out into the open beside the stream, ruins and rocks rising behind them."
+    },
+    {
+     "box": [
+      0.0,
+      0.2679,
+      0.4917,
+      0.4978
+     ],
+     "alt": "Bhavi has rolled up her salvar and stepped into the water, turning back to wave Dvij in."
+    },
+    {
+     "box": [
+      0.4917,
+      0.2655,
+      0.9986,
+      0.4978
+     ],
+     "alt": "The two of them walking upstream side by side, shoes in hand, water round their ankles."
+    },
+    {
+     "box": [
+      0.0,
+      0.4978,
+      0.4577,
+      0.768
+     ],
+     "alt": "The Mahavidya temples: ten carved spires of white, yellow and red crowded behind a low wall, the gate shut, a board in Hindi giving the hours. Dvij and Bhavi stand looking in."
+    },
+    {
+     "box": [
+      0.4577,
+      0.4978,
+      0.9986,
+      0.768
+     ],
+     "alt": "Under a mango tree, village children reach up for fruit. Bhavi walks past with a red dupatta over her shoulder; Dvij is behind her, taking a photograph."
+    },
+    {
+     "box": [
+      0.0,
+      0.768,
+      0.4993,
+      0.9979
+     ],
+     "alt": "The village edge: mud-and-thatch huts along a rutted track, children sitting in the dirt, and a painted sign reading Achhut Basti. Dvij and Bhavi walk in."
+    },
+    {
+     "box": [
+      0.4993,
+      0.768,
+      0.9986,
+      0.9979
+     ],
+     "alt": "An old woman crawls on all fours in front of a broken hut, her hands and feet bandaged. Dvij stares; Bhavi answers him without moving."
+    }
+   ],
+   "text": [
+    {
+     "t": "Smooth rounded pebbles jostled in the clear water.",
+     "bbox": [
+      0.25,
+      0.2459,
+      0.75,
+      0.2636
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "Bhavi rolled up her salvar and stepped into the cool stream, gesturing for Dvij to join her. They walked upstream, their feet rolling over rounded stones, conscious of the other's presence, afraid to join hands - long, precious moments suspended in time.",
+     "bbox": [
+      0.0846,
+      0.4463,
+      0.9154,
+      0.4716
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "The next day they walked towards the village. The ten Mahavidhya temples stood closed during lunch hour, when through the priests the Gods took their food. Children stood beneath mango trees hoping the rain had dislodged fruit.",
+     "bbox": [
+      0.1,
+      0.7303,
+      0.9,
+      0.7556
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "At the village outskirts lived the avarna - outcastes beyond even the varna system. The pratilomas, made of substance with misaligned grains.",
+     "bbox": [
+      0.0,
+      0.9634,
+      0.5,
+      0.9886
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "What is that old woman doing? Why is there nobody around to help her?",
+     "bbox": [
+      0.6171,
+      0.8025,
+      0.7988,
+      0.8448
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Leprosy. Nobody would dare go near that hut.",
+     "bbox": [
+      0.7502,
+      0.8662,
+      0.9,
+      0.9011
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 34,
+   "id": "b1-p034",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p034-240.a517120bd1.avif",
+     "900": "b1-p034-900.47ec1af1cb.avif",
+     "1400": "b1-p034-1400.9683d81365.avif",
+     "2115": "b1-p034-2115.1811772c13.avif"
+    },
+    "webp": {
+     "240": "b1-p034-240.056f039b70.webp",
+     "900": "b1-p034-900.3a0f43e1a1.webp",
+     "1400": "b1-p034-1400.70a53519db.webp",
+     "2115": "b1-p034-2115.542b9a189f.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4879,
+      0.2228
+     ],
+     "alt": "Bhavi tells it with a finger raised, Dvij listening. Behind them, in ragged-edged memory frames: a preacher haranguing a village crowd, a woman tending a patient on a cot, people turning away, a hut in darkness."
+    },
+    {
+     "box": [
+      0.0,
+      0.2228,
+      0.4879,
+      0.3959
+     ],
+     "alt": "Dvij kneels in the dust and tips water from a bottle into the cupped, bandaged hands of the old woman. Bhavi stoops over her from the other side."
+    },
+    {
+     "box": [
+      0.4879,
+      0.0,
+      0.9986,
+      0.3959
+     ],
+     "alt": "Dvij close to the old woman's face; her hand has closed on his wrist."
+    },
+    {
+     "box": [
+      0.0,
+      0.3959,
+      0.4993,
+      0.6258
+     ],
+     "alt": "A close shot of the two hands, her gnarled bandaged fingers under his palm."
+    },
+    {
+     "box": [
+      0.4993,
+      0.3959,
+      0.9986,
+      0.6329
+     ],
+     "alt": "Bhavi rounds on Dvij, hand on her hip; the old woman kneels between them with her palms together. Small framed faces of staring villagers run down the left edge."
+    },
+    {
+     "box": [
+      0.0,
+      0.6258,
+      0.7792,
+      0.7751
+     ],
+     "alt": "Villagers crowd in on all sides as Dvij and Bhavi walk through; a wiry man breaks from the ranks to follow close behind."
+    },
+    {
+     "box": [
+      0.7792,
+      0.6329,
+      0.9986,
+      0.7751
+     ],
+     "alt": "A strip of small panels: the crowd closing in, faces pressing forward, the old woman among them."
+    },
+    {
+     "box": [
+      0.0,
+      0.7751,
+      0.4312,
+      0.8889
+     ],
+     "alt": "Dvij and Bhavi push through the packed street, villagers on every side."
+    },
+    {
+     "box": [
+      0.0,
+      0.8889,
+      0.4312,
+      0.9979
+     ],
+     "alt": "Bhavi hurries ahead down a lane while the wiry man skips after her; more villagers follow."
+    },
+    {
+     "box": [
+      0.4312,
+      0.7751,
+      0.9986,
+      0.9979
+     ],
+     "alt": "A strip of small panels of the two of them running through narrow alleys, then a wider view as they break into dense green at the forest edge. Dvij and Bhavi stop among the trees, talking; the patter of following feet has stopped behind them."
+    }
+   ],
+   "text": [
+    {
+     "t": "I tried to set up shop. Initially some villagers came. But then Mahant and Vaid branded my practice as witchcraft.",
+     "bbox": [
+      0.3325,
+      0.1971,
+      0.5538,
+      0.2487
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "You are a doctor. Can't you do anything?",
+     "bbox": [
+      0.4212,
+      0.0786,
+      0.5616,
+      0.1113
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "The old womanlooked at him with reverence and suddenly clutched his wrist. A sense of having accomplished something good overpowered him as he patted her gnarled fingers.",
+     "bbox": [
+      0.1,
+      0.3675,
+      0.9,
+      0.3927
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "You said I have nothing to fear. I have died once already.",
+     "bbox": [
+      0.2933,
+      0.4816,
+      0.451,
+      0.5184
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Now I'm beginning to get scared of the crowd.",
+     "bbox": [
+      0.0108,
+      0.605,
+      0.1579,
+      0.6393
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Oh so the savior wants to be saved? Follow me.",
+     "bbox": [
+      0.3107,
+      0.6085,
+      0.4578,
+      0.6427
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Are you crazy? How could you let her touch you?",
+     "bbox": [
+      0.4212,
+      0.4038,
+      0.5789,
+      0.4405
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "How could I forget. You are the Wounded One. The savior.",
+     "bbox": [
+      0.508,
+      0.4537,
+      0.6657,
+      0.4905
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Villagers started following them at reverent distance. Ponga, the blabbering fool, broke from ranks to follow closely.",
+     "bbox": [
+      0.4979,
+      0.5212,
+      1.0,
+      0.5464
+     ],
+     "kind": "caption",
+     "panel": 4
+    },
+    {
+     "t": "They're scared of the forest?",
+     "bbox": [
+      0.6496,
+      0.7529,
+      0.7745,
+      0.782
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "They snaked through narrow alleys, and suddenly entered dense vegetation. The pattering feet behind them stopped at the forest edge.",
+     "bbox": [
+      0.003,
+      0.9605,
+      0.5001,
+      0.9857
+     ],
+     "kind": "caption",
+     "panel": 8
+    },
+    {
+     "t": "Not of the forest. Of what resides in it.",
+     "bbox": [
+      0.7652,
+      0.7992,
+      0.9086,
+      0.8327
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "And that is?",
+     "bbox": [
+      0.5409,
+      0.8563,
+      0.6327,
+      0.8776
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "Wild animals. Some tribes. But most of all fear itself, invented by those who do not want the villagers to step out of the village.",
+     "bbox": [
+      0.7528,
+      0.9003,
+      0.9969,
+      0.9571
+     ],
+     "kind": "balloon",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 35,
+   "id": "b1-p035",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p035-240.2caccb35e4.avif",
+     "900": "b1-p035-900.d79b274382.avif",
+     "1400": "b1-p035-1400.8023a77e45.avif",
+     "2115": "b1-p035-2115.34d0c33f09.avif"
+    },
+    "webp": {
+     "240": "b1-p035-240.9a4128abff.webp",
+     "900": "b1-p035-900.54830ae1da.webp",
+     "1400": "b1-p035-1400.b49b5e7dbd.webp",
+     "2115": "b1-p035-2115.97244f5f89.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4917,
+      0.1849
+     ],
+     "alt": "The Mahant asleep on a bed of white bolsters, one eye cracking open in irritation."
+    },
+    {
+     "box": [
+      0.4917,
+      0.0,
+      0.9986,
+      0.1849
+     ],
+     "alt": "He sits up on the bed. Through the arched window a burst of comic-book noise rises from the street below."
+    },
+    {
+     "box": [
+      0.0,
+      0.1849,
+      0.4652,
+      0.3911
+     ],
+     "alt": "He walks out barefoot onto a carved wooden jharokha balcony overlooking the crowded bazaar."
+    },
+    {
+     "box": [
+      0.4652,
+      0.1849,
+      0.9986,
+      0.3935
+     ],
+     "alt": "Indoors, the moustached man sits in a chair with a hookah pipe; the Mahant stands over him with a hand out, a painted goddess on the wall between them."
+    },
+    {
+     "box": [
+      0.0,
+      0.3911,
+      0.2723,
+      0.6756
+     ],
+     "alt": "The moustached man draws on the pipe while the Mahant raises a finger."
+    },
+    {
+     "box": [
+      0.2723,
+      0.3911,
+      0.5901,
+      0.6756
+     ],
+     "alt": "A dancing woman appears in the doorway, sees the moustached man and stops; the Mahant flicks his fingers and she is gone."
+    },
+    {
+     "box": [
+      0.5636,
+      0.3935,
+      0.9986,
+      0.5689
+     ],
+     "alt": "The Mahant turns towards the door, barking at whoever is knocking; the moustached man smokes on."
+    },
+    {
+     "box": [
+      0.5522,
+      0.5689,
+      0.9986,
+      0.7941
+     ],
+     "alt": "Close: Kurup's scarred face at the left, the Mahant's at the right with a finger at his lips."
+    },
+    {
+     "box": [
+      0.0,
+      0.6756,
+      0.2534,
+      0.9979
+     ],
+     "alt": "Kurup crouches low on the tiled floor, holding up an ornate metal figure."
+    },
+    {
+     "box": [
+      0.2534,
+      0.6756,
+      0.556,
+      0.9979
+     ],
+     "alt": "Kurup, hunched and grinning, presents the figure while the moustached man leans in behind."
+    },
+    {
+     "box": [
+      0.556,
+      0.7846,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The Mahant lounges back dismissing him; Kurup backs away across the hall."
+    }
+   ],
+   "text": [
+    {
+     "t": "Mahant was rudely roused from his mid-afternoon sleep by the commotion in the streets. The idea of a large crowd gathering without him addressing them was reprehensible. He walked to the jharokha overlooking the main bazaar street.",
+     "bbox": [
+      0.1,
+      0.1495,
+      0.9,
+      0.1747
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "Normally he would address gatherings from this window. Today he just watched till Dvij and Bhavi disappeared.",
+     "bbox": [
+      0.0,
+      0.3544,
+      0.5,
+      0.3796
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "That girl is a bad influence on Dvij. A few more days and we shall have the biggest ceremony that will make people forget everything else.",
+     "bbox": [
+      0.6214,
+      0.2745,
+      0.8722,
+      0.333
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "A mahari entered, taking lustful steps forward but stopped seeing Baldev. Mahant flicked his fingers and she disappeared as quickly as she'd appeared.",
+     "bbox": [
+      0.0,
+      0.6375,
+      0.5673,
+      0.6627
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "I told you to go away!!",
+     "bbox": [
+      0.7746,
+      0.4025,
+      0.9,
+      0.4317
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Another knock sounded - softer. The door creaked open.",
+     "bbox": [
+      0.5754,
+      0.5384,
+      0.992,
+      0.5584
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "I know where it is. I will have my hands on it any day now.",
+     "bbox": [
+      0.693,
+      0.5728,
+      0.8626,
+      0.6123
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "What you should worry about is when I will have my hands on it.",
+     "bbox": [
+      0.7125,
+      0.7025,
+      0.8955,
+      0.7451
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "For you, O great Mahant.",
+     "bbox": [
+      0.062,
+      0.7501,
+      0.1827,
+      0.7782
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Ah Kurup! You come when I am in a good mood. Tell me, what news do you bring?",
+     "bbox": [
+      0.3214,
+      0.6789,
+      0.5153,
+      0.7241
+     ],
+     "kind": "balloon",
+     "panel": 9
+    },
+    {
+     "t": "This time it was Kurup - his grotesque features contrasting with the splendor of a beautiful muthi he was carrying.",
+     "bbox": [
+      0.0112,
+      0.9446,
+      0.5575,
+      0.9646
+     ],
+     "kind": "caption",
+     "panel": 9
+    },
+    {
+     "t": "Three days, Kurup, three days. That is all you shall have. Now leave.",
+     "bbox": [
+      0.7283,
+      0.7867,
+      0.9113,
+      0.8293
+     ],
+     "kind": "balloon",
+     "panel": 10
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 36,
+   "id": "b1-p036",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p036-240.5a9434a696.avif",
+     "900": "b1-p036-900.a9fabd937d.avif",
+     "1400": "b1-p036-1400.4d8d9dddbb.avif",
+     "2115": "b1-p036-2115.1de66797c7.avif"
+    },
+    "webp": {
+     "240": "b1-p036-240.164d3dcfac.webp",
+     "900": "b1-p036-900.9adb0dd054.webp",
+     "1400": "b1-p036-1400.ce8a520384.webp",
+     "2115": "b1-p036-2115.5c241e7c9c.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.9986,
+      0.3176
+     ],
+     "alt": "A grand colonial bungalow standing derelict under a burning orange sky, its walls swallowed in creeper, windows black, the gateposts leaning. Dvij and Bhavi are small at the gate below."
+    },
+    {
+     "box": [
+      0.0,
+      0.3176,
+      0.4993,
+      0.5547
+     ],
+     "alt": "The two of them in front of the house, Bhavi with a finger up, warning him off."
+    },
+    {
+     "box": [
+      0.4993,
+      0.3081,
+      0.9986,
+      0.493
+     ],
+     "alt": "Dvij hauls himself over the top of a stone wall while Bhavi reaches up after him, her dupatta flying."
+    },
+    {
+     "box": [
+      0.0,
+      0.5547,
+      0.3972,
+      0.7277
+     ],
+     "alt": "The two of them pushing through the overgrown shrubbery along the wall."
+    },
+    {
+     "box": [
+      0.3972,
+      0.4954,
+      0.6846,
+      0.7822
+     ],
+     "alt": "A hand forces a broken window frame open. RANKLE! The sound echoes into the dark inside."
+    },
+    {
+     "box": [
+      0.4615,
+      0.493,
+      0.9986,
+      0.7301
+     ],
+     "alt": "Dvij climbs in through the window and reaches back to take Bhavi's hand."
+    },
+    {
+     "box": [
+      0.0,
+      0.7277,
+      0.6657,
+      0.9979
+     ],
+     "alt": "Inside: a great ruined entrance hall, a chandelier hanging in shafts of dusty light, a double staircase, hunting trophies of a tiger and a stag mounted on the walls. Dvij and Bhavi stand small at the foot of the stairs with a torch."
+    },
+    {
+     "box": [
+      0.6657,
+      0.7301,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The two of them moving down a corridor hung with old portraits, the torch beam thrown ahead of them."
+    }
+   ],
+   "text": [
+    {
+     "t": "The Forest Officer's bungalow stood abandoned, overgrown, bathed in eerie sunset light - a bhoot bungalow with a sinister reputation.",
+     "bbox": [
+      0.0705,
+      0.2909,
+      0.9295,
+      0.3074
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "Nobody in their senses goes in there.",
+     "bbox": [
+      0.4085,
+      0.3847,
+      0.5586,
+      0.4196
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Wouldn't that make it the perfect spot to hide a clue?",
+     "bbox": [
+      0.1344,
+      0.4631,
+      0.2922,
+      0.4998
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "They climbed the wall, circled through overgrown shrubs, and entered through a broken window that opened with a reverberating rankle.",
+     "bbox": [
+      0.1,
+      0.7499,
+      0.9,
+      0.7779
+     ],
+     "kind": "caption",
+     "panel": 4
+    },
+    {
+     "t": "Doesn't that remind you of the cinema of the sixties?",
+     "bbox": [
+      0.059,
+      0.8941,
+      0.227,
+      0.9332
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Nothing reminds me of anything I remember.",
+     "bbox": [
+      0.4634,
+      0.8911,
+      0.6135,
+      0.926
+     ],
+     "kind": "balloon",
+     "panel": 6
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 37,
+   "id": "b1-p037",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p037-240.72f06038f5.avif",
+     "900": "b1-p037-900.089b7a908e.avif",
+     "1400": "b1-p037-1400.387510317e.avif",
+     "2115": "b1-p037-2115.8d259d1c79.avif"
+    },
+    "webp": {
+     "240": "b1-p037-240.7598cd8a36.webp",
+     "900": "b1-p037-900.2717590373.webp",
+     "1400": "b1-p037-1400.4e69a71bd4.webp",
+     "2115": "b1-p037-2115.355e0eb0ea.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.49,
+      0.23
+     ],
+     "alt": "Dvij lifts a rifle out of a rack of guns, torch beam along the barrel; Bhavi leans in beside him."
+    },
+    {
+     "box": [
+      0.49,
+      0.0,
+      1.0,
+      0.23
+     ],
+     "alt": "An office with a mounted stag's head and a brass nameplate for the Forest Officer, R. N. Pratap. Dvij holds up a bundle of files; Bhavi has a wooden crate open in front of her."
+    },
+    {
+     "box": [
+      0.0,
+      0.23,
+      0.49,
+      0.46
+     ],
+     "alt": "The two bend over an open ledger of visitor numbers and a printed revenue chart; Dvij runs his finger down a column. A park map lies beside it."
+    },
+    {
+     "box": [
+      0.49,
+      0.23,
+      1.0,
+      0.47
+     ],
+     "alt": "Two moments side by side: Dvij at the desk turning a small bronze figure over in his hands; then he presses its arm, CLICK, and a bookcase swings out from the wall. Bhavi watches."
+    },
+    {
+     "box": [
+      0.0,
+      0.47,
+      0.5,
+      0.7
+     ],
+     "alt": "A narrow stone stairway dropping away into blackness; the two of them stand at the top with the torch."
+    },
+    {
+     "box": [
+      0.5,
+      0.47,
+      1.0,
+      0.7
+     ],
+     "alt": "Dvij shoves a tall mirrored dressing table across the library floor."
+    },
+    {
+     "box": [
+      0.0,
+      0.7,
+      0.5,
+      0.88
+     ],
+     "alt": "Moonlight comes through the window past an oil lamp and strikes the tilted mirror."
+    },
+    {
+     "box": [
+      0.5,
+      0.7,
+      1.0,
+      0.88
+     ],
+     "alt": "The mirror throws a shaft of silver light down into the dark; Dvij and Bhavi stand in the beam."
+    },
+    {
+     "box": [
+      0.0,
+      0.88,
+      0.41,
+      1.0
+     ],
+     "alt": "Close on Dvij in the stone passage, hand at his chin, puzzling it out."
+    },
+    {
+     "box": [
+      0.41,
+      0.88,
+      1.0,
+      1.0
+     ],
+     "alt": "The two of them hurrying along a vaulted tunnel of dressed stone, torch held out ahead."
+    }
+   ],
+   "text": [
+    {
+     "t": "Dvij's light fell upon a gun collection which he examined carefully, one weapon at a time.",
+     "bbox": [
+      0.0282,
+      0.0086,
+      0.4731,
+      0.0366
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "You found files? That should be the park's records.",
+     "bbox": [
+      0.8442,
+      0.0103,
+      0.9998,
+      0.0465
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Files...even more files. Nothing interesting,",
+     "bbox": [
+      0.5002,
+      0.0286,
+      0.6558,
+      0.0648
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "So that story was planted to hide something else. Some sinister business I'm sure.",
+     "bbox": [
+      0.3237,
+      0.2123,
+      0.5279,
+      0.2598
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "The visitor numbers only go up. The park couldn't have been closed for lack of money.",
+     "bbox": [
+      0.0044,
+      0.2189,
+      0.2034,
+      0.2653
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "That bookcase...it opened when I picked up this paperweight!",
+     "bbox": [
+      0.4035,
+      0.3533,
+      0.5724,
+      0.3926
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Look at this statue. I press its arm and...bingo! It's not that paperweight.",
+     "bbox": [
+      0.8086,
+      0.2293,
+      0.9945,
+      0.2726
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "It’s so dark down there.",
+     "bbox": [
+      0.1404,
+      0.4729,
+      0.2507,
+      0.4986
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "Moonlight! That's it. We will use the moonlight.",
+     "bbox": [
+      0.3809,
+      0.4663,
+      0.5408,
+      0.5036
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "A mirror fixed to a dressing table positioned correctly directed the the silvery light moonlight into the darkness.",
+     "bbox": [
+      0.1037,
+      0.8357,
+      0.9038,
+      0.8574
+     ],
+     "kind": "caption",
+     "panel": 7
+    },
+    {
+     "t": "Why would there be a tunnel under the Forest Officer's bungalow?",
+     "bbox": [
+      0.1664,
+      0.9375,
+      0.348,
+      0.9798
+     ],
+     "kind": "balloon",
+     "panel": 8
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 38,
+   "id": "b1-p038",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p038-240.30af041704.avif",
+     "900": "b1-p038-900.a07cf7c836.avif",
+     "1400": "b1-p038-1400.90c30466c5.avif",
+     "2115": "b1-p038-2115.aec444bba8.avif"
+    },
+    "webp": {
+     "240": "b1-p038-240.0e17ba877a.webp",
+     "900": "b1-p038-900.22ae99b7f7.webp",
+     "1400": "b1-p038-1400.05dc67b0a7.webp",
+     "2115": "b1-p038-2115.b23bb554b7.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.5,
+      0.15
+     ],
+     "alt": "In the tunnel, Dvij puts a hand on Bhavi's shoulder; she covers her face. A small light lies on the stone between them."
+    },
+    {
+     "box": [
+      0.5,
+      0.0,
+      1.0,
+      0.15
+     ],
+     "alt": "A skeleton lying on the tunnel floor, skull turned towards them, one side of it broken away."
+    },
+    {
+     "box": [
+      0.0,
+      0.15,
+      0.18,
+      0.3
+     ],
+     "alt": "A blank stretch of tunnel wall."
+    },
+    {
+     "box": [
+      0.18,
+      0.15,
+      0.68,
+      0.3
+     ],
+     "alt": "The two of them crouched over the skull, Bhavi's finger at the hole in its side."
+    },
+    {
+     "box": [
+      0.68,
+      0.15,
+      1.0,
+      0.3
+     ],
+     "alt": "Bhavi turns away and puts a hand flat against the wall."
+    },
+    {
+     "box": [
+      0.0,
+      0.3,
+      0.39,
+      0.44
+     ],
+     "alt": "Dvij hauls at a chained iron grille at the head of a stone stair, moonlight coming through the bars."
+    },
+    {
+     "box": [
+      0.39,
+      0.3,
+      1.0,
+      0.44
+     ],
+     "alt": "The two of them at the grille, Dvij reaching up, Bhavi behind him."
+    },
+    {
+     "box": [
+      0.0,
+      0.44,
+      0.51,
+      0.69
+     ],
+     "alt": "Close on Dvij's face at the bars, looking out."
+    },
+    {
+     "box": [
+      0.51,
+      0.44,
+      1.0,
+      0.69
+     ],
+     "alt": "Close on Bhavi at the bars, a hand on the ironwork; through the gap a moonlit temple spire."
+    },
+    {
+     "box": [
+      0.0,
+      0.69,
+      0.26,
+      0.84
+     ],
+     "alt": "Dvij raises one finger."
+    },
+    {
+     "box": [
+      0.26,
+      0.69,
+      1.0,
+      0.84
+     ],
+     "alt": "Bhavi turning, then answering; Dvij with his finger still up, the chains and the night beyond the gate."
+    },
+    {
+     "box": [
+      0.0,
+      0.84,
+      0.37,
+      1.0
+     ],
+     "alt": "Dvij yawns hugely, Bhavi beside him in the dark tunnel."
+    },
+    {
+     "box": [
+      0.37,
+      0.84,
+      1.0,
+      1.0
+     ],
+     "alt": "Dvij looks up; Bhavi rests her chin on her hand and smiles at him."
+    }
+   ],
+   "text": [
+    {
+     "t": "Could that be one of your parents?",
+     "bbox": [
+      0.0645,
+      0.0545,
+      0.2007,
+      0.0862
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Whoever did this would have gone out the other end of the tunnel. Let us find where it leads.",
+     "bbox": [
+      0.0169,
+      0.2089,
+      0.2171,
+      0.2555
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "His skull is fractured, right through the calvaria. He was hit from above with something heavy. Then left here to be eaten by worms.",
+     "bbox": [
+      0.4429,
+      0.1944,
+      0.6883,
+      0.2515
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "The phone died. They groped through darkness until finding steps leading up to a chained opening with slivers of moonlight.",
+     "bbox": [
+      0.1,
+      0.4055,
+      0.9,
+      0.4272
+     ],
+     "kind": "caption",
+     "panel": 6
+    },
+    {
+     "t": "Looks like we are near some temple.",
+     "bbox": [
+      0.2007,
+      0.5184,
+      0.3517,
+      0.5535
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "That we'll know only when we talk to him. But that can only be after I've slept through yet another morning.",
+     "bbox": [
+      0.078,
+      0.6572,
+      0.3216,
+      0.714
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "The morgue! That must be the Kaal Bhairava temple! The tantric! Could he?",
+     "bbox": [
+      0.75,
+      0.4407,
+      0.9491,
+      0.4871
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "I still can't believe you thought that skeleton was one of my parents.",
+     "bbox": [
+      0.6284,
+      0.6711,
+      0.8128,
+      0.714
+     ],
+     "kind": "balloon",
+     "panel": 10
+    },
+    {
+     "t": "There was a distinct resemblance.",
+     "bbox": [
+      0.6235,
+      0.8467,
+      0.7645,
+      0.8796
+     ],
+     "kind": "balloon",
+     "panel": 12
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 39,
+   "id": "b1-p039",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p039-240.04913f61ee.avif",
+     "900": "b1-p039-900.ed2e707b22.avif",
+     "1400": "b1-p039-1400.3a2d643de2.avif",
+     "2115": "b1-p039-2115.f10962451d.avif"
+    },
+    "webp": {
+     "240": "b1-p039-240.03b1dfcc1c.webp",
+     "900": "b1-p039-900.1fba3bf284.webp",
+     "1400": "b1-p039-1400.3c4599d1df.webp",
+     "2115": "b1-p039-2115.932daf6d86.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4879,
+      0.2394
+     ],
+     "alt": "The study. Dvij points across at Bhavi, who has come in wearing tall riding boots; the Professor sits at a board game he has been playing against himself."
+    },
+    {
+     "box": [
+      0.4879,
+      0.0,
+      0.9986,
+      0.2394
+     ],
+     "alt": "The Professor turns with a hand out, approving; Bhavi stands with her hands on her hips; Dvij watches from the left."
+    },
+    {
+     "box": [
+      0.0,
+      0.2394,
+      0.4993,
+      0.4575
+     ],
+     "alt": "The Professor holds up a finger and explains, Dvij and Bhavi leaning over the desk. Down the left and along the bottom run small framed images: a matted-haired ascetic, a skull bowl, sadhus at a fire, a temple, a trident and ritual beads."
+    },
+    {
+     "box": [
+      0.4993,
+      0.2394,
+      0.9986,
+      0.4575
+     ],
+     "alt": "Dvij and Bhavi walk out along the garden path towards the gate, arguing cheerfully."
+    },
+    {
+     "box": [
+      0.0,
+      0.4575,
+      0.9986,
+      0.685
+     ],
+     "alt": "The Kaal Bhairava temple: a small many-tiered stone shrine standing on a spit in a still lake, a densely forested hill rising behind it, huts along the far shore, vultures turning overhead and smoke from the cremation ground."
+    },
+    {
+     "box": [
+      0.0,
+      0.685,
+      0.9986,
+      0.9979
+     ],
+     "alt": "The temple steps, flanked by carved vyalas - elephant-headed lion creatures on high plinths - with panels of gods and beasts cut into the soft stone above. Dvij stands at the bottom looking up."
+    }
+   ],
+   "text": [
+    {
+     "t": "Why the boots, Bhavi? Are you going anywhere special? Could it be... the Kaal Bhairava temple?",
+     "bbox": [
+      0.1087,
+      0.0075,
+      0.3178,
+      0.0562
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "Why, that is a good idea. You must show that magnificent architecture to Dvij!",
+     "bbox": [
+      0.7627,
+      0.108,
+      0.9718,
+      0.1567
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "Next day, the sky was overcast and gloomy, even as late as when Dvij finally woke up. Professor played a board game with himself.",
+     "bbox": [
+      0.0816,
+      0.2092,
+      0.9183,
+      0.2309
+     ],
+     "kind": "caption",
+     "panel": 1
+    },
+    {
+     "t": "They are devotees of Lord Shiva as Bhairava...the destroyer. They practice extreme ritual worship. Challenge not their beliefs.",
+     "bbox": [
+      0.2771,
+      0.248,
+      0.5172,
+      0.304
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "Your uncle’s cuckoo...",
+     "bbox": [
+      0.5361,
+      0.2544,
+      0.647,
+      0.2803
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "...but a cute cuckoo.",
+     "bbox": [
+      0.789,
+      0.2783,
+      0.8998,
+      0.3041
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Kaal Bhairava temple stood mystifying, appearing to float on Bhootnath taal with densely forested Naga hill behind. Vultures circled above the cremation ground.",
+     "bbox": [
+      0.0908,
+      0.7333,
+      0.9091,
+      0.7613
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "Ferocious vyalas flanked the steps - composite creatures controlling cosmic energy. The soft stone from Naga hill bore delicate carvings of gods, beasts, and flowers.",
+     "bbox": [
+      0.0908,
+      0.9605,
+      0.9091,
+      0.9885
+     ],
+     "kind": "caption",
+     "panel": 5
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 40,
+   "id": "b1-p040",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p040-240.6fc1097374.avif",
+     "900": "b1-p040-900.41cff00ab0.avif",
+     "1400": "b1-p040-1400.f3da7b8c4c.avif",
+     "2115": "b1-p040-2115.246a67f8ed.avif"
+    },
+    "webp": {
+     "240": "b1-p040-240.17760765c6.webp",
+     "900": "b1-p040-900.cf4f1d440f.webp",
+     "1400": "b1-p040-1400.ee0bafe8f9.webp",
+     "2115": "b1-p040-2115.d63ab090ba.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.29,
+      0.19
+     ],
+     "alt": "Inside the temple: carved pillars rising into shadow, a lingam lit at the far end. Dvij and Bhavi come in from the left past seated sadhus."
+    },
+    {
+     "box": [
+      0.29,
+      0.0,
+      0.5,
+      0.19
+     ],
+     "alt": "The inner hall, ascetics sitting before the shrine with skull bowls beside them."
+    },
+    {
+     "box": [
+      0.5,
+      0.0,
+      1.0,
+      0.19
+     ],
+     "alt": "Bhavi waits in an ante-room among the pillars while sadhus sit at a fire beyond; flames climb the right edge of the panel."
+    },
+    {
+     "box": [
+      0.0,
+      0.19,
+      0.5,
+      0.37
+     ],
+     "alt": "Dvij and Bhavi bow beside a fire. Facing them sits the tantric baba, cross-legged, matted hair down his back, bands of ash across his chest and brow."
+    },
+    {
+     "box": [
+      0.5,
+      0.19,
+      1.0,
+      0.37
+     ],
+     "alt": "A big close shot of the baba, beard and dreadlocks, firelight on his face, speaking."
+    },
+    {
+     "box": [
+      0.0,
+      0.37,
+      1.0,
+      0.5
+     ],
+     "alt": "Dvij in profile at the left, the baba across the fire, Bhavi at the right."
+    },
+    {
+     "box": [
+      0.0,
+      0.5,
+      1.0,
+      0.63
+     ],
+     "alt": "Dvij bows with his palms together; the baba raises a finger; Bhavi watches."
+    },
+    {
+     "box": [
+      0.0,
+      0.63,
+      1.0,
+      0.74
+     ],
+     "alt": "Dvij, head lowered, answering; the baba listens; Bhavi looks on."
+    },
+    {
+     "box": [
+      0.0,
+      0.74,
+      0.5,
+      1.0
+     ],
+     "alt": "The baba rises and begins to walk in a circle round the two of them as he teaches."
+    },
+    {
+     "box": [
+      0.5,
+      0.74,
+      1.0,
+      1.0
+     ],
+     "alt": "Dvij kneels with a hand at his chest; Bhavi covers her mouth; the baba stands over the fire."
+    }
+   ],
+   "text": [
+    {
+     "t": "Inside, pillars carved with water symbols rose toward heaven. Sadhus meditated before the swayamshiva lingam, kapalas beside them.",
+     "bbox": [
+      0.0125,
+      0.1568,
+      0.4874,
+      0.1848
+     ],
+     "kind": "caption",
+     "panel": 0
+    },
+    {
+     "t": "They waited in the adjunct room until Baba emerged from Samadhi.",
+     "bbox": [
+      0.5125,
+      0.1568,
+      0.9875,
+      0.1785
+     ],
+     "kind": "caption",
+     "panel": 2
+    },
+    {
+     "t": "They bowed before Baba - vibhuti on his forehead, bhasma on his body, wisdom in his eyes. His voice was sonorous, his manner firm yet hearty.",
+     "bbox": [
+      0.0125,
+      0.3421,
+      0.4874,
+      0.3701
+     ],
+     "kind": "caption",
+     "panel": 3
+    },
+    {
+     "t": "You are The Wounded One with No Past. Your business is with the Mahant. Why do you seek my audience?",
+     "bbox": [
+      0.5325,
+      0.1851,
+      0.75,
+      0.2357
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "You are a great Siddhi Nath, O revered Baba. Please do not humiliate us by asking the reason of our visit.",
+     "bbox": [
+      0.2821,
+      0.377,
+      0.4997,
+      0.4277
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "You have come to seek advice on something concerning others more than you.",
+     "bbox": [
+      0.2699,
+      0.4973,
+      0.4875,
+      0.548
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "Yes, that is true. I have come to you to understand your path to God.",
+     "bbox": [
+      0.2982,
+      0.6273,
+      0.4964,
+      0.6735
+     ],
+     "kind": "balloon",
+     "panel": 7
+    },
+    {
+     "t": "Very well! But the path is only for true believers for it will ask you to challenge everything you believe today. Are you willing?",
+     "bbox": [
+      0.0886,
+      0.7357,
+      0.3336,
+      0.7927
+     ],
+     "kind": "balloon",
+     "panel": 8
+    },
+    {
+     "t": "Baba standing up and beginning to walk around Dvij and Bhavi in a circle - peripatetic teaching style.",
+     "bbox": [
+      0.0125,
+      0.9517,
+      0.4874,
+      0.9797
+     ],
+     "kind": "caption",
+     "panel": 8
+    },
+    {
+     "t": "I understand that true knowledge hides in darkness. in deep, dark tunnels under the belly of earth. I desire to seek that knowledge.",
+     "bbox": [
+      0.5737,
+      0.7579,
+      0.8186,
+      0.815
+     ],
+     "kind": "balloon",
+     "panel": 9
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 41,
+   "id": "b1-p041",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p041-240.1132f3dba7.avif",
+     "900": "b1-p041-900.ef871d7a1e.avif",
+     "1400": "b1-p041-1400.81e419d6e0.avif",
+     "2115": "b1-p041-2115.6fce071bb9.avif"
+    },
+    "webp": {
+     "240": "b1-p041-240.4cf49fc477.webp",
+     "900": "b1-p041-900.d0f2c0c266.webp",
+     "1400": "b1-p041-1400.2ba6c72d88.webp",
+     "2115": "b1-p041-2115.923373b622.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.9986,
+      0.147
+     ],
+     "alt": "Dvij asks across the fire; the baba answers with a hand at his chest, a small shrine figure lit behind him."
+    },
+    {
+     "box": [
+      0.0,
+      0.147,
+      0.9986,
+      0.4053
+     ],
+     "alt": "A wide band: Dvij and Bhavi at the left, the baba in the middle with a finger raised, and a younger ascetic with a topknot and strings of beads at the right."
+    },
+    {
+     "box": [
+      0.0,
+      0.3959,
+      0.5031,
+      0.5784
+     ],
+     "alt": "The baba goes on speaking while the young ascetic, at the right, opens his mouth wide."
+    },
+    {
+     "box": [
+      0.4993,
+      0.4053,
+      0.9986,
+      0.5784
+     ],
+     "alt": "A circular inset of Dvij's and Bhavi's shocked faces beside a close view of the ascetic's open mouth, an arrow curling back into his throat."
+    },
+    {
+     "box": [
+      0.0,
+      0.5784,
+      0.4312,
+      0.749
+     ],
+     "alt": "Dvij and Bhavi recoil, Bhavi's hand at her mouth, as the tongue disappears back down the throat."
+    },
+    {
+     "box": [
+      0.4312,
+      0.5784,
+      0.9986,
+      0.749
+     ],
+     "alt": "The same moment from another angle, the baba impassive between them."
+    },
+    {
+     "box": [
+      0.0,
+      0.749,
+      0.4842,
+      0.9979
+     ],
+     "alt": "The baba raises a finger and explains; the young ascetic beside him; Dvij and Bhavi seated at the fire."
+    },
+    {
+     "box": [
+      0.4842,
+      0.749,
+      0.9986,
+      0.9979
+     ],
+     "alt": "Dvij and Bhavi sit close together; the baba leans in towards them across the flames."
+    }
+   ],
+   "text": [
+    {
+     "t": "I understand what you imply. The Kaula traditions. How poorly understood by miserable disbelievers.",
+     "bbox": [
+      0.5112,
+      0.0087,
+      0.7419,
+      0.0624
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "What would be those secret rituals, O divine Nath?",
+     "bbox": [
+      0.25,
+      0.0469,
+      0.4234,
+      0.0873
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "You are not ready for that knowledge. Secret rituals are extremely potent, only after years of practicing asanas and samadhis. He shall demonstrate to silence your incredulity.",
+     "bbox": [
+      0.5338,
+      0.197,
+      0.8247,
+      0.2648
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "What he will demonstrate is the Khechari Mudra...a small ritual and yet extremely potent.",
+     "bbox": [
+      0.1911,
+      0.4041,
+      0.401,
+      0.453
+     ],
+     "kind": "balloon",
+     "panel": 2
+    },
+    {
+     "t": "The sadhu opened wide and snaked his tongue back into his throat. It did not stop where a normal person's would. Their eyes widened as it kept going in, till the whole thing disappeared inside the cavernous mouth.",
+     "bbox": [
+      0.1,
+      0.7108,
+      0.9,
+      0.7388
+     ],
+     "kind": "caption",
+     "panel": 5
+    },
+    {
+     "t": "The tongue has been pulled up between the eyes...inside the amakala. This is to stop the nectar of immortality dripping away.",
+     "bbox": [
+      0.0883,
+      0.7483,
+      0.3368,
+      0.8062
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "You seek knowledge of secret rituals. And yet, nothing is secret in my ashram.",
+     "bbox": [
+      0.6546,
+      0.774,
+      0.8446,
+      0.8183
+     ],
+     "kind": "balloon",
+     "panel": 7
+    }
+   ],
+   "reviewed": true
+  },
+  {
+   "n": 42,
+   "id": "b1-p042",
+   "w": 2115,
+   "h": 3375,
+   "src": {
+    "avif": {
+     "240": "b1-p042-240.b6a51d7b13.avif",
+     "900": "b1-p042-900.b6f1aeb078.avif",
+     "1400": "b1-p042-1400.3eaa664703.avif",
+     "2115": "b1-p042-2115.99fad247fb.avif"
+    },
+    "webp": {
+     "240": "b1-p042-240.79c92c89fd.webp",
+     "900": "b1-p042-900.831c48aa3e.webp",
+     "1400": "b1-p042-1400.e2295d0f88.webp",
+     "2115": "b1-p042-2115.00b86c480a.webp"
+    }
+   },
+   "panels": [
+    {
+     "box": [
+      0.0,
+      0.0,
+      0.4993,
+      0.2441
+     ],
+     "alt": "The baba raises a finger, telling Dvij whose attention he has caught. Bhavi sits between them with her hand at her chin."
+    },
+    {
+     "box": [
+      0.4993,
+      0.0,
+      0.9986,
+      0.2441
+     ],
+     "alt": "A woman stands in the firelight: long curling hair, a leopard-print top, heavy tribal jewellery at her throat and arms, looking straight out of the panel."
+    },
+    {
+     "box": [
+      0.0,
+      0.2441,
+      0.1551,
+      0.4504
+     ],
+     "alt": "Close on Dvij, turning to look."
+    },
+    {
+     "box": [
+      0.1551,
+      0.2441,
+      0.9986,
+      0.4504
+     ],
+     "alt": "Bhavi turns to the baba with a hand raised, alarmed, while the woman leans in behind him and whispers at his ear."
+    },
+    {
+     "box": [
+      0.0,
+      0.4504,
+      0.4577,
+      0.704
+     ],
+     "alt": "Dvij scrambles back with both palms up; the baba rises over him, pointing."
+    },
+    {
+     "box": [
+      0.4577,
+      0.4504,
+      0.9986,
+      0.704
+     ],
+     "alt": "The baba stands with a finger raised over the fire, Dvij backing away at the left and Bhavi at the right."
+    },
+    {
+     "box": [
+      0.0,
+      0.704,
+      0.9986,
+      0.9979
+     ],
+     "alt": "At the left, a memory: the woman bending over Dvij where he lies, blood at his shoulder. At the right the baba raises his finger again while Dvij answers him and Bhavi looks away."
+    }
+   ],
+   "text": [
+    {
+     "t": "You no longer hear me. But I am not offended. I see who has caught your attention. She has the enchantment of Tripura Sundari herself.",
+     "bbox": [
+      0.0888,
+      0.004,
+      0.3373,
+      0.0619
+     ],
+     "kind": "balloon",
+     "panel": 0
+    },
+    {
+     "t": "I have named her Kamakhya. She is a Naga tribal - fiercely proud, wary of strangers.",
+     "bbox": [
+      0.4421,
+      0.0039,
+      0.6504,
+      0.0525
+     ],
+     "kind": "balloon",
+     "panel": 1
+    },
+    {
+     "t": "But this one has taken a liking to you.",
+     "bbox": [
+      0.3768,
+      0.2616,
+      0.5337,
+      0.2982
+     ],
+     "kind": "balloon",
+     "panel": 3
+    },
+    {
+     "t": "Very well! If it has happened then so it must be. I have come to understand that you have mingled with her already...",
+     "bbox": [
+      0.2998,
+      0.4235,
+      0.55,
+      0.4818
+     ],
+     "kind": "balloon",
+     "panel": 4
+    },
+    {
+     "t": "...though you may not recall it. She desires to be yours and I have granted her the boon.",
+     "bbox": [
+      0.7643,
+      0.4268,
+      0.9868,
+      0.4786
+     ],
+     "kind": "balloon",
+     "panel": 5
+    },
+    {
+     "t": "You do not have a choice. She has tasted your blood. You are already inside her.",
+     "bbox": [
+      0.6507,
+      0.7588,
+      0.8377,
+      0.8024
+     ],
+     "kind": "balloon",
+     "panel": 6
+    },
+    {
+     "t": "I am honoured, O mystic. But I do not believe I can be a yogi till my task here is done. Only then shall I be able to take a yogini.",
+     "bbox": [
+      0.3249,
+      0.9376,
+      0.5751,
+      0.9959
+     ],
+     "kind": "balloon",
+     "panel": 6
+    }
+   ],
+   "reviewed": true
+  }
+ ]
+}

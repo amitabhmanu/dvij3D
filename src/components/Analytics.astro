@@ -1,0 +1,19 @@
+---
+// Analytics (design §18.12), off unless configured.
+//
+// Netlify Analytics needs nothing here: it counts server-side from the CDN
+// logs, sets no cookie and runs no script in the browser, so there is nothing
+// to add to the page and no consent banner to show.
+//
+// A privacy-friendly script (Plausible, GoatCounter, Umami, Fathom) needs one
+// tag, which this adds when PUBLIC_ANALYTICS_SRC is set - with the site's own
+// domain in PUBLIC_ANALYTICS_DOMAIN where the script wants one. Nothing is
+// loaded when they are unset, which is the default and the state of the build
+// until a service is chosen.
+//
+// Whatever goes here must not set a cookie or identify a reader: reading
+// progress lives in the reader's own browser and is nobody else's business.
+const src = import.meta.env.PUBLIC_ANALYTICS_SRC;
+const domain = import.meta.env.PUBLIC_ANALYTICS_DOMAIN;
+---
+{src && <script is:inline defer src={src} data-domain={domain} data-website-id={domain}></script>}

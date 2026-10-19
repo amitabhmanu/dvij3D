@@ -1,0 +1,62 @@
+---
+import Base from "../../../layouts/Base.astro";
+import PdfDownload from "../../../components/PdfDownload.astro";
+import { books, nextBook, pick } from "../../../lib/manifest";
+
+export function getStaticPaths() {
+  return books.map((book) => ({ params: { book: book.slug }, props: { book } }));
+}
+const { book } = Astro.props;
+const next = nextBook(book);
+const partOf = (page: number) => book.parts.find((p) => page >= p.startPage && page <= p.endPage)?.n;
+---
+<Base title={`Book ${book.book}: ${book.title}`} description={`Book ${book.book} of The Twice Born: ${book.title}. ${book.pageCount} pages.`}
+  image={book.pages[0] ? pick(book.pages[0].src.webp, 900) : undefined}>
+  <div class="wrap">
+    <p class="eyebrow">Book {book.book} of {books.length}</p>
+    <h1>{book.title}</h1>
+    <p class="actions">
+      <a class="btn" href={`/read/${book.slug}/1`} data-continue={book.slug}>Start reading</a>
+      <PdfDownload book={book} />
+    </p>
+
+    <h2>Chapters</h2>
+    <ol class="chapters">
+      {book.chapters.map((c) => (
+        <li><a href={`/read/${book.slug}/${c.startPage}`}>{c.title}</a> <span class="muted">page {c.startPage} · part {partOf(c.startPage)}</span></li>
+      ))}
+    </ol>
+
+    <h2>Pages</h2>
+    <ol class="thumbs">
+      {book.pages.map((p) => (
+        <li>
+          <a href={`/read/${book.slug}/${p.n}`} aria-label={`Page ${p.n}`}>
+            <img src={pick(p.src.webp, 240)} width={120} height={Math.round((120 * p.h) / p.w)} alt="" loading="lazy" />
+            <span>{p.n}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+    {next && <p><a class="btn secondary" href={`/read/${next.slug}/`}>Next: Book {next.book}, {next.title} →</a></p>}
+  </div>
+</Base>
+
+<style>
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 8px; }
+  .chapters { columns: 3 220px; padding-left: 1.2em; font-family: var(--font-ui); }
+  .chapters li { break-inside: avoid; margin-bottom: 6px; }
+  .chapters .muted { font-size: 0.8rem; }
+  .thumbs { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 16px; }
+  .thumbs a { display: block; text-decoration: none; color: var(--ink-3); font-family: var(--font-ui); font-size: 0.8rem; text-align: center; }
+  .thumbs img { width: 100%; aspect-ratio: 1058 / 1688; object-fit: cover; border-radius: 2px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); margin-bottom: 4px; }
+  .thumbs a:hover img { outline: 3px solid var(--gold); }
+</style>
+
+<script>
+  import { getProgress } from "../../../lib/progress";
+  const link = document.querySelector<HTMLAnchorElement>("[data-continue]");
+  const p = getProgress();
+  const reached = link ? p.furthest[link.dataset.continue!] ?? 0 : 0;
+  if (link && reached > 1) { link.href = `/read/${link.dataset.continue}/${reached}`; link.textContent = `Continue from page ${reached}`; }
+</script>

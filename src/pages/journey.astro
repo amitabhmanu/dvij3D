@@ -1,0 +1,99 @@
+---
+import Base from "../layouts/Base.astro";
+import VeilNotice from "../components/VeilNotice.astro";
+import VeilScript from "../components/VeilScript.astro";
+import { rail, voiceEntries } from "../lib/companions";
+
+const voices = new Map((await voiceEntries()).map((v) => [v.id, v]));
+const COLOURS: Record<string, string> = {
+  Muladhara: "#c62828", Svadhishthana: "#ef6c00", Manipura: "#f9a825", Anahata: "#2e7d32",
+  Vishuddha: "#1e88e5", Ajna: "#3949ab", Sahasrara: "#8e24aa",
+};
+---
+<Base title="The journey" description="The trek up Mount Dronagiri, read three ways: Dvij's rising kundalini, the party that narrows, and the teachers met along the way.">
+  <div class="wrap">
+    <p class="eyebrow">A companion reading</p>
+    <h1>The journey up Dronagiri</h1>
+    <div class="prose">
+      <p>The climb up the mountain follows, in exact order, the rise of Dvij's kundalini through the chakras. It ends one short of the crown.
+        Along the way the party thins out, as the Pandavas' did on their last journey, and at nearly every stop someone teaches him.</p>
+      <p class="muted small">The kundalini beats are the book's own words. The Mahabharata parallel is a reading, not something the book states. Beats you haven't reached are blurred.</p>
+    </div>
+
+    <div class="lenses" role="group" aria-label="Lenses">
+      <button type="button" data-lens="all" aria-pressed="true">All</button>
+      <button type="button" data-lens="chakra" aria-pressed="false">Kundalini</button>
+      <button type="button" data-lens="party" aria-pressed="false">The party</button>
+      <button type="button" data-lens="teacher" aria-pressed="false">Teachers</button>
+    </div>
+
+    <ol class="timeline">
+      {rail.nodes.map((n) => {
+        const colour = n.chakra ? COLOURS[n.chakra.name] : "var(--ink-3)";
+        const teacher = n.teacher ? voices.get(n.teacher.voice) : undefined;
+        return (
+          <li class={`node${n.chakra ? " has-chakra" : ""}${n.party ? " has-party" : ""}${n.teacher ? " has-teacher" : ""}${n.chakra?.state === "unlit" ? " unlit" : ""}`}
+            style={`--c:${colour}`} data-first-book={n.at?.book} data-first-page={n.at?.page}>
+            <span class={`marker${n.chakra ? " chakra" : " beat"}${n.chakra?.state === "questioned" ? " questioned" : ""}`} aria-hidden="true"></span>
+            <div class="card">
+              <p class="where">{n.at ? <a href={`/read/b${n.at.book}/${n.at.page}`}>Book {n.at.book}, page {n.at.page}</a> : "Beyond the book"}</p>
+              <h2>{n.chakra?.state === "unlit" ? n.chakra.name : n.title}</h2>
+              {n.at && <VeilNotice book={n.at.book} page={n.at.page} />}
+              <div class="veil-content">
+                {n.chakra && (
+                  <p class="lens-chakra"><span class="lens">Kundalini</span> <strong>{n.chakra.name}</strong>, {n.chakra.where}
+                    {n.chakra.state === "questioned" && <em> (asked, never confirmed)</em>}{n.chakra.state === "unlit" && <em> (never reached)</em>}</p>
+                )}
+                {n.note && <p class="lens-chakra note">{n.note}</p>}
+                {n.party && <p class="lens-party"><span class="lens">The party</span> <strong>{n.party.change}.</strong> {n.party.text}</p>}
+                {n.epic && <p class="lens-party epic"><span class="lens">Mahaprasthanika</span> {n.epic}</p>}
+                {n.teacher && (
+                  <p class="lens-teacher"><span class="lens">Teacher</span>
+                    {teacher ? <a href={`/voices/${teacher.id}/`}>{teacher.data.name}</a> : n.teacher.voice}: {n.teacher.text}</p>
+                )}
+                {n.codex && <p class="small"><a href={`/codex/${n.codex}/`}>In the Codex →</a></p>}
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+  <VeilScript />
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".lenses button");
+  buttons.forEach((b) => b.addEventListener("click", () => {
+    buttons.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    document.querySelector(".timeline")!.setAttribute("data-lens", b.dataset.lens!);
+  }));
+</script>
+
+<style>
+  .small { font-size: 0.9rem; }
+  .lenses { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0; }
+  .lenses button { font: 600 0.9rem var(--font-ui); padding: 7px 12px; border-radius: 999px; border: 2px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+  .lenses button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+  .timeline::before { content: ""; position: absolute; left: 13px; top: 0; bottom: 0; width: 2px; background: var(--paper-3); }
+  .node { position: relative; padding: 0 0 22px 44px; }
+  .marker { position: absolute; left: 4px; top: 22px; width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--c); background: var(--c); box-shadow: 0 0 0 4px var(--paper); }
+  .marker.beat { width: 14px; height: 14px; left: 7px; border-radius: 2px; transform: rotate(45deg); background: var(--paper); border-color: var(--ink-3); }
+  .marker.questioned { background: var(--paper); border-style: dashed; }
+  .node.unlit .marker { background: var(--paper); border-style: dotted; }
+  .node[data-veiled] .marker { background: var(--paper); }
+  .card { background: var(--paper-2); border: 1px solid var(--paper-3); border-left: 4px solid var(--c); border-radius: 6px; padding: 12px 16px; }
+  .card h2 { margin: 2px 0 6px; font-size: 1.4rem; }
+  .card p { margin: 6px 0; }
+  .where { font: 600 0.8rem var(--font-ui); margin: 0 !important; }
+  .lens { display: inline-block; font: 700 0.68rem var(--font-ui); text-transform: uppercase; letter-spacing: 0.08em; color: var(--sepia); margin-right: 4px; }
+  .note { color: var(--ink-2); font-style: italic; }
+  .epic { color: var(--ink-2); }
+  .timeline[data-lens="chakra"] .node:not(.has-chakra),
+  .timeline[data-lens="party"] .node:not(.has-party),
+  .timeline[data-lens="teacher"] .node:not(.has-teacher) { display: none; }
+  .timeline[data-lens="chakra"] :is(.lens-party, .lens-teacher),
+  .timeline[data-lens="party"] :is(.lens-chakra, .lens-teacher),
+  .timeline[data-lens="teacher"] :is(.lens-chakra, .lens-party) { display: none; }
+</style>

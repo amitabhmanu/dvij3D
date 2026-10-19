@@ -1,0 +1,56 @@
+---
+import type { Book } from "../lib/manifest";
+import { formatMB, pick } from "../lib/manifest";
+
+interface Props { book: Book }
+const { book } = Astro.props;
+const cover = book.pages[0];
+---
+<article class="book-card" data-book={book.slug} data-pages={book.pageCount}>
+  <a class="cover" href={`/read/${book.slug}/`} aria-label={`Book ${book.book}: ${book.title}`}>
+    {cover && <img src={pick(cover.src.webp, 240)} srcset={`${pick(cover.src.webp, 240)} 1x, ${pick(cover.src.webp, 900)} 3x`}
+      width={240} height={383} alt="" loading="lazy" />}
+  </a>
+  <div class="meta">
+    <p class="eyebrow">Book {book.book}</p>
+    <h2><a href={`/read/${book.slug}/`}>{book.title}</a></h2>
+    <p class="muted">{book.pageCount} pages · {book.parts.length} parts</p>
+    <div class="progress" hidden><span class="bar"><span class="fill"></span></span> <span class="label"></span></div>
+    <p class="actions">
+      <a class="btn" href={`/read/${book.slug}/1`}>Read</a>
+      {book.pdf.bytes && <span class="muted pdf">PDF {formatMB(book.pdf.bytes)}</span>}
+    </p>
+  </div>
+</article>
+
+<style>
+  .book-card { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: start; }
+  .cover img { width: 120px; height: auto; aspect-ratio: 1058 / 1688; object-fit: cover; border-radius: 3px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); }
+  h2 { margin: 0 0 4px; font-size: 1.6rem; }
+  h2 a { color: var(--ink); text-decoration: none; }
+  h2 a:hover { color: var(--accent); }
+  .eyebrow { margin: 0; }
+  p { margin: 0 0 8px; }
+  .actions { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .pdf { font-family: var(--font-ui); font-size: 0.85rem; }
+  .progress { font-family: var(--font-ui); font-size: 0.8rem; color: var(--ink-3); display: flex; align-items: center; gap: 8px; }
+  .progress[hidden] { display: none; }
+  .bar { display: inline-block; width: 120px; height: 6px; background: var(--paper-3); border-radius: 3px; overflow: hidden; }
+  .fill { display: block; height: 100%; background: var(--accent); width: 0; }
+</style>
+
+<script>
+  import { getProgress } from "../lib/progress";
+  const p = getProgress();
+  document.querySelectorAll<HTMLElement>(".book-card").forEach((card) => {
+    const reached = p.furthest[card.dataset.book!] ?? 0;
+    if (!reached) return;
+    const total = Number(card.dataset.pages);
+    const box = card.querySelector<HTMLElement>(".progress")!;
+    box.hidden = false;
+    box.querySelector<HTMLElement>(".fill")!.style.width = `${Math.round((100 * reached) / total)}%`;
+    box.querySelector<HTMLElement>(".label")!.textContent = reached >= total ? "Finished" : `Page ${reached} of ${total}`;
+    const read = card.querySelector<HTMLAnchorElement>(".actions .btn")!;
+    if (reached < total) { read.href = `/read/${card.dataset.book}/${reached}`; read.textContent = "Continue"; }
+  });
+</script>

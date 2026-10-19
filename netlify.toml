@@ -1,0 +1,46 @@
+# Netlify configuration (design §12.4).
+# Page images, art and PDFs are NOT in this repo. They are served from a
+# Cloudflare R2 bucket, set as the PUBLIC_ASSET_BASE environment variable in
+# the Netlify UI (design §12.3); R2 carries their cache headers, set at upload
+# time by pipeline/upload_assets.mjs. The /_assets rules below only apply to a
+# local BUNDLE_ASSETS=1 build.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Public URL of the Cloudflare R2 bucket holding the page images, art and
+  # PDFs. Not a credential: it is public by design and appears in every built
+  # page. Astro inlines it at build time, so changing it needs a redeploy.
+  # Swap this for assets.<domain> once the domain exists.
+  PUBLIC_ASSET_BASE = "https://pub-3add0a95b23d49908f176d380a696b98.r2.dev"
+
+# Content-hashed page images and bundled JS/CSS never change: cache forever.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_assets/pages/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_assets/pdf/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+    Content-Disposition = "attachment"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

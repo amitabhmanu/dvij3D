@@ -1,0 +1,1459 @@
+[
+ {
+  "id": "auto-b1-p007-1",
+  "page": "b1-p007",
+  "rect": [
+   0.3438,
+   0.142,
+   0.6738,
+   0.2189
+  ],
+  "targets": [
+   "codex:matrikas"
+  ],
+  "terms": [
+   "saptamatrikas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p011-1",
+  "page": "b1-p011",
+  "rect": [
+   0.0768,
+   0.0659,
+   0.302,
+   0.1184
+  ],
+  "targets": [
+   "codex:nagas"
+  ],
+  "terms": [
+   "Nagas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p021-12",
+  "page": "b1-p021",
+  "rect": [
+   0.7623,
+   0.7679,
+   0.8998,
+   0.7999
+  ],
+  "targets": [
+   "codex:vaastu-purusha-mandala"
+  ],
+  "terms": [
+   "Vaastu Purusha Mandala"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p022-0",
+  "page": "b1-p022",
+  "rect": [
+   0.0657,
+   0.113,
+   0.3738,
+   0.1848
+  ],
+  "targets": [
+   "codex:vaastu-purusha-mandala"
+  ],
+  "terms": [
+   "Vaastu Purusha"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p025-1",
+  "page": "b1-p025",
+  "rect": [
+   0.5912,
+   0.1032,
+   0.7813,
+   0.1475
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p025-4",
+  "page": "b1-p025",
+  "rect": [
+   0.0059,
+   0.5375,
+   0.5,
+   0.5624
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p025-6",
+  "page": "b1-p025",
+  "rect": [
+   0.7406,
+   0.6569,
+   0.9398,
+   0.7033
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p026-2",
+  "page": "b1-p026",
+  "rect": [
+   0.0582,
+   0.1121,
+   0.2574,
+   0.1584
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p028-0",
+  "page": "b1-p028",
+  "rect": [
+   0.1798,
+   0.009,
+   0.3575,
+   0.0504
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p028-3",
+  "page": "b1-p028",
+  "rect": [
+   0.0056,
+   0.1059,
+   0.1951,
+   0.15
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p028-4",
+  "page": "b1-p028",
+  "rect": [
+   0.6421,
+   0.1041,
+   0.8391,
+   0.15
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p028-5",
+  "page": "b1-p028",
+  "rect": [
+   0.5343,
+   0.21,
+   0.7405,
+   0.258
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p028-7",
+  "page": "b1-p028",
+  "rect": [
+   0.0689,
+   0.4303,
+   0.3526,
+   0.4964
+  ],
+  "targets": [
+   "codex:ashtadhyayi"
+  ],
+  "terms": [
+   "Panini"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p041-0",
+  "page": "b1-p041",
+  "rect": [
+   0.5112,
+   0.0087,
+   0.7419,
+   0.0624
+  ],
+  "targets": [
+   "codex:kaula"
+  ],
+  "terms": [
+   "Kaula"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b1-p042-1",
+  "page": "b1-p042",
+  "rect": [
+   0.4421,
+   0.0039,
+   0.6504,
+   0.0525
+  ],
+  "targets": [
+   "codex:nagas"
+  ],
+  "terms": [
+   "Naga tribal"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p002-2",
+  "page": "b2-p002",
+  "rect": [
+   0.0834,
+   0.247,
+   0.3221,
+   0.3026
+  ],
+  "targets": [
+   "codex:shaivite-renunciation",
+   "codex:kaula"
+  ],
+  "terms": [
+   "aghori",
+   "kaula"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p002-3",
+  "page": "b2-p002",
+  "rect": [
+   0.4155,
+   0.2724,
+   0.5779,
+   0.3102
+  ],
+  "targets": [
+   "codex:nagas"
+  ],
+  "terms": [
+   "Nagas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p002-4",
+  "page": "b2-p002",
+  "rect": [
+   0.3921,
+   0.4277,
+   0.6832,
+   0.4955
+  ],
+  "targets": [
+   "codex:nagas",
+   "codex:shaivite-renunciation"
+  ],
+  "terms": [
+   "Nagas",
+   "aghori"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p004-3",
+  "page": "b2-p004",
+  "rect": [
+   0.1103,
+   0.3882,
+   0.333,
+   0.4401
+  ],
+  "targets": [
+   "codex:shaivite-renunciation"
+  ],
+  "terms": [
+   "aghori"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p008-0",
+  "page": "b2-p008",
+  "rect": [
+   0.5596,
+   0.0194,
+   0.8354,
+   0.0836
+  ],
+  "targets": [
+   "codex:avadhana"
+  ],
+  "terms": [
+   "Avadhan"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p008-2",
+  "page": "b2-p008",
+  "rect": [
+   0.374,
+   0.3428,
+   0.6766,
+   0.4133
+  ],
+  "targets": [
+   "codex:vedic-pathas"
+  ],
+  "terms": [
+   "memorization"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p009-4",
+  "page": "b2-p009",
+  "rect": [
+   0.1364,
+   0.9622,
+   0.9364,
+   0.9902
+  ],
+  "targets": [
+   "codex:navagrahas"
+  ],
+  "terms": [
+   "navaratnas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p025-3",
+  "page": "b2-p025",
+  "rect": [
+   0.0002,
+   0.3307,
+   0.1406,
+   0.3634
+  ],
+  "targets": [
+   "codex:avadhana"
+  ],
+  "terms": [
+   "avadhan"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p025-4",
+  "page": "b2-p025",
+  "rect": [
+   0.5431,
+   0.3219,
+   0.7508,
+   0.3703
+  ],
+  "targets": [
+   "codex:vedic-pathas"
+  ],
+  "terms": [
+   "memorization"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p025-6",
+  "page": "b2-p025",
+  "rect": [
+   0.242,
+   0.5766,
+   0.4005,
+   0.6135
+  ],
+  "targets": [
+   "codex:katapayadi"
+  ],
+  "terms": [
+   "value of pi"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p026-1",
+  "page": "b2-p026",
+  "rect": [
+   0.6193,
+   0.1786,
+   0.8089,
+   0.2228
+  ],
+  "targets": [
+   "codex:katapayadi"
+  ],
+  "terms": [
+   "value of pi"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p026-7",
+  "page": "b2-p026",
+  "rect": [
+   0.5434,
+   0.5849,
+   0.6664,
+   0.6135
+  ],
+  "targets": [
+   "codex:bacteriophages"
+  ],
+  "terms": [
+   "bacteriophages"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b2-p033-2",
+  "page": "b2-p033",
+  "rect": [
+   0.0116,
+   0.4566,
+   0.9877,
+   0.4855
+  ],
+  "targets": [
+   "codex:navagrahas"
+  ],
+  "terms": [
+   "navratnas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p003-9",
+  "page": "b3-p003",
+  "rect": [
+   0.4933,
+   0.5634,
+   0.5998,
+   0.5882
+  ],
+  "targets": [
+   "codex:dikpalas"
+  ],
+  "terms": [
+   "Ashtadikpalas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p006-9",
+  "page": "b3-p006",
+  "rect": [
+   0.1818,
+   0.7375,
+   0.3331,
+   0.7728
+  ],
+  "targets": [
+   "codex:ashtalakshmi"
+  ],
+  "terms": [
+   "ashtalakshmis"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p007-1",
+  "page": "b3-p007",
+  "rect": [
+   0.0117,
+   0.2235,
+   0.9883,
+   0.2515
+  ],
+  "targets": [
+   "codex:dikpalas"
+  ],
+  "terms": [
+   "mahadikpalas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p013-6",
+  "page": "b3-p013",
+  "rect": [
+   0.6057,
+   0.5286,
+   0.7953,
+   0.5728
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p013-7",
+  "page": "b3-p013",
+  "rect": [
+   0.6374,
+   0.5849,
+   0.8358,
+   0.6312
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p013-10",
+  "page": "b3-p013",
+  "rect": [
+   0.0567,
+   0.961,
+   0.9481,
+   0.989
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p014-0",
+  "page": "b3-p014",
+  "rect": [
+   0.2979,
+   0.0003,
+   0.5891,
+   0.0681
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "Soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p014-1",
+  "page": "b3-p014",
+  "rect": [
+   0.3891,
+   0.1753,
+   0.5787,
+   0.2195
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p014-2",
+  "page": "b3-p014",
+  "rect": [
+   -0.0,
+   0.2819,
+   0.2607,
+   0.3426
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p014-6",
+  "page": "b3-p014",
+  "rect": [
+   0.5324,
+   0.5736,
+   0.758,
+   0.6262
+  ],
+  "targets": [
+   "codex:navagrahas"
+  ],
+  "terms": [
+   "navratnas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p015-1",
+  "page": "b3-p015",
+  "rect": [
+   0.2915,
+   0.0755,
+   0.4885,
+   0.1214
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p015-5",
+  "page": "b3-p015",
+  "rect": [
+   0.2098,
+   0.274,
+   0.3566,
+   0.3082
+  ],
+  "targets": [
+   "codex:soma"
+  ],
+  "terms": [
+   "soma"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p020-8",
+  "page": "b3-p020",
+  "rect": [
+   0.2882,
+   0.8002,
+   0.4778,
+   0.8443
+  ],
+  "targets": [
+   "codex:shaivite-renunciation"
+  ],
+  "terms": [
+   "Aghori"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p024-2",
+  "page": "b3-p024",
+  "rect": [
+   0.6199,
+   0.1243,
+   0.7792,
+   0.1614
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "chakras"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p024-4",
+  "page": "b3-p024",
+  "rect": [
+   0.3631,
+   0.2917,
+   0.5348,
+   0.3317
+  ],
+  "targets": [
+   "codex:harihara"
+  ],
+  "terms": [
+   "Harihara"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p025-3",
+  "page": "b3-p025",
+  "rect": [
+   0.0586,
+   0.9549,
+   0.9413,
+   0.9739
+  ],
+  "targets": [
+   "codex:tattvas",
+   "codex:nakshatras"
+  ],
+  "terms": [
+   "Purusha",
+   "nakshatras"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p026-4",
+  "page": "b3-p026",
+  "rect": [
+   0.5512,
+   0.2909,
+   0.75,
+   0.3372
+  ],
+  "targets": [
+   "codex:nakshatras"
+  ],
+  "terms": [
+   "nakshatras"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b3-p034-8",
+  "page": "b3-p034",
+  "rect": [
+   0.1281,
+   0.6013,
+   0.3276,
+   0.6477
+  ],
+  "targets": [
+   "codex:kundalini",
+   "codex:chakras"
+  ],
+  "terms": [
+   "kundalini",
+   "muladhara"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p004-9",
+  "page": "b4-p004",
+  "rect": [
+   0.7983,
+   0.6691,
+   0.9974,
+   0.7155
+  ],
+  "targets": [
+   "codex:charvaka"
+  ],
+  "terms": [
+   "Charvaka"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p005-0",
+  "page": "b4-p005",
+  "rect": [
+   0.3314,
+   0.0481,
+   0.5297,
+   0.0942
+  ],
+  "targets": [
+   "codex:nagas"
+  ],
+  "terms": [
+   "Nagas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p005-2",
+  "page": "b4-p005",
+  "rect": [
+   0.0002,
+   0.38,
+   0.1417,
+   0.413
+  ],
+  "targets": [
+   "codex:nagas"
+  ],
+  "terms": [
+   "Nagas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p005-5",
+  "page": "b4-p005",
+  "rect": [
+   0.5178,
+   0.4324,
+   0.9822,
+   0.4604
+  ],
+  "targets": [
+   "codex:nagas"
+  ],
+  "terms": [
+   "Nagas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p018-9",
+  "page": "b4-p018",
+  "rect": [
+   0.0003,
+   0.7469,
+   0.1894,
+   0.791
+  ],
+  "targets": [
+   "codex:kundalini",
+   "codex:chakras"
+  ],
+  "terms": [
+   "kundalini",
+   "chakras"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p018-10",
+  "page": "b4-p018",
+  "rect": [
+   0.6544,
+   0.7691,
+   0.7866,
+   0.7999
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "Vishuddha"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p018-12",
+  "page": "b4-p018",
+  "rect": [
+   0.0787,
+   0.9634,
+   0.8787,
+   0.9914
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "Vishuddha"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p021-4",
+  "page": "b4-p021",
+  "rect": [
+   0.0001,
+   0.8579,
+   0.1631,
+   0.8959
+  ],
+  "targets": [
+   "codex:ashtalakshmi"
+  ],
+  "terms": [
+   "Ashtalakshmis"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p021-5",
+  "page": "b4-p021",
+  "rect": [
+   0.5215,
+   0.8423,
+   0.6844,
+   0.8802
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "chakras"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p022-4",
+  "page": "b4-p022",
+  "rect": [
+   0.535,
+   0.536,
+   0.8666,
+   0.6133
+  ],
+  "targets": [
+   "codex:tattvas"
+  ],
+  "terms": [
+   "Prakriti"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p022-5",
+  "page": "b4-p022",
+  "rect": [
+   0.0987,
+   0.7194,
+   0.8987,
+   0.7474
+  ],
+  "targets": [
+   "codex:tattvas"
+  ],
+  "terms": [
+   "Samkhya",
+   "Prakriti"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p022-7",
+  "page": "b4-p022",
+  "rect": [
+   0.7396,
+   0.7551,
+   0.8938,
+   0.791
+  ],
+  "targets": [
+   "codex:charvaka"
+  ],
+  "terms": [
+   "Charvaka"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p023-8",
+  "page": "b4-p023",
+  "rect": [
+   0.5033,
+   0.6145,
+   0.9987,
+   0.6426
+  ],
+  "targets": [
+   "codex:kundalini",
+   "codex:chakras"
+  ],
+  "terms": [
+   "kundalini",
+   "manipura"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p024-4",
+  "page": "b4-p024",
+  "rect": [
+   0.1242,
+   0.4698,
+   0.3973,
+   0.5334
+  ],
+  "targets": [
+   "codex:bacteriophages"
+  ],
+  "terms": [
+   "bacteriophages"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p029-2",
+  "page": "b4-p029",
+  "rect": [
+   0.5392,
+   0.3873,
+   0.7868,
+   0.4449
+  ],
+  "targets": [
+   "codex:kanchukas"
+  ],
+  "terms": [
+   "kanchuka"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p029-6",
+  "page": "b4-p029",
+  "rect": [
+   0.62,
+   0.7246,
+   0.8345,
+   0.7745
+  ],
+  "targets": [
+   "codex:bija-mantras"
+  ],
+  "terms": [
+   "bija akshara"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p029-7",
+  "page": "b4-p029",
+  "rect": [
+   0.5589,
+   0.8076,
+   0.7271,
+   0.8468
+  ],
+  "targets": [
+   "codex:bija-mantras",
+   "codex:chakras"
+  ],
+  "terms": [
+   "bija akshara",
+   "svadhishthana"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p029-9",
+  "page": "b4-p029",
+  "rect": [
+   0.135,
+   0.8915,
+   0.3024,
+   0.9305
+  ],
+  "targets": [
+   "codex:tattvas"
+  ],
+  "terms": [
+   "tattvas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p030-7",
+  "page": "b4-p030",
+  "rect": [
+   0.5396,
+   0.6836,
+   0.8126,
+   0.7472
+  ],
+  "targets": [
+   "codex:matrikas"
+  ],
+  "terms": [
+   "Ashtamatrikas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p030-12",
+  "page": "b4-p030",
+  "rect": [
+   0.5436,
+   0.9415,
+   0.7644,
+   0.9929
+  ],
+  "targets": [
+   "codex:matrikas"
+  ],
+  "terms": [
+   "Saptamatrikas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p031-1",
+  "page": "b4-p031",
+  "rect": [
+   0.3208,
+   0.1611,
+   0.5916,
+   0.2241
+  ],
+  "targets": [
+   "codex:matrikas"
+  ],
+  "terms": [
+   "ashtamatrikas"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p031-2",
+  "page": "b4-p031",
+  "rect": [
+   0.6135,
+   0.2171,
+   0.8495,
+   0.272
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "chakras",
+   "Vishuddha",
+   "Svadhishthana"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p031-3",
+  "page": "b4-p031",
+  "rect": [
+   0.0924,
+   0.3639,
+   0.2924,
+   0.4105
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "Vishuddha"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p031-7",
+  "page": "b4-p031",
+  "rect": [
+   0.6447,
+   0.6237,
+   0.8679,
+   0.6757
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "muladhara"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p031-9",
+  "page": "b4-p031",
+  "rect": [
+   0.0003,
+   0.7806,
+   0.1965,
+   0.8263
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "chakras",
+   "muladhara",
+   "svadhishthana",
+   "vishuddha"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b4-p032-2",
+  "page": "b4-p032",
+  "rect": [
+   0.2601,
+   0.1873,
+   0.9775,
+   0.2153
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "chakras",
+   "muladhara",
+   "vishuddha",
+   "svadhishthana"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p008-0",
+  "page": "b5-p008",
+  "rect": [
+   0.4758,
+   0.0337,
+   0.6147,
+   0.0661
+  ],
+  "targets": [
+   "codex:chakras"
+  ],
+  "terms": [
+   "Anahata"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p009-10",
+  "page": "b5-p009",
+  "rect": [
+   0.5108,
+   0.7657,
+   0.9893,
+   0.7937
+  ],
+  "targets": [
+   "codex:vedic-pathas"
+  ],
+  "terms": [
+   "Samaveda"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p010-1",
+  "page": "b5-p010",
+  "rect": [
+   0.6588,
+   0.15,
+   0.8761,
+   0.2006
+  ],
+  "targets": [
+   "codex:vedic-pathas"
+  ],
+  "terms": [
+   "shrauta",
+   "oral recitation"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p015-5",
+  "page": "b5-p015",
+  "rect": [
+   0.6819,
+   0.3402,
+   0.8407,
+   0.3772
+  ],
+  "targets": [
+   "codex:gnomon"
+  ],
+  "terms": [
+   "gnomon"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p015-6",
+  "page": "b5-p015",
+  "rect": [
+   0.1,
+   0.7849,
+   0.9,
+   0.8129
+  ],
+  "targets": [
+   "codex:gnomon"
+  ],
+  "terms": [
+   "gnomon"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p016-2",
+  "page": "b5-p016",
+  "rect": [
+   0.5,
+   0.2071,
+   1.0,
+   0.2351
+  ],
+  "targets": [
+   "codex:kundalini",
+   "codex:chakras"
+  ],
+  "terms": [
+   "kundalini",
+   "vishuddha"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p016-3",
+  "page": "b5-p016",
+  "rect": [
+   0.644,
+   0.324,
+   0.75,
+   0.3487
+  ],
+  "targets": [
+   "codex:gnomon"
+  ],
+  "terms": [
+   "gnomon"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p022-4",
+  "page": "b5-p022",
+  "rect": [
+   0.592,
+   0.3008,
+   0.7411,
+   0.3355
+  ],
+  "targets": [
+   "codex:vaastu-purusha-mandala"
+  ],
+  "terms": [
+   "vaastu purusha"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p022-8",
+  "page": "b5-p022",
+  "rect": [
+   0.7949,
+   0.4687,
+   0.9232,
+   0.4986
+  ],
+  "targets": [
+   "codex:vaastu-purusha-mandala"
+  ],
+  "terms": [
+   "vaastu purusha"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p026-7",
+  "page": "b5-p026",
+  "rect": [
+   0.3688,
+   0.946,
+   0.583,
+   0.9958
+  ],
+  "targets": [
+   "codex:mahavidyas"
+  ],
+  "terms": [
+   "Mahavidya"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p028-2",
+  "page": "b5-p028",
+  "rect": [
+   0.1303,
+   0.6949,
+   0.3186,
+   0.7388
+  ],
+  "targets": [
+   "codex:mahavidyas"
+  ],
+  "terms": [
+   "Mahavidya"
+  ],
+  "auto": true
+ },
+ {
+  "id": "auto-b5-p029-0",
+  "page": "b5-p029",
+  "rect": [
+   0.3234,
+   0.229,
+   0.564,
+   0.285
+  ],
+  "targets": [
+   "codex:kundalini",
+   "codex:chakras"
+  ],
+  "terms": [
+   "kundalini",
+   "ajna",
+   "chakras"
+  ],
+  "auto": true
+ }
+]

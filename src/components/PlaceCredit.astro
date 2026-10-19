@@ -1,0 +1,24 @@
+---
+// The attribution a photograph's licence obliges the site to carry (design §10):
+// photographer, licence with its deed, and a link back to the file on Commons.
+// CC0 asks for none of it and gets it anyway.
+import { creditParts, type Picture } from "../lib/places";
+
+interface Props { pic: Picture }
+const { pic } = Astro.props;
+const c = creditParts(pic);
+---
+<p class="credit">
+  <a href={c.source} rel="noopener nofollow">{c.commons}</a>
+  {c.artist && <> by {c.artist}</>},{" "}
+  {c.licenseUrl
+    ? <a href={c.licenseUrl} rel="license noopener nofollow">{c.license}</a>
+    : <span>{c.license}</span>}, via Wikimedia Commons{!c.required && <span class="gift" title="CC0: no attribution required"> · credited by choice</span>}
+</p>
+
+<style>
+  .credit { margin: 6px 0 0; font: 0.74rem/1.5 var(--font-ui); color: var(--sepia); }
+  .credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  .credit a:hover { color: var(--accent); }
+  .gift { opacity: 0.8; }
+</style>

@@ -1,0 +1,86 @@
+[
+ {
+  "id": "puzzle-p1",
+  "page": "b3-p019",
+  "rect": [
+   0.2177,
+   0.1088,
+   0.3627,
+   0.1426
+  ],
+  "targets": [
+   "puzzle:p1"
+  ],
+  "label": "Puzzle 1: The tree with an eye"
+ },
+ {
+  "id": "puzzle-p2",
+  "page": "b3-p024",
+  "rect": [
+   0.9,
+   0.012,
+   0.985,
+   0.06
+  ],
+  "targets": [
+   "puzzle:p2"
+  ],
+  "label": "Puzzle 2: The moon and three wheels"
+ },
+ {
+  "id": "puzzle-p3",
+  "page": "b4-p016",
+  "rect": [
+   0.023,
+   0.0945,
+   0.1818,
+   0.1314
+  ],
+  "targets": [
+   "puzzle:p3"
+  ],
+  "label": "Puzzle 3: The serpent and three chakras"
+ },
+ {
+  "id": "puzzle-p4",
+  "page": "b5-p012",
+  "rect": [
+   0.9,
+   0.012,
+   0.985,
+   0.06
+  ],
+  "targets": [
+   "puzzle:p4"
+  ],
+  "label": "Puzzle 4: Nine green eyes"
+ },
+ {
+  "id": "puzzle-p5",
+  "page": "b5-p021",
+  "rect": [
+   0.9,
+   0.012,
+   0.985,
+   0.06
+  ],
+  "targets": [
+   "puzzle:p5"
+  ],
+  "label": "Puzzle 5: The cosmic man and the lame bull"
+ },
+ {
+  "id": "puzzle-caves",
+  "page": "b2-p026",
+  "rect": [
+   0.9,
+   0.012,
+   0.985,
+   0.06
+  ],
+  "targets": [
+   "puzzle:caves"
+  ],
+  "label": "The Bhoodara caves puzzle"
+ }
+]

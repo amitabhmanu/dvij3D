@@ -1,0 +1,91 @@
+---
+// Dvij's stick-and-rope construction, step for step as numbered in
+// src/content/codex/gnomon.md. Drawn as a plan view, looking down on the ground.
+// The geometry is computed rather than eyeballed: the two shadow marks sit on
+// the rope circle, and the line through the arc crossings is their perpendicular
+// bisector, which is why it runs true north-south.
+const CX = 150, CY = 146;
+const R = 80;          // the rope circle
+// The book's own figure puts the two marks on a horizontal diameter, labelled
+// "shadow at sunrise" west and "shadow at sunset" east; this follows it.
+const DX = R;
+const MY = CY;                           // both marks share the centre's y
+const WEST = { x: CX - DX, y: MY };      // dawn shadow points west
+const EAST = { x: CX + DX, y: MY };      // dusk shadow points east
+
+const AR = 110;        // rope swung from each mark; must exceed half of WEST-EAST
+const CROSS = Math.sqrt(AR * AR - DX * DX);
+const NORTH = { x: CX, y: MY - CROSS };
+const SOUTH = { x: CX, y: MY + CROSS };
+
+const r1 = (n: number) => Math.round(n * 10) / 10;
+const VB_H = 272;
+
+const STEPS = [
+  { n: 1, x: 104, y: 100 },  // stick and rope circle
+  { n: 2, x: EAST.x - 4, y: EAST.y - 22 }, // the two shadow marks
+  { n: 3, x: CX + 20, y: NORTH.y - 4 },     // the arcs and their crossings
+];
+---
+
+<figure class="diagram">
+  <svg viewBox={`0 0 300 ${VB_H}`} role="img" aria-labelledby="gno-t gno-d">
+    <title id="gno-t">Finding true north with a stick and a rope</title>
+    <desc id="gno-d">
+      Looking down on level ground. A stick stands at the centre of a circle drawn with a
+      rope. The dawn and dusk shadows meet the circle at two marks, west on the left and
+      east on the right. An arc swung from each mark crosses the other above and below,
+      and the line through those two crossings runs true north to south.
+    </desc>
+
+    <circle class="rope" cx={CX} cy={CY} r={R} />
+    <line class="ew" x1={r1(WEST.x)} y1={MY} x2={r1(EAST.x)} y2={MY} />
+
+    <path class="arc" d={`M ${CX} ${r1(NORTH.y)} A ${AR} ${AR} 0 0 1 ${CX} ${r1(SOUTH.y)}`} />
+    <path class="arc" d={`M ${CX} ${r1(NORTH.y)} A ${AR} ${AR} 0 0 0 ${CX} ${r1(SOUTH.y)}`} />
+
+    <line class="axis" x1={CX} y1={r1(NORTH.y) - 8} x2={CX} y2={r1(SOUTH.y) + 8} />
+    <text class="pole" x={CX} y={r1(NORTH.y) - 14} text-anchor="middle">N</text>
+    <text class="pole" x={CX} y={r1(SOUTH.y) + 22} text-anchor="middle">S</text>
+
+    <circle class="cross" cx={CX} cy={r1(NORTH.y)} r="3.4" />
+    <circle class="cross" cx={CX} cy={r1(SOUTH.y)} r="3.4" />
+
+    <circle class="mark" cx={r1(WEST.x)} cy={r1(WEST.y)} r="4.5" />
+    <circle class="mark" cx={r1(EAST.x)} cy={r1(EAST.y)} r="4.5" />
+    <text class="d-note" x={r1(WEST.x)} y={r1(WEST.y) + 20} text-anchor="middle">west · dawn</text>
+    <text class="d-note" x={r1(EAST.x)} y={r1(EAST.y) + 20} text-anchor="middle">east · dusk</text>
+
+    <circle class="stick" cx={CX} cy={CY} r="4.5" />
+    <text class="d-note" x={CX - 12} y={CY - 10} text-anchor="end">stick</text>
+
+    {STEPS.map((s) => (
+      <g>
+        <circle class="step" cx={s.x} cy={s.y} r="9" />
+        <text class="step-n" x={s.x} y={s.y + 3.5} text-anchor="middle">{s.n}</text>
+      </g>
+    ))}
+  </svg>
+  <figcaption>
+    <span class="step-line"><strong>1</strong> Stick upright, circle drawn round it with a rope.</span>
+    <span class="step-line"><strong>2</strong> Mark where the shadow crosses the circle at dawn and at dusk — west and east.</span>
+    <span class="step-line"><strong>3</strong> Swing an arc from each mark; the line through the two crossings is true north–south.</span>
+  </figcaption>
+</figure>
+
+<style>
+  .step-line { display: block; margin-bottom: 3px; }
+  .step-line strong { color: var(--sepia); }
+  .ew { stroke: var(--ink-3); stroke-width: 1.1; }
+  .rope { fill: none; stroke: var(--paper-3); stroke-width: 2.4; stroke-dasharray: 5 5; }
+  .arc { fill: none; stroke: var(--sepia); stroke-width: 1.3; opacity: 0.85; }
+  .axis { stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; }
+  .pole { font-family: var(--font-ui); font-size: 12px; font-weight: 700; fill: var(--ink); }
+
+  .mark { fill: var(--terracotta); stroke: var(--ink); stroke-width: 1; }
+  .cross { fill: var(--ink); }
+  .stick { fill: var(--ink); stroke: var(--paper); stroke-width: 1.4; }
+
+  .step { fill: var(--sepia); }
+  .step-n { font-family: var(--font-ui); font-size: 10px; font-weight: 700; fill: var(--paper); }
+</style>

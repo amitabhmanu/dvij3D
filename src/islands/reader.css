@@ -1,0 +1,339 @@
+/* Reader layout. The art is the hero: chrome overlays the stage and hides. */
+
+body.reader-body { background: var(--reader-bg); color: var(--reader-text); overflow: hidden; }
+
+.reader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--reader-bg);
+  color: var(--reader-text);
+  font-family: var(--font-ui);
+}
+
+.reader .stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  outline: none;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.reader .stage:focus-visible { box-shadow: inset 0 0 0 3px var(--focus); }
+
+/* ---- spread / single ----
+   Each page sits in a frame sized with container units so hotspots can be
+   positioned over the image: width = min(available width, height × ratio). */
+.reader .pages {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  container-type: size;
+}
+.reader .page-frame {
+  position: relative;
+  flex: none;
+  width: min(100cqw, 100cqh * var(--r, 0.627));
+  aspect-ratio: var(--r, 0.627);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+}
+.reader .pages.count-2 .page-frame { width: min(50cqw, 100cqh * var(--r, 0.627)); }
+.reader .page-frame picture, .reader .page-frame img { display: block; width: 100%; height: 100%; }
+.reader .page-placeholder { height: 100%; aspect-ratio: 1058 / 1688; background: rgba(255, 255, 255, 0.04); }
+
+/* ---- hotspots ---- */
+.reader .hotspots { position: absolute; inset: 0; pointer-events: none; }
+.reader .hotspot {
+  position: absolute;
+  pointer-events: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: help;
+  border-radius: 6px;
+}
+.reader .hotspot:hover, .reader .hotspot:focus-visible {
+  background: rgba(200, 150, 30, 0.14);
+  outline: 2px solid rgba(200, 150, 30, 0.85);
+  outline-offset: 1px;
+}
+.reader .hotspot .dot {
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid #1a130b;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6);
+  transform: scale(var(--inv, 1));
+  transform-origin: top right;
+}
+
+.reader .hotspot.kind-puzzle .badge {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font: 700 11px/1 var(--font-ui);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--accent);
+  border: 2px solid #1a130b;
+  border-radius: 999px;
+  padding: 5px 9px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transform: scale(var(--inv, 1));
+  transform-origin: top right;
+  white-space: nowrap;
+}
+
+/* Charvaka fragments: a faint ink asterisk, meant to be found, not advertised. */
+.reader .hotspot.kind-subtle { cursor: pointer; }
+.reader .hotspot.kind-subtle:hover, .reader .hotspot.kind-subtle:focus-visible { background: rgba(60, 40, 20, 0.08); outline-color: rgba(60, 40, 20, 0.5); }
+.reader .hotspot.kind-subtle .dot {
+  width: 10px; height: 10px; border: 0; box-shadow: none; background: transparent;
+  right: 2px; top: 2px;
+}
+.reader .hotspot.kind-subtle .dot::before {
+  content: "✦"; position: absolute; inset: -4px 0 0 -1px;
+  font: 12px/1 serif; color: rgba(40, 25, 10, 0.55);
+}
+
+/* ---- user zoom ----
+   Sits in the stage's content box (so the Text gutter still applies) and
+   scales whatever the mode draws. Eased for button/wheel steps, not drags. */
+.reader .zoom-layer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: 0 0;
+  transition: transform 140ms ease-out;
+}
+.reader .zoom-layer.zoomed { cursor: grab; }
+.reader .zoom-layer.panning { cursor: grabbing; transition: none; }
+.reader .zoom { display: flex; gap: 2px; flex: none; }
+.reader .zoom button {
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  min-width: 34px;
+  color: var(--reader-text);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius);
+  padding: 8px 8px;
+  cursor: pointer;
+}
+.reader .zoom .level { font-size: 0.8rem; min-width: 52px; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) {
+  .reader .zoom-layer { transition: none; }
+}
+
+/* ---- panel mode ---- */
+.reader .panel-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+.reader .panel-world img { width: 100%; height: 100%; }
+.reader .panel-focus {
+  position: absolute;
+  box-shadow: 0 0 0 200vmax rgba(10, 8, 6, 0.82);
+  outline: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  transition: all 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reader .panel-world, .reader .panel-focus { transition: none; }
+}
+
+/* ---- chrome ---- */
+.reader .chrome {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--reader-chrome);
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+.reader .chrome.top { top: 0; flex-wrap: wrap; }
+.reader .chrome.bottom { bottom: 0; }
+/* Room for the host's badge in the bottom-right corner, which otherwise sits on
+   Next and the zoom controls. Reader.tsx measures it into --badge-w; with no
+   badge it is 0 and this is the bar's usual 16px. */
+.reader .chrome.bottom { padding-right: calc(16px + var(--badge-w, 0px)); }
+.reader:not(.chrome-on) .chrome.top { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+.reader:not(.chrome-on) .chrome.bottom { transform: translateY(100%); opacity: 0; pointer-events: none; }
+.reader .chrome:focus-within { transform: none; opacity: 1; pointer-events: auto; }
+
+.reader .back { color: var(--reader-text); text-decoration: none; font-weight: 600; font-size: 0.95rem; margin-right: auto; }
+.reader .back:hover { color: var(--gold); }
+.reader select, .reader .modes button, .reader .nav {
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--reader-text);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.reader select option { color: #111; }
+.reader .modes { display: flex; gap: 4px; }
+.reader .modes button[aria-pressed="true"] { background: var(--gold); color: #1a130b; border-color: var(--gold); font-weight: 600; }
+.reader .nav { font-size: 1.4rem; line-height: 1; padding: 6px 14px; }
+.reader .nav:disabled { opacity: 0.35; cursor: default; }
+
+.reader .thumbs {
+  list-style: none;
+  margin: 0;
+  padding: 2px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  flex: 1;
+  scrollbar-width: thin;
+}
+.reader .thumbs button { padding: 0; border: 2px solid transparent; border-radius: 3px; background: none; cursor: pointer; display: block; }
+.reader .thumbs button.current { border-color: var(--gold); }
+.reader .thumbs img { width: 40px; height: 64px; object-fit: cover; opacity: 0.75; }
+.reader .thumbs button.current img, .reader .thumbs button:hover img { opacity: 1; }
+
+/* ---- transcript ---- */
+.reader { --transcript-w: 380px; }
+.reader .transcript {
+  position: absolute;
+  z-index: 6;
+  right: 0;
+  top: 56px;
+  bottom: 88px;
+  width: min(var(--transcript-w), 100%);
+  overflow-y: auto;
+  padding: 16px 20px;
+  background: var(--reader-chrome);
+  font-family: var(--font-text);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+.reader .transcript h3 { font-family: var(--font-ui); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+.reader .transcript ul { list-style: none; padding: 0; margin: 0 0 20px; }
+.reader .transcript li { margin: 0 0 10px; }
+.reader .transcript .kind { font-family: var(--font-ui); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin-right: 4px; }
+.reader .transcript .kind-caption { font-style: italic; }
+/* With room to spare, the art moves over for the text instead of sitting under
+   it: in a spread the sidebar used to cover 47% of the right-hand page at
+   1280px. Padding the stage shrinks its content box, which the page frames
+   (container units on .pages) and the panel view (the stage's ResizeObserver)
+   both size against, so every mode reflows from this one rule. Narrower than
+   this, Text stays an overlay - on a phone it is a full-screen reading view,
+   and a fixed gutter would leave a tablet too little width for the art. */
+@media (min-width: 900px) {
+  .reader.with-text .stage { padding-right: var(--transcript-w); }
+}
+
+/* ---- codex drawer ---- */
+.reader .codex-drawer {
+  position: absolute;
+  z-index: 7;
+  right: 0;
+  top: 56px;
+  bottom: 88px;
+  width: min(400px, 100%);
+  overflow-y: auto;
+  padding: 14px 20px 20px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.35);
+  border-radius: 8px 0 0 8px;
+}
+.reader .codex-drawer header { display: flex; justify-content: space-between; align-items: center; }
+.reader .codex-drawer .close { font-size: 1.6rem; line-height: 1; background: none; border: 0; cursor: pointer; color: var(--ink-2); padding: 4px 8px; }
+.reader .codex-drawer article + article { border-top: 1px solid var(--paper-3); margin-top: 12px; padding-top: 12px; }
+.reader .codex-drawer h2 { margin: 6px 0 6px; font-size: 1.5rem; }
+.reader .codex-drawer img { max-height: 140px; width: auto; background: #fff; border-radius: 4px; padding: 4px; }
+.reader .codex-drawer .more a { font-family: var(--font-ui); font-weight: 600; }
+.reader .codex-drawer .related { font-size: 0.9rem; color: var(--ink-3); }
+
+.reader .voice-card img { max-height: 180px; width: auto; border-radius: 4px; }
+.reader .voice-card blockquote { margin: 10px 0; padding-left: 12px; border-left: 3px solid var(--gold); font-style: italic; }
+.reader .voice-card.role-antagonist blockquote { border-left-color: var(--accent); }
+.reader .fragment-card { font-style: normal; }
+.reader .fragment-card .count { font: 600 0.85rem var(--font-ui); color: var(--sepia); }
+
+/* Creature cards show the crop from the art itself, so it gets the dark plate
+   the gallery uses rather than the Codex diagrams' white one. */
+.reader .beast-card img { max-height: 200px; width: auto; background: #15110d; padding: 0; border-radius: 4px; }
+.reader .beast-card .small { font: 700 0.68rem var(--font-ui); text-transform: uppercase; letter-spacing: 0.1em; margin: -2px 0 8px; }
+
+/* ---- journey rail ---- */
+.reader .journey-rail {
+  position: absolute; z-index: 6; left: 10px; top: 64px; bottom: 96px; width: 44px;
+  display: flex; flex-direction: column; align-items: center;
+  background: rgba(20, 16, 12, 0.72); border-radius: 22px; padding: 8px 0;
+}
+.reader .journey-rail ol {
+  list-style: none; margin: 0; padding: 0; flex: 1; width: 100%;
+  display: flex; flex-direction: column-reverse; justify-content: space-between; align-items: center;
+  background: linear-gradient(to top, transparent, rgba(255,255,255,0.15), transparent) center / 2px 100% no-repeat;
+}
+.reader .journey-rail li button { background: none; border: 0; padding: 4px; cursor: pointer; display: block; }
+.reader .journey-rail .mark { display: block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--c); background: transparent; }
+.reader .journey-rail .chakra.lit .mark { background: var(--c); box-shadow: 0 0 10px var(--c); }
+.reader .journey-rail .chakra.questioned.lit .mark { background: transparent; border-style: dashed; box-shadow: 0 0 8px var(--c); }
+.reader .journey-rail .beat .mark { width: 9px; height: 9px; border-radius: 1px; transform: rotate(45deg); border-color: rgba(255,255,255,0.5); }
+.reader .journey-rail .beat.lit .mark { background: rgba(255,255,255,0.75); }
+.reader .journey-rail .current .mark { outline: 2px solid var(--gold); outline-offset: 3px; }
+.reader .journey-rail .rail-close { background: none; border: 0; color: var(--reader-text); font-size: 1.2rem; cursor: pointer; line-height: 1; }
+.reader .rail-card {
+  position: absolute; left: 54px; bottom: 0; width: min(320px, 80vw);
+  background: var(--paper); color: var(--ink); border-radius: 8px; padding: 12px 16px;
+  font-family: var(--font-text); font-size: 0.95rem; box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+.reader .rail-card h3 { margin: 0 0 6px; font-size: 1.2rem; }
+.reader .rail-card .lens { display: inline-block; font: 700 0.7rem var(--font-ui); text-transform: uppercase; letter-spacing: 0.08em; color: var(--sepia); margin-right: 4px; }
+
+/* ---- end card ---- */
+.reader .end-card {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 24px;
+  background: rgba(15, 12, 9, 0.92);
+}
+.reader .end-card h2 { color: var(--reader-text); margin: 0; }
+.reader .end-card .btn.secondary { color: var(--reader-text); border-color: var(--reader-text); }
+
+@media (max-width: 640px) {
+  .reader .chrome.top { gap: 8px; padding: 6px 10px; }
+  .reader .back { font-size: 0.85rem; flex-basis: 100%; }
+  .reader .chapter-select { flex: 1; }
+  .reader .chapter-select select { width: 100%; }
+  .reader .thumbs { display: none; }
+  .reader .zoom { display: none; } /* phones pinch instead */
+  .reader .chrome.bottom { justify-content: space-between; }
+  .reader .transcript { top: 90px; bottom: 60px; }
+  .reader .codex-drawer { top: auto; bottom: 0; max-height: 62%; width: 100%; border-radius: 14px 14px 0 0; box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.35); }
+  /* As a bottom sheet it runs under the badge too: let its last links scroll clear. */
+  .reader .codex-drawer { padding-bottom: calc(20px + var(--badge-h, 0px)); }
+}

@@ -1,0 +1,63 @@
+---
+// Lakshmi's symbol: the eight-pointed star made from two overlapping squares,
+// one turned 45 degrees (src/content/codex/ashtalakshmi.md). Both squares are
+// congruent, so the star's inner vertices fall exactly where their edges cross.
+// The eight forms are numbered but not named: the entry does not name them.
+const CX = 150, CY = 150;
+const R = 110;                         // circumradius of both squares
+const HALF = R * Math.cos(Math.PI / 4); // half-side of the upright square
+const INNER = Math.hypot(HALF, R - HALF); // where the two squares' edges cross
+
+const pt = (deg: number, rad: number) => {
+  const a = (deg * Math.PI) / 180;
+  return `${Math.round((CX + rad * Math.cos(a)) * 10) / 10},${Math.round((CY + rad * Math.sin(a)) * 10) / 10}`;
+};
+
+// Upright square: corners on the diagonals. Turned square: corners on the axes.
+const squareUpright = [45, 135, 225, 315].map((d) => pt(d, R)).join(" ");
+const squareTurned = [0, 90, 180, 270].map((d) => pt(d, R)).join(" ");
+// The octagram outline, alternating outer corner and inner crossing.
+const star = Array.from({ length: 16 }, (_, k) => pt(-90 + k * 22.5, k % 2 ? INNER : R)).join(" ");
+const points = Array.from({ length: 8 }, (_, k) => ({ n: k + 1, at: pt(-90 + k * 45, R), label: pt(-90 + k * 45, R + 19) }));
+---
+
+<figure class="diagram">
+  <svg viewBox="0 0 300 300" role="img" aria-labelledby="lak-t lak-d">
+    <title id="lak-t">Lakshmi's eight-pointed star</title>
+    <desc id="lak-d">
+      Two identical squares laid over one another, the second turned forty-five degrees.
+      Where their edges cross, an eight-pointed star appears. The eight points are
+      numbered for the eight Ashtalakshmi forms.
+    </desc>
+
+    <polygon class="sq a" points={squareUpright} />
+    <polygon class="sq b" points={squareTurned} />
+    <polygon class="star" points={star} />
+
+    {points.map((p) => {
+      const [lx, ly] = p.label.split(",");
+      const [px, py] = p.at.split(",");
+      return (
+        <g>
+          <circle class="tip" cx={px} cy={py} r="3.2" />
+          <text class="tip-n" x={lx} y={Number(ly) + 3.5} text-anchor="middle">{p.n}</text>
+        </g>
+      );
+    })}
+  </svg>
+  <figcaption>
+    Two identical squares, one turned 45°, make the eight-pointed star Bhavi knows
+    by heart — one point for each of the eight Ashtalakshmi, whom she places
+    "from most benevolent to most malevolent".
+  </figcaption>
+</figure>
+
+<style>
+  /* The two squares stay faint construction lines; the star they make is the point. */
+  .sq { stroke-width: 1.1; stroke-dasharray: 4 3; fill-opacity: 0.09; }
+  .a { fill: var(--gold); stroke: var(--gold); }
+  .b { fill: var(--terracotta); stroke: var(--terracotta); }
+  .star { fill: var(--sepia); fill-opacity: 0.12; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+  .tip { fill: var(--ink); }
+  .tip-n { font-family: var(--font-ui); font-size: 10px; font-weight: 600; fill: var(--ink-3); }
+</style>

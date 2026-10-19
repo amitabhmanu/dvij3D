@@ -1,0 +1,54 @@
+---
+// One static page per comic page: the reader island (server-rendered on the
+// current page) plus the page's lettering as hidden text for screen readers
+// and the search index.
+import Base from "../../../layouts/Base.astro";
+import Reader from "../../../islands/Reader.tsx";
+import { books, chapterOf, nextBook, pick, srcset } from "../../../lib/manifest";
+import { hotspotsFor } from "../../../lib/codex";
+import { rail } from "../../../lib/companions";
+
+export function getStaticPaths() {
+  return books.flatMap((book) =>
+    book.pages.map((page) => ({ params: { book: book.slug, page: String(page.n) }, props: { book, page } }))
+  );
+}
+
+const { book, page } = Astro.props;
+const next = nextBook(book);
+const chapter = chapterOf(book, page.n);
+const lettering = page.text.map((u) => u.t).join(" ");
+const initial = {
+  ...page,
+  hotspots: hotspotsFor(page.id).map(({ id, rect, targets, terms, label, subtle }) => ({ id, rect, targets, label: label ?? terms?.join(", "), subtle })),
+};
+const description = lettering ? lettering.slice(0, 180) : `Page ${page.n} of Book ${book.book}: ${book.title}.`;
+---
+<Base
+  title={`Page ${page.n} · Book ${book.book}: ${book.title}`}
+  description={description}
+  image={pick(page.src.webp, 900)}
+  bodyClass="reader-body"
+  chrome={false}
+>
+  <link slot="head" rel="preload" as="image" type="image/avif"
+    imagesrcset={srcset(page.src.avif)}
+    imagesizes="min(100vw, 63vh)" fetchpriority="high" />
+  <h1 class="visually-hidden">Book {book.book}: {book.title}, page {page.n}</h1>
+  <Reader
+    client:load
+    slug={book.slug}
+    bookNo={book.book}
+    title={book.title}
+    pageCount={book.pageCount}
+    startPage={page.n}
+    initial={initial}
+    chapters={book.chapters}
+    next={next ? { slug: next.slug, title: next.title, book: next.book } : undefined}
+    journeyFrom={book.book >= rail.range.from.book ? { book: rail.range.from.book, page: rail.range.from.page } : undefined}
+  />
+  <section class="visually-hidden" data-pagefind-body data-pagefind-meta={`title:Book ${book.book} · page ${page.n}${chapter ? ` · ${chapter.title}` : ""}`}>
+    <h2>{chapter?.title} — page {page.n}</h2>
+    {page.text.map((u) => <p>{u.t}</p>)}
+  </section>
+</Base>

@@ -1,0 +1,42 @@
+[
+ {
+  "id": "manuscript",
+  "page": "b1-p007",
+  "match": "",
+  "title": "A manuscript in disguise",
+  "text": "\"It's a medieval text by an unknown author, supposedly a follower of Charvaka… Ancient texts do that on purpose. They camouflage themselves in their decayed covers, afraid of being discovered.\"",
+  "source": "The Professor, on the day Dvij wakes"
+ },
+ {
+  "id": "fools",
+  "page": "b4-p004",
+  "match": "ashvamedha",
+  "title": "A work of fools",
+  "text": "Charvaka denounced the grand ashvamedha horse sacrifice, calling it \"a work of fools\", and was ostracised for it. His works were destroyed, or so the world believes.",
+  "source": "The Professor's history of the valley"
+ },
+ {
+  "id": "not-destroyed",
+  "page": "b4-p004",
+  "match": "not destroyed",
+  "title": "Not destroyed",
+  "text": "\"Charvaka's texts were not destroyed. I have discovered some in this very valley.\" And then, almost lightly: \"Do you think that puts me under grave peril?\"",
+  "source": "The Professor"
+ },
+ {
+  "id": "shrine",
+  "page": "b4-p020",
+  "match": "Charvakas had made it their home",
+  "title": "Vidgati's shrine",
+  "text": "Half way up Mount Dronagiri, on a plateau cut by a vanished Buddhist settlement: a shrine to Vidgati, a Charvaka semi-saint. \"The followers of Charvaka's philosophy had made this place their home.\"",
+  "source": "The trek, second night"
+ },
+ {
+  "id": "joyously",
+  "page": "b4-p022",
+  "match": "live joyously",
+  "title": "While life is yours",
+  "text": "\"While life is yours, live joyously.\" The round-nosed man's greeting is the best-known line attributed to the Charvakas (yāvaj jīvet sukhaṁ jīvet), and they live by it.",
+  "source": "The round-nosed man"
+ }
+]
