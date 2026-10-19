@@ -678,6 +678,8 @@ It has its own nav entry, **Memory**, next to Puzzles.
 ### 14.1 Stack
 - **Astro, static output.** It produces one HTML page per comic page and codex entry, which is good for sharing and search. Content collections validate codex / voices / places schemas at build time.
 - **Islands:** reader, parchment, caves, journey rail, valley map. Preact or vanilla TypeScript; no heavy framework needed.
+- **3D:** [three.js](https://threejs.org) for the valley flyover (§10.1) only, loaded by a dynamic import when a reader opens the 3D view, so no other page pays for it. Measured floor for what the flyover needs (renderer, camera, plane geometry, shader material, instanced mesh, raycaster, OrbitControls): 139 KB gzip, against a 200 KB budget. Headless Chrome in the e2e suite gets hardware WebGL2 on this machine, so Playwright needs no software-GL flags.
+- **Tests:** Playwright end to end against the built site (114 tests across desktop and phone: 107 pass, 7 are device-specific skips), Vitest for pure helpers in `src/lib` (`*.test.ts`, via Astro's own Vite config), and pytest for the pipeline (`pipeline/tests`).
 - **Search:** [Pagefind](https://pagefind.app) indexes the built HTML at build time, including the hidden page transcripts and codex. It runs fully client-side, with no search backend.
 
 ### 14.2 Repository layout

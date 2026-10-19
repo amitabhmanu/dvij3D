@@ -45,6 +45,7 @@ v2 AI features.
 ```bash
 npm install
 pip install -r pipeline/requirements.txt
+pip install -r pipeline/requirements-dev.txt   # pytest, for the pipeline's own tests
 ```
 
 The Python packages are for the content pipeline only, which runs on your
@@ -245,6 +246,8 @@ privacy-friendly script instead, set `PUBLIC_ANALYTICS_SRC` (and `PUBLIC_ANALYTI
 npm run build             # production build (assets served from PUBLIC_ASSET_BASE)
 npm run build:local       # same, with site-assets bundled into dist/_assets
 npm run test:e2e          # Playwright tests against dist/ (run build:local first)
+npm run test:unit         # Vitest unit tests for the pure helpers in src/lib (*.test.ts)
+python -m pytest pipeline/tests   # pytest for the pipeline steps
 ```
 
 Environment variables:
