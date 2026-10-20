@@ -59,6 +59,12 @@ describe("blockers and polygons", () => {
     expect(b.hits(16.3, 0, 0.4)).toBe(true);
     expect(b.hits(18, 0, 0.4)).toBe(false);
   });
+  it("counts what stands near a point", () => {
+    const b = new Blockers(16);
+    for (let i = 0; i < 10; i++) b.add(i * 3, 0, 0.3);
+    expect(b.count(0, 0, 10)).toBe(4); // at 0, 3, 6 and 9 m
+    expect(b.count(100, 100, 10)).toBe(0);
+  });
   it("tells inside from outside", () => {
     const sq: [number, number][] = [[0, 0], [10, 0], [10, 10], [0, 10]];
     expect(inside(sq, 5, 5)).toBe(true);

@@ -18,6 +18,7 @@ import type { EffectComposer } from "postprocessing";
 import { Input, type Settings } from "./input";
 import { Blockers, inside, step, type Player } from "./player";
 import { atlas, walk, walkAsset, type Building } from "./walk-data";
+import { Sounds, type Surface } from "./audio";
 
 export type Quality = "low" | "medium" | "high";
 export type GameOptions = {
@@ -26,6 +27,7 @@ export type GameOptions = {
   worldUrl: string;
   groundUrl: string;
   quality: Quality;
+  volume: number;
   onProgress: (fraction: number, what: string) => void;
   /** About five times a second while walking: where you are, for the HUD and tests. */
   onStats?: (s: { x: number; z: number; heading: number; ground: number }) => void;
@@ -44,6 +46,9 @@ export type Game = {
   player: () => Player;
   ground: (x: number, z: number) => number;
   setQuality: (q: Quality) => void;
+  setVolume: (v: number) => void;
+  /** "off" until the first click to walk; then the audio context's state. */
+  soundState: () => string;
   dispose: () => void;
 };
 
@@ -191,9 +196,11 @@ export async function createGame(o: GameOptions): Promise<Game> {
   const spriteIndex = new Map(atlas.sprites.map((s, i) => [s.id, i]));
   const stands: Stand[] = worldJson.buildings.map((b) => ({ x: b.x, y: ground(b.x, b.z), z: b.z, height: b.height, sprite: spriteIndex.get(b.sprite)! }));
   for (const b of worldJson.buildings) blockers.add(b.x, b.z, b.r);
+  const woods = new Blockers(24); // the trees alone, for how wooded it sounds
   for (const t of await decodeTrees(treeBuf)) {
     stands.push({ x: t.x, y: ground(t.x, t.z), z: t.z, height: t.height, sprite: t.sprite });
     blockers.add(t.x, t.z, 0.35);
+    woods.add(t.x, t.z, 0.35);
   }
   let cutouts: Mesh | null = null;
   const buildCutouts = (q: Quality) => {
@@ -249,6 +256,18 @@ export async function createGame(o: GameOptions): Promise<Game> {
     (mat.uniforms.center.value as Vector2).set(Math.round(player.x / 2) * 2, Math.round(player.z / 2) * 2);
   };
 
+  // Sound starts with the click that starts walking (browsers insist).
+  let sounds: Sounds | null = null;
+  let volume = o.volume;
+  let stride = 0;
+  const lakeDistance = (x: number, z: number) =>
+    Math.min(...walk.water.map((l) => (inside(l.points, x, z) ? 0 : Math.min(...l.points.map(([px, pz]) => Math.hypot(px - x, pz - z))))));
+  const surface = (x: number, z: number): Surface => {
+    const steep = Math.hypot(ground(x + 1, z) - ground(x - 1, z), ground(x, z + 1) - ground(x, z - 1)) / 2;
+    if (steep > 0.6) return "rock";
+    return woods.count(x, z, 20) > 3 ? "grass" : "earth";
+  };
+
   let raf = 0, running = false, last = 0, acc = 0, statsAt = 0;
   const frame = (now: number) => {
     raf = 0;
@@ -256,15 +275,23 @@ export async function createGame(o: GameOptions): Promise<Game> {
     acc += Math.min(0.25, (now - last) / 1000);
     last = now;
     while (acc >= STEP) {
-      player = step(player, input.sample(), STEP, rules, world);
+      const move = input.sample();
+      const before = player;
+      player = step(player, move, STEP, rules, world);
       acc -= STEP;
+      stride += Math.hypot(player.x - before.x, player.z - before.z);
+      if (stride > (move.run ? 1.7 : 0.85)) {
+        stride = 0;
+        sounds?.step(surface(player.x, player.z), move.run);
+      }
     }
     place();
     draw();
     o.onFrame?.(player.x, player.z, player.heading);
-    if (o.onStats && now - statsAt > 200) {
+    if (now - statsAt > 200) {
       statsAt = now;
-      o.onStats({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z) });
+      sounds?.hear({ height: player.y - rules.eye, trees: Math.min(1, woods.count(player.x, player.z, 35) / 14), water: lakeDistance(player.x, player.z) });
+      o.onStats?.({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z) });
     }
     raf = requestAnimationFrame(frame);
   };
@@ -277,6 +304,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
 
   return {
     start: () => {
+      if (!sounds) sounds = new Sounds(volume);
+      else sounds.resume();
       if (running) return;
       running = true;
       last = performance.now();
@@ -288,6 +317,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
       input.clear();
+      sounds?.pause();
     },
     input,
     settings: input.settings,
@@ -309,6 +339,11 @@ export async function createGame(o: GameOptions): Promise<Game> {
       return [x, z];
     },
     ground,
+    soundState: () => sounds?.state ?? "off",
+    setVolume: (v) => {
+      volume = v;
+      sounds?.setVolume(v);
+    },
     setQuality: (qq) => {
       renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[qq]));
       buildGround(qq);
@@ -321,6 +356,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     dispose: () => {
       running = false;
       if (raf) cancelAnimationFrame(raf);
+      sounds?.dispose();
       ro.disconnect();
       input.dispose();
       groundMesh?.geometry.dispose();

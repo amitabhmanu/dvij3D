@@ -64,12 +64,26 @@ export class Blockers {
   add(x: number, z: number, r: number) {
     const s = this.size;
     const reach = r + 2; // a little past the edge, so a walker near a cell border still finds it
+    const entry: [number, number, number] = [x, z, r]; // one entry shared by every cell it's in
     for (let i = Math.floor((x - reach) / s); i <= Math.floor((x + reach) / s); i++)
       for (let j = Math.floor((z - reach) / s); j <= Math.floor((z + reach) / s); j++) {
         const k = `${i},${j}`;
-        (this.cells.get(k) ?? this.cells.set(k, []).get(k)!).push([x, z, r]);
+        (this.cells.get(k) ?? this.cells.set(k, []).get(k)!).push(entry);
       }
   }
+  /** How many things stand within r of (x, z): for how wooded it is round you. */
+  count(x: number, z: number, r: number): number {
+    const s = this.size;
+    let n = 0;
+    const seen = new Set<[number, number, number]>();
+    for (let i = Math.floor((x - r) / s); i <= Math.floor((x + r) / s); i++)
+      for (let j = Math.floor((z - r) / s); j <= Math.floor((z + r) / s); j++)
+        for (const b of this.cells.get(`${i},${j}`) ?? []) {
+          if (!seen.has(b) && Math.hypot(x - b[0], z - b[1]) < r) { seen.add(b); n++; }
+        }
+    return n;
+  }
+
   hits(x: number, z: number, r: number): boolean {
     const list = this.cells.get(`${Math.floor(x / this.size)},${Math.floor(z / this.size)}`);
     return !!list?.some(([bx, bz, br]) => Math.hypot(x - bx, z - bz) < r + br);

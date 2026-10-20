@@ -23,7 +23,7 @@ export type WalkPlace = {
 };
 type Props = { heightUrl: string; worldUrl: string; groundUrl: string; mapUrl: string; backUrl: string; places: WalkPlace[] };
 type Screen = "start" | "loading" | "ready" | "playing" | "paused" | "card" | "map" | "nogl" | "failed";
-type Saved = { sensitivity?: number; invertY?: boolean; quality?: Quality; real?: boolean };
+type Saved = { sensitivity?: number; invertY?: boolean; quality?: Quality; real?: boolean; volume?: number };
 
 const KEY = "twice-born:walk:v1";
 const load = (): Saved => {
@@ -60,7 +60,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   nearRef.current = near;
 
   useEffect(() => {
-    setPrefs({ sensitivity: 1, invertY: false, quality: defaultQuality(), real: false, ...load() });
+    setPrefs({ sensitivity: 1, invertY: false, quality: defaultQuality(), real: false, volume: 0.7, ...load() });
     return () => game.current?.dispose();
   }, []);
 
@@ -73,6 +73,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     g.settings.sensitivity = next.sensitivity ?? 1;
     g.settings.invertY = !!next.invertY;
     if (p.quality) g.setQuality(p.quality);
+    if (p.volume !== undefined) g.setVolume(p.volume);
   };
 
   const veiled = (p: WalkPlace) => !shown[p.id] && isVeiled(p.firstSeen);
@@ -109,6 +110,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         canvas: canvas.current!,
         heightUrl, worldUrl, groundUrl,
         quality: prefs.quality ?? defaultQuality(),
+        volume: prefs.volume ?? 0.7,
         onProgress: (f, what) => setProgress({ f, what }),
         onStats, onFrame,
       });
@@ -274,6 +276,10 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <label class="check">
             <input type="checkbox" checked={!!prefs.real} onChange={(e) => update({ real: (e.target as HTMLInputElement).checked })} />
             Real India: name places by what they most resemble
+          </label>
+          <label>Sound
+            <input type="range" min="0" max="1" step="0.05" value={prefs.volume ?? 0.7}
+                   onInput={(e) => update({ volume: Number((e.target as HTMLInputElement).value) })} />
           </label>
           <label>Mouse sensitivity
             <input type="range" min="0.3" max="2.5" step="0.1" value={prefs.sensitivity ?? 1}

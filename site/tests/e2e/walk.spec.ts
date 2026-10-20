@@ -270,3 +270,14 @@ test("the compass turns with you", async ({ page }) => {
   await expect(page.locator(".walk")).toHaveAttribute("data-heading", "90");
   await expect(page.locator(".compass .strip")).toHaveAttribute("style", /translateX\(-360px\)/);
 });
+
+test("sound starts when you start walking, stops when you pause, and keeps its volume", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  type S = { walkGame: { soundState: () => string } };
+  await enter(page);
+  await expect.poll(() => page.evaluate(() => (window as unknown as S).walkGame.soundState())).toBe("running");
+  await page.keyboard.press("Escape");
+  await expect.poll(() => page.evaluate(() => (window as unknown as S).walkGame.soundState())).toBe("suspended");
+  await page.getByLabel("Sound").fill("0.2");
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:walk:v1") || "{}").volume)).toBe(0.2);
+});
