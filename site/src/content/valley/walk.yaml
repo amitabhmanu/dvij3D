@@ -28,3 +28,10 @@ boulders:
   nearFort: 0.3
   fortRadius: 900
   size: [0.8, 4.0]  # metres across
+
+# Painted marks that make no sense underfoot, wiped from the walking ground's
+# colours (centre on the drape, 0-1, and radius as a fraction of its width).
+erase:
+  - note: the compass rose in the bottom-right corner
+    at: [0.864, 0.915]
+    r: 0.05

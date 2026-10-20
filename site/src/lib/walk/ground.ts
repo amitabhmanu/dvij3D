@@ -7,7 +7,7 @@ import {
   BufferAttribute, BufferGeometry, DataTexture, FloatType, NearestFilter, RedFormat, ShaderMaterial,
   Texture, Vector2, Vector3,
 } from "three";
-import { RIPPLE, type Field } from "./heights";
+import { RIPPLE, RISE, type Field } from "./heights";
 
 /** Ground-mesh warp: mostly cubic, with a linear part so cells near you stay about 0.75 m. */
 export function warp(t: number, reach: number, lin: number): number {
@@ -60,7 +60,9 @@ const common = /* glsl */ `
     vec2 f = uv - vec2(ij);
     float a = fetchH(ij.x, ij.y), b = fetchH(ij.x + 1, ij.y);
     float c = fetchH(ij.x, ij.y + 1), d = fetchH(ij.x + 1, ij.y + 1);
-    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+    vec2 last = origin + (fieldSize - 1.0) * cell;
+    vec2 out2 = max(max(origin - p, p - last), 0.0);
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y) + ${RISE.toFixed(3)} * length(out2);
   }
   // heights.ts's ripple(), line for line
   float hash(int ix, int iz) {
@@ -105,27 +107,51 @@ const vertex = /* glsl */ `
 `;
 
 const fragment = /* glsl */ `
-  uniform sampler2D drape;
+  ${common}
+  uniform sampler2D colours;  // the painting's colours, labels smoothed away (build_walk.py)
   uniform vec2 mapSize;
   uniform vec3 sun;
   uniform vec3 paper;
   uniform vec3 haze;
   uniform vec2 hazeRange;
+  uniform float rimFade;
   varying vec3 vPos;
   varying vec3 vNormal;
+
+  float fbm(vec2 p) {
+    return valueNoise(p) * 0.55 + valueNoise(p * 2.13 + 17.0) * 0.3 + valueNoise(p * 4.7 + 41.0) * 0.15;
+  }
+
   void main() {
     vec2 uv = vec2(vPos.x / mapSize.x + 0.5, vPos.z / mapSize.y + 0.5);
-    float onMap = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
-    vec3 skin = mix(paper, texture2D(drape, vec2(uv.x, 1.0 - uv.y)).rgb, onMap);
-    float d = max(dot(normalize(vNormal), sun), 0.0);
-    vec3 col = skin * (0.55 + 0.6 * d);
-    float far = smoothstep(hazeRange.x, hazeRange.y, distance(vPos, cameraPosition));
-    gl_FragColor = vec4(mix(col, haze, far), 1.0);
+    vec2 outside = max(max(-uv, uv - 1.0), 0.0) * mapSize;
+    float beyond = smoothstep(0.0, rimFade, length(outside));
+    vec3 base = mix(texture2D(colours, clamp(vec2(uv.x, 1.0 - uv.y), 0.0, 1.0)).rgb, paper, beyond);
+
+    // Up close the painting's colours become ground: grass where it is green,
+    // earth where it is brown, rock where it is steep, all mottled.
+    vec3 n = normalize(vNormal);
+    float dist = distance(vPos, cameraPosition);
+    float steep = 1.0 - n.y;
+    float green = base.g - 0.5 * (base.r + base.b);
+    float big = fbm(vPos.xz * 0.045), small = fbm(vPos.xz * 0.6);
+    vec3 grass = vec3(0.16, 0.2, 0.06), earth = vec3(0.38, 0.25, 0.12), rock = vec3(0.3, 0.27, 0.23);
+    vec3 near = mix(earth, grass, smoothstep(-0.005, 0.03, green + (big - 0.5) * 0.04));
+    near = mix(near, rock, smoothstep(0.22, 0.45, steep + (small - 0.5) * 0.12));
+    near = mix(near, base, 0.35) * (0.82 + 0.36 * small);
+    vec3 skin = mix(base, near, (1.0 - smoothstep(80.0, 600.0, dist)) * (1.0 - beyond));
+
+    float d = max(dot(n, sun), 0.0);
+    float banded = floor(d * 4.0 + 0.5) / 4.0;
+    vec3 col = skin * (0.5 + 0.75 * mix(d, banded, 0.35));
+    float far = smoothstep(hazeRange.x, hazeRange.y, dist);
+    gl_FragColor = vec4(mix(col, haze, max(far, beyond)), 1.0); // past the map: only haze, so the rim has no edge
+    #include <colorspace_fragment>
   }
 `;
 
 export type GroundOptions = {
-  field: Field; drape: Texture; mapW: number; mapD: number;
+  field: Field; colours: Texture; mapW: number; mapD: number;
   paper: Vector3; haze: Vector3; hazeRange: [number, number]; reach: number; cells: number;
 };
 
@@ -141,7 +167,8 @@ export function groundMaterial(o: GroundOptions): ShaderMaterial {
       center: { value: new Vector2() },
       reach: { value: o.reach },
       lin: { value: Math.min(1, 0.75 / (o.reach * (2 / o.cells))) },
-      drape: { value: o.drape },
+      colours: { value: o.colours },
+      rimFade: { value: o.mapW * 0.05 },
       mapSize: { value: new Vector2(o.mapW, o.mapD) },
       sun: { value: new Vector3(0.85, 0.42, -0.2).normalize() },
       paper: { value: o.paper },

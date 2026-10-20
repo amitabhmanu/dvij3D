@@ -16,17 +16,21 @@ fort, never in the lake.
 
 Inputs:  generated/contours.json, valley/terrain.yaml, valley/walk.yaml, places.yaml
 Output:  site-assets/walk/height.<hash>.bin  (gzip, int16 residuals in decimetres)
+         site-assets/walk/ground.<hash>.webp (the painting's colours without its labels and icons)
          site-assets/walk/world.<hash>.json  (what stands on the land)
          src/content/generated/walk.json     (committed: file names, sizes, spawn, water)
 Usage:   python build_walk.py
 """
 import copy
 import gzip
+import io
 import hashlib
 import json
 
+import cv2
 import numpy as np
 import yaml
+from PIL import Image
 
 import build_terrain as bt
 from common import ASSETS
@@ -57,6 +61,28 @@ def decode(data: bytes, w: int, h: int) -> np.ndarray:
     return q * SCALE
 
 
+def ground_colours(drape_file: str, erase: list[dict]) -> bytes:
+    """The painting's colours with its lettering and little drawn trees smoothed
+    away: from eye level, painted words on a hillside would read as graffiti, and
+    the trees arrive as cut-outs instead (design §10.2)."""
+    img = cv2.imread(str(bt.OUT / drape_file))
+    if img is None:
+        raise SystemExit(f"Missing {drape_file}: run extract_valley_drape.py first")
+    mask = np.zeros(img.shape[:2], np.uint8)
+    for e in erase:
+        cx, cy = e["at"][0] * img.shape[1], e["at"][1] * img.shape[0]
+        cv2.circle(mask, (round(cx), round(cy)), round(e["r"] * img.shape[1]), 255, -1)
+    if erase:
+        img = cv2.inpaint(img, mask, 9, cv2.INPAINT_TELEA)
+    soft = cv2.medianBlur(img, 15)  # about 80 m: wider than any letter or tree
+    soft = cv2.medianBlur(soft, 9)
+    soft = cv2.resize(soft, (1024, round(1024 * img.shape[0] / img.shape[1])), interpolation=cv2.INTER_AREA)
+    soft = cv2.GaussianBlur(soft, (0, 0), 1.5)
+    buf = io.BytesIO()
+    Image.fromarray(soft[:, :, ::-1]).save(buf, "WEBP", quality=80, method=6)
+    return buf.getvalue()
+
+
 def write_hashed(stem: str, ext: str, data: bytes) -> str:
     name = f"{stem}.{hashlib.sha256(data).hexdigest()[:10]}.{ext}"
     OUT.mkdir(parents=True, exist_ok=True)
@@ -74,6 +100,8 @@ def main() -> None:
     contours = load_contours()
     grid, _, final, _, _, _, water, _ = bt.build(cfg, contours)
     height_name = write_hashed("height", "bin", encode(final))
+    drape = json.loads((CONTENT / "generated" / "drape.json").read_text(encoding="utf-8"))
+    ground_name = write_hashed("ground", "webp", ground_colours(drape["file"], walk.get("erase", [])))
 
     places = yaml.safe_load(bt.PLACES_YAML.read_text(encoding="utf-8"))["places"]
     fort = next(p for p in places if p["id"] == "fort-ruins")["rects"][0]
@@ -90,6 +118,7 @@ def main() -> None:
         "version": 1,
         "height": {"file": height_name, "w": grid.width, "h": grid.height, "scale": SCALE},
         "world": world_name,
+        "ground": ground_name,
         "margin": grid.margin,
         "worldWidth": ww,
         "worldDepth": round(wd, 1),

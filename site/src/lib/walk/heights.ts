@@ -49,8 +49,14 @@ export function sampleField(f: Field, x: number, z: number): number {
   const fx = u - i, fz = v - j;
   const d = f.data, w = f.w;
   const a = d[j * w + i], b = d[j * w + i + 1], c = d[(j + 1) * w + i], e = d[(j + 1) * w + i + 1];
-  return (a * (1 - fx) + b * fx) * (1 - fz) + (c * (1 - fx) + e * fx) * fz;
+  // Past the last sample the land keeps climbing, so the world's edge is a
+  // slope fading into haze rather than a ridge with a flat shelf behind it.
+  const ou = Math.max(0, f.x0 - x, x - (f.x0 + (f.w - 1) * f.cell));
+  const ov = Math.max(0, f.z0 - z, z - (f.z0 + (f.h - 1) * f.cell));
+  return (a * (1 - fx) + b * fx) * (1 - fz) + (c * (1 - fx) + e * fx) * fz + RISE * Math.hypot(ou, ov);
 }
+
+export const RISE = 0.15;
 
 // Small ripples the 4 m samples can't hold, generated the same way here and in
 // the shader: value noise on an integer lattice with an integer hash.

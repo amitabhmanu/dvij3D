@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { decodeHeights, fieldFor, heightAt, integrate, ripple, RIPPLE, sampleField } from "./heights";
+import { decodeHeights, fieldFor, heightAt, integrate, ripple, RIPPLE, RISE, sampleField } from "./heights";
 import { walk } from "./walk-data";
 
 function encode(q: number[][]): Int16Array {
@@ -35,6 +35,13 @@ describe("walk heights", () => {
     const f = fieldFor(new Float32Array([0, 10, 20, 30]), 2, 2, { worldWidth: 2, worldDepth: 2, margin: 0 });
     expect(sampleField(f, f.x0 + f.cell / 2, f.z0)).toBeCloseTo(5, 5);
     expect(sampleField(f, f.x0 + f.cell / 2, f.z0 + f.cell / 2)).toBeCloseTo(15, 5);
+  });
+
+  it("keeps climbing past the last sample, so the world's edge has no shelf", () => {
+    const f = fieldFor(new Float32Array([5, 5, 5, 5]), 2, 2, { worldWidth: 2, worldDepth: 2, margin: 0 });
+    const edge = f.x0 + f.cell;
+    expect(sampleField(f, edge, f.z0)).toBeCloseTo(5, 5);
+    expect(sampleField(f, edge + 100, f.z0)).toBeCloseTo(5 + 100 * RISE, 3);
   });
 
   it("adds ripples that stay small and repeat exactly", () => {

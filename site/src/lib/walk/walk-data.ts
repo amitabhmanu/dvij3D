@@ -6,6 +6,7 @@ export type WalkData = {
   version: number;
   height: { file: string; w: number; h: number; scale: number };
   world: string;
+  ground: string;
   margin: number;
   worldWidth: number;
   worldDepth: number;

@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { expect, test, type Page } from "@playwright/test";
+import sharp from "sharp";
 
 // Walking the valley (design §10.2): /valley/walk/.
 const walk = JSON.parse(readFileSync(new URL("../../src/content/generated/walk.json", import.meta.url), "utf8"));
@@ -155,4 +156,36 @@ test("the walk's code and data stay within budget", async ({ page }) => {
     expect(res.status()).toBe(200);
     expect((await res.body()).length / 1024, name).toBeLessThan(kb);
   }
+});
+
+test("the valley is drawn at eye level, smoothly", async ({ page }) => {
+  await enter(page);
+  const shot = await page.locator(".walk-canvas").screenshot();
+  const { data, info } = await sharp(shot).raw().toBuffer({ resolveWithObject: true });
+  const colours = new Set<number>();
+  for (let i = 0; i < data.length; i += info.channels) colours.add((data[i] << 16) | (data[i + 1] << 8) | data[i + 2]);
+  expect(colours.size).toBeGreaterThan(500); // land, sky and haze, not a blank canvas
+  const fps = await page.evaluate(() => new Promise<number>((done) => {
+    let n = 0;
+    const t0 = performance.now();
+    const f = () => { n++; if (performance.now() - t0 < 1500) requestAnimationFrame(f); else done(n / 1.5); };
+    requestAnimationFrame(f);
+  }));
+  expect(fps).toBeGreaterThan(25);
+});
+
+test("the quality setting applies at once and is remembered", async ({ page, isMobile }) => {
+  test.skip(isMobile, "phones start on low");
+  await enter(page);
+  await page.keyboard.press("Escape");
+  await page.getByLabel("Quality").selectOption("low");
+  await page.getByRole("button", { name: "Keep walking" }).click();
+  await expect(page.locator(".walk")).toHaveAttribute("data-screen", "playing");
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:walk:v1") || "{}").quality)).toBe("low");
+  await page.reload();
+  await page.getByRole("button", { name: "Enter the valley" }).click();
+  await page.locator('.walk[data-screen="ready"]').waitFor();
+  await page.locator(".begin").click();
+  await page.keyboard.press("Escape");
+  await expect(page.getByLabel("Quality")).toHaveValue("low");
 });

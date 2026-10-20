@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import type { Game, Quality } from "../lib/walk/game";
 
-type Props = { heightUrl: string; worldUrl: string; drapeUrl: string; backUrl: string };
+type Props = { heightUrl: string; worldUrl: string; groundUrl: string; backUrl: string };
 type Screen = "start" | "loading" | "ready" | "playing" | "paused" | "nogl" | "failed";
 type Saved = { sensitivity?: number; invertY?: boolean; quality?: Quality };
 
@@ -25,7 +25,7 @@ const hasWebGL2 = () => {
 const touchFirst = () => matchMedia("(pointer: coarse)").matches;
 const defaultQuality = (): Quality => (touchFirst() ? "low" : innerWidth * devicePixelRatio > 2600 ? "high" : "medium");
 
-export default function Walk({ heightUrl, worldUrl, drapeUrl, backUrl }: Props) {
+export default function Walk({ heightUrl, worldUrl, groundUrl, backUrl }: Props) {
   const [screen, setScreen] = useState<Screen>("start");
   const [progress, setProgress] = useState({ f: 0, what: "" });
   const [prefs, setPrefs] = useState<Saved>({});
@@ -58,7 +58,7 @@ export default function Walk({ heightUrl, worldUrl, drapeUrl, backUrl }: Props) 
       const { createGame } = await import("../lib/walk/game");
       game.current = await createGame({
         canvas: canvas.current!,
-        heightUrl, worldUrl, drapeUrl,
+        heightUrl, worldUrl, groundUrl,
         quality: prefs.quality ?? defaultQuality(),
         onProgress: (f, what) => setProgress({ f, what }),
         onStats: (s) => setStats(s),

@@ -3,8 +3,7 @@
 // site's header and footer. All it loads at first is the start screen.
 import Base from "../../layouts/Base.astro";
 import Walk from "../../islands/Walk.tsx";
-import { terrainFile, walkFile } from "../../lib/manifest";
-import { terrain } from "../../lib/terrain-data";
+import { walkFile } from "../../lib/manifest";
 import { walk } from "../../lib/walk/walk-data";
 ---
 <Base
@@ -14,7 +13,7 @@ import { walk } from "../../lib/walk/walk-data";
   bodyClass="walk-page"
 >
   <Walk client:only="preact" heightUrl={walkFile(walk.height.file)} worldUrl={walkFile(walk.world)}
-    drapeUrl={terrainFile(terrain.drape)} backUrl="/valley/" />
+    groundUrl={walkFile(walk.ground)} backUrl="/valley/" />
   <noscript><p class="walk-noscript">Walking the valley needs JavaScript. <a href="/valley/">The book's map</a> works without it.</p></noscript>
 </Base>
 

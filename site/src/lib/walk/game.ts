@@ -12,6 +12,8 @@ import {
 } from "three";
 import { decodeHeights, fieldFor, heightAt, type Field } from "./heights";
 import { groundGeometry, groundMaterial } from "./ground";
+import { inkComposer } from "./post";
+import type { EffectComposer } from "postprocessing";
 import { Input, type Settings } from "./input";
 import { Blockers, inside, step, type Player } from "./player";
 import { walk } from "./walk-data";
@@ -21,7 +23,7 @@ export type GameOptions = {
   canvas: HTMLCanvasElement;
   heightUrl: string;
   worldUrl: string;
-  drapeUrl: string;
+  groundUrl: string;
   quality: Quality;
   onProgress: (fraction: number, what: string) => void;
   /** About five times a second while walking: where you are, for the HUD and tests. */
@@ -40,10 +42,13 @@ export type Game = {
   dispose: () => void;
 };
 
-const SKY_TOP = new Color("#9fb7c4");
-const SKY_LOW = new Color("#e8d7b5");
-export const HAZE = new Vector3(0.86, 0.8, 0.68);
-export const PAPER = new Vector3(0.79, 0.66, 0.47);
+// Colours are written as the eye sees them (sRGB); Color() turns them into the
+// linear light the shaders work in.
+const lin = (hex: string) => { const c = new Color(hex); return new Vector3(c.r, c.g, c.b); };
+const SKY_TOP = lin("#7f9fb4");
+export const HAZE = lin("#e2d3b4"); // the sky at the horizon and the far haze are one colour
+export const PAPER = lin("#c9a878");
+const SUN_DIR = new Vector3(0.85, 0.42, -0.2).normalize();
 const GRID: Record<Quality, number> = { low: 192, medium: 288, high: 384 };
 const PIXELS: Record<Quality, number> = { low: 1, medium: 1.5, high: 2 };
 const STEP = 1 / 60;
@@ -76,10 +81,16 @@ function skyDome(): Mesh {
   const mat = new ShaderMaterial({
     side: BackSide,
     depthWrite: false,
-    uniforms: { top: { value: SKY_TOP }, low: { value: SKY_LOW } },
+    uniforms: { top: { value: SKY_TOP }, low: { value: HAZE }, sun: { value: SUN_DIR } },
     vertexShader: `varying vec3 vDir; void main() { vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-    fragmentShader: `uniform vec3 top; uniform vec3 low; varying vec3 vDir;
-      void main() { float t = smoothstep(-0.05, 0.45, vDir.y); gl_FragColor = vec4(mix(low, top, t), 1.0); }`,
+    fragmentShader: `uniform vec3 top; uniform vec3 low; uniform vec3 sun; varying vec3 vDir;
+      void main() {
+        vec3 d = normalize(vDir);
+        vec3 c = mix(low, top, smoothstep(0.1, 0.55, d.y)); // haze-coloured up past the farthest land
+        c += vec3(1.0, 0.85, 0.6) * pow(max(dot(d, sun), 0.0), 24.0) * 0.55; // a low sun in the east
+        gl_FragColor = vec4(c, 1.0);
+        #include <colorspace_fragment>
+      }`,
   });
   const m = new Mesh(new SphereGeometry(10000, 24, 12), mat);
   m.renderOrder = -1;
@@ -90,11 +101,12 @@ function skyDome(): Mesh {
 export async function createGame(o: GameOptions): Promise<Game> {
   const h = walk.height;
   o.onProgress(0, "Unrolling the map");
-  const [heightBuf, worldJson, drape] = await Promise.all([
+  const [heightBuf, worldJson, colours] = await Promise.all([
     fetchWithProgress(o.heightUrl, (f) => o.onProgress(f * 0.7, "Raising the hills")),
     fetch(o.worldUrl).then((r) => r.json() as Promise<{ boulders: [number, number, number, number, number][] }>),
-    loadTexture(o.drapeUrl),
+    loadTexture(o.groundUrl),
   ]);
+  colours.colorSpace = SRGBColorSpace;
   o.onProgress(0.75, "Laying the paths");
   const field: Field = fieldFor(await decodeHeights(heightBuf, h.w, h.h, h.scale), h.w, h.h, walk);
   const ground = (x: number, z: number) => heightAt(field, x, z);
@@ -102,8 +114,10 @@ export async function createGame(o: GameOptions): Promise<Game> {
   const renderer = new WebGLRenderer({ canvas: o.canvas, antialias: true, powerPreference: "high-performance" });
   renderer.outputColorSpace = SRGBColorSpace;
   const scene = new Scene();
-  scene.fog = new Fog(new Color().setRGB(HAZE.x, HAZE.y, HAZE.z, SRGBColorSpace), 900, 7000);
-  const camera = new PerspectiveCamera(70, 1, 0.1, 12000);
+  scene.fog = new Fog(new Color(HAZE.x, HAZE.y, HAZE.z), 900, 7000);
+  // near 0.5 m, not 0.1: the ink pass reads distances back from the depth buffer,
+  // and a closer near plane leaves too little precision for the far valley
+  const camera = new PerspectiveCamera(70, 1, 0.5, 12000);
   camera.rotation.order = "YXZ";
   const sky = skyDome();
   scene.add(sky);
@@ -112,7 +126,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   const reach = 8000;
   let groundMesh: Mesh | null = null;
   const groundMat = (cells: number) => groundMaterial({
-    field, drape, mapW: walk.worldWidth, mapD: walk.worldDepth, paper: PAPER, haze: HAZE,
+    field, colours, mapW: walk.worldWidth, mapD: walk.worldDepth, paper: PAPER, haze: HAZE,
     hazeRange: [900, 7000], reach, cells,
   });
   const buildGround = (q: Quality) => {
@@ -162,7 +176,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   scene.add(stones);
   scene.add(new AmbientLight(0xffffff, 1.3));
   const sun = new DirectionalLight(0xfff1d6, 2.0);
-  sun.position.set(8500, 4200, -2000);
+  sun.position.copy(SUN_DIR).multiplyScalar(9000);
   scene.add(sun);
 
   const halfW = walk.worldWidth / 2 - 3, halfD = walk.worldDepth / 2 - 3;
@@ -182,11 +196,18 @@ export async function createGame(o: GameOptions): Promise<Game> {
     const w = o.canvas.clientWidth, hh = o.canvas.clientHeight;
     if (!w || !hh) return;
     renderer.setSize(w, hh, false);
+    composer?.setSize(w, hh, false);
     camera.aspect = w / hh;
     camera.updateProjectionMatrix();
   };
-  let quality = o.quality;
-  renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[quality]));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[o.quality]));
+  let composer: EffectComposer | null = null;
+  const setInk = (q: Quality) => {
+    composer?.dispose();
+    composer = q === "low" ? null : inkComposer(renderer, scene, camera);
+  };
+  setInk(o.quality);
+  const draw = () => (composer ? composer.render() : renderer.render(scene, camera));
   const ro = new ResizeObserver(resize);
   ro.observe(o.canvas);
   resize();
@@ -211,7 +232,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       acc -= STEP;
     }
     place();
-    renderer.render(scene, camera);
+    draw();
     if (o.onStats && now - statsAt > 200) {
       statsAt = now;
       o.onStats({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z) });
@@ -222,7 +243,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // first frame, so the canvas shows the valley behind the "click to start" card
   player = step(player, input.sample(), STEP, rules, world);
   place();
-  renderer.render(scene, camera);
+  draw();
   o.onProgress(1, "Ready");
 
   return {
@@ -245,17 +266,17 @@ export async function createGame(o: GameOptions): Promise<Game> {
       player = { ...player, x, z, y: 0, heading: heading ?? player.heading };
       player = step(player, { forward: 0, strafe: 0, run: false, turn: 0, look: 0 }, STEP, rules, world);
       place();
-      renderer.render(scene, camera);
+      draw();
     },
     player: () => player,
     ground,
     setQuality: (qq) => {
-      quality = qq;
       renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[qq]));
       buildGround(qq);
+      setInk(qq);
       resize();
       place();
-      renderer.render(scene, camera);
+      draw();
     },
     dispose: () => {
       running = false;
@@ -268,7 +289,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
       for (const m of [rockMat, waterMat, sky.material as ShaderMaterial]) m.dispose();
       sky.geometry.dispose();
       stones.dispose();
-      drape.dispose();
+      colours.dispose();
+      composer?.dispose();
       renderer.dispose();
     },
   };
