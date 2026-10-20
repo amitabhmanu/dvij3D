@@ -1,5 +1,244 @@
 {
  "version": 1,
- "file": "lodge.b5874e2680.glb",
- "bytes": 419928
+ "file": "lodge.82dc650811.glb",
+ "bytes": 417752,
+ "half": 16.0,
+ "floor": 0.6,
+ "grounds": [
+  -55,
+  -45,
+  55,
+  75
+ ],
+ "markers": [
+  {
+   "name": "arrive:gate",
+   "at": [
+    0,
+    0,
+    81
+   ],
+   "heading": 0.0,
+   "label": "The lodge gate"
+  },
+  {
+   "name": "arrive:verandah",
+   "at": [
+    0,
+    0.6,
+    21.0
+   ],
+   "heading": 0.0,
+   "label": "The verandah"
+  },
+  {
+   "name": "room:hall",
+   "at": [
+    0.0,
+    1.6,
+    13.25
+   ],
+   "kind": "room",
+   "label": "Entrance hall",
+   "rect": "[-5, 10.5, 5, 16]"
+  },
+  {
+   "name": "room:sitting",
+   "at": [
+    -10.5,
+    1.6,
+    13.25
+   ],
+   "kind": "room",
+   "label": "Sitting room",
+   "rect": "[-16, 10.5, -5, 16]"
+  },
+  {
+   "name": "room:dining",
+   "at": [
+    10.5,
+    1.6,
+    13.25
+   ],
+   "kind": "room",
+   "label": "Dining hall",
+   "rect": "[5, 10.5, 16, 16]"
+  },
+  {
+   "name": "room:dvij-room",
+   "at": [
+    -13.25,
+    1.6,
+    5.25
+   ],
+   "kind": "room",
+   "label": "The room where Dvij wakes",
+   "rect": "[-16, 0, -10.5, 10.5]"
+  },
+  {
+   "name": "room:bhavi-room",
+   "at": [
+    -13.25,
+    1.6,
+    -5.25
+   ],
+   "kind": "room",
+   "label": "Bhavi's room",
+   "rect": "[-16, -10.5, -10.5, 0]"
+  },
+  {
+   "name": "room:study",
+   "at": [
+    -10.5,
+    1.6,
+    -13.25
+   ],
+   "kind": "room",
+   "label": "The Professor's study",
+   "rect": "[-16, -16, -5, -10.5]"
+  },
+  {
+   "name": "room:prof-room",
+   "at": [
+    0.0,
+    1.6,
+    -13.25
+   ],
+   "kind": "room",
+   "label": "The Professor's bedroom",
+   "rect": "[-5, -16, 5, -10.5]"
+  },
+  {
+   "name": "room:kitchen",
+   "at": [
+    10.5,
+    1.6,
+    -13.25
+   ],
+   "kind": "room",
+   "label": "Kitchen",
+   "rect": "[5, -16, 16, -10.5]"
+  },
+  {
+   "name": "room:pantry",
+   "at": [
+    13.25,
+    1.6,
+    -8.25
+   ],
+   "kind": "room",
+   "label": "Pantry",
+   "rect": "[10.5, -10.5, 16, -6]"
+  },
+  {
+   "name": "room:washroom",
+   "at": [
+    13.25,
+    1.6,
+    -3.0
+   ],
+   "kind": "room",
+   "label": "Washroom (the only one in the house)",
+   "rect": "[10.5, -6, 16, 0]"
+  },
+  {
+   "name": "room:store",
+   "at": [
+    13.25,
+    1.6,
+    5.25
+   ],
+   "kind": "room",
+   "label": "Store room",
+   "rect": "[10.5, 0, 16, 10.5]"
+  },
+  {
+   "name": "room:corridor",
+   "at": [
+    0,
+    1.6,
+    0
+   ],
+   "kind": "room",
+   "label": "The pillared corridor",
+   "rect": "[-10.5, -10.5, 10.5, 10.5]"
+  },
+  {
+   "name": "look:study-desk",
+   "at": [
+    -12.8,
+    1.5,
+    -12.6
+   ],
+   "kind": "look",
+   "label": "The Professor's desk and the board game",
+   "room": "study"
+  },
+  {
+   "name": "look:god-wall",
+   "at": [
+    15.2,
+    2.8,
+    -13.0
+   ],
+   "kind": "look",
+   "label": "The wall of god-prints",
+   "room": "kitchen"
+  },
+  {
+   "name": "look:tandoor",
+   "at": [
+    14.6,
+    1.5,
+    -15.0
+   ],
+   "kind": "look",
+   "label": "Maharaj's tandoor",
+   "room": "kitchen"
+  },
+  {
+   "name": "look:courtyard",
+   "at": [
+    0,
+    0.6,
+    0
+   ],
+   "kind": "look",
+   "label": "The courtyard",
+   "room": "corridor"
+  },
+  {
+   "name": "look:dvij-bed",
+   "at": [
+    -14.5,
+    1.2,
+    7.5
+   ],
+   "kind": "look",
+   "label": "The bed where Dvij wakes",
+   "room": "dvij-room"
+  },
+  {
+   "name": "look:well",
+   "at": [
+    -18,
+    0.8,
+    38
+   ],
+   "kind": "look",
+   "label": "The well",
+   "room": ""
+  },
+  {
+   "name": "look:gate",
+   "at": [
+    0,
+    1.5,
+    75
+   ],
+   "kind": "look",
+   "label": "The cast-iron gate",
+   "room": ""
+  }
+ ]
 }

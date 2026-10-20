@@ -5,9 +5,9 @@
 // what you see is what you stand on.
 import {
   BufferAttribute, BufferGeometry, DataTexture, FloatType, NearestFilter, RedFormat, ShaderMaterial,
-  Texture, Vector2, Vector3,
+  Texture, Vector2, Vector3, Vector4,
 } from "three";
-import { RIPPLE, RISE, type Field } from "./heights";
+import { RIPPLE, RISE, type Field, type Flat } from "./heights";
 
 /** Ground-mesh warp: mostly cubic, with a linear part so cells near you stay about 0.75 m. */
 export function warp(t: number, reach: number, lin: number): number {
@@ -50,6 +50,8 @@ const common = /* glsl */ `
   uniform vec2 fieldSize;
   uniform float cell;
   uniform vec2 origin;
+  uniform vec4 flatRect;   // heights.ts's flat pad: x0, z0, x1, z1
+  uniform float flatBlend;
 
   float fetchH(int i, int j) {
     return texelFetch(heights, ivec2(clamp(i, 0, int(fieldSize.x) - 1), clamp(j, 0, int(fieldSize.y) - 1)), 0).r;
@@ -80,7 +82,12 @@ const common = /* glsl */ `
   float ripple(vec2 p) {
     return ${RIPPLE.map((o) => `(valueNoise(p / ${o.wave.toFixed(3)}) - 0.5) * ${(2 * o.amp).toFixed(4)}`).join(" + ")};
   }
-  float groundAt(vec2 p) { return sampleField(p) + ripple(p); }
+  float flatWeight(vec2 p) {
+    vec2 d = max(max(flatRect.xy - p, p - flatRect.zw), 0.0);
+    float t = clamp(length(d) / max(flatBlend, 1e-6), 0.0, 1.0);
+    return flatBlend > 0.0 ? 1.0 - t * t * (3.0 - 2.0 * t) : 0.0;
+  }
+  float groundAt(vec2 p) { return sampleField(p) + ripple(p) * (1.0 - flatWeight(p)); }
 `;
 
 const vertex = /* glsl */ `
@@ -152,7 +159,7 @@ const fragment = /* glsl */ `
 
 export type GroundOptions = {
   field: Field; colours: Texture; mapW: number; mapD: number;
-  paper: Vector3; haze: Vector3; hazeRange: [number, number]; reach: number; cells: number;
+  paper: Vector3; haze: Vector3; hazeRange: [number, number]; reach: number; cells: number; flat?: Flat;
 };
 
 export function groundMaterial(o: GroundOptions): ShaderMaterial {
@@ -164,6 +171,8 @@ export function groundMaterial(o: GroundOptions): ShaderMaterial {
       fieldSize: { value: new Vector2(o.field.w, o.field.h) },
       cell: { value: o.field.cell },
       origin: { value: new Vector2(o.field.x0, o.field.z0) },
+      flatRect: { value: new Vector4(...(o.flat?.rect ?? [0, 0, 0, 0])) },
+      flatBlend: { value: o.flat?.blend ?? 0 },
       center: { value: new Vector2() },
       reach: { value: o.reach },
       lin: { value: Math.min(1, 0.75 / (o.reach * (2 / o.cells))) },

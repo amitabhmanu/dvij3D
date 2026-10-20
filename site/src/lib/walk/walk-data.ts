@@ -18,6 +18,8 @@ export type WalkData = {
   water: Water[];
   player: { eye: number; walk: number; run: number; maxSlope: number; radius: number };
   check: { i: number; j: number; h: number }[];
+  /** The lodge you can walk into (design §10.3): its model, where it stands, its levelled pad. */
+  lodge: { file: string; x: number; y: number; z: number; pad: [number, number, number, number]; blend: number };
   /** Where walking up to each labelled place offers its card. */
   places: { id: string; x: number; y: number; z: number; r: number }[];
 };
@@ -31,5 +33,7 @@ export const walkAsset = (name: string) => `/_assets/walk/${name}`;
 export type Building = {
   id: string; kind: string; sprite: string; x: number; y: number; z: number;
   height: number; width: number; r: number; place: string | null;
+  /** A building with a model to walk into stands as that model, not as its cut-out. */
+  model?: string;
   door: null; interior: null; // for later: entering buildings
 };

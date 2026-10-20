@@ -224,7 +224,7 @@ def main() -> int:
     # The walkable valley (design §10.2): its files, and nothing stale beside them.
     walk = json.loads((CONTENT / "generated" / "walk.json").read_text(encoding="utf-8"))
     cut = json.loads((CONTENT / "generated" / "cutouts.json").read_text(encoding="utf-8"))
-    walk_files = {walk["height"]["file"], walk["world"], walk["ground"], walk["trees"], cut["atlas"]}
+    walk_files = {walk["height"]["file"], walk["world"], walk["ground"], walk["trees"], cut["atlas"], walk["lodge"]["file"]}
     for f in sorted(walk_files):
         if not (ASSETS / "walk" / f).exists():
             errors.append(f"walk: {f} not in site-assets/walk (run build_walk.py / extract_cutouts.py)")

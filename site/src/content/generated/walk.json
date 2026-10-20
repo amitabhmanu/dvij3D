@@ -6,9 +6,9 @@
   "h": 2274,
   "scale": 0.1
  },
- "world": "world.7657828d5b.json",
+ "world": "world.5e8c0a2272.json",
  "ground": "ground.a1c0059321.webp",
- "trees": "trees.3aca698cd6.bin",
+ "trees": "trees.6077181178.bin",
  "cutouts": "cutouts.9dfbd7107c.webp",
  "margin": 0.12,
  "worldWidth": 10000,
@@ -132,6 +132,19 @@
   "run": 12,
   "maxSlope": 38,
   "radius": 0.4
+ },
+ "lodge": {
+  "file": "lodge.82dc650811.glb",
+  "x": 1817.3,
+  "y": 0.0,
+  "z": 107.4,
+  "pad": [
+   1756.3,
+   56.4,
+   1878.3,
+   188.4
+  ],
+  "blend": 40.0
  },
  "places": [
   {

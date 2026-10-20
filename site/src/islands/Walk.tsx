@@ -58,6 +58,10 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   screenRef.current = screen;
   const nearRef = useRef<string | null>(null);
   nearRef.current = near;
+  const [door, setDoor] = useState<{ name: string; open: boolean } | null>(null);
+  const [indoors, setIndoors] = useState(false);
+  const doorRef = useRef(door);
+  doorRef.current = door;
 
   useEffect(() => {
     setPrefs({ sensitivity: 1, invertY: false, quality: defaultQuality(), real: false, volume: 0.7, ...load() });
@@ -91,7 +95,9 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     }
   };
 
-  const onStats = (s: { x: number; z: number; heading: number }) => {
+  const onStats = (s: { x: number; z: number; heading: number; door?: { name: string; open: boolean } | null; indoors?: boolean }) => {
+    setDoor(s.door ?? null);
+    setIndoors(!!s.indoors);
     setStats(s);
     let best: string | null = null, bestD = Infinity;
     for (const p of walk.places) {
@@ -163,6 +169,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     const onKey = (e: KeyboardEvent) => {
       if (screenRef.current === "playing") {
         if (e.code === "Escape") stop("paused");
+        else if (e.code === "KeyE" && doorRef.current) game.current?.useDoor(); // a door at hand comes first
         else if (e.code === "KeyE" && nearRef.current) readCard(nearRef.current);
         else if (e.code === "KeyM") stop("map");
       } else if ((screenRef.current === "card" || screenRef.current === "map") && (e.code === "Escape" || e.code === "KeyM" || e.code === "KeyE")) {
@@ -210,7 +217,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   void veilTick;
 
   return (
-    <div class="walk" data-screen={screen} data-x={stats.x.toFixed(1)} data-z={stats.z.toFixed(1)} data-heading={deg}
+    <div class="walk" data-screen={screen} data-indoors={indoors ? "true" : undefined} data-x={stats.x.toFixed(1)} data-z={stats.z.toFixed(1)} data-heading={deg}
          data-near={near ?? undefined}>
       <canvas ref={canvas} class="walk-canvas" />
 
@@ -228,7 +235,12 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <img src={mapUrl} alt="" />
           <span class="me" ref={dot} />
         </div>
-        {hud && nearPlace && (
+        {hud && door && (
+          <button type="button" class="prompt" onClick={() => game.current?.useDoor()}>
+            <kbd>E</kbd> {door.open ? "Shut the door" : "Open the door"}
+          </button>
+        )}
+        {hud && !door && nearPlace && (
           <button type="button" class="prompt" onClick={() => readCard(nearPlace.id)}>
             <kbd>E</kbd> Read about {label(nearPlace)}
           </button>

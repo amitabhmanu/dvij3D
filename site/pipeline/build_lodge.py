@@ -115,7 +115,14 @@ def main() -> None:
         if old.name != name:
             old.unlink()
     (OUT / name).write_bytes(data)
-    LODGE_JSON.write_text(json.dumps({"version": 1, "file": name, "bytes": len(data)}, indent=1) + "\n", encoding="utf-8")
+    markers = json.loads(Path(str(raw) + ".markers.json").read_text(encoding="utf-8"))
+    LODGE_JSON.write_text(json.dumps({
+        "version": 1, "file": name, "bytes": len(data),
+        # in the model's own frame: metres, x east, y up, z south, origin at the courtyard's centre
+        "half": plan["house"]["outer"] / 2, "floor": plan["house"]["plinth"],
+        "grounds": plan["grounds"]["boundary"]["rect"],
+        "markers": markers,
+    }, indent=1) + "\n", encoding="utf-8")
     compare_sheet()
     print(f"Lodge {name} ({len(data) // 1024} KB, {len(raw.read_bytes()) // 1024} KB before compression); "
           f"review {REPORTS / 'lodge-compare.png'}")

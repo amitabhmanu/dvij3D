@@ -7,7 +7,12 @@ export type Rules = { eye: number; walk: number; run: number; maxSlope: number; 
 export type World = {
   ground: (x: number, z: number) => number;
   blocked: (x: number, z: number, radius: number) => boolean;
+  /** Is (x, z) on built floor (a step, a verandah, floorboards), where a rise up to STEP is a stair, not a slope? */
+  built?: (x: number, z: number) => boolean;
 };
+
+/** The tallest stair you can step up without looking where you put your feet. */
+export const STEP = 0.4;
 
 const MAX_PITCH = 1.45; // just short of straight up or down
 
@@ -33,7 +38,8 @@ export function step(p: Player, m: Move, dt: number, rules: Rules, world: World)
     if (world.blocked(x, z, rules.radius)) return false;
     const dist = Math.hypot(x - p.x, z - p.z);
     const rise = world.ground(x, z) - here;
-    return dist === 0 || rise <= tan * dist; // going down is always fine
+    if (dist === 0 || rise <= tan * dist) return true; // going down is always fine
+    return !!world.built?.(x, z) && rise <= STEP;
   };
   let x = p.x, z = p.z;
   if (dx || dz) {

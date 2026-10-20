@@ -190,7 +190,13 @@ class Geo:
         return obj
 
 
+MARKERS = []
+
+
 def empty(name, x, y, z, **props):
+    # glTF optimisation prunes empty nodes, so the game reads markers from a
+    # sidecar (lodge.json) as well; the empties stay for anyone opening the .blend
+    MARKERS.append({"name": name, "at": [round(x, 3), round(y, 3), round(z, 3)], **props})
     e = bpy.data.objects.new(name, None)
     e.location = B(x, y, z)
     for k, v in props.items():
@@ -280,15 +286,13 @@ def build_windows_and_doors(g, furniture):
     for o in openings():
         orient, line, c, w, bottom, top, kind, room, n, raw = o
         outer_side = 1 if line > 0 else -1
-        if kind == "window":
+        if kind == "window":  # unglazed: the panes are long gone, the shutters folded back (ours)
             if orient == "h":
-                g.box(c - w / 2, c + w / 2, bottom, top, line - 0.03, line + 0.03, "glass")
                 for s in (-1, 1):
                     x = c + s * (w / 2 + w / 4)
                     zf = line + outer_side * (T / 2 + 0.03)
                     g.box(x - w / 4, x + w / 4, bottom, top, zf - 0.02, zf + 0.02, "shutter")
             else:
-                g.box(line - 0.03, line + 0.03, bottom, top, c - w / 2, c + w / 2, "glass")
                 for s in (-1, 1):
                     z = c + s * (w / 2 + w / 4)
                     xf = line + outer_side * (T / 2 + 0.03)
@@ -369,7 +373,7 @@ def build_pillars(g, col):
         g.box(x0, x1, TOP - 0.45, TOP, z0, z1, "whitewash")
 
 
-def build_court_cover(g):
+def build_court_cover(g, col):
     """Rusting iron bars over the court with the fibreglass torn away in places
     (novel ¶193; mostly open, as the comic draws it)."""
     y = TOP + 0.6
@@ -380,6 +384,8 @@ def build_court_cover(g):
         g.box(x0, x1, y + 0.09, y + 0.1, z0, z1, "paper")
     pl = H["planter"]
     g.cylinder(pl["at"][0], pl["at"][1], pl["radius"], FLOOR - 0.3, FLOOR + 0.3, "whitewash-grey", seg=16)
+    r = pl["radius"]
+    col.box(pl["at"][0] - r * 0.85, pl["at"][0] + r * 0.85, FLOOR - 0.3, FLOOR + 1.2, pl["at"][1] - r * 0.85, pl["at"][1] + r * 0.85, "whitewash")
     g.cylinder(pl["at"][0], pl["at"][1], pl["radius"] - 0.15, FLOOR + 0.25, FLOOR + 0.32, "clay", seg=16)
     for a in range(6):
         ang = a * math.pi / 3
@@ -557,8 +563,8 @@ def furnish(g, col):
     shelves(g, col, 3.3, 4.6, -15.6, -15.0)
     # the study: desk with lamp and board game, couch, shelves to the ceiling, statues,
     # a tape recorder, a globe, a veena (novel ¶949, ¶1286; comic b1-p004-8, b2-p027-9, b2-p033-11)
-    shelves(g, col, -15.7, -15.2, -15.6, -11.0)
-    shelves(g, col, -12.2, -6.0, -15.7, -15.2)
+    shelves(g, col, -15.7, -15.2, -15.6, -14.3)  # clear of the west window (novel ¶949)
+    shelves(g, col, -9.5, -6.0, -15.7, -15.2)  # clear of the back door to the mound path (novel ¶1450)
     table(g, col, -12.8, -12.6, 1.8, 0.9)
     chair(g, -12.8, -11.7, math.pi)
     g.box(-13.0, -12.2, FLOOR + 0.78, FLOOR + 0.83, -12.9, -12.3, "wood")  # the board game
@@ -811,7 +817,7 @@ def main():
     build_walls(house, col)
     build_floors(house, col)
     build_pillars(house, col)
-    build_court_cover(house)
+    build_court_cover(house, col)
     build_roof(house)
     build_verandah(house, col)
     build_windows_and_doors(house, furniture)
@@ -827,6 +833,7 @@ def main():
         render_views()
     bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", export_extras=True, export_yup=True,
                               export_apply=True, export_image_format="WEBP", use_selection=False)
+    json.dump(MARKERS, open(OUT + ".markers.json", "w", encoding="utf-8"), indent=1)
     print(f"LODGE OK {OUT}")
 
 

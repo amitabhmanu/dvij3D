@@ -10,7 +10,9 @@ import {
   Scene, ShaderMaterial, Shape, ShapeGeometry, SphereGeometry, SRGBColorSpace, Texture, TextureLoader,
   Vector2, Vector3, WebGLRenderer,
 } from "three";
-import { decodeHeights, fieldFor, heightAt, type Field } from "./heights";
+import { decodeHeights, fieldFor, heightAt, setFlat, type Field } from "./heights";
+import { loadLodge, type Lodge, type Marker } from "./lodge";
+import lodgeInfo from "../../content/generated/lodge.json";
 import { groundGeometry, groundMaterial } from "./ground";
 import { inkComposer } from "./post";
 import { cutoutMesh, decodeTrees, type Stand } from "./cutouts";
@@ -30,7 +32,7 @@ export type GameOptions = {
   volume: number;
   onProgress: (fraction: number, what: string) => void;
   /** About five times a second while walking: where you are, for the HUD and tests. */
-  onStats?: (s: { x: number; z: number; heading: number; ground: number }) => void;
+  onStats?: (s: { x: number; z: number; heading: number; ground: number; indoors: boolean; door: { name: string; open: boolean } | null }) => void;
   /** Every frame: for the compass and the small map, which move with you. */
   onFrame?: (x: number, z: number, heading: number) => void;
 };
@@ -49,6 +51,10 @@ export type Game = {
   setVolume: (v: number) => void;
   /** "off" until the first click to walk; then the audio context's state. */
   soundState: () => string;
+  /** Open or shut the door you're standing at, if any. */
+  useDoor: () => boolean;
+  /** Where things are in the lodge, in world metres: for fast travel and the tests. */
+  lodgePoint: (name: string) => [number, number, number] | null;
   dispose: () => void;
 };
 
@@ -125,7 +131,17 @@ export async function createGame(o: GameOptions): Promise<Game> {
   cutTex.needsUpdate = true;
   o.onProgress(0.75, "Laying the paths");
   const field: Field = fieldFor(await decodeHeights(heightBuf, h.w, h.h, h.scale), h.w, h.h, walk);
-  const ground = (x: number, z: number) => heightAt(field, x, z);
+  setFlat({ rect: walk.lodge.pad, blend: walk.lodge.blend }); // the lodge stands on levelled ground
+  const terrain = (x: number, z: number) => heightAt(field, x, z);
+  // The ground you stand on: the land, or the lodge's floors and steps under you.
+  let feet = Infinity; // where your feet were at the last step; Infinity when you've just arrived
+  let lodge: Lodge | null = null;
+  const ground = (x: number, z: number) => {
+    const land = terrain(x, z);
+    const floor = lodge?.floorAt(x, z, feet);
+    return floor != null && floor > land - 0.05 ? floor : land;
+  };
+  const built = (x: number, z: number) => (lodge?.floorAt(x, z, feet) ?? -Infinity) > terrain(x, z) + 0.02;
 
   const renderer = new WebGLRenderer({ canvas: o.canvas, antialias: true, powerPreference: "high-performance" });
   renderer.outputColorSpace = SRGBColorSpace;
@@ -143,7 +159,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   let groundMesh: Mesh | null = null;
   const groundMat = (cells: number) => groundMaterial({
     field, colours, mapW: walk.worldWidth, mapD: walk.worldDepth, paper: PAPER, haze: HAZE,
-    hazeRange: [900, 7000], reach, cells,
+    hazeRange: [900, 7000], reach, cells, flat: { rect: walk.lodge.pad, blend: walk.lodge.blend },
   });
   const buildGround = (q: Quality) => {
     if (groundMesh) {
@@ -194,8 +210,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // The painted cut-outs: buildings where the painting draws them, trees where it is green.
   o.onProgress(0.85, "Planting the trees");
   const spriteIndex = new Map(atlas.sprites.map((s, i) => [s.id, i]));
-  const stands: Stand[] = worldJson.buildings.map((b) => ({ x: b.x, y: ground(b.x, b.z), z: b.z, height: b.height, sprite: spriteIndex.get(b.sprite)! }));
-  for (const b of worldJson.buildings) blockers.add(b.x, b.z, b.r);
+  const painted = worldJson.buildings.filter((b) => !b.model); // a modelled building stands as its model
+  const stands: Stand[] = painted.map((b) => ({ x: b.x, y: terrain(b.x, b.z), z: b.z, height: b.height, sprite: spriteIndex.get(b.sprite)! }));
+  for (const b of painted) blockers.add(b.x, b.z, b.r);
   const woods = new Blockers(24); // the trees alone, for how wooded it sounds
   for (const t of await decodeTrees(treeBuf)) {
     stands.push({ x: t.x, y: ground(t.x, t.z), z: t.z, height: t.height, sprite: t.sprite });
@@ -209,7 +226,14 @@ export async function createGame(o: GameOptions): Promise<Game> {
     scene.add(cutouts);
   };
   buildCutouts(o.quality);
-  scene.add(new AmbientLight(0xffffff, 1.3));
+  // The lodge (design §10.3): small enough (about 400 KB) to load with the valley.
+  o.onProgress(0.92, "Opening the lodge");
+  lodge = await loadLodge({
+    url: walkAsset(walk.lodge.file), at: { x: walk.lodge.x, y: walk.lodge.y, z: walk.lodge.z },
+    half: lodgeInfo.half, court: 8, markers: lodgeInfo.markers as Marker[],
+  }, scene);
+  const ambient = new AmbientLight(0xffffff, 1.3);
+  scene.add(ambient);
   const sun = new DirectionalLight(0xfff1d6, 2.0);
   sun.position.copy(SUN_DIR).multiplyScalar(9000);
   scene.add(sun);
@@ -218,14 +242,27 @@ export async function createGame(o: GameOptions): Promise<Game> {
   const blocked = (x: number, z: number, r: number) =>
     Math.abs(x) > halfW || Math.abs(z) > halfD ||
     walk.water.some((lake) => inside(lake.points, x, z)) ||
-    blockers.hits(x, z, r);
+    blockers.hits(x, z, r) ||
+    (lodge?.hits(x, z, Number.isFinite(feet) ? feet : ground(x, z), r) ?? false);
 
   const input = new Input(o.canvas);
   const rules = walk.player;
   let player: Player = {
     x: walk.spawn.x, z: walk.spawn.z, y: 0, heading: (walk.spawn.heading * Math.PI) / 180, pitch: -0.05,
   };
-  const world = { ground, blocked };
+  const world = { ground, blocked, built };
+  // Indoors it is darker, lit from the windows and the courtyard, and the haze stands off.
+  let indoor = 0;
+  const lightFor = (dt: number) => {
+    const target = lodge?.indoors(player.x, player.z) ? 1 : 0;
+    indoor += (target - indoor) * Math.min(1, dt * 3);
+    ambient.intensity = 1.3 - 0.65 * indoor;
+    sun.intensity = 2.0 - 1.4 * indoor;
+  };
+  const moveBy = (m: ReturnType<Input["sample"]>) => {
+    player = step(player, m, STEP, rules, world);
+    feet = player.y - rules.eye;
+  };
 
   const resize = () => {
     const w = o.canvas.clientWidth, hh = o.canvas.clientHeight;
@@ -277,7 +314,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     while (acc >= STEP) {
       const move = input.sample();
       const before = player;
-      player = step(player, move, STEP, rules, world);
+      moveBy(move);
       acc -= STEP;
       stride += Math.hypot(player.x - before.x, player.z - before.z);
       if (stride > (move.run ? 1.7 : 0.85)) {
@@ -285,19 +322,23 @@ export async function createGame(o: GameOptions): Promise<Game> {
         sounds?.step(surface(player.x, player.z), move.run);
       }
     }
+    lodge?.update(1 / 60);
+    lightFor(1 / 60);
     place();
     draw();
     o.onFrame?.(player.x, player.z, player.heading);
     if (now - statsAt > 200) {
       statsAt = now;
-      sounds?.hear({ height: player.y - rules.eye, trees: Math.min(1, woods.count(player.x, player.z, 35) / 14), water: lakeDistance(player.x, player.z) });
-      o.onStats?.({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z) });
+      const inside = lodge?.indoors(player.x, player.z) ?? false;
+      sounds?.hear({ height: inside ? 0 : player.y - rules.eye, trees: inside ? 0 : Math.min(1, woods.count(player.x, player.z, 35) / 14), water: lakeDistance(player.x, player.z) });
+      o.onStats?.({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z), indoors: inside,
+        door: lodge?.doorNear(player.x, player.z) ?? null });
     }
     raf = requestAnimationFrame(frame);
   };
 
   // first frame, so the canvas shows the valley behind the "click to start" card
-  player = step(player, input.sample(), STEP, rules, world);
+  moveBy(input.sample());
   place();
   draw();
   o.onFrame?.(player.x, player.z, player.heading); // so the compass and map are right before you start
@@ -324,7 +365,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
     settings: input.settings,
     teleport: (x, z, heading) => {
       player = { ...player, x, z, y: 0, heading: heading ?? player.heading };
-      player = step(player, { forward: 0, strafe: 0, run: false, turn: 0, look: 0 }, STEP, rules, world);
+      feet = Infinity; // find the floor from above: you may have arrived indoors
+      moveBy({ forward: 0, strafe: 0, run: false, turn: 0, look: 0 });
       place();
       draw();
     },
@@ -341,6 +383,16 @@ export async function createGame(o: GameOptions): Promise<Game> {
     },
     ground,
     soundState: () => sounds?.state ?? "off",
+    useDoor: () => {
+      const d = lodge?.doorNear(player.x, player.z);
+      if (!d) return false;
+      lodge!.toggleDoor(d.name);
+      return true;
+    },
+    lodgePoint: (name) => {
+      const m = (lodgeInfo.markers as Marker[]).find((k) => k.name === name);
+      return m ? [m.at[0] + walk.lodge.x, m.at[1] + walk.lodge.y, m.at[2] + walk.lodge.z] : null;
+    },
     setVolume: (v) => {
       volume = v;
       sounds?.setVolume(v);
@@ -367,6 +419,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       sky.geometry.dispose();
       stones.dispose();
       colours.dispose();
+      lodge?.dispose();
       cutTex.dispose();
       cutouts?.geometry.dispose();
       (cutouts?.material as ShaderMaterial | undefined)?.dispose();

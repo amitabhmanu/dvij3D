@@ -287,3 +287,62 @@ test("sound starts when you start walking, stops when you pause, and keeps its v
   await page.getByLabel("Sound").fill("0.2");
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:walk:v1") || "{}").volume)).toBe(0.2);
 });
+
+// The lodge (design §10.3). Points are in the model's own frame (x east, z south,
+// origin at the courtyard's centre), offset by where the lodge stands.
+const L = walk.lodge;
+const local = (p: P) => ({ x: p.x - L.x, z: p.z - L.z, y: p.y - L.y });
+const toLodge = (page: Page, x: number, z: number, h: number) => teleport(page, L.x + x, L.z + z, h);
+
+test("you walk up the drive, up the verandah steps and in at the front door", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  await toLodge(page, 0, 44, 0); // on the drive, past its round planter, facing the house
+  await hold(page, ["KeyW"], 7000);
+  const p = local(await at(page));
+  expect(p.z).toBeLessThan(10); // through the entrance hall and into the corridor or courtyard
+  expect(p.y).toBeGreaterThan(1.7 + 0.2); // standing on the plinth, not the lawn
+});
+
+test("indoors is darker and the game knows you're inside", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  await toLodge(page, -10.5, 13, Math.PI); // the sitting room
+  await expect(page.locator(".walk")).toHaveAttribute("data-indoors", "true");
+  await toLodge(page, 0, 0 + 5, 0); // the open courtyard is outdoors
+  await expect(page.locator(".walk")).not.toHaveAttribute("data-indoors", "true");
+});
+
+test("the lodge's walls stop you", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  await toLodge(page, -12, 11.5, -Math.PI / 2); // in the sitting room, behind its armchairs, facing the west wall
+  await hold(page, ["KeyW"], 3000);
+  const p = local(await at(page));
+  expect(p.x).toBeGreaterThan(-16 + 0.2); // still inside the outer wall
+  expect(p.x).toBeLessThan(-14.5); // it did walk up to it
+});
+
+test("out through the study's back door to the mound path, unless you shut it", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  await toLodge(page, -10.5, -12.5, 0); // in the study, facing its north door
+  await hold(page, ["KeyW"], 3000);
+  let p = local(await at(page));
+  expect(p.z).toBeLessThan(-17); // outside, behind the house (novel ¶1450)
+  expect(p.y).toBeLessThan(1.7 + 0.3); // back on the ground
+  await toLodge(page, -10.5, -14.5, 0);
+  await expect(page.locator(".prompt")).toHaveText(/Shut the door/);
+  await page.keyboard.press("KeyE");
+  await expect(page.locator(".prompt")).toHaveText(/Open the door/);
+  await page.waitForTimeout(800); // let it swing shut
+  await hold(page, ["KeyW"], 2500);
+  p = local(await at(page));
+  expect(p.z).toBeGreaterThan(-16.3); // the shut door held
+});
+
+test("the lodge's model stays within its budget", async ({ page }) => {
+  const res = await page.request.get(`/_assets/walk/${L.file}`);
+  expect(res.status()).toBe(200);
+  expect((await res.body()).length / 1024 / 1024).toBeLessThan(3);
+});

@@ -110,6 +110,30 @@ def place_spots(cfg: dict, places: list[dict], contours: dict, houses: list[dict
     return out
 
 
+LODGE_JSON = CONTENT / "generated" / "lodge.json"
+PAD_MARGIN = 6.0  # metres of level ground beyond the lodge's boundary wall
+PAD_BLEND = 40.0  # metres over which the levelled pad eases back into the land
+
+
+def flatten(final: np.ndarray, grid, ww: float, wd: float, pad) -> float:
+    """Level the ground under a building's grounds (in place) and return its height.
+    The level is the median of the land there; past the pad it eases back over PAD_BLEND."""
+    x0, z0, x1, z1 = pad
+    cols = (np.arange(final.shape[1]) + 0.5) / grid.ppu - grid.margin
+    rows = ((np.arange(final.shape[0]) + 0.5) / grid.ppu - grid.margin) / bt.MAP_ASPECT
+    X = (cols - 0.5) * ww
+    Z = (rows - 0.5) * wd
+    dx = np.maximum(np.maximum(x0 - X, X - x1), 0)[None, :]
+    dz = np.maximum(np.maximum(z0 - Z, Z - z1), 0)[:, None]
+    d = np.hypot(dx, dz)
+    inside = d == 0
+    level = float(np.median(final[inside]))
+    t = np.clip(d / PAD_BLEND, 0, 1)
+    w = 1 - t * t * (3 - 2 * t)
+    final[:] = final * (1 - w) + level * w
+    return level
+
+
 def write_hashed(stem: str, ext: str, data: bytes) -> str:
     name = f"{stem}.{hashlib.sha256(data).hexdigest()[:10]}.{ext}"
     OUT.mkdir(parents=True, exist_ok=True)
@@ -126,7 +150,6 @@ def main() -> None:
     cfg["raster"]["width"] = walk["heights"]["width"]
     contours = load_contours()
     grid, _, final, _, _, _, water, _ = bt.build(cfg, contours)
-    height_name = write_hashed("height", "bin", encode(final))
     drape = json.loads((CONTENT / "generated" / "drape.json").read_text(encoding="utf-8"))
     ground_name = write_hashed("ground", "webp", ground_colours(drape["file"], walk.get("erase", [])))
 
@@ -155,12 +178,23 @@ def main() -> None:
     lakes = [Path_(np.array([[(x - 0.5) * ww, (y - 0.5) * wd] for x, y in w["points"]])) for w in water]
     wet = lambda x, z: any(l.contains_point((x, z)) for l in lakes)
     houses = place_world.buildings(cut, cut_cfg, lambda u, v: ((u - 0.5) * ww, (v - 0.5) * wd), ground)
-    near_house = lambda x, z: any((x - h["x"]) ** 2 + (z - h["z"]) ** 2 < (h["r"] + 4) ** 2 for h in houses)
+    # The lodge is a model you can walk into (design §10.3): it stands where the
+    # painting draws it, on ground levelled for its grounds, and replaces its cut-out.
+    lodge = json.loads(LODGE_JSON.read_text(encoding="utf-8"))
+    home = next(h for h in houses if h["id"] == "lodge")
+    lx, lz = home["x"], home["z"]
+    gx0, gz0, gx1, gz1 = lodge["grounds"]
+    pad = (lx + gx0 - PAD_MARGIN, lz + gz0 - PAD_MARGIN, lx + gx1 + PAD_MARGIN, lz + gz1 + PAD_MARGIN)
+    level = flatten(final, grid, ww, wd, pad)
+    home.update({"model": "lodge", "y": round(level, 2), "r": 0})  # no cut-out, and the model is its own collision
+    in_grounds = lambda x, z: pad[0] - 4 < x < pad[2] + 4 and pad[1] - 4 < z < pad[3] + 4
+    near_house = lambda x, z: in_grounds(x, z) or any((x - h["x"]) ** 2 + (z - h["z"]) ** 2 < (h["r"] + 4) ** 2 for h in houses)
     drape_img = cv2.imread(str(bt.OUT / json.loads((CONTENT / "generated" / "drape.json").read_text(encoding="utf-8"))["file"]))
     forest = place_world.trees(walk, cut, drape_img, (ww, wd), ground, slope, wet, near_house)
     trees_name = write_hashed("trees", "bin", place_world.encode_trees(forest))
     stones = [s for s in stones if not near_house(s[0], s[2])]
     world = {"version": 1, "boulders": stones, "buildings": houses}
+    height_name = write_hashed("height", "bin", encode(final))
     world_name = write_hashed("world", "json", json.dumps(world, separators=(",", ":")).encode())
 
     sx, sz = walk["spawn"]["at"]
@@ -179,6 +213,8 @@ def main() -> None:
         "water": [{"id": w["id"], "level": w["level"],
                    "points": [[round((x - 0.5) * ww, 1), round((y - 0.5) * wd, 1)] for x, y in w["points"]]} for w in water],
         "player": walk["player"],
+        "lodge": {"file": lodge["file"], "x": lx, "y": round(level, 2), "z": lz, "pad": [round(v, 1) for v in pad],
+                  "blend": PAD_BLEND},
         "places": place_spots(walk["places"], places, contours, houses, ww, wd, ground),
         # exact samples for the browser's decoder to be checked against (tests)
         "check": [{"i": i, "j": j, "h": round(float(final[j, i]), 2)}
