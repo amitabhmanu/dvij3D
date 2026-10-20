@@ -102,4 +102,4 @@ beats:
       - say: {who: maharaj, line: "Nobody goes out, sahib. It is an unthinkable act. Outside is an evil world, that's what Mahant has told us.", sources: [novel ¶222]}
       - caption: "He could not tell the cook that he will have to leave to find himself. Somewhere beyond the mountains that surrounded the valley hid his past, his identity."
       - progress: {book: 1, page: 10}
-      - end: {next: null, title: "To be continued"}
+      - end: {next: b1-ch06}

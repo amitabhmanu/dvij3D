@@ -16,6 +16,8 @@ export type StoryScreen = {
   card: (title: string, subtitle?: string) => Promise<void>;
   panels: (pages: string[]) => Promise<void>;
   reflection: (panel: string) => Promise<void>;
+  /** A comic panel held full screen while the next words play (null: back to the world). */
+  panel: (id: string | null) => void;
   ended: (scene: Scene, next: string | null) => void;
   /** Is the game paused (the story's clock stops with it)? */
   paused: () => boolean;
@@ -95,6 +97,7 @@ export class StoryStage implements Stage {
 
   async setUp(sc: Scene): Promise<void> {
     this.game.body.halt();
+    this.screen.panel(null);
     this.props?.dispose();
     this.props = new Props((sc.props ?? []) as never);
     this.game.body.lodgeRoot()?.add(this.props.group);
@@ -154,6 +157,7 @@ export class StoryStage implements Stage {
       }
       case "look":
         if (!hurried && arg.at === "arm") await body.glance(-1.0, 2.2);
+        if (!hurried && arg.at === "down") await body.glance(-0.7, 1.4); // a bow of the head
         return;
       case "animate":
         if (!hurried && String(arg.player).startsWith("drink")) {
@@ -169,6 +173,9 @@ export class StoryStage implements Stage {
         return;
       case "sound":
         body.fx(arg);
+        return;
+      case "panel":
+        this.screen.panel(arg.id ?? null);
         return;
       case "reflection":
         if (!hurried) await this.screen.reflection(arg.panel);

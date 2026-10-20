@@ -13,13 +13,14 @@ def test_every_scene_script_checks_out_against_the_book():
         assert ss.problems(name, sc, PARAS, PAGES) == [], name
 
 
-def test_the_slice_runs_from_waking_to_the_kitchen_in_page_order():
+def test_the_slice_runs_from_waking_to_his_naming_in_page_order():
     order = [SCENES[n] for n in sorted(SCENES)]
-    assert [sc["scene"] for sc in order] == ["b1-ch01", "b1-ch02", "b1-ch03", "b1-ch04", "b1-ch05"]
+    assert [sc["scene"] for sc in order] == ["b1-ch01", "b1-ch02", "b1-ch03", "b1-ch04", "b1-ch05", "b1-ch06", "b1-ch07"]
     pages = [p for sc in order for p in sc["pages"]]
     assert pages == sorted(pages) and pages[0] == 4
     for a, b in zip(order, order[1:]):
-        assert a["beats"][-1]["do" if "do" in a["beats"][-1] else "then"][-1]["end"]["next"] == b["scene"]
+        last = a["beats"][-1]
+        assert last["then" if "then" in last else "do"][-1]["end"]["next"] == b["scene"]
 
 
 def test_bad_scripts_are_caught():

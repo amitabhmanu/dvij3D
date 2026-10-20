@@ -1,0 +1,82 @@
+# Book 1, Chapter 6: Mahant's pact with Baldev (story mode, design §10.4).
+# DRAFT for the author's review. Novel ¶224-246; breakdown chapter 6; comic b1-p011, panels 4-11
+# (panels 1-3 of that page close Chapter 5).
+# Dvij is not in this chapter, so like Chapter 2 it plays as the comic: here panel by panel,
+# each panel full screen while its lines are spoken in Mahant's and Baldev's voices.
+
+scene: b1-ch06
+book: 1
+pages: [11]
+title: Chapter 6
+novel: [224, 246]
+start: {pose: interlude}
+cast:                                            # seen only in the comic's panels in this slice
+  - {who: mahant, at: [0, 0], sources: [breakdown ch6 p3]}
+  - {who: baldev, at: [0, 0], sources: [breakdown ch6 p2]}
+
+beats:
+  - id: the-site
+    sources: [comic b1-p011-4, breakdown ch6 p1, novel ¶224]
+    do:
+      - chapter: {title: "Chapter 6", subtitle: "Meanwhile, at the temple site"}   # subtitle ours
+      - panel: {id: b1-p011-4}
+      - caption: "Mahant surveyed the temple site from the shade of his pandal. Out in the midday sun, volunteers from the village dug up bones and carcasses, ridding the land of impurities in a ritual called Shalyodhara."
+      - caption: "Beyond it lay a considerable stretch of fertile land, something he knew he would later appropriate for his private use."
+
+  - id: the-tent
+    sources: [comic b1-p011-5, breakdown ch6 p2, breakdown ch6 p3, novel ¶225, novel ¶226]
+    do:
+      - panel: {id: b1-p011-5}
+      - say: {who: baldev, line: "That's a good piece of land you've chosen there, Mahant.", sources: [novel ¶225]}
+      - say: {who: mahant, line: "All governed by divya vaastu. The Lord dictates what he wants. I am a mere conduit for Him to execute His wishes.", sources: [novel ¶226]}
+
+  - id: the-bottle
+    sources: [comic b1-p011-6, breakdown ch6 p4, breakdown ch6 p5, novel ¶227-229]
+    do:
+      - panel: {id: b1-p011-6}
+      - say: {who: baldev, line: "Indeed! What about my wishes, o holy one?", sources: [novel ¶227]}
+      - caption: "Mahant glowered for an instant, then pointed to a chest behind them. Baldev's eyes grew wide. He drew out a bottle and poured for both of them."
+      - sound: clink
+      - say: {who: baldev, line: "You use my weaknesses against me. But I will not relent this time. What about my wishes, Mahant?", sources: [novel ¶229]}
+
+  - id: the-temple
+    sources: [comic b1-p011-7, breakdown ch6 p6, breakdown ch6 p7, novel ¶230, novel ¶231]
+    do:
+      - panel: {id: b1-p011-7}
+      - say: {who: mahant, line: "All in good time, Baldev... all in good time. You will become the mukhiya soon. But first we have to build this temple. Do not spare any cost in its construction. You have access to the village coffers. Empty them for this cause. Use your powers well.", sources: [novel ¶230]}
+      - panel: {id: b1-p011-8}
+      - caption: "Mahant paused to sip the intoxicating liquor. Baldev gulped larger quantities down his throat."
+
+  - id: the-drought
+    sources: [comic b1-p011-9, breakdown ch6 p8, breakdown ch6 p9, novel ¶232-234]
+    do:
+      - panel: {id: b1-p011-9}
+      - say: {who: mahant, line: "We have not had rain the last three years. Your corrupt misadministration is adding fuel to the fire. The fools are losing their faith in me. They have begun to question my edicts. They will never let you become the mukhiya.", sources: [novel ¶232]}
+      - panel: {id: b1-p011-10}
+      - sound: clink
+      - say: {who: baldev, line: "Why do we need this wounded guy? Who is he anyway?", sources: [novel ¶234]}
+
+  - id: the-miracle
+    sources: [breakdown ch6 p10, breakdown ch6 p11, novel ¶235-243]
+    do:
+      - say: {who: mahant, line: "Who he is... is not for you to worry about. Faith needs miracles. He is my miracle. He is a fool who has dropped into my lap like a blessing from the Lord. I have set the stage for the play to begin. He will be the main actor, acting under my direction.", sources: [novel ¶235]}
+      - say: {who: baldev, line: "Did he really drop into your lap, Mahant?", sources: [novel ¶236]}
+      - say: {who: mahant, line: "What do you mean?", sources: [novel ¶237]}
+      - say: {who: baldev, line: "I mean you could have arranged for it to appear as if he dropped into your lap from nowhere.", sources: [novel ¶238]}
+      - say: {who: mahant, line: "I could, and I might have. That is none of your concern, Baldev. It is enough for you to know that he is the saviour that I ordered.", sources: [novel ¶239]}
+      - say: {who: baldev, line: "But if he's the saviour, why would anyone care for you?", sources: [novel ¶240]}
+      - say: {who: mahant, line: "Ah, but he will only be the saviour as long as I want him to be. When I don't need him anymore, he would be gone. You will take care of that when I ask you to. You understand?", sources: [novel ¶241]}
+      - say: {who: baldev, line: "But what if he does not play along?", sources: [novel ¶242]}
+      - say: {who: mahant, line: "He does not play along? Everybody plays along when I want them to.", sources: [novel ¶243]}
+
+  - id: the-toast
+    sources: [breakdown ch6 p12, breakdown ch6 p13, comic b1-p011-11, novel ¶244-246]
+    do:
+      - say: {who: mahant, line: "He will. You will make sure of that. Got it? Good. The Wounded One with No Past will have to forget everything else and don a new avatar. Here, let us raise a toast to that.", sources: [novel ¶245]}
+      - sound: clink
+      - panel: {id: b1-p011-11}
+      - caption: "The attendant keeping watch outside the tent shook his head with distaste when he heard the clinking of their glasses."
+      - caption: "Out on the field, the oppressive heat whirled dust about the tired volunteers, unmindful of their hunger and fatigue, oblivious of the real cause of their suffering."
+      - panel: {id: null}
+      - progress: {book: 1, page: 11}
+      - end: {next: b1-ch07}

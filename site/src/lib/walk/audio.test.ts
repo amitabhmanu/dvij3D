@@ -18,4 +18,10 @@ describe("what you hear", () => {
     expect(levels({ height: 0, trees: 0, water: 80 }).water).toBeCloseTo(0.5, 5);
     expect(levels({ height: 0, trees: 0, water: 400 }).water).toBe(0);
   });
+
+  it("is quiet indoors: no wind (it droned like a fan), birds and water only through the windows", () => {
+    expect(levels({ height: 0, trees: 1, water: 0, indoors: true }).wind).toBe(0);
+    expect(levels({ height: 0, trees: 1, water: 0, indoors: true }).birds).toBeLessThan(0.5);
+    expect(levels({ height: 0, trees: 1, water: 0, indoors: true }).water).toBeLessThan(0.5);
+  });
 });

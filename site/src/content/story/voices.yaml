@@ -69,3 +69,21 @@ characters:
       - {speaker: Rohit, seed: 2404, description: "Rohit's voice is middle-aged, soft and low-pitched. He speaks English with a rustic Pahadi Hindi accent from the Uttarakhand hills, slowly and quietly, timid and deferential, almost whispering."}
       - {speaker: Aman, seed: 2404, description: "Aman's voice is low-pitched and a little rough. He speaks English with a strong Hindi accent, at a slow, hushed pace, nervous and respectful."}
       - {speaker: Jatin, seed: 2404, description: "Jatin's voice is middle-aged and medium-pitched. He speaks Indian English with a Hindi accent, quietly and hesitantly, anxious and humble."}
+
+  mahant:
+    who: Mahapandit Sampoornand Swami, the head priest; lean, calculating, mesmerizing, smooth until he snarls  # breakdown ch6 notes, novel ¶224-245
+    voice: {speaker: Rohit, seed: 2505, description: "Rohit's voice is deep, smooth and low-pitched. He speaks English with a North Indian Hindi accent, at a slow, deliberate pace, silky and calculating, like a priest who is used to being obeyed."}
+    line: "Faith needs miracles. He is my miracle. He is a fool who has dropped into my lap like a blessing from the Lord."
+    candidates:
+      - {speaker: Rohit, seed: 2505, description: "Rohit's voice is deep, smooth and low-pitched. He speaks English with a North Indian Hindi accent, at a slow, deliberate pace, silky and calculating, like a priest who is used to being obeyed."}
+      - {speaker: Sanjay, seed: 2505, description: "Sanjay's voice is low and resonant. He speaks English with a North Indian accent, at a measured pace, commanding and quietly menacing."}
+      - {speaker: Harish, seed: 2505, description: "Harish's voice is mature, deep and a little nasal. He speaks English with a North Indian Hindi accent, slowly and smoothly, persuasive and sly."}
+
+  baldev:
+    who: Baldev Singh, the mukhiya-in-waiting; large and brutish, sarcastic, slurring as he drinks  # breakdown ch6 notes, novel ¶225-242
+    voice: {speaker: Vikas, seed: 2606, description: "Vikas's voice is gruff, loud and low-pitched. He speaks English with a rustic Haryanvi Hindi accent, at a heavy, sluggish pace, sarcastic and a little slurred, like a big man who has been drinking."}
+    line: "You use my weaknesses against me. But I will not relent this time. What about my wishes, Mahant?"
+    candidates:
+      - {speaker: Vikas, seed: 2606, description: "Vikas's voice is gruff, loud and low-pitched. He speaks English with a rustic Haryanvi Hindi accent, at a heavy, sluggish pace, sarcastic and a little slurred, like a big man who has been drinking."}
+      - {speaker: Suresh, seed: 2606, description: "Suresh's voice is rough and booming, low-pitched. He speaks English with a rustic North Indian accent, at a slow, heavy pace, crude and sarcastic."}
+      - {speaker: Rakesh, seed: 2606, description: "Rakesh's voice is thick and gravelly. He speaks English with a strong rustic Hindi accent, slowly and loudly, mocking and half drunk."}

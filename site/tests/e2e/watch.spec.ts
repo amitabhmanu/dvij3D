@@ -110,4 +110,22 @@ test.describe("watch mode", () => {
     const files = new Set(Object.values(voices).map((v) => (v as { file: string }).file));
     for (const u of heard) expect(files.has(u.split("/").pop()!)).toBe(true);
   });
+
+  test("Chapter 6 plays as the comic's panels, one at a time, then Chapter 7 begins", async ({ page }) => {
+    test.setTimeout(240_000);
+    await watch(page);
+    for (let i = 0; i < 5; i++) await bar(page).getByRole("button", { name: "Next chapter" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch06");
+    await bar(page).getByRole("button", { name: "4×" }).click();
+    const panels = new Set<string>();
+    const deadline = Date.now() + 180_000;
+    while (Date.now() < deadline && (await walkEl(page).getAttribute("data-story")) === "b1-ch06") {
+      const id = await page.locator(".story-panel").getAttribute("data-panel", { timeout: 500 }).catch(() => null);
+      if (id) panels.add(id);
+      await page.waitForTimeout(200);
+    }
+    expect([...panels].sort()).toEqual(["b1-p011-10", "b1-p011-11", "b1-p011-4", "b1-p011-5", "b1-p011-6", "b1-p011-7", "b1-p011-8", "b1-p011-9"]);
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch07");
+    await expect(page.locator(".story-panel[data-panel='b1-p012-1']")).toBeVisible({ timeout: 30_000 }); // the days going by
+  });
 });

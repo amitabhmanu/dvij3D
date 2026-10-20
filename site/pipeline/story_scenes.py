@@ -23,10 +23,10 @@ import lodge_reference
 
 STORY = SITE / "src" / "content" / "story"
 REVIEW = SITE / "docs" / "story" / "review.md"
-SPEAKERS = {"dvij", "professor", "bhavi", "maharaj"}
+SPEAKERS = {"dvij", "professor", "bhavi", "maharaj", "mahant", "baldev"}
 ACT_KINDS = {"press", "look-press", "reach", "use"}
 ACTIONS = {"effect", "caption", "wait", "animate", "prop", "sound", "camera", "look", "body", "checkpoint",
-           "reflection", "progress", "end", "say", "actor", "chapter", "panels"}
+           "reflection", "progress", "end", "say", "actor", "chapter", "panels", "panel"}
 SOURCE = re.compile(r"^(novel ¶\d+(-\d+)?|breakdown ch\d+ p\d+(-p\d+)?|comic b\d-p\d{3}(-\d+)?|ours)$")
 
 
@@ -144,7 +144,7 @@ def review(paras: list[str]) -> str:
                     lines.append(f"- **{arg['who'].title()}:** “{arg['line']}”")
                 elif verb == "caption":
                     lines.append(f"- *Caption:* {arg}")
-                elif verb in ("actor", "camera", "effect", "prop", "panels", "reflection"):
+                elif verb in ("actor", "camera", "effect", "prop", "panels", "reflection", "panel"):
                     lines.append(f"- *{verb}:* `{json.dumps(arg, ensure_ascii=False)}`")
             cited = sorted({int(n) for s in sources_of(beat) for n in re.findall(r"novel ¶(\d+)", s)})
             if cited:

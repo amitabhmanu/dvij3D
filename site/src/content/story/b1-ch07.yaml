@@ -1,0 +1,153 @@
+# Book 1, Chapter 7: panchamrita, and a name (story mode, design §10.4).
+# DRAFT for the author's review. Novel ¶247-280; breakdown chapter 7; comic b1-p012.
+# The clearing: the novel puts it "in the otherwise overgrown grass" (¶249) and the comic
+# on the lawn by the veranda (b1-p012 panels 2-3); where exactly on the lawn is ours.
+
+scene: b1-ch07
+book: 1
+pages: [12]
+title: Chapter 7
+novel: [247, 280]
+start:
+  pose: lie                                      # in his bed again, days later (novel ¶247)
+  at: [-15.0, 7.5]
+  look: up
+cast:
+  - {who: professor, at: [8.5, 32.6], pose: sit, on: deck-chair, sources: [novel ¶249, breakdown ch7 p3]}
+  - {who: bhavi, at: [10.5, 32.6], pose: sit, on: deck-chair, sources: [novel ¶249, breakdown ch7 p3]}
+  - {who: maharaj, at: [0, 20.4], pose: stand, sources: [novel ¶257, breakdown ch7 p6]}      # comes up the path later
+props:
+  - {id: chair-professor, floor: 0, kind: deck-chair, at: [8.5, 32.6], sources: [novel ¶249]}
+  - {id: chair-bhavi, floor: 0, kind: deck-chair, at: [10.5, 32.6], sources: [novel ¶249]}
+  - {id: chair-dvij, floor: 0, kind: deck-chair, at: [10.5, 30.4], facing: [10.5, 32.6], sources: [novel ¶249]}   # "sat opposite the girl"
+  - {id: tumbler, floor: 0, kind: glass, at: [9.6, 31.5], on: table, state: gone, sources: [novel ¶258]}
+  - {id: table, floor: 0, kind: stool, at: [9.6, 31.5], sources: [ours]}   # somewhere to put the tumblers down
+
+beats:
+  - id: days
+    sources: [comic b1-p012-1, breakdown ch7 p1, novel ¶247]
+    do:
+      - chapter: {title: "Chapter 7", subtitle: "A name"}       # subtitle ours
+      - panel: {id: b1-p012-1}
+      - caption: "He spent the next few days alternating between afternoons reading esoteric texts and nights dreaming nightmarish dreams that would end with him waking up to a feeling of dread."
+      - panel: {id: null}
+      - effect: {dark: 0.85}
+      - sound: thud
+      - effect: {dark: 0, over: 3}
+
+  - id: healed
+    sources: [breakdown ch7 p2, novel ¶248]
+    act:
+      objective: Get up.
+      kind: press
+    then:
+      - camera: {pose: sit, over: 1.5}
+      - look: {at: arm}                          # the plaster still on, but it moves freely now
+      - caption: "The reams of bandages had been replaced by a much smaller bandage. Hair was growing back on his shaven head. His left arm was still plastered, but he found that he was able to move it freely now."
+      - camera: {pose: stand, over: 1.5}
+      - checkpoint: healed
+
+  - id: outside
+    sources: [breakdown ch7 p3, novel ¶249]
+    act:
+      objective: Go out to the lawn.
+      kind: reach
+      target: [0, 20.4]                          # the three small doorsteps (as in Chapter 4)
+      radius: 1.5
+    then:
+      - caption: "The old man was out, sitting on a deck chair in a clearing cut out in the otherwise overgrown grass. The girl sat beside him, dressed in a rustling morning gown."
+
+  - id: the-clearing
+    sources: [comic b1-p012-2, breakdown ch7 p3, novel ¶249]
+    act:
+      objective: Sit opposite the girl.
+      kind: look-press
+      target: chair-dvij
+    then:
+      - camera: {pose: sit, at: [10.5, 30.4], look: [10.5, 1.4, 32.6], over: 1.5}
+      - caption: "She stared at him with the same intent as she had done the other day. Then she turned to the old man."
+
+  - id: the-doctor
+    sources: [breakdown ch7 p4, breakdown ch7 p5, novel ¶250-256]
+    do:
+      - say: {who: bhavi, line: "Dr. Parathasarathi, have you seen a loony old man around here?", sources: [novel ¶250]}
+      - say: {who: professor, line: "A loony old man? I can't say that I have. Why do you ask?", sources: [novel ¶251]}
+      - say: {who: bhavi, line: "Because The Wounded One with No Past here thinks you saved him from a certain death.", sources: [novel ¶252]}
+      - say: {who: dvij, line: "Yes doctor, I do think you saved me, and I would like to thank you for that.", sources: [novel ¶253]}
+      - say: {who: professor, line: "I saved your life? What nonsense? I did not do anything, young man. It was my niece whom you should thank.", sources: [novel ¶254]}
+      - say: {who: dvij, line: "But you're Dr. Parthasarathi... and you took care of me...", sources: [novel ¶255]}
+      - say: {who: professor, line: "Yes of course, I am Dr. Parthasarathi. But that is because I have done my doctorate. I am a mere professor. Bhavi is the doctor around here. She fixed you up, my boy.", sources: [novel ¶256]}
+
+  - id: the-bow
+    sources: [comic b1-p012-3, breakdown ch7 p6, novel ¶257]
+    act:
+      objective: Bow your head to Bhavi.
+      kind: press
+    then:
+      - look: {at: down}
+      - caption: "Bhavi was laughing at his confusion. She accepted his bow with a very graceful nod of her pretty head."
+      - actor: {who: maharaj, walk: [9.6, 33.5], from: [0, 20.4], holding: pitcher}   # Maharaj brings the pitcher (novel ¶257)
+      - caption: "Maharaj had brought in a pitcher of a thick, strongly smelling drink."
+      - prop: {id: tumbler, state: full}
+
+  - id: panchamrita
+    sources: [comic b1-p012-5, breakdown ch7 p7, breakdown ch7 p8, novel ¶258-261]
+    do:
+      - say: {who: professor, line: "Here, have this. It will invigorate your very soul.", sources: [novel ¶258]}
+    act:
+      objective: Take the tumbler.
+      kind: look-press
+      target: tumbler
+    then:
+      - animate: {player: drink}
+      - prop: {id: tumbler, state: empty}
+      - caption: "He took a sip and had to harden his features to hide his displeasure."
+      - say: {who: professor, line: "This is panchamrita. Made of five essential elements... ghee, milk, curd, honey and... Curious mixture of tastes, no? All of them impinge upon your tongue at the same time. An ancient formula, yet as effective today as in those bygone days.", sources: [novel ¶260]}
+      - caption: "He did his best to nod vigorously in assent."
+
+  - id: the-anomaly
+    sources: [comic b1-p012-6, breakdown ch7 p9, novel ¶262-268]
+    do:
+      - say: {who: professor, line: "You are an anomaly, young man. An aberration, do you know that? I, for one, do not accept prophecies. Prophesying implies predestination. I am a believer of free will, my boy. But you are a singularity that is forcing me to question my utmost beliefs.", sources: [novel ¶262]}
+      - say: {who: dvij, line: "Me, professor? I don't even know my own past.", sources: [novel ¶263]}
+      - say: {who: professor, line: "That is a part of the problem. The other part is that you arrived wounded.", sources: [novel ¶264]}
+      - say: {who: dvij, line: "I don't quite understand.", sources: [novel ¶265]}
+      - say: {who: professor, line: "Let me explain, my boy. The Mahant, he's the head priest of the main temple in the village, he predicted the arrival of The Wounded One with No Past on a specific date.", sources: [novel ¶266]}
+      - say: {who: dvij, line: "That's the date I arrived?", sources: [novel ¶267]}
+      - say: {who: professor, line: "Exactly that date... and wounded... just as Mahant had predicted. And because you have lost your memory, you have no past. Now do you see why you're an anomaly to my beliefs?", sources: [novel ¶268]}
+
+  - id: the-accusation
+    sources: [comic b1-p012-9, breakdown ch7 p10, novel ¶269-273]
+    do:
+      - say: {who: dvij, line: "Yes, I think I understand it now. You think I'm in cahoots with this Mahant?", sources: [novel ¶269]}
+      - say: {who: bhavi, line: "I don't think... I know. How else do you explain your arrival on that exact date?", sources: [novel ¶270]}
+      - say: {who: dvij, line: "I don't know. Maybe I am his accomplice; maybe I am not.", sources: [novel ¶271]}
+      - say: {who: bhavi, line: "Bah! I think you are pretending. This is all planned by that evil Mahant. He bought you with money. You had the accident as per Mahant's plan, and now that you are healed, you will start working with him. This is all an evil scheme, uncle. We have to stop it before it's too late.", sources: [novel ¶272]}
+      - say: {who: dvij, line: "Just a sec! I may have been a bad guy or maybe not. I just don't know. The only thing I know is that I have lost my memory... even my name.", sources: [novel ¶273]}
+
+  - id: the-name
+    sources: [comic b1-p012-7, breakdown ch7 p11, breakdown ch7 p12, novel ¶274, novel ¶275]
+    do:
+      - say: {who: professor, line: "Name? You do need a name. Now, what shall we call... Yes! I have it. We will call you Dvij, young man, for you are twice-born. Back in Vedic days, it was believed that people took birth twice... once in life, and then in afterlife.", sources: [novel ¶274]}
+      - checkpoint: named
+    act:
+      objective: Answer him.
+      kind: press
+    then:
+      - say: {who: dvij, line: "Maybe this is the afterlife... and maybe she is an apsara.", sources: [novel ¶275]}
+
+  - id: the-huff
+    sources: [comic b1-p012-10, breakdown ch7 p13, novel ¶276]
+    do:
+      - caption: "Bhavi looked at the Professor, hoping he would find this as offensive as she did. But he appeared to be enjoying their little banter. Bhavi scowled and left in a huff."
+      - actor: {who: bhavi, walk: [0, 20.4], exit: true}
+
+  - id: what-you-know
+    sources: [comic b1-p012-11, breakdown ch7 p14, novel ¶277-280]
+    do:
+      - say: {who: professor, line: "Don't mind her. She fears for my safety, my little one. She believes the Mahant wants to hurt me, and rightly so.", sources: [novel ¶277]}
+      - say: {who: dvij, line: "And she thinks this Mahant has planted me here as a part of some nefarious scheme. But why? Why would Mahant want to hurt you?", sources: [novel ¶278]}
+      - say: {who: professor, line: "Because of what I know, my boy. Sometimes what you do can become your undoing. At other times, it could happen simply because of what you know, and you may not know it.", sources: [novel ¶279]}
+      - caption: "The Professor ended the conversation by gulping down the rest of his panchamrita, with those cryptic words that only he would have understood."
+      - progress: {book: 1, page: 12}
+      - end: {next: null}

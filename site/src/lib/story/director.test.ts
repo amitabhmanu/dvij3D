@@ -64,6 +64,6 @@ describe("the director", () => {
     await done;
     expect(f.log.some((l) => l.startsWith("say:"))).toBe(false);
     expect(f.log).toContain(`progress:${JSON.stringify({ book: 1, page: 10 })}`);
-    expect(f.log.at(-1)).toBe("end:b1-ch05->null");
+    expect(f.log.at(-1)).toBe("end:b1-ch05->b1-ch06");
   });
 });

@@ -6,10 +6,17 @@ import {
   BoxGeometry, Color, CylinderGeometry, Group, Mesh, MeshLambertMaterial, MeshStandardMaterial, Object3D, SphereGeometry, TorusGeometry,
 } from "three";
 
-export type PropSpec = { id: string; kind: string; at?: [number, number]; on?: string; state?: string; window?: string; room?: string };
+export type PropSpec = {
+  id: string; kind: string; at?: [number, number]; on?: string; state?: string; window?: string; room?: string;
+  /** the ground it stands on, in the lodge's frame: the plinth (0.6) indoors, 0 out on the lawn */
+  floor?: number;
+  /** a point it faces (a chair turned to the others) */
+  facing?: [number, number];
+};
 type Made = { obj: Object3D; set: (state: string) => void; point: () => [number, number, number] };
 
-const FLOOR = 0.6; // the lodge's plinth: rooms' floors stand this high (lodge.yaml house.plinth)
+const PLINTH = 0.6; // the lodge's plinth: rooms' floors stand this high (lodge.yaml house.plinth)
+let FLOOR = PLINTH; // the floor of the prop being made (see make)
 const mat = (hex: string, opts: Partial<MeshStandardMaterial> = {}) => new MeshStandardMaterial({ color: new Color(hex), roughness: 0.8, ...opts });
 const WOOD = mat("#5c3a22"), BRASS = mat("#b08a3a", { metalness: 0.7, roughness: 0.35 }), GLASS = mat("#cfe3e6", { transparent: true, opacity: 0.45, roughness: 0.1 });
 const PAPER = mat("#e6d8b4"), CLOTH = mat("#7a2e20"), CLAY = mat("#8a4a2a"), PLANK = mat("#6b4a2c"), IRON = mat("#3a332c");
@@ -21,6 +28,7 @@ function at(o: Object3D, x: number, y: number, z: number) {
 
 /** One prop, by kind. Unknown kinds become a small marked box, so a script never breaks the scene. */
 function make(p: PropSpec): Made {
+  FLOOR = p.floor ?? PLINTH;
   const [x, z] = p.at ?? [0, 0];
   const g = new Group();
   let state = p.state ?? "";
@@ -43,7 +51,8 @@ function make(p: PropSpec): Made {
         obj: at(g, x, 0, z),
         set: (s) => {
           state = s;
-          if (s === "rolled-off" || s === "empty") water.visible = false;
+          g.visible = s !== "gone";
+          water.visible = s !== "rolled-off" && s !== "empty";
           if (s === "rolled-off") { g.position.set(x - 0.4, 0, z - 0.3); glass.rotation.z = Math.PI / 2; glass.position.y = FLOOR + 0.035; }
           if (s === "gone") g.visible = false;
         },
@@ -53,6 +62,23 @@ function make(p: PropSpec): Made {
     case "spectacles": {
       for (const s of [-0.035, 0.035]) g.add(at(new Mesh(new TorusGeometry(0.025, 0.004, 6, 16), IRON), s, FLOOR + 0.505, 0));
       g.children.forEach((c) => (c.rotation.x = Math.PI / 2));
+      break;
+    }
+    case "deck-chair": {
+      // an old cane deck chair, leaning back (novel ¶249: "sitting on a deck chair in a clearing")
+      const CANE = mat("#a07a44");
+      const seat = at(new Mesh(new BoxGeometry(0.55, 0.04, 0.9), CANE), 0, FLOOR + 0.32, 0);
+      seat.rotation.x = -0.35;
+      const back = at(new Mesh(new BoxGeometry(0.55, 0.04, 0.6), CANE), 0, FLOOR + 0.6, 0.48);
+      back.rotation.x = -1.0;
+      g.add(seat, back);
+      for (const sx of [-0.27, 0.27]) {
+        g.add(at(new Mesh(new BoxGeometry(0.04, 0.5, 0.04), WOOD), sx, FLOOR + 0.25, -0.35));
+        g.add(at(new Mesh(new BoxGeometry(0.04, 0.8, 0.04), WOOD), sx, FLOOR + 0.4, 0.55));
+        g.add(at(new Mesh(new BoxGeometry(0.04, 0.04, 0.6), WOOD), sx, FLOOR + 0.52, 0.05)); // the arm
+      }
+      if (p.facing) g.rotation.y = Math.atan2(p.facing[0] - x, p.facing[1] - z) + Math.PI;
+      top = FLOOR + 0.6;
       break;
     }
     case "open-book": {

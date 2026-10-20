@@ -10,6 +10,8 @@ export type Surface = "grass" | "earth" | "rock";
 export type Hearing = {
   /** metres above the valley floor */
   height: number;
+  /** inside a building: no wind, and the birds and water only through the windows */
+  indoors?: boolean;
   /** 0-1: how wooded it is around you */
   trees: number;
   /** metres to the nearest water */
@@ -35,13 +37,16 @@ function loop(ctx: AudioContext, buf: AudioBuffer): AudioBufferSourceNode {
   return s;
 }
 
-/** Wind gets louder with height; birds follow the trees; water fades in within this many metres. */
+/** Wind gets louder with height (and comes in gusts, see Sounds.hear); birds follow the trees;
+ * water fades in within this many metres. Indoors there is no wind: a steady wind in a room
+ * sounds like a ceiling fan. */
 export function levels(h: Hearing): { wind: number; birds: number; water: number } {
   const clamp = (v: number) => Math.min(1, Math.max(0, v));
+  const through = h.indoors ? 0.3 : 1;
   return {
-    wind: 0.12 + 0.55 * clamp(h.height / 600),
-    birds: clamp(h.trees) * (1 - clamp(h.height / 700)),
-    water: clamp(1 - h.water / 160),
+    wind: h.indoors ? 0 : 0.06 + 0.6 * clamp(h.height / 600),
+    birds: clamp(h.trees) * (1 - clamp(h.height / 700)) * through,
+    water: clamp(1 - h.water / 160) * through,
   };
 }
 
@@ -51,6 +56,8 @@ export class Sounds {
   private wind: GainNode;
   private water: GainNode;
   private windFilter: BiquadFilterNode;
+  private gust = 0.5;
+  private nextGust = 0;
   private noise: AudioBuffer;
   private birdsLevel = 0;
   private nextBird = 0;
@@ -65,9 +72,9 @@ export class Sounds {
 
     // wind: noise through a slowly wandering band-pass
     this.windFilter = this.ctx.createBiquadFilter();
-    this.windFilter.type = "bandpass";
-    this.windFilter.frequency.value = 420;
-    this.windFilter.Q.value = 0.6;
+    this.windFilter.type = "lowpass"; // air moving, not a whirr: a band-pass held at one pitch sounded like a fan
+    this.windFilter.frequency.value = 500;
+    this.windFilter.Q.value = 0.3;
     this.wind = this.ctx.createGain();
     this.wind.gain.value = 0;
     loop(this.ctx, this.noise).connect(this.windFilter).connect(this.wind).connect(this.master);
@@ -113,8 +120,13 @@ export class Sounds {
   hear(h: Hearing) {
     const l = levels(h);
     const t = this.ctx.currentTime;
-    this.wind.gain.setTargetAtTime(l.wind * 0.35, t, 0.8);
-    this.windFilter.frequency.setTargetAtTime(380 + 160 * Math.sin(t * 0.21) + 240 * Math.min(1, h.height / 600), t, 1.5);
+    // gusts: the wind wanders between a breath and a blow every few seconds, so it never settles into a drone
+    if (t > this.nextGust) {
+      this.gust = 0.15 + 0.85 * Math.random() ** 1.5;
+      this.nextGust = t + 2 + Math.random() * 5;
+    }
+    this.wind.gain.setTargetAtTime(l.wind * 0.35 * this.gust, t, 1.2);
+    this.windFilter.frequency.setTargetAtTime(300 + 500 * this.gust + 300 * Math.min(1, h.height / 600), t, 1.5);
     this.water.gain.setTargetAtTime(l.water * 0.3, t, 0.6);
     this.birdsLevel = l.birds;
     if (t > this.nextBird) {
@@ -176,6 +188,7 @@ export class Sounds {
       gulp: { f: 300, q: 4, len: 0.12, peak: 0.4, hits: 3 },
       thud: { f: 120, q: 1, len: 0.25, peak: 0.8, hits: 1 },
       hiss: { f: 5000, q: 0.7, len: 1.2, peak: 0.25, hits: 1 },
+      clink: { f: 4200, q: 30, len: 0.35, peak: 0.6, hits: 2 },
     };
     const s = shape[name] ?? shape.thud;
     for (let i = 0; i < s.hits; i++) {

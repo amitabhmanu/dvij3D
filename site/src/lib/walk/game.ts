@@ -413,7 +413,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     if (now - statsAt > 200) {
       statsAt = now;
       const inside = lodge?.indoors(player.x, player.z) ?? false;
-      sounds?.hear({ height: inside ? 0 : player.y - rules.eye, trees: inside ? 0 : Math.min(1, woods.count(player.x, player.z, 35) / 14), water: lakeDistance(player.x, player.z) });
+      sounds?.hear({ indoors: inside, height: inside ? 0 : player.y - rules.eye, trees: inside ? 0 : Math.min(1, woods.count(player.x, player.z, 35) / 14), water: lakeDistance(player.x, player.z) });
       o.onStats?.({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z), indoors: inside,
         door: lodge?.doorNear(player.x, player.z) ?? null, look: lodge?.lookNear(player.x, player.z) ?? null });
     }

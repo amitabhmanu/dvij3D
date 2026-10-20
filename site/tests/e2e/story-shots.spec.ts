@@ -42,3 +42,25 @@ test("watch mode, for review", async ({ page }) => {
   await page.waitForTimeout(800);
   await page.screenshot({ path: `${out}/5-watch-comic.png` });
 });
+
+test("chapters 6 and 7, for review", async ({ page }) => {
+  test.setTimeout(240_000);
+  const out = process.env.SHOTS!;
+  await page.goto("/valley/walk/?test");
+  await page.getByRole("button", { name: "Watch it play, like a film" }).click();
+  await page.locator('.walk[data-screen="ready"]').waitFor({ timeout: 60_000 });
+  await page.locator(".begin").click();
+  const bar = page.getByRole("toolbar");
+  for (let i = 0; i < 5; i++) await bar.getByRole("button", { name: "Next chapter" }).click();
+  await page.locator(".story-panel[data-panel='b1-p011-5']").waitFor({ timeout: 60_000 });
+  await page.locator(".words").waitFor({ timeout: 20_000 });
+  await bar.getByRole("button", { name: "Pause" }).click();
+  await page.screenshot({ path: `${out}/6-mahant.png` });
+  await bar.getByRole("button", { name: "Play", exact: true }).click();
+  await bar.getByRole("button", { name: "Next chapter" }).click();
+  await bar.getByRole("button", { name: "4×" }).click();
+  await expect(page.locator(".walk")).toHaveAttribute("data-beat", "the-doctor", { timeout: 150_000 });
+  await bar.getByRole("button", { name: "1×" }).click();
+  await page.locator(".words").waitFor({ timeout: 20_000 });
+  await page.screenshot({ path: `${out}/7-clearing.png` });
+});

@@ -44,7 +44,7 @@ type Props = { heightUrl: string; worldUrl: string; groundUrl: string; mapUrl: s
 type Screen = "start" | "loading" | "ready" | "playing" | "paused" | "card" | "look" | "map" | "nogl" | "failed" | "the-end";
 /** Story mode's full-screen moments: a chapter card, a comic page, the reflection. */
 type Overlay = { kind: "card"; title: string; subtitle?: string } | { kind: "page"; id: string; n: number; of: number } | { kind: "reflection"; panel: string };
-const SPEAKER: Record<string, string> = { dvij: "Dvij", professor: "The Professor", bhavi: "Bhavi", maharaj: "Maharaj" };
+const SPEAKER: Record<string, string> = { dvij: "Dvij", professor: "The Professor", bhavi: "Bhavi", maharaj: "Maharaj", mahant: "Mahant", baldev: "Baldev" };
 type Saved = { sensitivity?: number; invertY?: boolean; quality?: Quality; real?: boolean; volume?: number };
 
 const KEY = "twice-born:walk:v1";
@@ -99,6 +99,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const [objective, setObjective] = useState<{ text: string; ready: boolean } | null>(null);
   const [hint, setHint] = useState<string | null>(null);
   const [overlay, setOverlay] = useState<Overlay | null>(null);
+  const [panel, setPanel] = useState<string | null>(null); // a comic panel held full screen (Chapter 6)
   const [where, setWhere] = useState<{ scene: string; beat: string } | null>(null);
   const director = useRef<Director | null>(null);
   const stage = useRef<StoryStage | null>(null);
@@ -268,6 +269,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         for (let i = 0; i < pages.length; i++) await until(() => setOverlay({ kind: "page", id: pages[i], n: i + 1, of: pages.length }), () => setOverlay(null), undefined, 9);
       },
       reflection: (panel) => until(() => setOverlay({ kind: "reflection", panel }), () => setOverlay(null), 7),
+      panel: setPanel,
       ended: (_sc: Scene, next) => {
         if (next) setTimeout(() => director.current?.play(next), 400);
         else { setSaved(null); stop("the-end"); }
@@ -302,7 +304,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const clearScreen = () => {
     shownId.current++;
     advance.current?.();
-    setCaption(null); setSub(null); setObjective(null); setHint(null); setOverlay(null);
+    setCaption(null); setSub(null); setObjective(null); setHint(null); setOverlay(null); setPanel(null);
   };
   const goTo = (id: string) => {
     clearScreen();
@@ -491,6 +493,22 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
          data-watching={story && watching ? "" : undefined} data-held={held ? "" : undefined} data-rate={story ? rate : undefined}>
       <canvas ref={canvas} class="walk-canvas" />
 
+      {/* a comic panel held full screen while its lines are spoken: under the words and the bar */}
+      {story && panel && screen !== "start" && (() => {
+        const id = panel.replace(/-\d+$/, ""), k = Number(panel.slice(id.length + 1)) - 1;
+        const pg = storyPages[id], box = pg?.panels[k]?.box;
+        if (!pg || !box) return null;
+        const [x0, y0, x1, y1] = box, w = x1 - x0, h = y1 - y0;
+        return (
+          <div class="story-panel" data-panel={panel}>
+            <span class="panel-frame" style={{ aspectRatio: `${w * pg.w} / ${h * pg.h}`, "--ar": String((w * pg.w) / (h * pg.h)) }}>
+              <img src={pg.src} alt={pg.panels[k].alt}
+                   style={{ width: `${100 / w}%`, left: `${(-x0 / w) * 100}%`, top: `${(-y0 / h) * 100}%` }} />
+            </span>
+          </div>
+        );
+      })()}
+
       {/* The HUD stays in the page so the frame hook can move it; it shows only while walking. */}
       <div class="hud" hidden={!hud && screen !== "ready"}>
         <div class="compass" aria-hidden="true" hidden={story}>
@@ -583,7 +601,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <button type="button" class="go" onClick={() => enter(false)} autofocus={!story}>Enter the valley</button>
           <div class="story-start">
             <p class="eyebrow">Or play the story</p>
-            <p>Be Dvij, waking in the Professor's lodge after the accident: Book 1, chapters 1 to 5.</p>
+            <p>Be Dvij, waking in the Professor's lodge after the accident: Book 1, chapters 1 to 7.</p>
             {saved ? (
               <>
                 <button type="button" class="go" onClick={() => enter(true, saved, false)} autofocus={story && !watching}>Continue the story</button>
@@ -782,8 +800,8 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         <section class="card" aria-labelledby="end-title">
           <p class="eyebrow">The Twice Born, Book 1</p>
           <h2 id="end-title">To be continued</h2>
-          <p>That's as far as the story plays for now: the opening of Book 1, chapters 1 to 5. The comic carries on from page 11.</p>
-          <a class="go" href="/read/b1/11">Read on in the comic</a>
+          <p>That's as far as the story plays for now: the opening of Book 1, chapters 1 to 7. The comic carries on from page 13.</p>
+          <a class="go" href="/read/b1/13">Read on in the comic</a>
           {watching && <button type="button" class="go quiet" onClick={restart}>Watch it again</button>}
           <button type="button" class="go quiet" onClick={leaveStory}>Walk the valley freely</button>
           <p class="back"><a href={backUrl}>Back to the map</a></p>

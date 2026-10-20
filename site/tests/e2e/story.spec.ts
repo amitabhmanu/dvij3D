@@ -27,7 +27,7 @@ async function begin(page: Page, button: string) {
 const state = (page: Page) => page.evaluate(() => {
   const w = document.querySelector<HTMLElement>(".walk")!;
   return {
-    scene: w.dataset.story ?? "", beat: w.dataset.beat ?? "",
+    scene: w.dataset.story ?? "", beat: w.dataset.beat ?? "", screen: w.dataset.screen ?? "",
     words: !!document.querySelector(".words"), overlay: document.querySelector<HTMLElement>(".story-overlay")?.dataset.overlay ?? null,
     objective: document.querySelector(".objective .what")?.textContent?.trim() ?? null,
     ready: !!document.querySelector(".objective[data-ready]"),
@@ -131,5 +131,21 @@ test.describe("story mode", () => {
     const img = page.locator(".reflection-frame img");
     await expect(img).toHaveAttribute("src", /b1-p004/);
     await expect(img).toHaveAttribute("alt", /reflection/i);
+  });
+
+  test("Chapter 7 plays from his recovery to his naming, and the story ends there", async ({ page }) => {
+    test.setTimeout(300_000);
+    await page.addInitScript(() => localStorage.setItem("twice-born:story:v1", JSON.stringify({ scene: "b1-ch07", beat: "healed" })));
+    await page.goto("/valley/walk/?story&test");
+    await begin(page, "Continue the story");
+    const seen: string[] = [];
+    await drive(page, (s) => s.screen === "the-end", seen);
+    await expect(page.locator(".walk")).toHaveAttribute("data-screen", "the-end", { timeout: 30_000 });
+    for (const b of ["healed", "outside", "the-clearing", "the-bow", "panchamrita", "the-name", "what-you-know"]) expect(seen).toContain(`b1-ch07/${b}`);
+    // he sat opposite the girl, on the lawn
+    const p = await page.evaluate(() => (window as unknown as G).walkGame.player());
+    const chair = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(10.5, 0, 30.4));
+    expect(Math.hypot(p.x - chair[0], p.z - chair[2])).toBeLessThan(0.5);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:v1") || "{}").furthest?.b1)).toBeGreaterThanOrEqual(12);
   });
 });
