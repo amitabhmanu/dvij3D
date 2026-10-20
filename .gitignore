@@ -40,3 +40,6 @@ Thumbs.db
 
 # Scratch builds (the lodge's Blender inputs)
 /site/pipeline/.build/
+
+# Third-party downloads (CC0 source assets; built outputs are what ship)
+/.downloads/

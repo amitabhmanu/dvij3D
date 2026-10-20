@@ -1,0 +1,94 @@
+# Book 1, Chapter 3: the Professor revives him in the study (story mode, design §10.4).
+# DRAFT for the author's review. Novel ¶134-162; breakdown chapter 3.
+# Lines are the book's, shortened only where the comic shortens them.
+
+scene: b1-ch03
+book: 1
+pages: [7]
+title: Chapter 3
+novel: [134, 162]
+start:
+  pose: floor                                   # where he fell in Chapter 1
+  at: [-14.6, -13.0]
+  look: [-14.0, 1.6, -12.4]                     # up at the Professor leaning over him
+cast:
+  - {who: professor, at: [-14.0, -12.4], pose: kneel, holding: tumbler}
+props:
+  - {id: study-clutter, kind: clutter, room: study, state: knocked}
+  - {id: tumbler, kind: glass, held-by: professor}
+  - {id: veena, kind: veena, state: toppled, at: [-14.6, -11.6], sources: [novel ¶140, breakdown ch3 p4]}
+  - {id: varahi, kind: figurine, at: [-13.8, -13.6], sources: [novel ¶147, breakdown ch3 p5]}
+  - {id: manuscript, kind: manuscript, at: [-12.8, -12.6], on: desk, sources: [novel ¶151, novel ¶153, breakdown ch3 p8]}
+
+beats:
+  - id: water-face
+    sources: [breakdown ch3 p1, novel ¶135, novel ¶136]
+    do:
+      - effect: {dark: 1.0}
+      - sound: splash
+      - effect: {dark: 0.2, blur: 0.6, drops: true, over: 1.5}   # cold water on the lens
+      - caption: "He awoke the second time, jerked out of his stupor by vigorous shaking and cold water."
+      - effect: {blur: 0.1, over: 2}
+      - say: {who: professor, line: "Have you seen my glasses?", sources: [novel ¶134, novel ¶137]}
+
+  - id: drink
+    sources: [breakdown ch3 p2, breakdown ch3 p3, novel ¶138]
+    act:
+      objective: Take the tumbler from him.
+      kind: look-press
+      target: tumbler
+    then:
+      - animate: {player: drink}
+      - sound: gulp
+      - say: {who: dvij, line: "There... in the room where I was sleeping. Your glasses... they're on the stool by the bed.", sources: [novel ¶139]}
+      - actor: {who: professor, walk: [-8.5, 3.0], via: [[-7.75, -10.0]], then: pick-up, item: spectacles}   # fetches them from Dvij's room (novel ¶140)
+      - camera: {pose: sit, at: [-12.8, -11.7], over: 2.0}       # meanwhile he gets himself into the cushioned chair (novel ¶140)
+      - actor: {who: professor, walk: [-13.4, -12.0], wearing: spectacles}
+
+  - id: veena
+    sources: [breakdown ch3 p4, novel ¶140, novel ¶141, novel ¶142]
+    do:
+      - actor: {who: professor, look: veena, anim: interact}
+      - say: {who: professor, line: "The veena... ah... it is safe. Of course I do not play it. No... no... I am no good with music. It's the inspiration that I keep it with me all the time... after all it is the instrument of the Goddess of learning, no?"}
+      - prop: {id: veena, state: upright}
+      - say: {who: professor, line: "You were trying to reach up for those books, eh? And fell backwards. Was that it? It happens to me all the time. I don't cause as much damage though.", sources: [novel ¶143]}
+      - say: {who: dvij, line: "I... I fainted. My head... it's bandaged.", sources: [novel ¶144]}
+
+  - id: varahi
+    sources: [breakdown ch3 p5, breakdown ch3 p6, novel ¶145-149]
+    act:
+      objective: Pick up the broken figurine.
+      kind: look-press
+      target: varahi
+    then:
+      - say: {who: dvij, line: "I'm sorry.", sources: [novel ¶146]}
+      - actor: {who: professor, take: varahi, anim: pick-up}
+      - say: {who: professor, line: "She is Varahi, one of the saptamatrikas. She is pot bellied, for she holds in her womb the universe.", sources: [novel ¶147]}
+      - say: {who: dvij, line: "I am really sorry.", sources: [novel ¶148]}
+      - say: {who: professor, line: "Oh, don't be a fool. It's impossible to find anything intact, really speaking, including our history. All we see now are small fragments.", sources: [novel ¶149]}
+
+  - id: questions
+    sources: [breakdown ch3 p7-p10, novel ¶150-155]
+    do:
+      - say: {who: dvij, line: "Why is my head bandaged?", sources: [novel ¶150]}
+      - actor: {who: professor, take: manuscript, anim: talk}
+      - say: {who: professor, line: "Why indeed? Because of the accident, I should think. Careless driving, I dare say. Must you fret about those things when we are in the midst of such secret knowledge?", sources: [novel ¶151]}
+      - say: {who: dvij, line: "I had a car accident?", sources: [novel ¶152]}
+      - say: {who: professor, line: "Yes, yes, of course you had an accident. You were in coma. Look here... at the edges of the birch barks... see how they have frayed over time. Beautiful!", sources: [novel ¶153]}
+      - say: {who: dvij, line: "Why? Why was I in a coma?", sources: [novel ¶154]}
+      - actor: {who: professor, look: player}
+      - say: {who: professor, line: "Well! It's all very simple really. You had an accident. You hurt your head. You went into a coma. Now, if we could get back to the book, I'd appreciate very much.", sources: [novel ¶155]}
+
+  - id: introduction
+    sources: [breakdown ch3 p11-p14, novel ¶157-162]
+    do:
+      - say: {who: professor, line: "Become the intrepid explorer and find the text, my boy, for it would help you find your past.", sources: [novel ¶157]}
+      - say: {who: dvij, line: "My past?", sources: [novel ¶158]}
+      - say: {who: professor, line: "I haven't really introduced myself, have I? How embarrassing. I am Doctor Vidyasagar Parthasarathi, owner of this room and the rest of the lodge that came along with it.", sources: [novel ¶159]}
+      - say: {who: dvij, line: "I woke up in a strange room, walked out into a courtyard, and then into this room. Next thing I remember is you asking me for your glasses.", sources: [novel ¶160]}
+      - say: {who: professor, line: "Think nothing of it! It's your turn to introduce yourself. What's your name? Come on, out with it.", sources: [novel ¶161]}
+      - say: {who: dvij, line: "I... I don't know!", sources: [novel ¶162]}
+      - effect: {faint: true, over: 2}
+      - sound: thud
+      - progress: {book: 1, page: 7}
+      - end: {next: b1-ch04}

@@ -1,0 +1,135 @@
+# Book 1, Chapter 1: Dvij wakes at the lodge (story mode, design §10.4).
+# DRAFT for the author's review. Every beat cites its sources:
+#   breakdown chN pK  images/book 1 - valley/part 1/chapter N/chapterN_panel_breakdown.md, panel K
+#   novel ¶N          a paragraph of book/The Twice Born.docx (Chapter 1 is ¶93-102)
+#   ours              the gap between two panels, filled by us
+# Places are in the lodge's frame (src/content/valley/lodge.yaml): metres, x east,
+# z south, origin at the courtyard's centre. Dvij's room is the west wing's
+# north room; the study is the north-west corner.
+
+scene: b1-ch01
+book: 1
+pages: [4]
+title: Chapter 1
+novel: [93, 102]
+start:
+  # flat on his back in the iron bed, staring up at the fan (breakdown ch1 p2; novel ¶93)
+  pose: lie
+  at: [-15.0, 7.5]
+  look: up
+props:
+  # what the scene needs beyond the lodge's own furniture
+  - {id: stool, kind: stool, at: [-14.3, 6.75], sources: [novel ¶94]}
+  - {id: glass, kind: glass, at: [-14.3, 6.75], on: stool, sources: [novel ¶94, breakdown ch1 p3]}
+  - {id: spectacles, kind: spectacles, at: [-14.2, 6.65], on: stool, sources: [novel ¶98]}   # the Professor's (ch3 asks for them)
+  - {id: book, kind: open-book, at: [-14.4, 6.6], on: stool, sources: [novel ¶98]}
+  - {id: rocking-chair, kind: rocking-chair, at: [-13.6, 6.4], sources: [novel ¶99]}
+  - {id: shutters, kind: shutters, window: dvij-room:0, state: boarded, sources: [novel ¶97, novel ¶99, breakdown ch1 p4, breakdown ch1 p5]}
+  - {id: study-clutter, kind: clutter, room: study, sources: [novel ¶100, breakdown ch1 p9]}
+
+beats:
+  - id: wake
+    sources: [breakdown ch1 p1, breakdown ch1 p2, novel ¶93]
+    do:
+      - effect: {blur: 1.0, double: 0.7, dark: 0.3}
+      - caption: "He had been staring at the ceiling for a long time before he realized he was awake."
+      - wait: 4
+      - effect: {blur: 0.5, double: 0.3, dark: 0, over: 5}
+      - caption: "His first sensation was a debilitating lack of it. He felt decapitated..."
+      - wait: 3
+
+  - id: water
+    sources: [breakdown ch1 p3, novel ¶94, novel ¶95]
+    act:
+      objective: Reach for the glass on the stool.
+      kind: look-press
+      target: glass
+    then:
+      - animate: {player: drink-spill}         # the glass too heavy, water over the pillows (novel ¶95)
+      - caption: "His weakened arm found the glass too heavy and spilled most of the water..."
+      - prop: {id: glass, state: rolled-off}  # "let the glass roll down the blanket and a clatter onto the floor"
+      - sound: clatter
+
+  - id: sit-up
+    sources: [breakdown ch1 p4, novel ¶96, novel ¶97]
+    act:
+      objective: Sit up.
+      kind: press
+    then:
+      - camera: {pose: sit, over: 2.5}
+      - effect: {blur: 0.2, over: 3}
+      - look: {at: arm}                        # the plaster cast on the right arm (novel ¶96)
+      - caption: "He sat up. The plaster on his right arm. His legs intact. The room was sparse, but not clinical..."
+
+  - id: stand
+    sources: [novel ¶98, ours]
+    act:
+      objective: Stand up.
+      kind: press
+    then:
+      - camera: {pose: stand, over: 2}
+      - body: {injured: true}                  # "the first few steps were gingerly" (novel ¶98): a slow, swaying walk
+      - effect: {blur: 0, over: 4}
+      - checkpoint: awake
+
+  - id: shutters
+    sources: [breakdown ch1 p5, breakdown ch1 p6, novel ¶99]
+    act:
+      objective: Open the boarded window.
+      kind: use
+      target: shutters
+      hint: [-15.6, 5.25]
+    then:
+      - prop: {id: shutters, state: open}
+      - effect: {flash: 1.0, over: 1.5}        # "the brilliance of sunlight blinded him momentarily"
+      - sound: creak
+      - caption: "He tugged at the stops. The brilliance of sunlight blinded him momentarily..."
+      - wait: 2
+      - caption: "What greeted him was a battered boundary wall with grey grass growing all over it."
+
+  - id: courtyard
+    sources: [breakdown ch1 p7, breakdown ch1 p8, novel ¶100]
+    act:
+      objective: Find water.
+      kind: reach
+      target: [-9.0, 5.25]                     # out of the door into the corridor
+      radius: 1.5
+    then:
+      - caption: "The room opened into a large wonderfully sunlit courtyard. Nothing stirred. No voices could be heard."
+      - wait: 3
+      - caption: "His throat twanged sharply. He had to find water."
+
+  - id: study
+    sources: [breakdown ch1 p9, novel ¶100]
+    act:
+      objective: Look for someone.
+      kind: reach
+      target: [-7.75, -12.0]                   # through the study's door from the corridor
+      radius: 1.6
+    then:
+      - caption: "There were books everywhere. As if antiquity was preserved there, albeit a bit haphazardly."
+
+  - id: window
+    sources: [breakdown ch1 p10, breakdown ch1 p11, novel ¶101]
+    act:
+      objective: Go to the windows.
+      kind: reach
+      target: [-15.0, -13.25]                  # the west window over the lawn
+      radius: 1.0
+    then:
+      - camera: {pose: stand, look: [-17.0, 1.9, -13.25], over: 1.2}
+      - caption: "He walked around the crowded floor to windows that revealed a wide lawn through their dirty panes."
+      - reflection: {window: study:1, panel: b1-p004-9}   # the comic's own drawing of his face in the glass
+      - wait: 2.5
+      - caption: "They also revealed the reflection of a bearded face with a heavily bandaged head."
+
+  - id: faint
+    sources: [breakdown ch1 p12, novel ¶101, novel ¶102]
+    do:
+      - caption: "The reflection of a stranger."
+      - effect: {faint: true, over: 2.5}       # the view tilts, darkens and drops to the floor
+      - prop: {id: study-clutter, state: knocked}
+      - sound: crash
+      - caption: "He collapsed with a swoon, knocking a few artefacts over as he hit the hard floor."
+      - progress: {book: 1, page: 4}
+      - end: {next: b1-ch02}

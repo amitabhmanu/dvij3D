@@ -1,0 +1,20 @@
+# Book 1, Chapter 2: the Professor, Mahant and the scroll (story mode, design §10.4).
+# Dvij lies unconscious through this chapter (novel ¶103-134), so for this slice it
+# plays as the comic's own panels; staging it with Mahant, Baldev and Vaidji is the
+# next slice (agreed 20 Oct).
+
+scene: b1-ch02
+book: 1
+pages: [5, 6]
+title: Chapter 2
+novel: [103, 134]
+start: {pose: interlude}
+
+beats:
+  - id: panels
+    sources: [comic b1-p005, comic b1-p006, novel ¶103-133]
+    do:
+      - chapter: {title: "Chapter 2", subtitle: "Meanwhile, in the garden"}
+      - panels: {pages: [b1-p005, b1-p006]}
+      - progress: {book: 1, page: 6}
+      - end: {next: b1-ch03}

@@ -1,0 +1,105 @@
+# Book 1, Chapter 5: Maharaj in the kitchen (story mode, design §10.4).
+# DRAFT for the author's review. Novel ¶193-223; breakdown chapter 5.
+# The slice ends here.
+
+scene: b1-ch05
+book: 1
+pages: [10]
+title: Chapter 5
+novel: [193, 223]
+start:
+  pose: stand
+  at: [0, 13.0]                                  # back inside, in the entrance hall
+  look: [0, 1.6, 0]
+cast:
+  - {who: maharaj, at: [14.2, -14.0], pose: stoke, sources: [novel ¶195, breakdown ch5 p3]}
+props:
+  - {id: stool-low, kind: stool, at: [12.0, -12.6], sources: [novel ¶203, breakdown ch5 p5]}
+  - {id: tea, kind: tea-pot, at: [11.2, -12.9], on: stove, sources: [novel ¶209]}
+  - {id: tulsi, kind: tulsi-pedestal, at: [0, 4.5], sources: [novel ¶213, breakdown ch5 p10]}
+
+beats:
+  - id: courtyard
+    sources: [breakdown ch5 p1, breakdown ch5 p2, novel ¶193, novel ¶194]
+    act:
+      objective: Walk round the courtyard.
+      kind: reach
+      target: [6.0, 9.0]
+      radius: 2.0
+    then:
+      - caption: "Back inside, light in the courtyard was diffused by a curtain of thin fibreglass spread to keep the monkeys out."
+      - wait: 2
+      - sound: clatter                           # a fallen vessel, from the kitchen (novel ¶194)
+
+  - id: kitchen
+    sources: [breakdown ch5 p3, novel ¶195]
+    act:
+      objective: Follow the sound.
+      kind: reach
+      target: [7.75, -12.5]                      # through the kitchen's door
+      radius: 1.6
+    then:
+      - caption: "The sound led him to an open, wide kitchen that had all kinds of brass vessels and earthen pots."
+      - actor: {who: maharaj, anim: turn, look: player}
+      - actor: {who: maharaj, anim: namaste}     # he supplicates himself (novel ¶196, breakdown ch5 p4)
+      - say: {who: dvij, line: "What's this? What are you doing?", sources: [novel ¶197]}
+      - say: {who: maharaj, line: "Are you really an incarnation, sahib?", sources: [novel ¶198]}
+      - say: {who: dvij, line: "You think I am an incarnation?", sources: [novel ¶199]}
+      - say: {who: maharaj, line: "The entire village thinks so. Mahantji predicted your arrival, sahib.", sources: [novel ¶200]}
+
+  - id: stool
+    sources: [breakdown ch5 p5, novel ¶201-206]
+    act:
+      objective: Sit on the stool he has set for you.
+      kind: look-press
+      target: stool-low
+    then:
+      - camera: {pose: sit-low, at: [12.0, -12.6], over: 1.5}
+      - say: {who: maharaj, line: "Mahantji is very learned, sahib. He knows the Vedas by heart. He can read the stars and tell of events that have not yet happened. If he has said that you are an incarnation, then you must be.", sources: [novel ¶202]}
+      - say: {who: dvij, line: "Do you believe everything he says?", sources: [novel ¶203]}
+      - say: {who: maharaj, line: "Who are we to question him, sahib? We are poor and illiterate.", sources: [novel ¶204]}
+      - say: {who: dvij, line: "This Mahantji... do you think he is a good man?", sources: [novel ¶205]}
+      - say: {who: maharaj, line: "I don't know, sahib.", sources: [novel ¶206]}
+
+  - id: fear
+    sources: [breakdown ch5 p6, breakdown ch5 p7, novel ¶207-210]
+    do:
+      - actor: {who: maharaj, walk: [11.4, -12.0], look: player, anim: lean-in}
+      - say: {who: maharaj, line: "People are scared of Mahantji. But I do not fear anyone above God. And may He strike me down if I say or do anything wrong. Mahantji is an evil man. He has many vices.", sources: [novel ¶208]}
+      - prop: {id: tea, state: boiling-over}
+      - sound: hiss
+
+  - id: tea
+    sources: [breakdown ch5 p8, novel ¶210, novel ¶211]
+    act:
+      objective: Tell him to pour the tea.
+      kind: press
+    then:
+      - say: {who: dvij, line: "Go ahead. Let's have tea.", sources: [novel ¶210]}
+      - actor: {who: maharaj, take: tea, anim: pour, then: {give: player}}
+      - say: {who: dvij, line: "Tell me about this valley. What is this place? Where are we?", sources: [novel ¶211]}
+      - say: {who: maharaj, line: "The village down below - it is called Vaspati. Where we are, I can't say. I belong to another village called Baswara in the tarai region of the Uttaranchal hills.", sources: [novel ¶212]}
+
+  - id: tulsi
+    sources: [breakdown ch5 p10, novel ¶213-216]
+    do:
+      - actor: {who: maharaj, walk: [0, 3.2], anim: tend}
+      - say: {who: maharaj, line: "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.", sources: [novel ¶214]}
+
+  - id: way-out
+    sources: [breakdown ch5 p11-p15, novel ¶217-223]
+    act:
+      objective: Follow him into the courtyard.
+      kind: reach
+      target: [0, 6.0]
+      radius: 2.5
+    then:
+      - say: {who: dvij, line: "How does one go out from this valley? Don't worry. I am not looking to go away so soon.", sources: [novel ¶217]}
+      - say: {who: maharaj, line: "The valley is surrounded from all sides by mountains. There are forests at the bottom of these mountains, forests full of lions and tigers and other wild animals. Then there are the tribals.", sources: [novel ¶218]}
+      - say: {who: dvij, line: "Yes, but there must be roads connecting this place to the outside world.", sources: [novel ¶219]}
+      - say: {who: maharaj, line: "There is one road. It was built when the national park was set up. But it is too steep.", sources: [novel ¶220]}
+      - say: {who: dvij, line: "Then how does one come in or go out?", sources: [novel ¶221]}
+      - say: {who: maharaj, line: "Nobody goes out, sahib. It is an unthinkable act. Outside is an evil world, that's what Mahant has told us.", sources: [novel ¶222]}
+      - caption: "He could not tell the cook that he will have to leave to find himself. Somewhere beyond the mountains that surrounded the valley hid his past, his identity."
+      - progress: {book: 1, page: 10}
+      - end: {next: null, title: "To be continued"}

@@ -1,0 +1,84 @@
+# Book 1, Chapter 4: the girl on the well (story mode, design §10.4).
+# DRAFT for the author's review. Novel ¶163-192; breakdown chapter 4.
+
+scene: b1-ch04
+book: 1
+pages: [8, 9]
+title: Chapter 4
+novel: [163, 192]
+start:
+  pose: stand                                    # "later, having woken up yet again after gorged down cold khichdi" (novel ¶163)
+  at: [0, 13.0]                                  # in the entrance hall, facing the front door
+  look: [0, 1.6, 25]
+cast:
+  - {who: bhavi, at: [-18, 38], pose: sit, on: well-rim, sources: [novel ¶165, breakdown ch4 p5]}
+
+beats:
+  - id: doorsteps
+    sources: [breakdown ch4 p2, novel ¶163]
+    act:
+      objective: Step outside.
+      kind: reach
+      target: [0, 20.4]                          # the three small doorsteps
+      radius: 1.5
+    then:
+      - caption: "Later, having woken up yet again, he stepped out onto the gravel path that circled the establishment."
+
+  - id: gate-view
+    sources: [breakdown ch4 p1, novel ¶164]
+    do:
+      - caption: "The decaying magnificence of the building - a relic of the raj, a symmetrical square squatting in the middle of sprawling environs."
+
+  - id: silhouette
+    sources: [breakdown ch4 p3, novel ¶165]
+    act:
+      objective: Walk towards the figure on the lawn.
+      kind: reach
+      target: [-18, 35.5]
+      radius: 3.0
+      hint: [-18, 38]
+    then:
+      - effect: {glare: 0.7, over: 1.5}           # the sun in front of him, the figure a silhouette
+      - caption: "He could see someone sitting up ahead, someone with long hair that waved in the gentle breeze."
+      - effect: {glare: 0, over: 3}
+      - actor: {who: bhavi, look: player}
+      - caption: "The better he could make out the face, the more he got entranced by its sheer beauty."
+
+  - id: the-well
+    sources: [breakdown ch4 p5, breakdown ch4 p7, novel ¶167-169]
+    act:
+      objective: Sit on the low platform.
+      kind: look-press
+      target: [-18, 0.8, 38]
+    then:
+      - camera: {recoil: true}                   # "suddenly he recoiled with a shout"
+      - say: {who: dvij, line: "That is a well! A very deep well!", sources: [novel ¶168]}
+      - actor: {who: bhavi, anim: laugh, then: {walk-rim: true}}    # she gets up and walks the parapet (novel ¶169)
+      - caption: "It was indeed a deep well, its brick walls covered with slime, the water surface almost indiscernible due to its depth."
+
+  - id: talk
+    sources: [breakdown ch4 p8-p11, novel ¶170-185]
+    do:
+      - say: {who: dvij, line: "Aren't you afraid?", sources: [novel ¶170]}
+      - say: {who: bhavi, line: "Are you?", sources: [novel ¶171]}
+      - say: {who: dvij, line: "I would be if I was walking about like that.", sources: [novel ¶172]}
+      - say: {who: bhavi, line: "Why should you? You already died once.", sources: [novel ¶173]}
+      - say: {who: dvij, line: "You mean my accident? So you know about me?", sources: [novel ¶174]}
+      - say: {who: bhavi, line: "Everyone around here knows about you. You're The Wounded One with No Past, right?", sources: [novel ¶175]}
+      - say: {who: bhavi, line: "Then what is your name?", sources: [novel ¶178]}
+      - say: {who: dvij, line: "I don't know. I can't remember. The knock on the head must have done it. At least that's what the doctor says.", sources: [novel ¶179]}
+      - say: {who: dvij, line: "Doctor Parthasarathi. The old man who lives here. Likable, but loony. Do you know him?", sources: [novel ¶181]}
+      - say: {who: bhavi, line: "Do I know a loony old Dr Parathasarathi? Can't be sure about that.", sources: [novel ¶182]}
+
+  - id: why-here
+    sources: [breakdown ch4 p13, breakdown ch4 p14, novel ¶186-192]
+    do:
+      - actor: {who: bhavi, stop: true, look: player}
+      - say: {who: bhavi, line: "Why have you come to this valley?", sources: [novel ¶188]}
+      - say: {who: dvij, line: "I don't know.", sources: [novel ¶189]}
+      - say: {who: bhavi, line: "Nobody ever comes to this valley any more. Why did you?", sources: [novel ¶190]}
+      - say: {who: dvij, line: "You did... didn't you? You don't belong here yourself.", sources: [novel ¶191]}
+      - actor: {who: bhavi, anim: jump-down, then: {walk: [-50, 70], via: [[-30, 55]], exit: true}}   # she finds her slippers and goes (novel ¶192)
+      - caption: "He wished it were a wishing well, one that would grant him the thing he most desired. And at that moment, that was not something from his lost past."
+      - progress: {book: 1, page: 9}
+      - end: {next: b1-ch05}
