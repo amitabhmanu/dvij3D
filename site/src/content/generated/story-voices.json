@@ -1,3 +1,228 @@
 {
- "lines": {}
+ "lines": {
+  "bhavi|Are you?": {
+   "file": "bhavi-7ad8c80003.mp3",
+   "seconds": 0.92
+  },
+  "bhavi|Do I know a loony old Dr Parathasarathi? Can't be sure about that.": {
+   "file": "bhavi-2e1265f89e.mp3",
+   "seconds": 4.98
+  },
+  "bhavi|Everyone around here knows about you. You're The Wounded One with No Past, right?": {
+   "file": "bhavi-01b8e63505.mp3",
+   "seconds": 4.42
+  },
+  "bhavi|Nobody ever comes to this valley any more. Why did you?": {
+   "file": "bhavi-d57c25a847.mp3",
+   "seconds": 3.13
+  },
+  "bhavi|Then what is your name?": {
+   "file": "bhavi-ea686ed3dc.mp3",
+   "seconds": 1.37
+  },
+  "bhavi|Why have you come to this valley?": {
+   "file": "bhavi-a45b03c8f3.mp3",
+   "seconds": 1.69
+  },
+  "bhavi|Why should you? You already died once.": {
+   "file": "bhavi-196dc966c3.mp3",
+   "seconds": 2.46
+  },
+  "dvij|Aren't you afraid?": {
+   "file": "dvij-c1311866f3.mp3",
+   "seconds": 1.08
+  },
+  "dvij|Do you believe everything he says?": {
+   "file": "dvij-269379a5b2.mp3",
+   "seconds": 2.15
+  },
+  "dvij|Doctor Parthasarathi. The old man who lives here. Likable, but loony. Do you know him?": {
+   "file": "dvij-8d6410cc62.mp3",
+   "seconds": 5.71
+  },
+  "dvij|Go ahead. Let's have tea.": {
+   "file": "dvij-10f7fef9ac.mp3",
+   "seconds": 1.72
+  },
+  "dvij|How does one go out from this valley? Don't worry. I am not looking to go away so soon.": {
+   "file": "dvij-4e559ea928.mp3",
+   "seconds": 5.42
+  },
+  "dvij|I am really sorry.": {
+   "file": "dvij-928d93a45e.mp3",
+   "seconds": 1.23
+  },
+  "dvij|I don't know.": {
+   "file": "dvij-8b96150307.mp3",
+   "seconds": 1.04
+  },
+  "dvij|I don't know. I can't remember. The knock on the head must have done it. At least that's what the doctor says.": {
+   "file": "dvij-9ecda27483.mp3",
+   "seconds": 6.92
+  },
+  "dvij|I had a car accident?": {
+   "file": "dvij-1e32277642.mp3",
+   "seconds": 1.59
+  },
+  "dvij|I woke up in a strange room, walked out into a courtyard, and then into this room. Next thing I remember is you asking me for your glasses.": {
+   "file": "dvij-6811169f6d.mp3",
+   "seconds": 9.77
+  },
+  "dvij|I would be if I was walking about like that.": {
+   "file": "dvij-ad074a500e.mp3",
+   "seconds": 2.74
+  },
+  "dvij|I'm sorry.": {
+   "file": "dvij-c62d203c6b.mp3",
+   "seconds": 0.86
+  },
+  "dvij|I... I don't know!": {
+   "file": "dvij-ee3e463c78.mp3",
+   "seconds": 1.4
+  },
+  "dvij|I... I fainted. My head... it's bandaged.": {
+   "file": "dvij-3fd5c76651.mp3",
+   "seconds": 2.98
+  },
+  "dvij|My past?": {
+   "file": "dvij-c5685311d8.mp3",
+   "seconds": 0.93
+  },
+  "dvij|Tell me about this valley. What is this place? Where are we?": {
+   "file": "dvij-5abed11d66.mp3",
+   "seconds": 3.84
+  },
+  "dvij|That is a well! A very deep well!": {
+   "file": "dvij-64930cc6ac.mp3",
+   "seconds": 2.19
+  },
+  "dvij|Then how does one come in or go out?": {
+   "file": "dvij-a3ad2aaf71.mp3",
+   "seconds": 2.65
+  },
+  "dvij|There... in the room where I was sleeping. Your glasses... they're on the stool by the bed.": {
+   "file": "dvij-dc4f982695.mp3",
+   "seconds": 5.33
+  },
+  "dvij|This Mahantji... do you think he is a good man?": {
+   "file": "dvij-b04ea5d831.mp3",
+   "seconds": 3.21
+  },
+  "dvij|What's this? What are you doing?": {
+   "file": "dvij-b525bcb5ae.mp3",
+   "seconds": 2.06
+  },
+  "dvij|Why is my head bandaged?": {
+   "file": "dvij-ee4e9ba250.mp3",
+   "seconds": 1.77
+  },
+  "dvij|Why? Why was I in a coma?": {
+   "file": "dvij-0d382f0966.mp3",
+   "seconds": 2.29
+  },
+  "dvij|Yes, but there must be roads connecting this place to the outside world.": {
+   "file": "dvij-1700846eeb.mp3",
+   "seconds": 4.38
+  },
+  "dvij|You did... didn't you? You don't belong here yourself.": {
+   "file": "dvij-a247fca113.mp3",
+   "seconds": 3.49
+  },
+  "dvij|You mean my accident? So you know about me?": {
+   "file": "dvij-9ea7d2883c.mp3",
+   "seconds": 3.04
+  },
+  "dvij|You think I am an incarnation?": {
+   "file": "dvij-04d3a03abb.mp3",
+   "seconds": 1.98
+  },
+  "maharaj|Are you really an incarnation, sahib?": {
+   "file": "maharaj-2d52339cbd.mp3",
+   "seconds": 3.06
+  },
+  "maharaj|I don't know, sahib.": {
+   "file": "maharaj-76e80b2a33.mp3",
+   "seconds": 1.8
+  },
+  "maharaj|I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.": {
+   "file": "maharaj-186f831b12.mp3",
+   "seconds": 11.54
+  },
+  "maharaj|Mahantji is very learned, sahib. He knows the Vedas by heart. He can read the stars and tell of events that have not yet happened. If he has said that you are an incarnation, then you must be.": {
+   "file": "maharaj-5f73f0ace4.mp3",
+   "seconds": 16.92
+  },
+  "maharaj|Nobody goes out, sahib. It is an unthinkable act. Outside is an evil world, that's what Mahant has told us.": {
+   "file": "maharaj-f8b0db65ad.mp3",
+   "seconds": 11.19
+  },
+  "maharaj|People are scared of Mahantji. But I do not fear anyone above God. And may He strike me down if I say or do anything wrong. Mahantji is an evil man. He has many vices.": {
+   "file": "maharaj-d5884c909f.mp3",
+   "seconds": 17.45
+  },
+  "maharaj|The entire village thinks so. Mahantji predicted your arrival, sahib.": {
+   "file": "maharaj-14794ed17b.mp3",
+   "seconds": 6.39
+  },
+  "maharaj|The valley is surrounded from all sides by mountains. There are forests at the bottom of these mountains, forests full of lions and tigers and other wild animals. Then there are the tribals.": {
+   "file": "maharaj-7487544c0b.mp3",
+   "seconds": 17.57
+  },
+  "maharaj|The village down below - it is called Vaspati. Where we are, I can't say. I belong to another village called Baswara in the tarai region of the Uttaranchal hills.": {
+   "file": "maharaj-598ca92aad.mp3",
+   "seconds": 14.34
+  },
+  "maharaj|There is one road. It was built when the national park was set up. But it is too steep.": {
+   "file": "maharaj-677cec3318.mp3",
+   "seconds": 9.15
+  },
+  "maharaj|Who are we to question him, sahib? We are poor and illiterate.": {
+   "file": "maharaj-de421e1dab.mp3",
+   "seconds": 5.11
+  },
+  "professor|Become the intrepid explorer and find the text, my boy, for it would help you find your past.": {
+   "file": "professor-fd9693ff71.mp3",
+   "seconds": 6.27
+  },
+  "professor|Have you seen my glasses?": {
+   "file": "professor-d76ba8ace2.mp3",
+   "seconds": 1.6
+  },
+  "professor|I haven't really introduced myself, have I? How embarrassing. I am Doctor Vidyasagar Parthasarathi, owner of this room and the rest of the lodge that came along with it.": {
+   "file": "professor-7d4bbed855.mp3",
+   "seconds": 11.38
+  },
+  "professor|Oh, don't be a fool. It's impossible to find anything intact, really speaking, including our history. All we see now are small fragments.": {
+   "file": "professor-2ed88e6994.mp3",
+   "seconds": 9.27
+  },
+  "professor|She is Varahi, one of the saptamatrikas. She is pot bellied, for she holds in her womb the universe.": {
+   "file": "professor-8269f87cbf.mp3",
+   "seconds": 7.09
+  },
+  "professor|The veena... ah... it is safe. Of course I do not play it. No... no... I am no good with music. It's the inspiration that I keep it with me all the time... after all it is the instrument of the Goddess of learning, no?": {
+   "file": "professor-aa02c2bef5.mp3",
+   "seconds": 15.41
+  },
+  "professor|Think nothing of it! It's your turn to introduce yourself. What's your name? Come on, out with it.": {
+   "file": "professor-483123713d.mp3",
+   "seconds": 6.33
+  },
+  "professor|Well! It's all very simple really. You had an accident. You hurt your head. You went into a coma. Now, if we could get back to the book, I'd appreciate very much.": {
+   "file": "professor-0f87799feb.mp3",
+   "seconds": 11.24
+  },
+  "professor|Why indeed? Because of the accident, I should think. Careless driving, I dare say. Must you fret about those things when we are in the midst of such secret knowledge?": {
+   "file": "professor-5d844c5af0.mp3",
+   "seconds": 11.27
+  },
+  "professor|Yes, yes, of course you had an accident. You were in coma. Look here... at the edges of the birch barks... see how they have frayed over time. Beautiful!": {
+   "file": "professor-c233c19ead.mp3",
+   "seconds": 11.55
+  },
+  "professor|You were trying to reach up for those books, eh? And fell backwards. Was that it? It happens to me all the time. I don't cause as much damage though.": {
+   "file": "professor-7f47c8e445.mp3",
+   "seconds": 10.44
+  }
+ }
 }

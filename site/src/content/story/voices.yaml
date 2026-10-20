@@ -15,34 +15,55 @@ tail: The recording is very clear and close up, with no background noise.
 characters:
   dvij:
     who: a young man waking with no memory, head bandaged, arm in plaster  # novel ¶93-102
-    voice: {speaker: Aakash, seed: 2101, description: "Aakash's voice is warm, slightly husky and mid-pitched. He speaks Indian English with a neutral urban accent, at a slow, hesitant pace, a little weak and bewildered, as if just woken."}
+    voice: {speaker: Raghav, seed: 2101, description: "Raghav's voice is clear and slightly low-pitched. He speaks Indian English at a measured, hesitant pace, puzzled and gentle."}  # chosen by the author, 2026-10-20
     line: "There... in the room where I was sleeping. Your glasses... they're on the stool by the bed."
     candidates:
       - {speaker: Aakash, seed: 2101, description: "Aakash's voice is warm, slightly husky and mid-pitched. He speaks Indian English with a neutral urban accent, at a slow, hesitant pace, a little weak and bewildered, as if just woken."}
       - {speaker: Kabir, seed: 2101, description: "Kabir's voice is soft and mid-pitched. He speaks Indian English with a slight North Indian accent, at a slow, uncertain pace, quiet and tired."}
       - {speaker: Raghav, seed: 2101, description: "Raghav's voice is clear and slightly low-pitched. He speaks Indian English at a measured, hesitant pace, puzzled and gentle."}
+      - {speaker: Rohit, seed: 2101, description: "Rohit's voice is warm, slightly husky and mid-pitched. He speaks English with a North Indian Hindi accent from Delhi, at a slow, hesitant pace, a little weak and bewildered, as if just woken."}  # North Indian
+      - {speaker: Karan, seed: 2101, description: "Karan's voice is young, soft and mid-pitched. He speaks English with a North Indian Hindi accent from the Jammu hills, at a slow, uncertain pace, quiet, tired and puzzled."}  # North Indian
+      - {speaker: Vikas, seed: 2101, description: "Vikas's voice is young and slightly low-pitched. He speaks English with a North Indian Punjabi-Hindi accent, at a measured, hesitant pace, gentle and bewildered."}  # North Indian
+      - {speaker: Tarun, seed: 2101, description: "Tarun's voice is young, warm and mid-pitched. He speaks English with a North Indian Hindi accent, at a slow, hesitant pace, weak and bewildered, as if just woken."}  # North Indian, round 2
+      - {speaker: Ravi, seed: 2101, description: "Ravi's voice is young and slightly husky, medium-pitched. He speaks English with a North Indian accent, at a slow, halting pace, confused and gentle."}  # North Indian, round 2
+      - {speaker: Gurpreet, seed: 2101, description: "Gurpreet's voice is young, deep and soft. He speaks English with a North Indian Punjabi accent, at a slow, measured pace, tired and puzzled."}  # North Indian, round 2
+      - {speaker: Varun, seed: 2101, description: "Varun's voice is young and clear, slightly low-pitched. He speaks English with a North Indian Hindi accent, quietly and hesitantly, a little lost."}  # North Indian, round 2
+      - {speaker: Yash, seed: 2101, description: "Yash's voice is young, soft and slightly breathy. He speaks English with a North Indian accent, at a slow, uncertain pace, weak and wondering."}  # North Indian, round 2
+      - {speaker: Arnav, seed: 2101, description: "Arnav's voice is young and warm, medium-pitched. He speaks English with a North Indian Hindi accent, at a calm, hesitant pace, earnest and bewildered."}  # North Indian, round 2
 
   professor:
     who: Dr Vidyasagar Parthasarathi, an old scholar with heavy eyebrows; talkative, ends his thoughts with "no?"  # novel ¶136-141
-    voice: {speaker: Thoma, seed: 2202, description: "Thoma's voice is old, slightly raspy and medium-pitched. He speaks English with a South Indian Tamil accent, at a lively, animated pace, warm and scholarly, like a professor delighted by his own digressions."}
+    voice: {speaker: Aman, seed: 2202, description: "Aman's voice is old, slightly raspy and medium-pitched. He speaks English with a North Indian Hindi accent, at a lively, animated pace, warm and scholarly, like a professor delighted by his own digressions."}  # chosen by the author, 2026-10-20
     line: "The veena... ah... it is safe. Of course I do not play it. No... no... I am no good with music. After all it is the instrument of the Goddess of learning, no?"
     candidates:
       - {speaker: Thoma, seed: 2202, description: "Thoma's voice is old, slightly raspy and medium-pitched. He speaks English with a South Indian Tamil accent, at a lively, animated pace, warm and scholarly, like a professor delighted by his own digressions."}
       - {speaker: Dinesh, seed: 2202, description: "Dinesh's voice is elderly and gravelly, slightly low-pitched. He speaks English with a South Indian accent, at a moderate pace, expressive and kindly, like an old teacher."}
       - {speaker: Ravi, seed: 2202, description: "Ravi's voice is old and a little thin, medium-pitched. He speaks English with a Tamil accent, quickly and animatedly, scholarly and amused."}
+      - {speaker: Aman, seed: 2202, description: "Aman's voice is old, slightly raspy and medium-pitched. He speaks English with a North Indian Hindi accent, at a lively, animated pace, warm and scholarly, like a professor delighted by his own digressions."}  # North Indian
+      - {speaker: Tarun, seed: 2202, description: "Tarun's voice is elderly and gravelly, slightly low-pitched. He speaks English with a cultured North Indian accent, at a moderate pace, expressive and kindly, like an old teacher."}  # North Indian
+      - {speaker: Jatin, seed: 2202, description: "Jatin's voice is old and a little thin, medium-pitched. He speaks English with a North Indian Hindi accent, quickly and animatedly, scholarly and amused."}  # North Indian
 
   bhavi:
     who: a young woman sitting on the well's parapet; playful, laughs, answers a question with a question  # novel ¶165-171
-    voice: {speaker: Meera, seed: 2303, description: "Meera's voice is young, clear and slightly high-pitched. She speaks Indian English at a quick, lively pace, playful and teasing, with a smile in her voice."}
+    voice: {speaker: Divya, seed: 2303, description: "Divya's voice is young, clear and slightly high-pitched. She speaks English with a North Indian Hindi accent, at a quick, lively pace, playful and teasing, with a smile in her voice."}  # chosen by the author, 2026-10-20
     line: "Everyone around here knows about you. You're The Wounded One with No Past, right?"
     candidates:
       - {speaker: Meera, seed: 2303, description: "Meera's voice is young, clear and slightly high-pitched. She speaks Indian English at a quick, lively pace, playful and teasing, with a smile in her voice."}
       - {speaker: Priya, seed: 2303, description: "Priya's voice is young and bright, medium-pitched. She speaks Indian English at a brisk pace, confident and mischievous."}
       - {speaker: Kavya, seed: 2303, description: "Kavya's voice is soft, young and slightly high-pitched. She speaks Indian English at a relaxed pace, amused and a little mysterious."}
+      - {speaker: Divya, seed: 2303, description: "Divya's voice is young, clear and slightly high-pitched. She speaks English with a North Indian Hindi accent, at a quick, lively pace, playful and teasing, with a smile in her voice."}  # North Indian
+      - {speaker: Rani, seed: 2303, description: "Rani's voice is young and bright, medium-pitched. She speaks English with a North Indian Hindi accent, at a brisk pace, confident and mischievous."}  # North Indian
+      - {speaker: Nisha, seed: 2303, description: "Nisha's voice is soft, young and slightly high-pitched. She speaks English with a North Indian accent, at a relaxed pace, amused and a little mysterious."}  # North Indian
+      - {speaker: Sneha, seed: 2303, description: "Sneha's voice is young, clear and slightly high-pitched. She speaks English with a North Indian Hindi accent, at a quick, lively pace, playful and teasing."}  # North Indian, round 2
+      - {speaker: Tisha, seed: 2303, description: "Tisha's voice is young and bright. She speaks English with a North Indian accent, at a brisk pace, mischievous and confident, laughing a little."}  # North Indian, round 2
+      - {speaker: Gauri, seed: 2303, description: "Gauri's voice is young, soft and medium-pitched. She speaks English with a North Indian Hindi accent, at a relaxed pace, amused and a little mysterious."}  # North Indian, round 2
+      - {speaker: Riya, seed: 2303, description: "Riya's voice is young and lively, slightly high-pitched. She speaks English with a North Indian accent, quickly and expressively, teasing and bold."}  # North Indian, round 2
+      - {speaker: Neha, seed: 2303, description: "Neha's voice is young and warm, medium-pitched. She speaks English with a North Indian Hindi accent, at an easy pace, playful and knowing."}  # North Indian, round 2
+      - {speaker: Isha, seed: 2303, description: "Isha's voice is young, clear and sweet. She speaks English with a North Indian accent, at a lively pace, cheeky and amused."}  # North Indian, round 2
 
   maharaj:
     who: the lodge's cook from Baswara, a village in the tarai of the Uttaranchal hills; soot on his face, deferential and afraid, talks in low tones  # novel ¶195-217
-    voice: {speaker: Rohit, seed: 2404, description: "Rohit's voice is middle-aged, soft and low-pitched. He speaks English with a rustic Pahadi Hindi accent from the Uttarakhand hills, slowly and quietly, timid and deferential, almost whispering."}
+    voice: {speaker: Jatin, seed: 2404, description: "Jatin's voice is middle-aged and medium-pitched. He speaks Indian English with a Hindi accent, quietly and hesitantly, anxious and humble."}  # chosen by the author, 2026-10-20
     line: "Nobody goes out, sahib. It is an unthinkable act. Outside is an evil world, that's what Mahant has told us."
     candidates:
       - {speaker: Rohit, seed: 2404, description: "Rohit's voice is middle-aged, soft and low-pitched. He speaks English with a rustic Pahadi Hindi accent from the Uttarakhand hills, slowly and quietly, timid and deferential, almost whispering."}

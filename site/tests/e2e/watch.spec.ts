@@ -94,4 +94,20 @@ test.describe("watch mode", () => {
     await expect(page.getByRole("button", { name: /Let it play/ })).toHaveCount(0);
     await expect(bar(page)).toBeVisible();
   });
+
+  test("each character speaks their lines in their own voice", async ({ page }) => {
+    test.setTimeout(120_000);
+    const voices = JSON.parse(readFileSync(new URL("../../src/content/generated/story-voices.json", import.meta.url), "utf8")).lines;
+    const heard: string[] = [];
+    page.on("response", (r) => { if (r.url().includes("/_assets/story/voices/") && r.status() < 400) heard.push(r.url()); });
+    await watch(page);
+    await bar(page).getByRole("button", { name: "Next chapter" }).click();
+    await bar(page).getByRole("button", { name: "Next chapter" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch03");
+    await bar(page).getByRole("button", { name: "4×" }).click();
+    // the Professor asks for his glasses, Dvij answers: two voices
+    await expect.poll(() => new Set(heard.map((u) => u.split("/").pop()!.split("-")[0])).size, { timeout: 60_000 }).toBeGreaterThanOrEqual(2);
+    const files = new Set(Object.values(voices).map((v) => (v as { file: string }).file));
+    for (const u of heard) expect(files.has(u.split("/").pop()!)).toBe(true);
+  });
 });
