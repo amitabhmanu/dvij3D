@@ -1,0 +1,56 @@
+---
+// Walking the valley (design §10.2): a full-screen game page, without the
+// site's header and footer. All it loads at first is the start screen.
+import Base from "../../layouts/Base.astro";
+import Walk from "../../islands/Walk.tsx";
+import { terrainFile, walkFile } from "../../lib/manifest";
+import { terrain } from "../../lib/terrain-data";
+import { walk } from "../../lib/walk/walk-data";
+---
+<Base
+  title="Walk the valley"
+  description="Walk through the valley of The Twice Born in first person, from the Access Road to the top of Mount Dronagiri, built from the book's own map."
+  chrome={false}
+  bodyClass="walk-page"
+>
+  <Walk client:only="preact" heightUrl={walkFile(walk.height.file)} worldUrl={walkFile(walk.world)}
+    drapeUrl={terrainFile(terrain.drape)} backUrl="/valley/" />
+  <noscript><p class="walk-noscript">Walking the valley needs JavaScript. <a href="/valley/">The book's map</a> works without it.</p></noscript>
+</Base>
+
+<style is:global>
+  body.walk-page { margin: 0; overflow: hidden; background: #2b241c; }
+  body.walk-page .skip-link { display: none; }
+  .walk { position: fixed; inset: 0; font-family: var(--font-ui); color: var(--ink); user-select: none; }
+  .walk-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  .walk .card { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(440px, calc(100% - 32px));
+    box-sizing: border-box; padding: 26px 28px; border-radius: 12px; background: rgb(245 236 218 / 96%);
+    box-shadow: 0 18px 60px rgb(0 0 0 / 35%); text-align: left; max-height: calc(100% - 32px); overflow: auto; }
+  .walk .card h1 { font-family: var(--font-display); font-size: 2.3rem; margin: 2px 0 10px; }
+  .walk .card h2 { font-size: 1.15rem; margin: 0 0 14px; }
+  .walk .card p { margin: 0 0 14px; font: 0.95rem/1.5 var(--font-body); color: var(--ink-2); }
+  .walk .eyebrow { margin: 0; font: 700 0.72rem var(--font-ui) !important; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sepia) !important; }
+  .walk .go { display: block; width: 100%; margin: 6px 0 16px; padding: 13px 18px; border: 0; border-radius: 8px;
+    background: var(--ink); color: var(--paper); font: 600 1rem var(--font-ui); cursor: pointer; }
+  .walk .go:hover, .walk .go:focus-visible { background: var(--accent); outline: none; }
+  .walk .back { margin: 12px 0 0 !important; font: 0.88rem var(--font-ui) !important; }
+  .walk .back a { color: var(--accent); }
+  .walk .controls { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; font-size: 0.84rem; color: var(--ink-2); }
+  .walk .controls dt { font-weight: 600; color: var(--ink); }
+  .walk .controls dd { margin: 0; }
+  .walk .bar { height: 8px; border-radius: 4px; background: var(--paper-3); overflow: hidden; }
+  .walk .bar span { display: block; height: 100%; background: var(--accent); transition: width 0.2s; }
+  .walk .begin { border: 0; cursor: pointer; text-align: center; display: grid; gap: 6px; font: 0.95rem var(--font-ui); color: var(--ink-2); }
+  .walk .begin strong { font-size: 1.1rem; color: var(--ink); }
+  .walk .pause label { display: grid; gap: 4px; margin: 0 0 12px; font-size: 0.86rem; font-weight: 600; }
+  .walk .pause label.check { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+  .walk .pause select, .walk .pause input[type="range"] { width: 100%; }
+  .walk .pause-btn { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%; border: 0;
+    background: rgb(245 236 218 / 80%); font: 700 0.9rem var(--font-ui); cursor: pointer; }
+  .walk .stick { position: absolute; left: 28px; bottom: 28px; width: 120px; height: 120px; border-radius: 50%;
+    background: rgb(245 236 218 / 25%); border: 2px solid rgb(245 236 218 / 55%); touch-action: none; }
+  .walk .stick span { position: absolute; left: 35px; top: 35px; width: 50px; height: 50px; border-radius: 50%;
+    background: rgb(245 236 218 / 85%); }
+  .walk-noscript { color: #efe3c8; padding: 2rem; font-family: var(--font-ui); }
+  .walk-noscript a { color: #e9b77f; }
+</style>

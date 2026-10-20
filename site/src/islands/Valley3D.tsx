@@ -151,6 +151,7 @@ export default function Valley3D({ heightUrl, drapeUrl, posterUrl, places }: Pro
       <div class="views" role="group" aria-label="How to see the valley">
         <button type="button" class="chip" aria-pressed={view === "map"} onClick={() => view === "3d" && close()}>Map</button>
         <button type="button" class="chip" aria-pressed={view === "3d"} onClick={() => view === "map" && open()}>3D</button>
+        <a class="chip walk-link" href="/valley/walk/">Enter the valley <span aria-hidden="true">&rarr;</span></a>
         {status === "nogl" && (
           <p class="v3d-note" role="status">This browser can't draw the valley in 3D, so here is the book's map.</p>
         )}

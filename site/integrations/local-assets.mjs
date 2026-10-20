@@ -18,11 +18,13 @@ const DEV_FILES = {
   "hotspots.json": { file: "hotspots/manual.json", replace: true },
   "hotspots-auto.json": { file: "hotspots/auto.json", readonly: true },
 };
-const PUBLISHED = ["pages", "art", "pdf", "terrain"]; // never master/ or data/
+const PUBLISHED = ["pages", "art", "pdf", "terrain", "walk"]; // never master/ or data/
+const SAME_ORIGIN = ["terrain", "walk"]; // shipped in every build (WebGL reads them; see manifest.ts)
 const TYPES = {
   ".avif": "image/avif",
   ".webp": "image/webp",
   ".png": "image/png",
+  ".bin": "application/octet-stream",
   ".pdf": "application/pdf",
   ".json": "application/json",
 };
@@ -82,13 +84,15 @@ export default function localAssets() {
         const out = path.join(fileURLToPath(dir), "_assets");
         // The 3D valley's files ship with every build, served by the site itself
         // (see terrainFile in src/lib/manifest.ts): WebGL needs them same-origin.
-        if (existsSync(path.join(ASSETS, "terrain"))) {
-          await cp(path.join(ASSETS, "terrain"), path.join(out, "terrain"), { recursive: true });
-        } else {
-          logger.warn("site-assets/terrain is missing: the 3D valley will not load in this build");
+        for (const sub of SAME_ORIGIN) {
+          if (existsSync(path.join(ASSETS, sub))) {
+            await cp(path.join(ASSETS, sub), path.join(out, sub), { recursive: true });
+          } else {
+            logger.warn(`site-assets/${sub} is missing: the 3D valley will not load in this build`);
+          }
         }
         if (process.env.BUNDLE_ASSETS !== "1") {
-          logger.info("bundled terrain from site-assets into dist/_assets");
+          logger.info(`bundled ${SAME_ORIGIN.join(", ")} from site-assets into dist/_assets`);
           return;
         }
         await mkdir(out, { recursive: true });

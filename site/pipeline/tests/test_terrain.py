@@ -145,3 +145,22 @@ def test_every_labelled_place_has_an_anchor():
     located = [p["id"] for p in places if p.get("rects")]
     assert sorted(TERRAIN["anchors"]) == sorted(located)
     assert len(located) == 8
+
+
+def test_walk_heights_round_trip_to_a_decimetre():
+    import build_walk as bw
+    walk = json.loads(bw.WALK_JSON.read_text(encoding="utf-8"))
+    data = (bw.OUT / walk["height"]["file"]).read_bytes()
+    back = bw.decode(data, walk["height"]["w"], walk["height"]["h"])
+    for c in walk["check"]:
+        assert abs(back[c["j"], c["i"]] - c["h"]) <= 0.051
+
+
+def test_walk_boulders_are_real_size_and_dry():
+    import build_walk as bw
+    walk = json.loads(bw.WALK_JSON.read_text(encoding="utf-8"))
+    world = json.loads((bw.OUT / walk["world"]).read_text(encoding="utf-8"))
+    lake = Polygon(walk["water"][0]["points"])
+    assert len(world["boulders"]) > 3000
+    assert all(0.8 <= b[3] <= 4.0 for b in world["boulders"])
+    assert not any(lake.contains(Point(b[0], b[2])) for b in world["boulders"])

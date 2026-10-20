@@ -1,0 +1,30 @@
+# Walking the valley (design §10.2), read by pipeline/build_walk.py and the game.
+# Like terrain.yaml, every number here is ours; each says why.
+
+heights:
+  # Samples across the map plus its rims: about 4 m apart, close enough that the
+  # ground doesn't show steps at eye level. The game adds finer ripples itself.
+  width: 3072
+
+# Where you arrive: the Access Road, the valley's one way in ("a bowl with one
+# steep road out", B1), facing Dronagiri. `at` is on map.jpg (0-1); `heading`
+# is degrees clockwise from north.
+spawn:
+  at: [0.603, 0.705]
+  heading: 35
+
+player:
+  eye: 1.7          # metres above the ground
+  walk: 5           # metres a second: brisk, so the valley doesn't drag
+  run: 12           # with Shift: the agreed fast run across 10 km
+  maxSlope: 38      # degrees; steeper ground can't be climbed
+  radius: 0.4       # metres, for bumping into things
+
+# Boulders at their real size for walking (the flyover draws them 14-38 m
+# across so they read from the air). Thickest round the fort on Keval hill (B1 ch18).
+boulders:
+  seed: 7
+  spacing: 85       # metres between boulders on open ground
+  nearFort: 0.3
+  fortRadius: 900
+  size: [0.8, 4.0]  # metres across
