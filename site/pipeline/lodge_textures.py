@@ -41,7 +41,7 @@ def tint(base, n, spread):
     return np.asarray(base, float)[None, None, :] * (1 - spread / 2 + spread * n[..., None])
 
 
-def whitewash(rng, base=(238, 220, 178)):  # the comic's warm cream (b1-p008-2)
+def whitewash(rng, base=(240, 216, 166)):  # the comic's warm cream (b1-p008-2)
     n = noise(rng, scale=6)
     img = tint(base, n, 0.12)
     # mould: dark streaks running down from the top edge (the roof line)

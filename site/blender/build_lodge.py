@@ -97,6 +97,14 @@ def setup_materials():
     material("paper", color=(0.85, 0.8, 0.65))
     material("lamp", color=(0.95, 0.85, 0.55), rough=0.4)
     material("green-patch", color=(0.25, 0.42, 0.22))
+    material("chilli", color=(0.55, 0.06, 0.04), rough=0.6)
+    material("garlic", color=(0.85, 0.8, 0.7))
+    material("rug", color=(0.45, 0.16, 0.1))
+    material("soot-dark", color=(0.09, 0.07, 0.05))
+    fire = material("fire", color=(1.0, 0.45, 0.1), rough=1.0)
+    bsdf = fire.node_tree.nodes["Principled BSDF"]
+    bsdf.inputs["Emission Color"].default_value = (1.0, 0.42, 0.08, 1)
+    bsdf.inputs["Emission Strength"].default_value = 4.0
 
 
 # --- geometry ----------------------------------------------------------------
@@ -741,6 +749,106 @@ def build_back_wall_patch():
     obj["source"] = "novel ¶1446-1451"
 
 
+def pot(g, x, z, r, y=None, mat="clay"):
+    y0 = FLOOR if y is None else y
+    g.sphere(x, y0 + r * 0.9, z, r, mat, seg=10)
+    g.cylinder(x, z, r * 0.45, y0 + r * 1.6, y0 + r * 2.0, mat, seg=8, cap=False)
+
+
+def plant(g, x, z, y=None, size=0.35):
+    y0 = FLOOR if y is None else y
+    g.cylinder(x, z, size * 0.7, y0, y0 + size * 1.2, "clay", seg=8)
+    for a in range(5):
+        ang = a * 2 * math.pi / 5
+        g.sphere(x + size * 0.45 * math.cos(ang), y0 + size * 1.9, z + size * 0.45 * math.sin(ang), size * 0.6, "foliage", seg=6)
+
+
+def from_the_comic(g, col):
+    """Things the comic draws in each room that the plan's first pass left out
+    (design §10.3). Each line names the panel it comes from."""
+    # --- the study (comic b1-p004-8, b1-p007-2, b2-p027-9, b2-p033-11, b3-p016-6) ---
+    # the veena leaning by the window (b1-p004-8, b1-p007-2)
+    g.sphere(-14.9, FLOOR + 0.35, -11.4, 0.32, "wood", seg=10)
+    g.box(-14.97, -14.83, FLOOR + 0.5, FLOOR + 1.75, -11.47, -11.33, "wood")
+    g.sphere(-14.9, FLOOR + 1.85, -11.4, 0.14, "wood", seg=8)
+    col.box(-15.25, -14.55, FLOOR, FLOOR + 0.8, -11.75, -11.05, "wood")
+    # clay pots on the floor (b1-p004-8, b1-p004-10)
+    pot(g, -15.2, -14.0, 0.28)
+    pot(g, -14.6, -14.3, 0.2)
+    col.box(-15.5, -14.3, FLOOR, FLOOR + 0.6, -14.6, -13.6, "wood")
+    # papers heaped on the desk, books stacked on the floor (b1-p004-8: "books everywhere")
+    for k in range(4):
+        g.box(-13.6 + k * 0.05, -13.1 + k * 0.03, FLOOR + 0.83 + k * 0.03, FLOOR + 0.86 + k * 0.03, -12.95, -12.55, "paper")
+    for x, z, n in ((-8.8, -15.0, 6), (-7.6, -14.8, 4), (-11.0, -14.9, 5)):
+        for k in range(n):
+            g.box(x - 0.18 + 0.02 * (k % 2), x + 0.16, FLOOR + k * 0.07, FLOOR + (k + 1) * 0.07, z - 0.13, z + 0.13,
+                  "cloth" if k % 3 == 0 else "wood" if k % 3 == 1 else "paper")
+        col.box(x - 0.2, x + 0.2, FLOOR, FLOOR + n * 0.07, z - 0.15, z + 0.15, "wood")
+    # drawers under the desk (b2-p027-9)
+    g.box(-13.6, -13.0, FLOOR + 0.15, FLOOR + 0.72, -13.0, -12.2, "wood")
+    # brass statues along the shelf tops (b1-p004-8, b3-p016-6)
+    for x in (-9.0, -8.0, -7.0):
+        g.cylinder(x, -15.45, 0.08, TOP - 0.4, TOP - 0.05, "brass", seg=6)
+        g.sphere(x, TOP + 0.02, -15.45, 0.08, "brass", seg=6)
+    # a rug under the desk (b1-p007-2)
+    g.box(-14.6, -10.6, FLOOR + 0.005, FLOOR + 0.015, -13.8, -11.4, "rug", faces=("+y",))
+
+    # --- the kitchen (novel ¶195; comic b1-p010-2, b4-p001-2) ---
+    # an arched clay oven in the corner, a fire in its mouth (b1-p010-2)
+    g.box(13.9, 15.6, FLOOR, FLOOR + 0.6, -15.6, -14.2, "clay")
+    g.sphere(14.75, FLOOR + 0.6, -14.9, 0.75, "clay", seg=12)
+    g.box(14.45, 15.05, FLOOR + 0.6, FLOOR + 1.0, -14.21, -14.15, "soot-dark")
+    g.box(14.55, 14.95, FLOOR + 0.62, FLOOR + 0.85, -14.2, -14.12, "fire")
+    col.box(13.9, 15.6, FLOOR, FLOOR + 1.3, -15.6, -14.1, "wood")
+    # wall shelves of jars on the north wall (b1-p010-2)
+    for k, y in enumerate((FLOOR + 1.5, FLOOR + 2.1)):
+        g.box(6.0, 10.0, y, y + 0.04, -15.75, -15.45, "wood")
+        for j in range(9):
+            x = 6.2 + j * 0.44
+            if (j + k) % 2:
+                g.cylinder(x, -15.6, 0.1, y + 0.04, y + 0.32, "glass", seg=8)
+                g.cylinder(x, -15.6, 0.11, y + 0.32, y + 0.36, "brass", seg=8)
+            else:
+                pot(g, x, -15.6, 0.12, y + 0.04, "brass" if j % 3 == 0 else "clay")
+    # strings of chillies and garlic by the prints (b1-p010-2)
+    for k in range(3):
+        x, z = 15.7, -10.9 - k * 0.25
+        g.cylinder(x, z, 0.01, FLOOR + 1.6, FLOOR + 2.6, "iron", seg=4, cap=False)
+        for j in range(8):
+            g.sphere(x, FLOOR + 1.7 + j * 0.11, z, 0.045, "chilli" if k != 1 else "garlic", seg=6)
+    # earthen pots and a basket of vegetables on the floor (b1-p010-2)
+    for x, z, r in ((6.0, -11.2, 0.3), (6.6, -11.0, 0.22), (11.8, -15.3, 0.26)):
+        pot(g, x, z, r)
+    col.box(5.6, 6.95, FLOOR, FLOOR + 0.6, -11.6, -10.6, "wood")
+    g.cylinder(7.6, -11.1, 0.32, FLOOR, FLOOR + 0.25, "wood", seg=10)
+    for j, m in enumerate(("chilli", "garlic", "foliage", "clay", "chilli")):
+        g.sphere(7.6 + 0.15 * math.cos(j * 1.3), FLOOR + 0.3, -11.1 + 0.15 * math.sin(j * 1.3), 0.08, m, seg=6)
+    # soot over the whole deep end and the ceiling above the fire (novel ¶195)
+    g.box(5.3, 15.7, TOP - 1.4, TOP - 0.31, -15.75, -15.73, "soot-dark")
+    g.box(15.7, 15.73, TOP - 1.4, TOP - 0.31, -15.75, -10.75, "soot")
+    g.box(5.3, 15.7, TOP - 0.02, TOP - 0.01, -16, -10.5, "soot-dark", faces=("-y",))
+
+    # --- the verandah (comic b1-p008-2, b1-p012-2, b3-p031-1): potted plants along its edge ---
+    v = spec["verandah"]
+    for x in (-6.4, -5.2, -2.6, 2.6, 5.2, 6.4):
+        plant(g, x, HALF + v["depth"] - 0.6)
+        col.box(x - 0.3, x + 0.3, FLOOR, FLOOR + 0.9, HALF + v["depth"] - 0.9, HALF + v["depth"] - 0.3, "wood")
+
+    # --- the courtyard: pots by the pillars (comic b1-p004-7, b3-p031-1) ---
+    for x, z in ((-6.4, -8.6), (6.4, -8.6), (-6.4, 8.6), (6.4, 8.6), (-8.6, 0), (8.6, 0)):
+        plant(g, x, z, y=FLOOR, size=0.4)
+        col.box(x - 0.35, x + 0.35, FLOOR, FLOOR + 1.0, z - 0.35, z + 0.35, "wood")
+
+    # --- the sitting room (comic b2-p001-7): curtains at the front window, a rug ---
+    for x in (-11.55, -9.45):
+        g.box(x - 0.25, x + 0.25, FLOOR + 0.8, FLOOR + 3.0, 15.65, 15.72, "cloth")
+    g.box(-14.0, -7.0, FLOOR + 0.005, FLOOR + 0.015, 11.5, 14.5, "rug", faces=("+y",))
+
+    # --- the dining hall: a lamp on the table ---
+    g.cylinder(10.5, 13.25, 0.06, FLOOR + 0.78, FLOOR + 1.1, "brass", seg=8)
+    g.cylinder(10.5, 13.25, 0.12, FLOOR + 1.1, FLOOR + 1.3, "lamp", seg=8)
+
+
 def markers():
     R = {r["id"]: r for r in spec["rooms"]}
     gr = spec["grounds"]
@@ -822,6 +930,7 @@ def main():
     build_verandah(house, col)
     build_windows_and_doors(house, furniture)
     furnish(furniture, col)
+    from_the_comic(furniture, col)
     build_grounds(grounds, col)
     house.to_object("house")
     furniture.to_object("furniture")
