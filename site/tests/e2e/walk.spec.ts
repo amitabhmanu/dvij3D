@@ -201,3 +201,72 @@ test("you can't walk through a building", async ({ page, isMobile }) => {
   expect(Math.hypot(p.x - b.x, p.z - b.z)).toBeGreaterThanOrEqual(b.r);
   expect(p.z).toBeLessThan(b.z + 20); // it did walk up to it
 });
+
+const spot = (id: string) => walk.places.find((p: { id: string }) => p.id === id);
+
+test("walking up to a place offers its card, veiled until you've read that far", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  const fort = spot("fort-ruins");
+  await teleport(page, fort.x, fort.z + 100, 0);
+  await expect(page.locator(".walk")).toHaveAttribute("data-near", "fort-ruins");
+  await expect(page.locator(".prompt")).toHaveText(/Read about Fort Ruins/);
+  await page.keyboard.press("KeyE");
+  const card = page.locator(".place-card");
+  await expect(card).toHaveAttribute("data-place", "fort-ruins");
+  await expect(card).toHaveAttribute("data-veiled", ""); // a fresh reader hasn't reached b1 p29
+  await expect(card).toContainText("Book 1, page 29");
+  await card.getByRole("button", { name: "Show it" }).click();
+  await expect(card).not.toHaveAttribute("data-veiled", "");
+  await expect(card.locator(".book")).toContainText("Maharaja");
+  await card.getByRole("button", { name: "Keep walking" }).click();
+  await expect(page.locator(".walk")).toHaveAttribute("data-screen", "playing");
+});
+
+test("a reader who has read that far sees the card unveiled", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await page.goto("/read/b1/30");
+  await page.locator('.reader[data-hydrated="true"]').waitFor();
+  await page.waitForFunction(() => !!localStorage.getItem("twice-born:v1"));
+  await enter(page);
+  const fort = spot("fort-ruins");
+  await teleport(page, fort.x, fort.z + 100, 0);
+  await expect(page.locator(".prompt")).toBeVisible();
+  await page.keyboard.press("KeyE");
+  await expect(page.locator(".place-card")).not.toHaveAttribute("data-veiled", "");
+});
+
+test("the map shows where you are and takes you to places you've reached", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  await page.keyboard.press("KeyM");
+  await expect(page.locator(".walk")).toHaveAttribute("data-screen", "map");
+  await expect(page.locator(".map-frame .spot")).toHaveCount(8);
+  await expect(page.locator('.map-frame .spot[data-place="fort-ruins"]')).toBeDisabled(); // not reached yet
+  const hill = page.locator('.map-frame .spot[data-place="gaumukh-hill"]');
+  await expect(hill).toBeEnabled();
+  await hill.click();
+  await expect(page.locator(".walk")).toHaveAttribute("data-screen", "playing");
+  const g = spot("gaumukh-hill");
+  const p = await at(page);
+  expect(Math.hypot(p.x - g.x, p.z - g.z)).toBeLessThan(g.r);
+  await expect(page.locator(".walk")).toHaveAttribute("data-near", "gaumukh-hill");
+});
+
+test("Real India renames the places", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  const fort = spot("fort-ruins");
+  await teleport(page, fort.x, fort.z + 100, 0);
+  await page.keyboard.press("Escape");
+  await page.getByLabel(/Real India/).check();
+  await page.getByRole("button", { name: "Keep walking" }).click();
+  await expect(page.locator(".prompt")).toHaveText(/Read about Daulatabad Fort/);
+});
+
+test("the compass turns with you", async ({ page }) => {
+  await enter(page);
+  await teleport(page, -1200, 1800, Math.PI / 2); // facing east
+  await expect(page.locator(".walk")).toHaveAttribute("data-heading", "90");
+  await expect(page.locator(".compass .strip")).toHaveAttribute("style", /translateX\(-360px\)/);
+});

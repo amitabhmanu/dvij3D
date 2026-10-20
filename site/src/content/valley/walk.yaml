@@ -44,3 +44,16 @@ trees:
   spacing: 12       # metres
   thickness: 2.2
   maxSlope: 35      # degrees; nothing grows on cliffs
+
+# Where walking up to a place offers its card (design §10.2): the building the
+# painting draws for it, else a hill's summit, else where map.jpg writes its
+# name; reached within `radius` metres, wider for big places.
+places:
+  radius: 160
+  at:
+    gaumukh-hill: {hill: gaumukh, radius: 450}
+    mount-dronagiri: {hill: dronagiri, radius: 600}
+    naga-forest: {radius: 500}
+    sheetal-lake: {radius: 420}
+    fort-ruins: {radius: 260}
+    kamal-taal: {radius: 220}

@@ -3,8 +3,16 @@
 // site's header and footer. All it loads at first is the start screen.
 import Base from "../../layouts/Base.astro";
 import Walk from "../../islands/Walk.tsx";
-import { walkFile } from "../../lib/manifest";
+import { artFile, walkFile } from "../../lib/manifest";
+import { located } from "../../lib/places";
 import { walk } from "../../lib/walk/walk-data";
+// The 8 places the map labels, for the walk's prompts, cards and fast travel.
+const places = located.map((p) => ({
+  id: p.id, name: p.name, fiction: p.fiction, book: p.book,
+  firstSeen: p.pages[0] ? { book: p.pages[0].book, page: p.pages[0].page } : null,
+  real: { name: p.real.name, pin: p.real.pin, region: p.real.region, why: p.real.why },
+  pages: p.pages.map((pg) => ({ book: pg.book, page: pg.page })),
+}));
 ---
 <Base
   title="Walk the valley"
@@ -13,7 +21,7 @@ import { walk } from "../../lib/walk/walk-data";
   bodyClass="walk-page"
 >
   <Walk client:only="preact" heightUrl={walkFile(walk.height.file)} worldUrl={walkFile(walk.world)}
-    groundUrl={walkFile(walk.ground)} backUrl="/valley/" />
+    groundUrl={walkFile(walk.ground)} mapUrl={artFile("valley-map.webp")} backUrl="/valley/" places={places} />
   <noscript><p class="walk-noscript">Walking the valley needs JavaScript. <a href="/valley/">The book's map</a> works without it.</p></noscript>
 </Base>
 
@@ -50,6 +58,44 @@ import { walk } from "../../lib/walk/walk-data";
     background: rgb(245 236 218 / 25%); border: 2px solid rgb(245 236 218 / 55%); touch-action: none; }
   .walk .stick span { position: absolute; left: 35px; top: 35px; width: 50px; height: 50px; border-radius: 50%;
     background: rgb(245 236 218 / 85%); }
+  .walk .hud { position: absolute; inset: 0; pointer-events: none; }
+  .walk .hud button { pointer-events: auto; }
+  .walk .compass { position: absolute; top: 12px; left: 50%; width: min(440px, 70vw); height: 30px; transform: translateX(-50%);
+    overflow: hidden; border-radius: 15px; background: rgb(43 36 28 / 55%); color: #efe3c8;
+    mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+  .walk .compass .strip { position: absolute; left: 50%; top: 0; height: 100%; }
+  .walk .compass .strip span { position: absolute; top: 6px; transform: translateX(-50%); font: 600 0.72rem var(--font-ui); opacity: 0.75; }
+  .walk .compass .strip span.major { font-size: 0.9rem; opacity: 1; top: 4px; }
+  .walk .compass .pointer { position: absolute; left: 50%; bottom: 0; width: 2px; height: 8px; background: #e9b77f; }
+  .walk .minimap { position: absolute; right: 14px; bottom: 14px; width: min(220px, 34vw); border-radius: 8px; overflow: hidden;
+    border: 2px solid rgb(245 236 218 / 85%); background: #fff; box-shadow: 0 6px 20px rgb(0 0 0 / 30%); }
+  .walk .minimap img, .walk .map-frame img { display: block; width: 100%; height: auto; }
+  .walk .me { position: absolute; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent;
+    border-bottom: 14px solid #b6402c; transform: translate(-50%, -50%); filter: drop-shadow(0 0 2px #fff); }
+  .walk .prompt { position: absolute; left: 50%; bottom: 18%; transform: translateX(-50%); border: 0; border-radius: 999px;
+    padding: 10px 18px; background: rgb(245 236 218 / 94%); font: 600 0.95rem var(--font-ui); color: var(--ink); cursor: pointer; }
+  .walk .prompt kbd { display: inline-block; min-width: 1.4em; margin-right: 6px; padding: 1px 6px; border-radius: 4px;
+    background: var(--ink); color: var(--paper); font: 700 0.8rem var(--font-ui); }
+  .walk .map-btn { position: absolute; top: 14px; right: 62px; width: 40px; height: 40px; border-radius: 50%; border: 0;
+    background: rgb(245 236 218 / 80%); font: 700 0.9rem var(--font-ui); cursor: pointer; }
+  .walk .place-card .fiction { font: 0.9rem var(--font-ui) !important; color: var(--sepia) !important; }
+  .walk .place-card .book, .walk .place-card .why { font-size: 0.95rem; }
+  .walk .place-card .pages { font: 0.85rem var(--font-ui) !important; }
+  .walk .place-card .pages a { color: var(--accent); }
+  .walk .veil-notice { margin: 0 0 14px; padding: 10px 12px; border-radius: 8px; background: var(--paper-2); font: 0.9rem/1.5 var(--font-ui); }
+  .walk .veil-notice .acts { display: block; }
+  .walk .veil-notice button { margin: 6px 6px 0 0; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--paper-3);
+    background: var(--paper); font: 600 0.82rem var(--font-ui); cursor: pointer; }
+  .walk .big-map { width: min(900px, calc(100% - 32px)); }
+  .walk .map-frame { position: relative; border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+  .walk .map-frame .spot { position: absolute; transform: translate(-50%, -50%); border: 0; border-radius: 999px; padding: 3px 9px;
+    background: var(--ink); color: var(--paper); font: 600 0.74rem var(--font-ui); cursor: pointer; white-space: nowrap; }
+  .walk .map-frame .spot:disabled { background: rgb(120 110 100 / 75%); cursor: not-allowed; }
+  .walk .map-frame .spot:not(:disabled):hover, .walk .map-frame .spot:focus-visible { background: var(--accent); }
+  .walk .hint { font: 0.85rem var(--font-ui) !important; color: var(--sepia) !important; }
+  @media (max-width: 640px) {
+    .walk .minimap { width: 38vw; bottom: auto; top: 54px; }
+  }
   .walk-noscript { color: #efe3c8; padding: 2rem; font-family: var(--font-ui); }
   .walk-noscript a { color: #e9b77f; }
 </style>

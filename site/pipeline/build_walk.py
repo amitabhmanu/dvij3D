@@ -86,6 +86,30 @@ def ground_colours(drape_file: str, erase: list[dict]) -> bytes:
     return buf.getvalue()
 
 
+def place_spots(cfg: dict, places: list[dict], contours: dict, houses: list[dict], ww: float, wd: float, ground) -> list[dict]:
+    """Where each labelled place is, for walking up to it: the building the
+    painting draws for it if there is one, a hill's summit (walk.yaml `places`),
+    or else where map.jpg writes its name."""
+    built = {h["place"]: h for h in houses if h["place"]}
+    summits = {h["id"]: h["summit"] for h in contours["hills"]}
+    out = []
+    for p in places:
+        if not p.get("rects"):
+            continue
+        own = cfg["at"].get(p["id"], {})
+        if p["id"] in built:
+            u, v = built[p["id"]]["x"] / ww + 0.5, built[p["id"]]["z"] / wd + 0.5
+        elif "hill" in own:
+            u, v = summits[own["hill"]]
+        else:
+            x0, y0, x1, y1 = p["rects"][0]
+            u, v = (x0 + x1) / 2, (y0 + y1) / 2
+        x, z = (u - 0.5) * ww, (v - 0.5) * wd
+        out.append({"id": p["id"], "x": round(x, 1), "z": round(z, 1), "y": round(ground(x, z), 1),
+                    "r": own.get("radius", cfg["radius"])})
+    return out
+
+
 def write_hashed(stem: str, ext: str, data: bytes) -> str:
     name = f"{stem}.{hashlib.sha256(data).hexdigest()[:10]}.{ext}"
     OUT.mkdir(parents=True, exist_ok=True)
@@ -155,6 +179,7 @@ def main() -> None:
         "water": [{"id": w["id"], "level": w["level"],
                    "points": [[round((x - 0.5) * ww, 1), round((y - 0.5) * wd, 1)] for x, y in w["points"]]} for w in water],
         "player": walk["player"],
+        "places": place_spots(walk["places"], places, contours, houses, ww, wd, ground),
         # exact samples for the browser's decoder to be checked against (tests)
         "check": [{"i": i, "j": j, "h": round(float(final[j, i]), 2)}
                   for i, j in ((0, 0), (grid.width - 1, grid.height - 1), (grid.width // 2, grid.height // 3), (1234, 987))],

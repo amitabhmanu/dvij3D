@@ -29,6 +29,8 @@ export type GameOptions = {
   onProgress: (fraction: number, what: string) => void;
   /** About five times a second while walking: where you are, for the HUD and tests. */
   onStats?: (s: { x: number; z: number; heading: number; ground: number }) => void;
+  /** Every frame: for the compass and the small map, which move with you. */
+  onFrame?: (x: number, z: number, heading: number) => void;
 };
 
 export type Game = {
@@ -37,6 +39,8 @@ export type Game = {
   input: Input;
   settings: Settings;
   teleport: (x: number, z: number, heading?: number) => void;
+  /** The nearest spot to (x, z) you could stand on: not in the lake, a building or a tree. */
+  standable: (x: number, z: number) => [number, number];
   player: () => Player;
   ground: (x: number, z: number) => number;
   setQuality: (q: Quality) => void;
@@ -257,6 +261,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     }
     place();
     draw();
+    o.onFrame?.(player.x, player.z, player.heading);
     if (o.onStats && now - statsAt > 200) {
       statsAt = now;
       o.onStats({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z) });
@@ -293,6 +298,16 @@ export async function createGame(o: GameOptions): Promise<Game> {
       draw();
     },
     player: () => player,
+    standable: (x, z) => {
+      for (let r = 0; r < 600; r += 6) {
+        for (let k = 0; k < Math.max(1, r / 3); k++) {
+          const a = (k / Math.max(1, r / 3)) * Math.PI * 2;
+          const px = x + Math.cos(a) * r, pz = z + Math.sin(a) * r;
+          if (!blocked(px, pz, rules.radius + 1)) return [px, pz];
+        }
+      }
+      return [x, z];
+    },
     ground,
     setQuality: (qq) => {
       renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[qq]));

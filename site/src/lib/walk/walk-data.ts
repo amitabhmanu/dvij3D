@@ -18,6 +18,8 @@ export type WalkData = {
   water: Water[];
   player: { eye: number; walk: number; run: number; maxSlope: number; radius: number };
   check: { i: number; j: number; h: number }[];
+  /** Where walking up to each labelled place offers its card. */
+  places: { id: string; x: number; y: number; z: number; r: number }[];
 };
 
 export const walk = data as unknown as WalkData;
