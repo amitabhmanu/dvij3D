@@ -1,0 +1,199 @@
+# The Professor's lodge (design §10.3): the plan that pipeline/lodge_plan.py
+# draws and site/blender/build_lodge.py builds. Every feature says where it
+# comes from: `novel ¶n` (a paragraph of book/The Twice Born.docx, quoted in
+# docs/lodge-reference.md), `comic <page>-<panel>` (a panel there), or `ours`
+# where neither says. `ask` marks a place where the two disagree, listed under
+# `questions` for the author.
+#
+# Frame: metres, origin at the centre of the courtyard, +x east, +z south. The
+# house faces south, down its drive to the gate and on toward the Access Road.
+# The study is in the north-west corner (novel ¶949), which fixes the rest.
+
+character:
+  # "A relic of the raj", "decaying magnificence", "dilapidated" (novel ¶164,
+  # ¶1942): a colonial house that has not been kept up. Built into every
+  # material and the grounds: mould streaks below the roof line (novel ¶164),
+  # whitewash and paint peeling in patches about the windows and verandah
+  # (novel ¶164), a grey stained back wall (novel ¶1446), rusting gate and
+  # courtyard bars (novel ¶163, ¶193), dusty fans (novel ¶194), a soot-black
+  # kitchen end (novel ¶195), an unkempt burnt lawn (novel ¶163, comic b1-p008-2),
+  # cracked and chipped tiles and plaster (ours).
+  sources: [novel ¶164, novel ¶1942, novel ¶163, novel ¶193, novel ¶194, novel ¶195, novel ¶1446, comic b1-p008-2]
+
+house:
+  # "a symmetrical square squatting in the middle of sprawling environs. It
+  # had only one floor though the ceiling was high" (novel ¶164); four wings of
+  # hipped red-tiled roof round an open square court (comic b3-p031-1, b1-p004-7).
+  outer: 32          # metres square (ours, from the comic's proportions)
+  court: 16          # the courtyard, metres square (ours)
+  corridor: 2.5      # the pillared corridor round the court (novel ¶194; comic b3-p031-1)
+  ceiling: 4.6       # high (novel ¶164)
+  plinth: 0.6        # three small doorsteps up from the gravel (novel ¶163)
+  wall: 0.45         # thick lime-plastered brick (ours)
+  pillars: {spacing: 3.2, diameter: 0.4, sources: [novel ¶194, comic b3-p031-1, comic b1-p004-7]}
+  roof:
+    kind: hipped tiles round the court   # comic b1-p008-2, b3-p031-1
+    pitch: 26          # degrees (ours)
+    eaves: 0.8         # overhang (ours)
+    sources: [comic b1-p008-2, comic b3-p031-1]
+  parapet:
+    # "crenellated roof top" (novel ¶164): the comic draws it across the front
+    # wing's middle, above the verandah (comic b1-p008-2, b3-p031-1).
+    span: [-7, 7]
+    height: 1.3
+    sources: [novel ¶164, comic b1-p008-2, comic b3-p031-1]
+  court_cover:
+    # The novel covers the court with "a curtain of thin fibreglass … spread
+    # over the row of rusting iron bars … to keep the monkeys out" (¶193); the
+    # comic draws it open and sunlit (b1-p004-7, b3-p031-1). See questions.
+    kind: rusting bars with torn fibreglass
+    sources: [novel ¶193]
+    ask: court-cover
+  planter: {at: [0, 0], radius: 2.2, kind: round stone planter with a palm, sources: [comic b3-p031-1, comic b1-p004-7]}
+
+verandah:
+  # "fretted verandahs with decorated railings" (novel ¶164); a deep front
+  # verandah on slender pillars with fretwork arches, steps down the middle
+  # (comic b1-p008-2, b3-p031-1, b1-p010-1, b1-p012-2).
+  span: [-7, 7]
+  depth: 3.2
+  steps: 3                 # novel ¶163
+  sources: [novel ¶164, novel ¶163, comic b1-p008-2, comic b3-p031-1, comic b1-p012-2]
+  furniture: [cane chairs, a low table]   # comic b1-p012-2, b1-p012-3
+
+rooms:
+  # Each room: its rectangle [x0, z0, x1, z1], its doors and its windows.
+  # Doors on a wall: side (n/s/e/w), centre along that wall, width. Windows the same.
+  - id: hall
+    name: Entrance hall
+    rect: [-5, 10.5, 5, 16]
+    doors: [{side: s, at: 0, width: 1.8, to: verandah, double: true}, {side: n, at: 0, width: 3, to: corridor, arch: true}]
+    sources: [comic b3-p031-1]
+  - id: sitting
+    name: Sitting room
+    rect: [-16, 10.5, -5, 16]
+    doors: [{side: n, at: -7.75, width: 1.2, to: corridor}]
+    windows: [{side: s, at: -10.5, width: 1.6}, {side: w, at: 13.25, width: 1.4}]
+    furniture: [a sofa beneath the front window, armchairs, a side table]   # novel ¶885
+    sources: [novel ¶885, comic b2-p001-7]
+  - id: dining
+    name: Dining hall
+    rect: [5, 10.5, 16, 16]
+    doors: [{side: n, at: 7.75, width: 1.2, to: corridor}]
+    windows: [{side: s, at: 10.5, width: 1.6}, {side: e, at: 13.25, width: 1.4}]
+    furniture: [a long table, chairs, a sideboard]
+    sources: [novel ¶1941]   # the dining hall named in the breakdowns; place ours
+  - id: dvij-room
+    name: The room where Dvij wakes
+    rect: [-16, 0, -10.5, 10.5]
+    doors: [{side: e, at: 5.25, width: 1.2, to: corridor}]
+    windows: [{side: w, at: 5.25, width: 1.4}]
+    furniture: [an iron bed, a chair, a small table]
+    sources: [novel ¶160]   # "I woke up in a strange room, walked out into a courtyard"; place ours
+  - id: bhavi-room
+    name: Bhavi's room
+    rect: [-16, -10.5, -10.5, 0]
+    doors: [{side: e, at: -5.25, width: 1.2, to: corridor}]
+    windows: [{side: w, at: -5.25, width: 1.4}]
+    furniture: [a bed, a dresser, curtains]   # comic b3-p031-1 (a lit room with a bed and curtains)
+    sources: [comic b3-p031-1]
+  - id: study
+    name: The Professor's study
+    rect: [-16, -16, -5, -10.5]
+    doors:
+      - {side: s, at: -7.75, width: 1.2, to: corridor}
+      - {side: n, at: -10.5, width: 1.1, to: back path}   # novel ¶1450: through the study onto the path to the mound
+    windows: [{side: n, at: -13.5, width: 1.6}, {side: w, at: -13.25, width: 1.6}]   # north and west windows, novel ¶949
+    furniture: [a desk with a study lamp and the cowry board game, a couch, bookshelves full to the ceiling, statues, a tape recorder, a globe, a veena]
+    sources: [novel ¶949, novel ¶1286, novel ¶1450, comic b1-p004-8, comic b1-p007-2, comic b2-p027-9, comic b2-p033-11, comic b3-p016-6]
+    ask: study-place
+  - id: prof-room
+    name: The Professor's bedroom
+    rect: [-5, -16, 5, -10.5]
+    doors: [{side: s, at: 0, width: 1.2, to: corridor}]
+    windows: [{side: n, at: 0, width: 1.6}]
+    furniture: [a bed, a cupboard]
+    sources: [ours]
+  - id: kitchen
+    name: Kitchen
+    rect: [5, -16, 16, -10.5]
+    doors:
+      - {side: s, at: 7.75, width: 1.4, to: corridor}
+      - {side: e, at: -12, width: 1.0, to: back yard}   # novel ¶195: another door opened outside into a yard
+    windows: [{side: n, at: 8.5, width: 1.2}]
+    furniture: [a tandoor at the deep end with soot-black wall and ceiling, a worktop with jars, brass vessels and earthen pots, a wall of god-prints with Ganesha at the centre, a lamp beneath them, a hanging kerosene lantern]
+    sources: [novel ¶195, novel ¶1942, comic b1-p010-2, comic b4-p001-2]
+  - id: pantry
+    name: Pantry
+    rect: [10.5, -10.5, 16, -6]
+    doors: [{side: n, at: 14.25, width: 0.9, to: kitchen}]   # novel ¶195: behind a small door
+    furniture: [tins of grain and dal, pots of ghee, martbans]
+    sources: [novel ¶195]
+  - id: washroom
+    name: Washroom (the only one in the house)
+    rect: [10.5, -6, 16, 0]
+    doors: [{side: w, at: -3, width: 0.9, to: corridor}]
+    windows: [{side: e, at: -3, width: 0.6}]
+    sources: [novel ¶1941]
+  - id: store
+    name: Store room
+    rect: [10.5, 0, 16, 10.5]
+    doors: [{side: w, at: 5.25, width: 1.2, to: corridor}]
+    windows: [{side: e, at: 5.25, width: 1.4}]
+    furniture: [trunks, old furniture under sheets]
+    sources: [ours]
+
+grounds:
+  # "a gravel path that seemed to circle the establishment. Another path ran
+  # perpendicular through a particularly unkempt lawn to … a heavy cast-iron
+  # gate … A brick wall took over where the gate ended, with a brown-bush hedge
+  # running parallel to it" (novel ¶163); gate piers with ball finials, a
+  # gravel drive with a round planter, potted plants, a burnt lawn (comic b1-p008-2).
+  boundary: {rect: [-55, -45, 55, 75], height: 2.2, sources: [novel ¶163, comic b1-p008-2]}
+  gate: {at: [0, 75], width: 4.5, piers: ball finials, sources: [novel ¶163, comic b1-p008-2, comic b3-p030-1]}
+  hedge: {along: boundary, inside: true, sources: [novel ¶163]}
+  drive: {from: [0, 75], to: [0, 20.5], width: 4, planter: [0, 47], sources: [novel ¶163, comic b1-p008-2]}
+  circling_path: {width: 2, sources: [novel ¶163]}
+  lawn: {kind: dry, unkempt, sources: [novel ¶163, comic b1-p008-2]}
+  potted_plants: {along: drive, sources: [comic b1-p008-2]}
+  well:
+    # deep, brick-lined, slimy, a narrow parapet, the bucket frame fallen in (novel ¶168–169)
+    at: [-18, 38]
+    radius: 1.6
+    sources: [novel ¶168, novel ¶169, comic b1-p008-6, comic b1-p009-1]
+  servant_quarters: {rect: [26, -40, 40, -30], sources: [novel ¶193]}
+  kurup_shed: {rect: [-48, -40, -40, -33], sources: [novel ¶1854]}
+  back_yard:
+    # outside the kitchen door: a wood pile and a chopping stump (novel ¶195)
+    at: [22, -12]
+    items: [a wood pile, a chopping stump, a concrete sink with a blackened pot, a clothes line]
+    sources: [novel ¶195]
+  back_gate: {at: [-10.5, -45], width: 1.5, sources: [ours]}   # where the study's back path leaves the grounds
+  mango_grove: {from: [-40, -50], to: [20, -110], sources: [novel ¶1450, novel ¶949]}
+  mound_path: {from: [-10.5, -16], to: [-10, -150], sources: [novel ¶1450]}
+  back_wall:
+    # "staid grey wall" with "a green patch" painted on it, read from the mound
+    # (novel ¶1446–1451): a puzzle in the book, shown only to readers who have
+    # reached it (design §10.3).
+    sources: [novel ¶1446, novel ¶1451]
+    spoiler: true
+
+questions:
+  # Where the novel and the comic disagree; the author decides.
+  court-cover: >
+    The novel covers the courtyard with torn fibreglass on rusting iron bars
+    (¶193); the comic draws it open and sunlit (b1-p004-7, b3-p031-1).
+    Suggestion: rusting bars with fibreglass torn away in places, so the court
+    is mostly sunlit as drawn.
+  study-place: >
+    The novel puts the study in the north-west corner with windows north and
+    west (¶949); the comic's night view (b3-p031-1) shows someone at a lamp-lit
+    desk in a raised room at the back centre. Suggestion: the novel's corner,
+    which the plot leans on; the raised back room as a small attic store.
+  roof: >
+    The novel's "crenellated roof top" (¶164) and the comic's red tiles both
+    hold: tiled hips with a crenellated parapet across the front's middle, as
+    drawn in b1-p008-2 and b3-p031-1.
+  shape: >
+    Square round the court (novel ¶164, comic b3-p031-1). A few panels draw a
+    longer house with dormers and a chimney (b1-p008-6); taken as panel licence.
