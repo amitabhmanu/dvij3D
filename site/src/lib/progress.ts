@@ -43,6 +43,13 @@ export function recordPage(book: string, page: number, panel?: number): void {
   write(p);
 }
 
+/** Story mode played these pages (design §10.4): they count as read, without moving the reader's place. */
+export function reachPage(book: string, page: number): void {
+  const p = read();
+  p.furthest[book] = Math.max(p.furthest[book] ?? 0, page);
+  write(p);
+}
+
 export function setMode(mode: ReaderMode): void {
   const p = read();
   p.mode = mode;

@@ -3,7 +3,8 @@
 // site's header and footer. All it loads at first is the start screen.
 import Base from "../../layouts/Base.astro";
 import Walk from "../../islands/Walk.tsx";
-import { artFile, walkFile } from "../../lib/manifest";
+import { artFile, books, pick, walkFile } from "../../lib/manifest";
+import story from "../../content/generated/story.json";
 import { located } from "../../lib/places";
 import { walk } from "../../lib/walk/walk-data";
 // The 8 places the map labels, for the walk's prompts, cards and fast travel.
@@ -13,6 +14,13 @@ const places = located.map((p) => ({
   real: { name: p.real.name, pin: p.real.pin, region: p.real.region, why: p.real.why },
   pages: p.pages.map((pg) => ({ book: pg.book, page: pg.page })),
 }));
+// The comic pages story mode shows (its interludes and the reflection), with their panels' boxes.
+const storyPages = Object.fromEntries(
+  [...new Set(JSON.stringify(story).match(/"b\d+-p\d{3}(?=["-])/g)!.map((m) => m.slice(1)))].map((id) => {
+    const pg = books.find((b) => b.book === Number(id.slice(1, id.indexOf("-"))))!.pages.find((x) => x.id === id)!;
+    return [id, { src: pick(pg.src.webp, 1400), w: pg.w, h: pg.h, panels: pg.panels }];
+  }),
+);
 ---
 <Base
   title="Walk the valley"
@@ -21,7 +29,7 @@ const places = located.map((p) => ({
   bodyClass="walk-page"
 >
   <Walk client:only="preact" heightUrl={walkFile(walk.height.file)} worldUrl={walkFile(walk.world)}
-    groundUrl={walkFile(walk.ground)} mapUrl={artFile("valley-map.webp")} backUrl="/valley/" places={places} />
+    groundUrl={walkFile(walk.ground)} mapUrl={artFile("valley-map.webp")} backUrl="/valley/" places={places} storyPages={storyPages} />
   <noscript><p class="walk-noscript">Walking the valley needs JavaScript. <a href="/valley/">The book's map</a> works without it.</p></noscript>
 </Base>
 
@@ -93,6 +101,42 @@ const places = located.map((p) => ({
   .walk .map-frame .spot:disabled { background: rgb(120 110 100 / 75%); cursor: not-allowed; }
   .walk .map-frame .spot:not(:disabled):hover, .walk .map-frame .spot:focus-visible { background: var(--accent); }
   .walk .hint { font: 0.85rem var(--font-ui) !important; color: var(--sepia) !important; }
+  /* story mode (design §10.4) */
+  .walk .go.quiet { background: var(--paper-2); color: var(--ink); }
+  .walk .go.quiet:hover, .walk .go.quiet:focus-visible { background: var(--paper-3); }
+  .walk a.go { box-sizing: border-box; text-align: center; text-decoration: none; }
+  .walk .story-start { margin: 4px 0 14px; padding-top: 12px; border-top: 1px solid var(--paper-3); }
+  .walk .story-start p:not(.eyebrow) { margin: 4px 0 8px; }
+  .walk .story button { pointer-events: auto; }
+  .walk .objective { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); max-width: calc(100% - 140px);
+    border: 0; border-radius: 999px; padding: 8px 16px; background: rgb(43 36 28 / 70%); color: #efe3c8;
+    font: 600 0.95rem var(--font-ui); cursor: pointer; }
+  .walk .objective[data-ready] { background: rgb(245 236 218 / 95%); color: var(--ink); }
+  .walk .objective kbd, .walk .skip kbd { display: inline-block; min-width: 1.3em; padding: 0 5px; border-radius: 4px;
+    background: var(--ink); color: var(--paper); font: 700 0.78rem var(--font-ui); }
+  .walk .story-hint { position: absolute; top: 58px; left: 50%; transform: translateX(-50%); margin: 0; padding: 5px 12px;
+    border-radius: 6px; background: rgb(43 36 28 / 55%); color: #efe3c8; font: 0.85rem var(--font-ui); white-space: nowrap; }
+  .walk .words { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); width: min(760px, calc(100% - 32px));
+    border: 0; padding: 0; background: none; text-align: center; cursor: pointer; display: grid; gap: 8px; }
+  .walk .words .caption { display: block; padding: 12px 18px; border-radius: 4px; background: rgb(245 236 218 / 94%); color: var(--ink);
+    font: italic 1.05rem/1.5 var(--font-body); box-shadow: 0 4px 0 rgb(43 36 28 / 60%); }
+  .walk .words .subtitle { display: block; padding: 8px 14px; color: #fff; font: 1.1rem/1.45 var(--font-ui);
+    text-shadow: 0 1px 3px #000, 0 0 10px rgb(0 0 0 / 80%); }
+  .walk .words .subtitle b { color: #e9b77f; }
+  .walk .skip { position: absolute; bottom: 14px; right: 14px; border: 0; border-radius: 999px; padding: 6px 12px;
+    background: rgb(43 36 28 / 55%); color: #efe3c8; font: 600 0.8rem var(--font-ui); cursor: pointer; }
+  .walk .story-overlay { position: absolute; inset: 0; border: 0; padding: 16px; display: grid; place-items: center; cursor: pointer;
+    background: rgb(20 16 12 / 92%); color: #efe3c8; font: inherit; }
+  .walk .story-overlay.reflection { background: rgb(20 16 12 / 55%); }
+  .walk .chapter-card { display: grid; gap: 10px; text-align: center; }
+  .walk .chapter-card strong { font: 2.6rem var(--font-display); }
+  .walk .chapter-card em { font: italic 1.1rem var(--font-body); opacity: 0.85; }
+  .walk .comic-page { display: grid; gap: 8px; justify-items: center; max-height: 100%; }
+  .walk .comic-page img { max-height: calc(100vh - 70px); max-width: 100%; width: auto; height: auto; box-shadow: 0 10px 40px #000; }
+  .walk .comic-page .turn { font: 0.85rem var(--font-ui); opacity: 0.8; }
+  .walk .reflection-frame { position: relative; display: block; width: min(560px, 80vw); overflow: hidden; border: 10px solid #3a2a1c;
+    box-shadow: 0 10px 40px #000; }
+  .walk .reflection-frame img { position: absolute; max-width: none; height: auto; }
   @media (max-width: 640px) {
     .walk .minimap { width: 38vw; bottom: auto; top: 54px; }
   }

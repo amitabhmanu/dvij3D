@@ -165,6 +165,37 @@ export class Sounds {
     src.stop(t + 0.2);
   }
 
+  /** A one-off sound the story calls for: a clatter, a creak, a crash, a splash ... */
+  fx(name: string) {
+    const ctx = this.ctx, t = ctx.currentTime;
+    const shape: Record<string, { f: number; q: number; len: number; peak: number; hits: number }> = {
+      clatter: { f: 3200, q: 3, len: 0.09, peak: 0.5, hits: 5 },
+      creak: { f: 420, q: 12, len: 0.6, peak: 0.35, hits: 1 },
+      crash: { f: 1400, q: 0.8, len: 0.5, peak: 0.7, hits: 4 },
+      splash: { f: 1800, q: 0.5, len: 0.4, peak: 0.45, hits: 2 },
+      gulp: { f: 300, q: 4, len: 0.12, peak: 0.4, hits: 3 },
+      thud: { f: 120, q: 1, len: 0.25, peak: 0.8, hits: 1 },
+      hiss: { f: 5000, q: 0.7, len: 1.2, peak: 0.25, hits: 1 },
+    };
+    const s = shape[name] ?? shape.thud;
+    for (let i = 0; i < s.hits; i++) {
+      const at = t + i * (s.len * 0.7 + Math.random() * 0.05);
+      const src = ctx.createBufferSource();
+      src.buffer = this.noise;
+      const f = ctx.createBiquadFilter();
+      f.type = "bandpass";
+      f.frequency.value = s.f * (0.8 + Math.random() * 0.4);
+      f.Q.value = s.q;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, at);
+      g.gain.linearRampToValueAtTime(s.peak, at + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + s.len);
+      src.connect(f).connect(g).connect(this.master);
+      src.start(at, Math.random() * 3);
+      src.stop(at + s.len + 0.05);
+    }
+  }
+
   dispose() {
     void this.ctx.close();
   }

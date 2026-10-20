@@ -1,0 +1,1747 @@
+{
+ "version": 1,
+ "scenes": [
+  {
+   "scene": "b1-ch01",
+   "book": 1,
+   "pages": [
+    4
+   ],
+   "title": "Chapter 1",
+   "novel": [
+    93,
+    102
+   ],
+   "start": {
+    "pose": "lie",
+    "at": [
+     -15.0,
+     7.5
+    ],
+    "look": "up"
+   },
+   "props": [
+    {
+     "id": "stool",
+     "kind": "stool",
+     "at": [
+      -14.3,
+      6.75
+     ],
+     "sources": [
+      "novel ¶94"
+     ]
+    },
+    {
+     "id": "glass",
+     "kind": "glass",
+     "at": [
+      -14.3,
+      6.75
+     ],
+     "on": "stool",
+     "sources": [
+      "novel ¶94",
+      "breakdown ch1 p3"
+     ]
+    },
+    {
+     "id": "spectacles",
+     "kind": "spectacles",
+     "at": [
+      -14.2,
+      6.65
+     ],
+     "on": "stool",
+     "sources": [
+      "novel ¶98"
+     ]
+    },
+    {
+     "id": "book",
+     "kind": "open-book",
+     "at": [
+      -14.4,
+      6.6
+     ],
+     "on": "stool",
+     "sources": [
+      "novel ¶98"
+     ]
+    },
+    {
+     "id": "rocking-chair",
+     "kind": "rocking-chair",
+     "at": [
+      -13.6,
+      6.4
+     ],
+     "sources": [
+      "novel ¶99"
+     ]
+    },
+    {
+     "id": "shutters",
+     "kind": "shutters",
+     "window": "dvij-room:0",
+     "state": "boarded",
+     "sources": [
+      "novel ¶97",
+      "novel ¶99",
+      "breakdown ch1 p4",
+      "breakdown ch1 p5"
+     ]
+    },
+    {
+     "id": "study-clutter",
+     "kind": "clutter",
+     "room": "study",
+     "sources": [
+      "novel ¶100",
+      "breakdown ch1 p9"
+     ]
+    }
+   ],
+   "beats": [
+    {
+     "id": "wake",
+     "sources": [
+      "breakdown ch1 p1",
+      "breakdown ch1 p2",
+      "novel ¶93"
+     ],
+     "do": [
+      {
+       "effect": {
+        "blur": 1.0,
+        "double": 0.7,
+        "dark": 0.3
+       }
+      },
+      {
+       "caption": "He had been staring at the ceiling for a long time before he realized he was awake."
+      },
+      {
+       "wait": 4
+      },
+      {
+       "effect": {
+        "blur": 0.5,
+        "double": 0.3,
+        "dark": 0,
+        "over": 5
+       }
+      },
+      {
+       "caption": "His first sensation was a debilitating lack of it. He felt decapitated..."
+      },
+      {
+       "wait": 3
+      }
+     ]
+    },
+    {
+     "id": "water",
+     "sources": [
+      "breakdown ch1 p3",
+      "novel ¶94",
+      "novel ¶95"
+     ],
+     "act": {
+      "objective": "Reach for the glass on the stool.",
+      "kind": "look-press",
+      "target": "glass"
+     },
+     "then": [
+      {
+       "animate": {
+        "player": "drink-spill"
+       }
+      },
+      {
+       "caption": "His weakened arm found the glass too heavy and spilled most of the water..."
+      },
+      {
+       "prop": {
+        "id": "glass",
+        "state": "rolled-off"
+       }
+      },
+      {
+       "sound": "clatter"
+      }
+     ]
+    },
+    {
+     "id": "sit-up",
+     "sources": [
+      "breakdown ch1 p4",
+      "novel ¶96",
+      "novel ¶97"
+     ],
+     "act": {
+      "objective": "Sit up.",
+      "kind": "press"
+     },
+     "then": [
+      {
+       "camera": {
+        "pose": "sit",
+        "over": 2.5
+       }
+      },
+      {
+       "effect": {
+        "blur": 0.2,
+        "over": 3
+       }
+      },
+      {
+       "look": {
+        "at": "arm"
+       }
+      },
+      {
+       "caption": "He sat up. The plaster on his right arm. His legs intact. The room was sparse, but not clinical..."
+      }
+     ]
+    },
+    {
+     "id": "stand",
+     "sources": [
+      "novel ¶98",
+      "ours"
+     ],
+     "act": {
+      "objective": "Stand up.",
+      "kind": "press"
+     },
+     "then": [
+      {
+       "camera": {
+        "pose": "stand",
+        "over": 2
+       }
+      },
+      {
+       "body": {
+        "injured": true
+       }
+      },
+      {
+       "effect": {
+        "blur": 0,
+        "over": 4
+       }
+      },
+      {
+       "checkpoint": "awake"
+      }
+     ]
+    },
+    {
+     "id": "shutters",
+     "sources": [
+      "breakdown ch1 p5",
+      "breakdown ch1 p6",
+      "novel ¶99"
+     ],
+     "act": {
+      "objective": "Open the boarded window.",
+      "kind": "use",
+      "target": "shutters",
+      "hint": [
+       -15.6,
+       5.25
+      ]
+     },
+     "then": [
+      {
+       "prop": {
+        "id": "shutters",
+        "state": "open"
+       }
+      },
+      {
+       "effect": {
+        "flash": 1.0,
+        "over": 1.5
+       }
+      },
+      {
+       "sound": "creak"
+      },
+      {
+       "caption": "He tugged at the stops. The brilliance of sunlight blinded him momentarily..."
+      },
+      {
+       "wait": 2
+      },
+      {
+       "caption": "What greeted him was a battered boundary wall with grey grass growing all over it."
+      }
+     ]
+    },
+    {
+     "id": "courtyard",
+     "sources": [
+      "breakdown ch1 p7",
+      "breakdown ch1 p8",
+      "novel ¶100"
+     ],
+     "act": {
+      "objective": "Find water.",
+      "kind": "reach",
+      "target": [
+       -9.0,
+       5.25
+      ],
+      "radius": 1.5
+     },
+     "then": [
+      {
+       "caption": "The room opened into a large wonderfully sunlit courtyard. Nothing stirred. No voices could be heard."
+      },
+      {
+       "wait": 3
+      },
+      {
+       "caption": "His throat twanged sharply. He had to find water."
+      }
+     ]
+    },
+    {
+     "id": "study",
+     "sources": [
+      "breakdown ch1 p9",
+      "novel ¶100"
+     ],
+     "act": {
+      "objective": "Look for someone.",
+      "kind": "reach",
+      "target": [
+       -7.75,
+       -12.0
+      ],
+      "radius": 1.6
+     },
+     "then": [
+      {
+       "caption": "There were books everywhere. As if antiquity was preserved there, albeit a bit haphazardly."
+      }
+     ]
+    },
+    {
+     "id": "window",
+     "sources": [
+      "breakdown ch1 p10",
+      "breakdown ch1 p11",
+      "novel ¶101"
+     ],
+     "act": {
+      "objective": "Go to the windows.",
+      "kind": "reach",
+      "target": [
+       -15.0,
+       -13.25
+      ],
+      "radius": 1.0
+     },
+     "then": [
+      {
+       "camera": {
+        "pose": "stand",
+        "look": [
+         -17.0,
+         1.9,
+         -13.25
+        ],
+        "over": 1.2
+       }
+      },
+      {
+       "caption": "He walked around the crowded floor to windows that revealed a wide lawn through their dirty panes."
+      },
+      {
+       "reflection": {
+        "window": "study:1",
+        "panel": "b1-p004-9"
+       }
+      },
+      {
+       "wait": 2.5
+      },
+      {
+       "caption": "They also revealed the reflection of a bearded face with a heavily bandaged head."
+      }
+     ]
+    },
+    {
+     "id": "faint",
+     "sources": [
+      "breakdown ch1 p12",
+      "novel ¶101",
+      "novel ¶102"
+     ],
+     "do": [
+      {
+       "caption": "The reflection of a stranger."
+      },
+      {
+       "effect": {
+        "faint": true,
+        "over": 2.5
+       }
+      },
+      {
+       "prop": {
+        "id": "study-clutter",
+        "state": "knocked"
+       }
+      },
+      {
+       "sound": "crash"
+      },
+      {
+       "caption": "He collapsed with a swoon, knocking a few artefacts over as he hit the hard floor."
+      },
+      {
+       "progress": {
+        "book": 1,
+        "page": 4
+       }
+      },
+      {
+       "end": {
+        "next": "b1-ch02"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "scene": "b1-ch02",
+   "book": 1,
+   "pages": [
+    5,
+    6
+   ],
+   "title": "Chapter 2",
+   "novel": [
+    103,
+    134
+   ],
+   "start": {
+    "pose": "interlude"
+   },
+   "beats": [
+    {
+     "id": "panels",
+     "sources": [
+      "comic b1-p005",
+      "comic b1-p006",
+      "novel ¶103-133"
+     ],
+     "do": [
+      {
+       "chapter": {
+        "title": "Chapter 2",
+        "subtitle": "Meanwhile, in the garden"
+       }
+      },
+      {
+       "panels": {
+        "pages": [
+         "b1-p005",
+         "b1-p006"
+        ]
+       }
+      },
+      {
+       "progress": {
+        "book": 1,
+        "page": 6
+       }
+      },
+      {
+       "end": {
+        "next": "b1-ch03"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "scene": "b1-ch03",
+   "book": 1,
+   "pages": [
+    7
+   ],
+   "title": "Chapter 3",
+   "novel": [
+    134,
+    162
+   ],
+   "start": {
+    "pose": "floor",
+    "at": [
+     -14.6,
+     -13.0
+    ],
+    "look": [
+     -14.0,
+     1.6,
+     -12.4
+    ]
+   },
+   "cast": [
+    {
+     "who": "professor",
+     "at": [
+      -14.0,
+      -12.4
+     ],
+     "pose": "kneel",
+     "holding": "tumbler"
+    }
+   ],
+   "props": [
+    {
+     "id": "study-clutter",
+     "kind": "clutter",
+     "room": "study",
+     "state": "knocked"
+    },
+    {
+     "id": "tumbler",
+     "kind": "glass",
+     "held-by": "professor"
+    },
+    {
+     "id": "veena",
+     "kind": "veena",
+     "state": "toppled",
+     "at": [
+      -14.6,
+      -11.6
+     ],
+     "sources": [
+      "novel ¶140",
+      "breakdown ch3 p4"
+     ]
+    },
+    {
+     "id": "varahi",
+     "kind": "figurine",
+     "at": [
+      -13.8,
+      -13.6
+     ],
+     "sources": [
+      "novel ¶147",
+      "breakdown ch3 p5"
+     ]
+    },
+    {
+     "id": "manuscript",
+     "kind": "manuscript",
+     "at": [
+      -12.8,
+      -12.6
+     ],
+     "on": "desk",
+     "sources": [
+      "novel ¶151",
+      "novel ¶153",
+      "breakdown ch3 p8"
+     ]
+    }
+   ],
+   "beats": [
+    {
+     "id": "water-face",
+     "sources": [
+      "breakdown ch3 p1",
+      "novel ¶135",
+      "novel ¶136"
+     ],
+     "do": [
+      {
+       "effect": {
+        "dark": 1.0
+       }
+      },
+      {
+       "sound": "splash"
+      },
+      {
+       "effect": {
+        "dark": 0.2,
+        "blur": 0.6,
+        "drops": true,
+        "over": 1.5
+       }
+      },
+      {
+       "caption": "He awoke the second time, jerked out of his stupor by vigorous shaking and cold water."
+      },
+      {
+       "effect": {
+        "blur": 0.1,
+        "over": 2
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Have you seen my glasses?",
+        "sources": [
+         "novel ¶134",
+         "novel ¶137"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "drink",
+     "sources": [
+      "breakdown ch3 p2",
+      "breakdown ch3 p3",
+      "novel ¶138"
+     ],
+     "act": {
+      "objective": "Take the tumbler from him.",
+      "kind": "look-press",
+      "target": "tumbler"
+     },
+     "then": [
+      {
+       "animate": {
+        "player": "drink"
+       }
+      },
+      {
+       "sound": "gulp"
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "There... in the room where I was sleeping. Your glasses... they're on the stool by the bed.",
+        "sources": [
+         "novel ¶139"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "walk": [
+         -8.5,
+         3.0
+        ],
+        "via": [
+         [
+          -7.75,
+          -10.0
+         ]
+        ],
+        "then": "pick-up",
+        "item": "spectacles"
+       }
+      },
+      {
+       "camera": {
+        "pose": "sit",
+        "at": [
+         -12.8,
+         -11.7
+        ],
+        "over": 2.0
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "walk": [
+         -13.4,
+         -12.0
+        ],
+        "wearing": "spectacles"
+       }
+      }
+     ]
+    },
+    {
+     "id": "veena",
+     "sources": [
+      "breakdown ch3 p4",
+      "novel ¶140",
+      "novel ¶141",
+      "novel ¶142"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "professor",
+        "look": "veena",
+        "anim": "interact"
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "The veena... ah... it is safe. Of course I do not play it. No... no... I am no good with music. It's the inspiration that I keep it with me all the time... after all it is the instrument of the Goddess of learning, no?"
+       }
+      },
+      {
+       "prop": {
+        "id": "veena",
+        "state": "upright"
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "You were trying to reach up for those books, eh? And fell backwards. Was that it? It happens to me all the time. I don't cause as much damage though.",
+        "sources": [
+         "novel ¶143"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I... I fainted. My head... it's bandaged.",
+        "sources": [
+         "novel ¶144"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "varahi",
+     "sources": [
+      "breakdown ch3 p5",
+      "breakdown ch3 p6",
+      "novel ¶145-149"
+     ],
+     "act": {
+      "objective": "Pick up the broken figurine.",
+      "kind": "look-press",
+      "target": "varahi"
+     },
+     "then": [
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I'm sorry.",
+        "sources": [
+         "novel ¶146"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "take": "varahi",
+        "anim": "pick-up"
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "She is Varahi, one of the saptamatrikas. She is pot bellied, for she holds in her womb the universe.",
+        "sources": [
+         "novel ¶147"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I am really sorry.",
+        "sources": [
+         "novel ¶148"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Oh, don't be a fool. It's impossible to find anything intact, really speaking, including our history. All we see now are small fragments.",
+        "sources": [
+         "novel ¶149"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "questions",
+     "sources": [
+      "breakdown ch3 p7-p10",
+      "novel ¶150-155"
+     ],
+     "do": [
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Why is my head bandaged?",
+        "sources": [
+         "novel ¶150"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "take": "manuscript",
+        "anim": "talk"
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Why indeed? Because of the accident, I should think. Careless driving, I dare say. Must you fret about those things when we are in the midst of such secret knowledge?",
+        "sources": [
+         "novel ¶151"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I had a car accident?",
+        "sources": [
+         "novel ¶152"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Yes, yes, of course you had an accident. You were in coma. Look here... at the edges of the birch barks... see how they have frayed over time. Beautiful!",
+        "sources": [
+         "novel ¶153"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Why? Why was I in a coma?",
+        "sources": [
+         "novel ¶154"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "look": "player"
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Well! It's all very simple really. You had an accident. You hurt your head. You went into a coma. Now, if we could get back to the book, I'd appreciate very much.",
+        "sources": [
+         "novel ¶155"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "introduction",
+     "sources": [
+      "breakdown ch3 p11-p14",
+      "novel ¶157-162"
+     ],
+     "do": [
+      {
+       "say": {
+        "who": "professor",
+        "line": "Become the intrepid explorer and find the text, my boy, for it would help you find your past.",
+        "sources": [
+         "novel ¶157"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "My past?",
+        "sources": [
+         "novel ¶158"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "I haven't really introduced myself, have I? How embarrassing. I am Doctor Vidyasagar Parthasarathi, owner of this room and the rest of the lodge that came along with it.",
+        "sources": [
+         "novel ¶159"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I woke up in a strange room, walked out into a courtyard, and then into this room. Next thing I remember is you asking me for your glasses.",
+        "sources": [
+         "novel ¶160"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Think nothing of it! It's your turn to introduce yourself. What's your name? Come on, out with it.",
+        "sources": [
+         "novel ¶161"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I... I don't know!",
+        "sources": [
+         "novel ¶162"
+        ]
+       }
+      },
+      {
+       "effect": {
+        "faint": true,
+        "over": 2
+       }
+      },
+      {
+       "sound": "thud"
+      },
+      {
+       "progress": {
+        "book": 1,
+        "page": 7
+       }
+      },
+      {
+       "end": {
+        "next": "b1-ch04"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "scene": "b1-ch04",
+   "book": 1,
+   "pages": [
+    8,
+    9
+   ],
+   "title": "Chapter 4",
+   "novel": [
+    163,
+    192
+   ],
+   "start": {
+    "pose": "stand",
+    "at": [
+     0,
+     13.0
+    ],
+    "look": [
+     0,
+     1.6,
+     25
+    ]
+   },
+   "cast": [
+    {
+     "who": "bhavi",
+     "at": [
+      -18,
+      38
+     ],
+     "pose": "sit",
+     "on": "well-rim",
+     "sources": [
+      "novel ¶165",
+      "breakdown ch4 p5"
+     ]
+    }
+   ],
+   "beats": [
+    {
+     "id": "doorsteps",
+     "sources": [
+      "breakdown ch4 p2",
+      "novel ¶163"
+     ],
+     "act": {
+      "objective": "Step outside.",
+      "kind": "reach",
+      "target": [
+       0,
+       20.4
+      ],
+      "radius": 1.5
+     },
+     "then": [
+      {
+       "caption": "Later, having woken up yet again, he stepped out onto the gravel path that circled the establishment."
+      }
+     ]
+    },
+    {
+     "id": "gate-view",
+     "sources": [
+      "breakdown ch4 p1",
+      "novel ¶164"
+     ],
+     "do": [
+      {
+       "caption": "The decaying magnificence of the building - a relic of the raj, a symmetrical square squatting in the middle of sprawling environs."
+      }
+     ]
+    },
+    {
+     "id": "silhouette",
+     "sources": [
+      "breakdown ch4 p3",
+      "novel ¶165"
+     ],
+     "act": {
+      "objective": "Walk towards the figure on the lawn.",
+      "kind": "reach",
+      "target": [
+       -18,
+       35.5
+      ],
+      "radius": 3.0,
+      "hint": [
+       -18,
+       38
+      ]
+     },
+     "then": [
+      {
+       "effect": {
+        "glare": 0.7,
+        "over": 1.5
+       }
+      },
+      {
+       "caption": "He could see someone sitting up ahead, someone with long hair that waved in the gentle breeze."
+      },
+      {
+       "effect": {
+        "glare": 0,
+        "over": 3
+       }
+      },
+      {
+       "actor": {
+        "who": "bhavi",
+        "look": "player"
+       }
+      },
+      {
+       "caption": "The better he could make out the face, the more he got entranced by its sheer beauty."
+      }
+     ]
+    },
+    {
+     "id": "the-well",
+     "sources": [
+      "breakdown ch4 p5",
+      "breakdown ch4 p7",
+      "novel ¶167-169"
+     ],
+     "act": {
+      "objective": "Sit on the low platform.",
+      "kind": "look-press",
+      "target": [
+       -18,
+       0.8,
+       38
+      ]
+     },
+     "then": [
+      {
+       "camera": {
+        "recoil": true
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "That is a well! A very deep well!",
+        "sources": [
+         "novel ¶168"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "bhavi",
+        "anim": "laugh",
+        "then": {
+         "walk-rim": true
+        }
+       }
+      },
+      {
+       "caption": "It was indeed a deep well, its brick walls covered with slime, the water surface almost indiscernible due to its depth."
+      }
+     ]
+    },
+    {
+     "id": "talk",
+     "sources": [
+      "breakdown ch4 p8-p11",
+      "novel ¶170-185"
+     ],
+     "do": [
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Aren't you afraid?",
+        "sources": [
+         "novel ¶170"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "bhavi",
+        "line": "Are you?",
+        "sources": [
+         "novel ¶171"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I would be if I was walking about like that.",
+        "sources": [
+         "novel ¶172"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "bhavi",
+        "line": "Why should you? You already died once.",
+        "sources": [
+         "novel ¶173"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "You mean my accident? So you know about me?",
+        "sources": [
+         "novel ¶174"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "bhavi",
+        "line": "Everyone around here knows about you. You're The Wounded One with No Past, right?",
+        "sources": [
+         "novel ¶175"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "bhavi",
+        "line": "Then what is your name?",
+        "sources": [
+         "novel ¶178"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I don't know. I can't remember. The knock on the head must have done it. At least that's what the doctor says.",
+        "sources": [
+         "novel ¶179"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Doctor Parthasarathi. The old man who lives here. Likable, but loony. Do you know him?",
+        "sources": [
+         "novel ¶181"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "bhavi",
+        "line": "Do I know a loony old Dr Parathasarathi? Can't be sure about that.",
+        "sources": [
+         "novel ¶182"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "why-here",
+     "sources": [
+      "breakdown ch4 p13",
+      "breakdown ch4 p14",
+      "novel ¶186-192"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "bhavi",
+        "stop": true,
+        "look": "player"
+       }
+      },
+      {
+       "say": {
+        "who": "bhavi",
+        "line": "Why have you come to this valley?",
+        "sources": [
+         "novel ¶188"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "I don't know.",
+        "sources": [
+         "novel ¶189"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "bhavi",
+        "line": "Nobody ever comes to this valley any more. Why did you?",
+        "sources": [
+         "novel ¶190"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "You did... didn't you? You don't belong here yourself.",
+        "sources": [
+         "novel ¶191"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "bhavi",
+        "anim": "jump-down",
+        "then": {
+         "walk": [
+          -50,
+          70
+         ],
+         "via": [
+          [
+           -30,
+           55
+          ]
+         ],
+         "exit": true
+        }
+       }
+      },
+      {
+       "caption": "He wished it were a wishing well, one that would grant him the thing he most desired. And at that moment, that was not something from his lost past."
+      },
+      {
+       "progress": {
+        "book": 1,
+        "page": 9
+       }
+      },
+      {
+       "end": {
+        "next": "b1-ch05"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "scene": "b1-ch05",
+   "book": 1,
+   "pages": [
+    10
+   ],
+   "title": "Chapter 5",
+   "novel": [
+    193,
+    223
+   ],
+   "start": {
+    "pose": "stand",
+    "at": [
+     0,
+     13.0
+    ],
+    "look": [
+     0,
+     1.6,
+     0
+    ]
+   },
+   "cast": [
+    {
+     "who": "maharaj",
+     "at": [
+      14.2,
+      -14.0
+     ],
+     "pose": "stoke",
+     "sources": [
+      "novel ¶195",
+      "breakdown ch5 p3"
+     ]
+    }
+   ],
+   "props": [
+    {
+     "id": "stool-low",
+     "kind": "stool",
+     "at": [
+      12.0,
+      -12.6
+     ],
+     "sources": [
+      "novel ¶203",
+      "breakdown ch5 p5"
+     ]
+    },
+    {
+     "id": "tea",
+     "kind": "tea-pot",
+     "at": [
+      11.2,
+      -12.9
+     ],
+     "on": "stove",
+     "sources": [
+      "novel ¶209"
+     ]
+    },
+    {
+     "id": "tulsi",
+     "kind": "tulsi-pedestal",
+     "at": [
+      0,
+      4.5
+     ],
+     "sources": [
+      "novel ¶213",
+      "breakdown ch5 p10"
+     ]
+    }
+   ],
+   "beats": [
+    {
+     "id": "courtyard",
+     "sources": [
+      "breakdown ch5 p1",
+      "breakdown ch5 p2",
+      "novel ¶193",
+      "novel ¶194"
+     ],
+     "act": {
+      "objective": "Walk round the courtyard.",
+      "kind": "reach",
+      "target": [
+       6.0,
+       9.0
+      ],
+      "radius": 2.0
+     },
+     "then": [
+      {
+       "caption": "Back inside, light in the courtyard was diffused by a curtain of thin fibreglass spread to keep the monkeys out."
+      },
+      {
+       "wait": 2
+      },
+      {
+       "sound": "clatter"
+      }
+     ]
+    },
+    {
+     "id": "kitchen",
+     "sources": [
+      "breakdown ch5 p3",
+      "novel ¶195"
+     ],
+     "act": {
+      "objective": "Follow the sound.",
+      "kind": "reach",
+      "target": [
+       7.75,
+       -12.5
+      ],
+      "radius": 1.6
+     },
+     "then": [
+      {
+       "caption": "The sound led him to an open, wide kitchen that had all kinds of brass vessels and earthen pots."
+      },
+      {
+       "actor": {
+        "who": "maharaj",
+        "anim": "turn",
+        "look": "player"
+       }
+      },
+      {
+       "actor": {
+        "who": "maharaj",
+        "anim": "namaste"
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "What's this? What are you doing?",
+        "sources": [
+         "novel ¶197"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "Are you really an incarnation, sahib?",
+        "sources": [
+         "novel ¶198"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "You think I am an incarnation?",
+        "sources": [
+         "novel ¶199"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "The entire village thinks so. Mahantji predicted your arrival, sahib.",
+        "sources": [
+         "novel ¶200"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "stool",
+     "sources": [
+      "breakdown ch5 p5",
+      "novel ¶201-206"
+     ],
+     "act": {
+      "objective": "Sit on the stool he has set for you.",
+      "kind": "look-press",
+      "target": "stool-low"
+     },
+     "then": [
+      {
+       "camera": {
+        "pose": "sit-low",
+        "at": [
+         12.0,
+         -12.6
+        ],
+        "over": 1.5
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "Mahantji is very learned, sahib. He knows the Vedas by heart. He can read the stars and tell of events that have not yet happened. If he has said that you are an incarnation, then you must be.",
+        "sources": [
+         "novel ¶202"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Do you believe everything he says?",
+        "sources": [
+         "novel ¶203"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "Who are we to question him, sahib? We are poor and illiterate.",
+        "sources": [
+         "novel ¶204"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "This Mahantji... do you think he is a good man?",
+        "sources": [
+         "novel ¶205"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "I don't know, sahib.",
+        "sources": [
+         "novel ¶206"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "fear",
+     "sources": [
+      "breakdown ch5 p6",
+      "breakdown ch5 p7",
+      "novel ¶207-210"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "maharaj",
+        "walk": [
+         11.4,
+         -12.0
+        ],
+        "look": "player",
+        "anim": "lean-in"
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "People are scared of Mahantji. But I do not fear anyone above God. And may He strike me down if I say or do anything wrong. Mahantji is an evil man. He has many vices.",
+        "sources": [
+         "novel ¶208"
+        ]
+       }
+      },
+      {
+       "prop": {
+        "id": "tea",
+        "state": "boiling-over"
+       }
+      },
+      {
+       "sound": "hiss"
+      }
+     ]
+    },
+    {
+     "id": "tea",
+     "sources": [
+      "breakdown ch5 p8",
+      "novel ¶210",
+      "novel ¶211"
+     ],
+     "act": {
+      "objective": "Tell him to pour the tea.",
+      "kind": "press"
+     },
+     "then": [
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Go ahead. Let's have tea.",
+        "sources": [
+         "novel ¶210"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "maharaj",
+        "take": "tea",
+        "anim": "pour",
+        "then": {
+         "give": "player"
+        }
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Tell me about this valley. What is this place? Where are we?",
+        "sources": [
+         "novel ¶211"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "The village down below - it is called Vaspati. Where we are, I can't say. I belong to another village called Baswara in the tarai region of the Uttaranchal hills.",
+        "sources": [
+         "novel ¶212"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "tulsi",
+     "sources": [
+      "breakdown ch5 p10",
+      "novel ¶213-216"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "maharaj",
+        "walk": [
+         0,
+         3.2
+        ],
+        "anim": "tend"
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.",
+        "sources": [
+         "novel ¶214"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "way-out",
+     "sources": [
+      "breakdown ch5 p11-p15",
+      "novel ¶217-223"
+     ],
+     "act": {
+      "objective": "Follow him into the courtyard.",
+      "kind": "reach",
+      "target": [
+       0,
+       6.0
+      ],
+      "radius": 2.5
+     },
+     "then": [
+      {
+       "say": {
+        "who": "dvij",
+        "line": "How does one go out from this valley? Don't worry. I am not looking to go away so soon.",
+        "sources": [
+         "novel ¶217"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "The valley is surrounded from all sides by mountains. There are forests at the bottom of these mountains, forests full of lions and tigers and other wild animals. Then there are the tribals.",
+        "sources": [
+         "novel ¶218"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Yes, but there must be roads connecting this place to the outside world.",
+        "sources": [
+         "novel ¶219"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "There is one road. It was built when the national park was set up. But it is too steep.",
+        "sources": [
+         "novel ¶220"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "dvij",
+        "line": "Then how does one come in or go out?",
+        "sources": [
+         "novel ¶221"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "maharaj",
+        "line": "Nobody goes out, sahib. It is an unthinkable act. Outside is an evil world, that's what Mahant has told us.",
+        "sources": [
+         "novel ¶222"
+        ]
+       }
+      },
+      {
+       "caption": "He could not tell the cook that he will have to leave to find himself. Somewhere beyond the mountains that surrounded the valley hid his past, his identity."
+      },
+      {
+       "progress": {
+        "book": 1,
+        "page": 10
+       }
+      },
+      {
+       "end": {
+        "next": null,
+        "title": "To be continued"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+// Screenshots of story mode for review (not part of the gate: run with SHOTS=1).
+import { expect, test } from "@playwright/test";
+
+test.skip(!process.env.SHOTS, "review screenshots only");
+
+test("story mode, Chapter 1, for review", async ({ page }) => {
+  test.setTimeout(240_000);
+  const out = process.env.SHOTS!;
+  await page.goto("/valley/walk/?story&test");
+  await page.getByRole("button", { name: "Play the story" }).click();
+  await page.locator('.walk[data-screen="ready"]').waitFor({ timeout: 60_000 });
+  await page.locator(".begin").click();
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: `${out}/1-wake.png` });
+  const y = await page.evaluate(() => (window as any).walkGame.player().y); // eslint-disable-line @typescript-eslint/no-explicit-any
+  console.log("lying eye y", y);
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+  await expect(page.locator(".objective")).toBeVisible({ timeout: 20_000 });
+  await page.screenshot({ path: `${out}/2-glass.png` });
+  for (const beat of ["shutters", "window"]) {
+    await page.evaluate((b) => { (window as any).walkStory.director.play("b1-ch01", b); }, beat); // eslint-disable-line @typescript-eslint/no-explicit-any
+    await page.waitForTimeout(2500);
+    await page.screenshot({ path: `${out}/3-${beat}.png` });
+  }
+});

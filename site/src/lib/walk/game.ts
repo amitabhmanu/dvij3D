@@ -15,6 +15,7 @@ import { loadLodge, type Look, type Lodge, type Marker } from "./lodge";
 import lodgeInfo from "../../content/generated/lodge.json";
 import { groundGeometry, groundMaterial } from "./ground";
 import { inkComposer } from "./post";
+import { SightEffect } from "../story/effects";
 import { cutoutMesh, decodeTrees, type Stand } from "./cutouts";
 import type { EffectComposer } from "postprocessing";
 import { Input, type Settings } from "./input";
@@ -30,6 +31,8 @@ export type GameOptions = {
   groundUrl: string;
   quality: Quality;
   volume: number;
+  /** Story mode (design §10.4): the director drives the body and the eyes. */
+  story?: boolean;
   onProgress: (fraction: number, what: string) => void;
   /** About five times a second while walking: where you are, for the HUD and tests. */
   onStats?: (s: { x: number; z: number; heading: number; ground: number; indoors: boolean; door: { name: string; open: boolean } | null; look: Look | null }) => void;
@@ -59,6 +62,31 @@ export type Game = {
   showPatch: (on: boolean) => void;
   patchVisible: () => boolean;
   dispose: () => void;
+  /** Story mode's hold on Dvij's body and eyes. */
+  body: Body;
+};
+
+/** How story mode moves Dvij (design §10.4). All positions are world metres. */
+export type Body = {
+  sight: SightEffect;
+  /** Where he is and how: lying, sitting, standing, on the floor; eases there over `seconds`. */
+  pose: (p: { pose: "lie" | "sit" | "sit-low" | "stand" | "floor"; at?: [number, number]; look?: "up" | [number, number, number]; seconds?: number }) => Promise<void>;
+  /** "free": walk and look; "look": look only; "none": the director has the camera. */
+  hold: (h: "free" | "look" | "none") => void;
+  /** Injured: slow, swaying steps. */
+  injured: (on: boolean) => void;
+  /** A brief look somewhere and back (at his arm, at someone). */
+  glance: (pitch: number, seconds: number) => Promise<void>;
+  /** Tip over and drop to the floor: the faint. */
+  faint: (seconds: number) => Promise<void>;
+  /** Is he looking at this point, within `degrees`? */
+  lookingAt: (p: [number, number, number], degrees: number) => boolean;
+  /** Turn his head to this point, at once. */
+  face: (p: [number, number, number]) => void;
+  /** The lodge's frame -> the world's. */
+  fromLodge: (x: number, y: number, z: number) => [number, number, number];
+  lodgeRoot: () => import("three").Object3D | null;
+  fx: (name: string) => void;
 };
 
 // Colours are written as the eye sees them (sRGB); Color() turns them into the
@@ -262,9 +290,30 @@ export async function createGame(o: GameOptions): Promise<Game> {
     ambient.intensity = 1.3 - 0.65 * indoor;
     sun.intensity = 2.0 - 1.4 * indoor;
   };
+  // Story mode's hold on the body (design §10.4).
+  let hold: "free" | "look" | "none" = "free";
+  let eye = rules.eye, speed = 1, sway = 0, roll = 0, swayT = 0;
+  let tween: { t: number; dur: number; from: { x: number; z: number; eye: number; heading: number; pitch: number; roll: number };
+               to: { x: number; z: number; eye: number; heading: number; pitch: number; roll: number }; done: () => void } | null = null;
   const moveBy = (m: ReturnType<Input["sample"]>) => {
-    player = step(player, m, STEP, rules, world);
-    feet = player.y - rules.eye;
+    if (hold !== "free") { m.forward = 0; m.strafe = 0; m.run = false; }
+    if (hold === "none" || tween) { m.turn = 0; m.look = 0; }
+    const r = { ...rules, eye, walk: rules.walk * speed, run: rules.run * speed };
+    if (tween) {
+      tween.t = Math.min(tween.dur, tween.t + STEP);
+      const k = tween.dur > 0 ? tween.t / tween.dur : 1;
+      const e = k * k * (3 - 2 * k);
+      const L = (a: number, b: number) => a + (b - a) * e;
+      player = { ...player, x: L(tween.from.x, tween.to.x), z: L(tween.from.z, tween.to.z), heading: L(tween.from.heading, tween.to.heading), pitch: L(tween.from.pitch, tween.to.pitch) };
+      eye = L(tween.from.eye, tween.to.eye);
+      roll = L(tween.from.roll, tween.to.roll);
+      if (k >= 1) { const d = tween.done; tween = null; d(); }
+    }
+    player = step(player, m, STEP, { ...r, eye }, world);
+    if (speed < 1) {
+      swayT += Math.hypot(m.forward, m.strafe) * STEP * 3.2;
+    }
+    feet = player.y - eye; // his own eye height: lying, sitting or standing
   };
 
   const resize = () => {
@@ -277,9 +326,11 @@ export async function createGame(o: GameOptions): Promise<Game> {
   };
   renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[o.quality]));
   let composer: EffectComposer | null = null;
+  const sight = new SightEffect();
   const setInk = (q: Quality) => {
     composer?.dispose();
-    composer = q === "low" ? null : inkComposer(renderer, scene, camera);
+    // story mode always runs the sight pass; the ink comes with medium and high quality
+    composer = q === "low" && !o.story ? null : inkComposer(renderer, scene, camera, o.story ? [sight] : [], q !== "low");
   };
   setInk(o.quality);
   const draw = () => (composer ? composer.render() : renderer.render(scene, camera));
@@ -289,7 +340,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
 
   const place = () => {
     camera.position.set(player.x, player.y, player.z);
-    camera.rotation.set(player.pitch, -player.heading, 0);
+    camera.rotation.set(player.pitch, -player.heading, roll + sway * Math.sin(swayT) * 0.045);
     sky.position.copy(camera.position);
     const mat = groundMesh!.material as ShaderMaterial;
     // snap the grid's centre to its own spacing near you, so the land doesn't swim
@@ -326,7 +377,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       }
     }
     lodge?.update(1 / 60);
-    lightFor(1 / 60);
+    lightFor(1 / 60); // (the sight pass eases itself, each time the composer renders)
     place();
     draw();
     o.onFrame?.(player.x, player.z, player.heading);
@@ -346,6 +397,62 @@ export async function createGame(o: GameOptions): Promise<Game> {
   draw();
   o.onFrame?.(player.x, player.z, player.heading); // so the compass and map are right before you start
   o.onProgress(1, "Ready");
+
+  const POSE_EYE = { lie: 0.75, sit: 1.05, "sit-low": 0.85, stand: rules.eye, floor: 0.3 } as const;
+  const body: Body = {
+    sight,
+    pose: ({ pose, at, look, seconds = 0 }) => new Promise<void>((done) => {
+      const x = at ? at[0] : player.x, z = at ? at[1] : player.z;
+      let heading = player.heading, pitch = 0;
+      if (look === "up") pitch = 1.4;
+      else if (look) {
+        heading = Math.atan2(look[0] - x, -(look[2] - z));
+        const flat = Math.hypot(look[0] - x, look[2] - z);
+        pitch = Math.atan2(look[1] - (ground(x, z) + POSE_EYE[pose]), Math.max(flat, 0.01));
+      }
+      if (seconds <= 0) {
+        player = { ...player, x, z, heading, pitch, y: 0 };
+        eye = POSE_EYE[pose];
+        roll = pose === "floor" ? 0.5 : 0;
+        feet = Infinity;
+        moveBy({ forward: 0, strafe: 0, run: false, turn: 0, look: 0 });
+        done();
+        return;
+      }
+      tween = { t: 0, dur: seconds, from: { x: player.x, z: player.z, eye, heading: player.heading, pitch: player.pitch, roll },
+                to: { x, z, eye: POSE_EYE[pose], heading, pitch, roll: pose === "floor" ? 0.5 : 0 }, done };
+    }),
+    hold: (h) => { hold = h; },
+    injured: (on) => { speed = on ? 0.45 : 1; sway = on ? 1 : 0; },
+    glance: (pitch, seconds) => new Promise<void>((done) => {
+      const back = player.pitch;
+      tween = { t: 0, dur: seconds / 2, from: { x: player.x, z: player.z, eye, heading: player.heading, pitch: back, roll },
+                to: { x: player.x, z: player.z, eye, heading: player.heading, pitch, roll }, done: () => {
+        tween = { t: 0, dur: seconds / 2, from: { x: player.x, z: player.z, eye, heading: player.heading, pitch, roll },
+                  to: { x: player.x, z: player.z, eye, heading: player.heading, pitch: back, roll }, done };
+      } };
+    }),
+    faint: (seconds) => new Promise<void>((done) => {
+      sight.set({ dark: 1, blur: 0.8 }, seconds);
+      tween = { t: 0, dur: seconds, from: { x: player.x, z: player.z, eye, heading: player.heading, pitch: player.pitch, roll },
+                to: { x: player.x, z: player.z, eye: 0.3, heading: player.heading, pitch: -0.3, roll: 1.1 }, done };
+    }),
+    lookingAt: (p, degrees) => {
+      const dx = p[0] - camera.position.x, dy = p[1] - camera.position.y, dz = p[2] - camera.position.z;
+      const fwd = new Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      const len = Math.hypot(dx, dy, dz) || 1;
+      return (fwd.x * dx + fwd.y * dy + fwd.z * dz) / len > Math.cos((degrees * Math.PI) / 180);
+    },
+    face: (p) => {
+      const c = camera.position;
+      player = { ...player, heading: Math.atan2(p[0] - c.x, -(p[2] - c.z)), pitch: Math.atan2(p[1] - c.y, Math.max(Math.hypot(p[0] - c.x, p[2] - c.z), 0.01)) };
+      camera.rotation.set(player.pitch, -player.heading, roll);
+      camera.updateMatrixWorld();
+    },
+    fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
+    lodgeRoot: () => lodge?.root ?? null,
+    fx: (name) => sounds?.fx(name),
+  };
 
   return {
     start: () => {
@@ -385,6 +492,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       return [x, z];
     },
     ground,
+    body,
     soundState: () => sounds?.state ?? "off",
     useDoor: () => {
       const d = lodge?.doorNear(player.x, player.z);

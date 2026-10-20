@@ -9,7 +9,7 @@ author to read the scripts against the book.
 
 Inputs:  src/content/story/*.yaml, book/The Twice Born.docx, images/**/chapterN_panel_breakdown.md,
          src/content/manifests/*.json
-Output:  docs/story/review.md
+Output:  src/content/generated/story.json (committed), docs/story/review.md
 Usage:   python story_scenes.py
 """
 import json
@@ -30,8 +30,18 @@ ACTIONS = {"effect", "caption", "wait", "animate", "prop", "sound", "camera", "l
 SOURCE = re.compile(r"^(novel ¶\d+(-\d+)?|breakdown ch\d+ p\d+(-p\d+)?|comic b\d-p\d{3}(-\d+)?|ours)$")
 
 
+class _Loader(yaml.SafeLoader):
+    """YAML 1.2 booleans only: the scripts say `on: stool`, and YAML 1.1 reads that `on` as true."""
+
+
+_Loader.yaml_implicit_resolvers = {
+    k: [(tag, rx) for tag, rx in v if tag != "tag:yaml.org,2002:bool"] for k, v in yaml.SafeLoader.yaml_implicit_resolvers.items()
+}
+_Loader.add_implicit_resolver("tag:yaml.org,2002:bool", re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"), list("tTfF"))
+
+
 def scenes() -> list[tuple[str, dict]]:
-    return [(f.name, yaml.safe_load(f.read_text(encoding="utf-8"))) for f in sorted(STORY.glob("b*-ch*.yaml"))]
+    return [(f.name, yaml.load(f.read_text(encoding="utf-8"), Loader=_Loader)) for f in sorted(STORY.glob("b*-ch*.yaml"))]
 
 
 def breakdown_panels(book: int, chapter: int) -> int:
@@ -153,6 +163,9 @@ def main() -> None:
     if bad:
         print("\n".join(bad))
         sys.exit(1)
+    # what the game reads: every scene, in order
+    out = SITE / "src" / "content" / "generated" / "story.json"
+    out.write_text(json.dumps({"version": 1, "scenes": [sc for _, sc in scenes()]}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     REVIEW.parent.mkdir(parents=True, exist_ok=True)
     REVIEW.write_text(review(paras), encoding="utf-8")
     n = sum(len(sc["beats"]) for _, sc in scenes())
