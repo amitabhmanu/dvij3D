@@ -261,6 +261,16 @@ npm run pipeline -- --from contours   # or just: npm run terrain
 painting's buildings and makes its trees, and `build_walk.py` raises the walking heights and plants what stands
 on them, from `src/content/valley/walk.yaml` and `cutouts.yaml`. Its files live in `site-assets/walk/`.
 
+The Professor's lodge is the first building you can walk into (design §10.3). It is built in Blender, by script,
+from `src/content/valley/lodge.yaml`, which cites the novel or the comic for everything in it:
+
+```bash
+python pipeline/build_lodge.py          # needs Blender 4.5 LTS (or set BLENDER to its blender.exe)
+python pipeline/build_walk.py           # places it in the valley
+```
+
+Review `pipeline/reports/lodge-compare.png` (renders beside the comic panels) after a change.
+
 The terrain's three files live in `site-assets/terrain/` and ship inside every build (not via R2), because WebGL
 must read them from the site's own origin.
 

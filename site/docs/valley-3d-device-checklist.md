@@ -33,3 +33,16 @@ pass for the fallback, but note which browser it was.
 | Esc (or the pause button) pauses; Keep walking resumes | | | | | |
 | Sound starts when you start walking and the volume slider works | | | | | |
 | Movement feels smooth at the quality it starts on; Low helps if not | | | | | |
+
+## Inside the Professor's lodge
+
+| Check | Edge | Firefox | Safari (Mac) | Chrome (Android) | Safari (iPhone) |
+|---|---|---|---|---|---|
+| M, then "The Professor's lodge", puts you inside its gate | | | | | |
+| Up the drive, round the planter, up the verandah steps and in at the front door | | | | | |
+| Walls and furniture stop you; you never fall through a floor | | | | | |
+| E shuts and opens a door; a shut door stops you | | | | | |
+| Indoors is darker; the courtyard is bright | | | | | |
+| "Look at" cards open near the desk, the god-prints and the well, veiled for a new reader | | | | | |
+| Out through the study's back door onto the path behind the house | | | | | |
+| Movement stays smooth inside | | | | | |

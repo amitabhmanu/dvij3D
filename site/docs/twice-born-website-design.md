@@ -637,6 +637,51 @@ size. The flyover on `/valley/` is its preview and links to it ("Enter the valle
   Real India and the compass. pytest on the walk data (heights round-trip, boulders, buildings, trees following the
   painting's green); Vitest on decoding, walking, collision and sound levels.
 
+### 10.3 Buildings you can walk into: the Professor's lodge
+
+The first building with an inside. It replaces the lodge's painted cut-out in the walkable valley (§10.2), and you
+walk up its drive, up the verandah steps, through the house and out of the study's back door onto the mound path
+without a loading screen.
+
+- **Built from the book, and only the book.** `pipeline/lodge_reference.py` gathers what the novel says (70
+  passages of `book/The Twice Born.docx`) and what the comic draws (80 panels) into `docs/lodge-reference.md`.
+  `src/content/valley/lodge.yaml` is the plan as data: every room, door, window, piece of furniture and feature of
+  the grounds names its source, `novel ¶n`, `comic <page>-<panel>`, or `ours`. `pipeline/lodge_plan.py` draws it
+  (`docs/lodge/plan.png`, `site.png`) and checks it: rooms inside the house and not overlapping, every room
+  reachable from the front door, the study in the north-west corner (novel ¶949), a source on everything.
+- **The house.** A symmetrical colonial square, one high floor, four red-tiled wings round an open courtyard with
+  a central planter (novel ¶164, ¶193; comic b1-p008-2, b3-p031-1); the pillared corridor, the fretted front
+  verandah with three steps and a crenellated parapet above it; eleven rooms. The grounds: the cast-iron gate on
+  ball-topped piers, the boundary wall and hedge, the gravel drive and its planter, the deep well, the servant
+  quarters, Kurup's shed, the back yard. **Not kept up** (the author's note, and novel ¶164, ¶1942): mould under
+  the roof line, peeling whitewash, broken tiles, rusting bars, faded shutters, unglazed windows, a burnt lawn.
+- **Furniture from the panels.** The study's desk, lamp, board game, veena, clay pots, papers, books to the
+  ceiling, statues; the kitchen's clay oven with its fire, jars, brass, chillies and garlic, soot, and its
+  god-prints, cropped from the comic's own drawing of that wall (b4-p001-2).
+- **The author's calls** (approved 20 Oct 2026): the courtyard mostly open under torn fibreglass on rusting bars
+  (the novel covers it, the comic draws it open); the study in the novel's north-west corner (the comic's night
+  view puts a lamp-lit room at the back centre); the comic's tiled roof with a crenellated parapet; a square plan.
+- **Blender, by script.** `pipeline/build_lodge.py` makes the textures (`lodge_textures.py`) and runs Blender 4.5
+  LTS headless on `site/blender/build_lodge.py`, which builds the house, furniture and grounds, a collision copy,
+  and named doors, rooms and look points; renders it from the comic's own viewpoints beside the panels
+  (`pipeline/reports/lodge-compare.png`); and exports a glTF, compressed with meshopt and WebP to about 480 KB
+  (budget 3 MB). A change to the plan is a rebuild. An artist can refine the same file later.
+- **In the game** (`src/lib/walk/lodge.ts`, nothing lodge-specific but the file). `build_walk.py` levels the
+  ground under the grounds and turns the land's ripples off there, in the walking code and its shader alike, so
+  the lawn sits flush. The model loads with the valley. Its collision copy is baked into a three-mesh-bvh tree:
+  you are two spheres (knee and chest) that must not touch it, and a ray from just above your feet finds the
+  floor under you, so steps up to 0.4 m are stairs and anything taller is a wall. Doors start open; E shuts and
+  opens them, and a shut door is solid. Indoors the light drops and the wind falls away.
+- **The story inside.** Seven things to look at, each with a short card from the book and links to the comic
+  pages that show it, veiled until the reader has reached the first (§5.5). The back wall's painted green patch
+  is a puzzle in the book (novel ¶1446–1451) and appears only to readers past b3 p16. The map takes you to the
+  lodge's gate.
+- **For the next building:** a `<building>.yaml` with sources, a Blender script, a `model` on its world entity,
+  and the same game code.
+- **Tests.** pytest on the plan (sources, reachability, the study's corner, real comic pages); e2e walks in from
+  the drive, stops at a wall, leaves by the study's back door unless it is shut, checks indoors, the look cards'
+  veils, the back-wall puzzle, map travel and the model's budget.
+
 ## 11. The Bestiary (Layer 5) — built: `/bestiary/`
 
 The valley is full of creatures. Most are spoken of rather than met: the cook warns of yakshas hiding in the trees, Viraat reels off banmanus, pichhal peris, pishachas, kimpurushas and kinnars as the van climbs into the dark, Bhavi explains the boulder field with a rakshasa riding a mountain, and vyalas are carved on the temple steps. The Bestiary is where a reader can browse them, see them, and read what tradition says about them.
@@ -940,6 +985,7 @@ If per-question cost is too high even with caching, fall back to **retrieval**: 
 | 7 | **Memory Hall** — pāṭha ladder, avadhana ring, recall check (§12) | **Done.** 2 verses, 2 Codex entries. Ships silent; audio still open |
 | 7.5 | **The valley in 3D** — a flyover traced from the book's own map (§10.1) | **Done.** 26 contour rings on 7 hills, the painted map as the land's skin, 949 boulders, 8 labelled places; 27 e2e tests, 31 pytest, 22 Vitest. Not yet seen on Firefox, Safari or phones (checklist in §10.1); walking it is not planned (§18 item 14) |
 | 7.6 | **Walking the valley** — a first-person game page (§10.2) | **Done.** Walking at full scale with collision, the painting's buildings and its greens as trees, place cards with spoilers, a compass, the book's map with fast travel, generated sound. Seen only in Chrome so far (checklist). Interiors and sprites are next |
+| 7.7 | **The Professor's lodge** — the first building you can walk into (§10.3) | **Done.** Modelled in Blender from the novel and the comic, furnished from the panels, solid walls and stairs, doors, look points with veiled comic links, the back-wall puzzle |
 | 8 (v2) | Ask the Codex, Talk to a Voice | Not started; needs a cost review |
 
 Phase 1 alone is a complete, shippable comic site. Each later phase adds a layer without reworking earlier ones, because they all share the manifest + hotspot + `firstSeen` pattern.
