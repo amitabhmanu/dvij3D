@@ -300,6 +300,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   player = step(player, input.sample(), STEP, rules, world);
   place();
   draw();
+  o.onFrame?.(player.x, player.z, player.heading); // so the compass and map are right before you start
   o.onProgress(1, "Ready");
 
   return {
