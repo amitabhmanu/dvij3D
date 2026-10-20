@@ -38,10 +38,10 @@ test.describe("watch mode", () => {
         const w = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(-15.0, 0, -13.25));
         expect(Math.hypot(p.x - w[0], p.z - w[2])).toBeLessThan(1.5);
       }
-      if (sc === "b1-ch02") break;
+      if (sc === "b1-ch03") break;
       await page.waitForTimeout(250);
     }
-    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch02");
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch03"); // Chapter 2 is without him: skipped
     expect([...seen]).toEqual(story.scenes[0].beats.map((b: { id: string }) => b.id));
     expect(errors).toEqual([]);
   });
@@ -65,12 +65,12 @@ test.describe("watch mode", () => {
     await expect(walkEl(page)).toHaveAttribute("data-rate", "0.5");
 
     await b.getByRole("button", { name: "Next chapter" }).click();
-    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch02");
-    await b.getByRole("button", { name: "Next chapter" }).click();
     await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch03");
-    await expect(page.locator(".story-overlay")).toHaveCount(0); // Chapter 2's pages went with it
+    await b.getByRole("button", { name: "Next chapter" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch04");
+    await expect(page.locator(".words")).toHaveCount(0, { timeout: 5000 }); // Chapter 3's words went with it
     await page.keyboard.press("ArrowLeft");
-    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch02");
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch03");
 
     await b.getByRole("button", { name: "From the beginning" }).click();
     await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch01");
@@ -102,7 +102,6 @@ test.describe("watch mode", () => {
     page.on("response", (r) => { if (r.url().includes("/_assets/story/voices/") && r.status() < 400) heard.push(r.url()); });
     await watch(page);
     await bar(page).getByRole("button", { name: "Next chapter" }).click();
-    await bar(page).getByRole("button", { name: "Next chapter" }).click();
     await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch03");
     await bar(page).getByRole("button", { name: "4×" }).click();
     // the Professor asks for his glasses, Dvij answers: two voices
@@ -111,21 +110,17 @@ test.describe("watch mode", () => {
     for (const u of heard) expect(files.has(u.split("/").pop()!)).toBe(true);
   });
 
-  test("Chapter 6 plays as the comic's panels, one at a time, then Chapter 7 begins", async ({ page }) => {
-    test.setTimeout(240_000);
+  test("only the chapters Dvij is in play: 1, 3, 4, 5 and 7", async ({ page }) => {
+    test.setTimeout(120_000);
     await watch(page);
-    for (let i = 0; i < 5; i++) await bar(page).getByRole("button", { name: "Next chapter" }).click();
-    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch06");
-    await bar(page).getByRole("button", { name: "4×" }).click();
-    const panels = new Set<string>();
-    const deadline = Date.now() + 180_000;
-    while (Date.now() < deadline && (await walkEl(page).getAttribute("data-story")) === "b1-ch06") {
-      const id = await page.locator(".story-panel").getAttribute("data-panel", { timeout: 500 }).catch(() => null);
-      if (id) panels.add(id);
-      await page.waitForTimeout(200);
+    const went: string[] = ["b1-ch01"];
+    for (let i = 0; i < 4; i++) {
+      await bar(page).getByRole("button", { name: "Next chapter" }).click();
+      await expect(walkEl(page)).not.toHaveAttribute("data-story", went.at(-1)!);
+      went.push((await walkEl(page).getAttribute("data-story"))!);
     }
-    expect([...panels].sort()).toEqual(["b1-p011-10", "b1-p011-11", "b1-p011-4", "b1-p011-5", "b1-p011-6", "b1-p011-7", "b1-p011-8", "b1-p011-9"]);
-    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch07");
-    await expect(page.locator(".story-panel[data-panel='b1-p012-1']")).toBeVisible({ timeout: 30_000 }); // the days going by
+    expect(went).toEqual(["b1-ch01", "b1-ch03", "b1-ch04", "b1-ch05", "b1-ch07"]);
+    await expect(bar(page).getByRole("button", { name: "Next chapter" })).toBeDisabled();
+    await expect(page.locator(".story-panel[data-panel='b1-p012-1']")).toBeVisible({ timeout: 30_000 }); // his days going by
   });
 });

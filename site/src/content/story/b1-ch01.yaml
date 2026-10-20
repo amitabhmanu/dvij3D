@@ -132,4 +132,4 @@ beats:
       - sound: crash
       - caption: "He collapsed with a swoon, knocking a few artefacts over as he hit the hard floor."
       - progress: {book: 1, page: 4}
-      - end: {next: b1-ch02}
+      - end: {next: b1-ch03}           # Chapter 2 is skipped: Dvij is not in it

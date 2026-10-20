@@ -601,7 +601,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <button type="button" class="go" onClick={() => enter(false)} autofocus={!story}>Enter the valley</button>
           <div class="story-start">
             <p class="eyebrow">Or play the story</p>
-            <p>Be Dvij, waking in the Professor's lodge after the accident: Book 1, chapters 1 to 7.</p>
+            <p>Be Dvij, waking in the Professor's lodge after the accident: the chapters of Book 1 he is in, from 1 to 7.</p>
             {saved ? (
               <>
                 <button type="button" class="go" onClick={() => enter(true, saved, false)} autofocus={story && !watching}>Continue the story</button>

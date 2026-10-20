@@ -14,8 +14,10 @@ def test_every_scene_script_checks_out_against_the_book():
 
 
 def test_the_slice_runs_from_waking_to_his_naming_in_page_order():
-    order = [SCENES[n] for n in sorted(SCENES)]
-    assert [sc["scene"] for sc in order] == ["b1-ch01", "b1-ch02", "b1-ch03", "b1-ch04", "b1-ch05", "b1-ch06", "b1-ch07"]
+    # only scenes Dvij is in are played: the story is seen through his eyes
+    order = [SCENES[n] for n in sorted(SCENES) if not SCENES[n].get("skip")]
+    assert [sc["scene"] for sc in order] == ["b1-ch01", "b1-ch03", "b1-ch04", "b1-ch05", "b1-ch07"]
+    assert {n for n, sc in SCENES.items() if sc.get("skip")} == {"b1-ch02.yaml", "b1-ch06.yaml"}
     pages = [p for sc in order for p in sc["pages"]]
     assert pages == sorted(pages) and pages[0] == 4
     for a, b in zip(order, order[1:]):

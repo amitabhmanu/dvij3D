@@ -76,7 +76,7 @@ async function drive(page: Page, done: (s: Awaited<ReturnType<typeof state>>) =>
 test.describe("story mode", () => {
   test.skip(({ isMobile }) => isMobile, "driven with the keyboard; phones tap the same buttons");
 
-  test("Chapter 1 plays through by Dvij's own actions, into Chapter 2's pages", async ({ page }) => {
+  test("Chapter 1 plays through by Dvij's own actions, then on to Chapter 3 (Chapter 2 is without him)", async ({ page }) => {
     test.setTimeout(240_000);
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
@@ -96,11 +96,10 @@ test.describe("story mode", () => {
     expect(Math.hypot(still.x - lying.x, still.z - lying.z)).toBeLessThan(0.05);
 
     const seen: string[] = [];
-    await drive(page, (s) => s.scene === "b1-ch02" && s.overlay === "page", seen);
+    await drive(page, (s) => s.scene === "b1-ch03", seen);
     expect(seen.filter((b) => b.startsWith("b1-ch01/"))).toEqual(
       story.scenes[0].beats.map((b: { id: string }) => `b1-ch01/${b.id}`),
     );
-    await expect(page.locator(".comic-page img")).toHaveAttribute("src", /b1-p005/);
     const furthest = await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:v1") || "{}").furthest?.b1);
     expect(furthest).toBeGreaterThanOrEqual(4); // he's lived through page 4: its spoilers lift
     expect(errors).toEqual([]);
@@ -114,12 +113,12 @@ test.describe("story mode", () => {
     await begin(page, "Continue the story");
     await expect(page.locator(".objective")).toHaveText(/Open the boarded window/, { timeout: 15_000 });
     // resuming put him on his feet, with what came before already done (the glass drunk)
-    const p = await page.evaluate(() => (window as unknown as G).walkGame.player());
     const floor = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(0, 0.6, 0)[1]);
-    expect(p.y - floor).toBeGreaterThan(1.3);
+    // (he settles onto the plinth's floor over a few frames, which a busy machine draws slowly)
+    await expect.poll(async () => (await page.evaluate(() => (window as unknown as G).walkGame.player())).y - floor, { timeout: 10_000 }).toBeGreaterThan(1.3);
 
     await page.keyboard.press("k");
-    await expect(page.locator(".walk")).toHaveAttribute("data-story", "b1-ch02", { timeout: 15_000 });
+    await expect(page.locator(".walk")).toHaveAttribute("data-story", "b1-ch03", { timeout: 15_000 });
   });
 
   test("the reflection is the comic's own panel", async ({ page }) => {

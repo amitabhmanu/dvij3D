@@ -165,7 +165,8 @@ def main() -> None:
         sys.exit(1)
     # what the game reads: every scene, in order
     out = SITE / "src" / "content" / "generated" / "story.json"
-    out.write_text(json.dumps({"version": 1, "scenes": [sc for _, sc in scenes()]}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    # A scene marked `skip` (one Dvij is not in) stays as a script but is not played.
+    out.write_text(json.dumps({"version": 1, "scenes": [sc for _, sc in scenes() if not sc.get("skip")]}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     REVIEW.parent.mkdir(parents=True, exist_ok=True)
     REVIEW.write_text(review(paras), encoding="utf-8")
     n = sum(len(sc["beats"]) for _, sc in scenes())
