@@ -18,3 +18,18 @@ open `/valley/`, press **3D**, and tick what holds.
 
 If a browser can't draw 3D at all, the **3D** button should say so and leave the flat map in place; that counts as a
 pass for the fallback, but note which browser it was.
+
+## Walking the valley (`/valley/walk/`)
+
+| Check | Edge | Firefox | Safari (Mac) | Chrome (Android) | Safari (iPhone) |
+|---|---|---|---|---|---|
+| The start screen shows at once; "Enter the valley" loads with a progress bar | | | | | |
+| Clicking (or tapping) starts walking; the mouse looks around without leaving the window | | | | | |
+| W A S D walk, Shift runs; on a phone the left thumb walks and dragging looks | | | | | |
+| You can't walk into the lake, through a building or off the edge | | | | | |
+| Trees and buildings stand upright and face you as you walk round them | | | | | |
+| Near Fort Ruins, "E: Read about Fort Ruins" opens its card; spoilers are veiled until you've read that far | | | | | |
+| M opens the map; you can travel to a place you've reached | | | | | |
+| Esc (or the pause button) pauses; Keep walking resumes | | | | | |
+| Sound starts when you start walking and the volume slider works | | | | | |
+| Movement feels smooth at the quality it starts on; Low helps if not | | | | | |

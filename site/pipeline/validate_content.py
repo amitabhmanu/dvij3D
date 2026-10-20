@@ -221,6 +221,26 @@ def main() -> int:
     for f in sorted(p.name for p in terrain_dir.glob("*")):
         if f not in published:
             errors.append(f"terrain: site-assets/terrain/{f} is not used by terrain.json (a stale build? delete it)")
+    # The walkable valley (design §10.2): its files, and nothing stale beside them.
+    walk = json.loads((CONTENT / "generated" / "walk.json").read_text(encoding="utf-8"))
+    cut = json.loads((CONTENT / "generated" / "cutouts.json").read_text(encoding="utf-8"))
+    walk_files = {walk["height"]["file"], walk["world"], walk["ground"], walk["trees"], cut["atlas"]}
+    for f in sorted(walk_files):
+        if not (ASSETS / "walk" / f).exists():
+            errors.append(f"walk: {f} not in site-assets/walk (run build_walk.py / extract_cutouts.py)")
+    for f in sorted(p.name for p in (ASSETS / "walk").glob("*")):
+        if f not in walk_files:
+            errors.append(f"walk: site-assets/walk/{f} is not used by walk.json (a stale build? delete it)")
+    walk_world = json.loads((ASSETS / "walk" / walk["world"]).read_text(encoding="utf-8"))
+    sprite_ids = {s["id"] for s in cut["sprites"]}
+    for b in walk_world["buildings"]:
+        if b["sprite"] not in sprite_ids:
+            errors.append(f"walk: building {b['id']} has no cut-out")
+        if b["place"] and b["place"] not in {p["id"] for p in places["places"]} | {f["id"] for f in places["fictional"]}:
+            errors.append(f"walk: building {b['id']} names unknown place {b['place']}")
+    for pl in places["places"]:
+        if pl["rects"] and pl["id"] not in {s["id"] for s in walk["places"]}:
+            errors.append(f"walk: place {pl['id']} has no spot to walk up to")
     for pl in places["places"]:
         if pl["rects"] and pl["id"] not in terrain["anchors"]:
             errors.append(f"terrain: place {pl['id']} has no 3D anchor (run build_terrain.py)")
@@ -235,7 +255,7 @@ def main() -> int:
     print(f"OK: {len(entries)} codex entries, {len(beasts)} creatures, {len(parchment['puzzles'])} puzzles, "
           f"{len(memory['verses'])} memory verses, {len(voices)} voices, {len(rail['nodes'])} rail beats, "
           f"{len(frags)} fragments, {len(places['places'])} places with {photos} credited photographs, "
-          f"{total} hotspots, {rings} contour rings on {len(contours['hills'])} hills, {len(terrain['anchors'])} places anchored in 3D, all references resolve.")
+          f"{total} hotspots, {rings} contour rings on {len(contours['hills'])} hills, {len(terrain['anchors'])} places anchored in 3D, {len(walk_world['buildings'])} buildings to walk among, all references resolve.")
     return 0
 
 

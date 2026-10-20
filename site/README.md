@@ -80,7 +80,9 @@ Steps (see each script's docstring):
 14. `link_companions.py` — locates the Journey rail beats, crops each Voice's portrait from the panel where they speak, and places the `voice:` and hidden `fragment:` hotspots. `--sheet` also writes a portrait contact sheet.
 15. `fetch_real_india.py` — downloads the Real India layer's photographs from Wikimedia Commons, refuses anything that is not freely licensed, and records each one's photographer, licence and file page.
 16. `link_places.py` — joins `src/content/places.yaml` to those credits and to the comic pages that name each place.
+7.7. `extract_cutouts.py` — lifts the painting's buildings (boxes in `src/content/valley/cutouts.yaml`) and makes trees in its leaf colours, packed into one atlas for walking the valley (design §10.2). Review `pipeline/reports/cutouts-sheet.png`.
 16.5. `build_terrain.py` — turns the traced contours into the 3D valley's heightmap, poster, boulders and place anchors, from the knobs in `src/content/valley/terrain.yaml` (design §10.1). Review `pipeline/reports/terrain-preview.png`: the red iso-lines should sit on the blue rings.
+16.6. `build_walk.py` — the walking heights (about 4 m apart), boulders, buildings where the painting draws them, trees where it is green, and where each place is for walking up to it (design §10.2).
 17. `validate_content.py` — checks every Codex, Bestiary, Memory Hall and place link, image, credit, hotspot, puzzle answer, voice, rail beat, fragment and page reference resolves (`npm run validate`).
 
 Helper: `python pipeline/find_page.py "a manuscript quote"` → book, page and chapter where it appears in the comic.
@@ -254,6 +256,10 @@ changing a ring's summit, a matching point or a knob:
 ```bash
 npm run pipeline -- --from contours   # or just: npm run terrain
 ```
+
+`/valley/walk/` is the same valley on foot, a full-screen game page (design §10.2): `extract_cutouts.py` cuts the
+painting's buildings and makes its trees, and `build_walk.py` raises the walking heights and plants what stands
+on them, from `src/content/valley/walk.yaml` and `cutouts.yaml`. Its files live in `site-assets/walk/`.
 
 The terrain's three files live in `site-assets/terrain/` and ship inside every build (not via R2), because WebGL
 must read them from the site's own origin.

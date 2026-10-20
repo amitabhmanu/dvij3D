@@ -79,6 +79,7 @@ Deep-linkable URLs are built in from day one — cheap now, expensive to retrofi
 | `/avadhana/` | The Memory Hall — the recitation technique Dvij learns (§12) |
 | `/valley/` | Valley map, with the Real India layer |
 | `/valley/#3d` | The same valley as a 3D flyover (§10.1) |
+| `/valley/walk/` | Walking the valley in first person, a full-screen game page (§10.2) |
 | `/search/` | Full-text search across comic text and codex |
 | `/about/` | About the book and author |
 
@@ -587,6 +588,55 @@ at least 8 points, sit on the map, levels run 1..n without gaps, and each level 
 `validate_content.py` and `pipeline/tests/test_contours.py` run them; the tests also trace synthetic gappy rings
 under a grid and require each one found in order with its gap bridged.
 
+### 10.2 Walking the valley — built: `/valley/walk/`
+
+A full-screen game page, without the site's header, where a reader walks the valley in first person at its full
+size. The flyover on `/valley/` is its preview and links to it ("Enter the valley").
+
+- **The page.** All its first load is the start screen (under 60 KB of JS). "Enter the valley" loads three.js,
+  postprocessing and the game, under 450 KB gzipped, and the world's files (about 1.5 MB) behind a loading bar.
+  A click starts walking and takes the pointer lock; Esc, the pause button or losing the lock pauses. Without
+  WebGL 2 the page says so and points back to the map.
+- **Walking.** WASD or the arrows, the mouse to look, Shift to run (5 m/s, 12 running), a thumb joystick and
+  drag-to-look on phones. Eye height 1.7 m; ground steeper than 38° can't be climbed, and you slide along it. The
+  lake, buildings, trees, boulders and the map's edge are in the way. True heights on foot (the flyover's 1.6×
+  stretch is for the air). You arrive on the Access Road, facing Dronagiri.
+- **The ground.** `pipeline/build_walk.py` raises the same terrain as the flyover (same contours, same knobs) at
+  3072 samples across, about 4 m apart, to a decimetre: 8 bits would show 3.7 m terraces at eye level. It ships
+  as gzip'd int16 residuals of a planar prediction (798 KB), which the browser reverses with DecompressionStream.
+  The player and the drawn land read the same heights and the same small generated ripples (`heights.ts`, and the
+  identical GLSL in `ground.ts`), so feet and ground agree. One mesh follows you, under a metre a cell at your
+  feet and over 100 m at the horizon; past the world's edge the land keeps rising into the haze.
+- **The look.** The land wears the painting's colours with its lettering, drawn trees and compass rose smoothed
+  away (painted words on a hillside read as graffiti from eye level), and turns to grass, earth or rock up close
+  by colour and slope. A sky with a low eastern sun shares its horizon colour with the haze, and an ink pass
+  outlines crests, rocks, trees and buildings where they stand against what lies behind (medium and high
+  quality). Low, medium and high quality trade draw distance and resolution; phones start on low.
+- **Painted cut-outs.** `pipeline/extract_cutouts.py` lifts 23 buildings off the painting with GrabCut (huts, the
+  bazaar, the tavern, the Forest Officer's Bungalow, the Professor's Lodge, Bhoothnath and the Mahavidya temples)
+  from boxes in `src/content/valley/cutouts.yaml`. The painting's trees stand in clumps on textured parchment and
+  carried blocks of parchment with them, so the 10 tree cut-outs are crown shapes dabbed in the painting's own leaf
+  colours and inked round the edge: **the shapes are ours, the colours the painting's.** Buildings stand where
+  the painting draws them (the drape's registration, inverted); 76,454 trees grow where the painting is green
+  (`place_world.py`). All of them are one instanced draw of upright pictures that turn to face you.
+- **Ready for interiors and sprites.** Every building is an entity with an id, a footprint, a sprite, an optional
+  place, and a `door` and `interior` that are empty for now. Entering a building will load its own small glTF
+  scene through the door; sprites will be entities with animation frames.
+- **Places.** Walking up to one of the 8 labelled places offers "E: Read about …". Its card follows §5.5: the name
+  as the map draws it, what the book says veiled until the reader has read that far, with Show it and Show all
+  spoilers. A place is where the painting draws its building, else a hill's summit, else its label on map.jpg,
+  reached within a radius set in `walk.yaml`. A compass and the book's map, with you on it, move with you; M
+  opens the full map, which takes you straight to any place you've already reached. Real India, in the pause
+  menu, renames places as on `/valley/`.
+- **Sound.** Wind that rises as you climb, birds where the trees are, water near Sheetal Lake, and footsteps on
+  grass, earth or rock, generated live with Web Audio rather than recorded, so there is nothing to download or
+  license. It starts with the click that starts walking and has a volume control.
+- **Tests.** `tests/e2e/walk.spec.ts`: the start screen loads alone, the arrival point, walking and running speeds,
+  the lake and buildings in the way, pause, the phone joystick, no WebGL, the link from `/valley/`, budgets, a
+  drawn frame at speed, quality and volume remembered, place cards veiled and unveiled, the map's fast travel,
+  Real India and the compass. pytest on the walk data (heights round-trip, boulders, buildings, trees following the
+  painting's green); Vitest on decoding, walking, collision and sound levels.
+
 ## 11. The Bestiary (Layer 5) — built: `/bestiary/`
 
 The valley is full of creatures. Most are spoken of rather than met: the cook warns of yakshas hiding in the trees, Viraat reels off banmanus, pichhal peris, pishachas, kimpurushas and kinnars as the van climbs into the dark, Bhavi explains the boulder field with a rakshasa riding a mountain, and vyalas are carved on the temple steps. The Bestiary is where a reader can browse them, see them, and read what tradition says about them.
@@ -889,11 +939,12 @@ If per-question cost is too high even with caching, fall back to **retrieval**: 
 | 6 | **Bestiary** — 13 creature entries, gallery, `beast:` hotspots (§11) | **Done.** 10 illustrated from the comic art, 11 hotspots |
 | 7 | **Memory Hall** — pāṭha ladder, avadhana ring, recall check (§12) | **Done.** 2 verses, 2 Codex entries. Ships silent; audio still open |
 | 7.5 | **The valley in 3D** — a flyover traced from the book's own map (§10.1) | **Done.** 26 contour rings on 7 hills, the painted map as the land's skin, 949 boulders, 8 labelled places; 27 e2e tests, 31 pytest, 22 Vitest. Not yet seen on Firefox, Safari or phones (checklist in §10.1); walking it is not planned (§18 item 14) |
+| 7.6 | **Walking the valley** — a first-person game page (§10.2) | **Done.** Walking at full scale with collision, the painting's buildings and its greens as trees, place cards with spoilers, a compass, the book's map with fast travel, generated sound. Seen only in Chrome so far (checklist). Interiors and sprites are next |
 | 8 (v2) | Ask the Codex, Talk to a Voice | Not started; needs a cost review |
 
 Phase 1 alone is a complete, shippable comic site. Each later phase adds a layer without reworking earlier ones, because they all share the manifest + hotspot + `firstSeen` pattern.
 
-**Verification as of this pass (19 Oct 2026):** `npm run build` and Pagefind succeed; `validate_content.py` resolves every hotspot target, codex link, `firstSeen`, companion reference, contour ring and 3D anchor; 134 Playwright tests pass (10 skipped by viewport), as do 31 pytest and 22 Vitest tests; `npm run check` is clean.
+**Verification as of this pass:** `npm run build` and Pagefind succeed; `validate_content.py` resolves every hotspot target, codex link, `firstSeen`, companion reference, contour ring, 3D anchor and walk file; 159 Playwright tests pass (21 skipped by viewport), as do 39 pytest and 41 Vitest tests; `npm run check` is clean (20 Oct 2026).
 
 ---
 
@@ -948,6 +999,16 @@ Verified against the manuscript and the PDFs:
       with modelled buildings, which would fix appearances the book leaves open.
     - **Seen only in Chrome so far.** Please try it on Firefox, Safari (desktop and iPhone) and an Android phone with
       the checklist in `docs/valley-3d-device-checklist.md`.
+
+15. **Walking the valley (§10.2), now built.** Choices for you:
+    - **Sound is generated, not recorded.** The plan said CC0 recordings, but downloading them needs your go-ahead
+      each time, and generated wind, birds, water and footsteps need no licence. Recordings can replace any of them.
+    - **Trees are ours in shape.** The painted trees don't cut out cleanly, so each tree is a crown dabbed in the
+      painting's leaf colours. Hand-cleaned cut-outs of the painted trees would be truer to the book.
+    - **Only 23 buildings stand in the valley**, the ones cut from the painting by hand; the painting draws more huts,
+      and the fort's walls and the Hanuman temple are not cut yet. At full scale the village is sparse.
+    - **Places to walk up to** are the 8 the map labels; the tavern, bazaar, bungalow and lodge stand as buildings
+      but carry no card yet.
 
 **Decided 27 Sep 2026:**
 

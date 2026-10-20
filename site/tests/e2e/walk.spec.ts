@@ -142,21 +142,27 @@ test("the valley page leads into the walk", async ({ page }) => {
 });
 
 test("the walk's code and data stay within budget", async ({ page }) => {
-  const chunks: Buffer[] = [];
+  await page.goto("/valley/walk/");
+  await page.waitForLoadState("networkidle");
+  const js: Buffer[] = [];
   page.on("response", async (res) => {
-    if ((res.headers()["content-type"] || "").includes("javascript")) {
-      const body = await res.body().catch(() => Buffer.alloc(0));
-      if (body.includes("THREE.WebGLRenderer")) chunks.push(body);
-    }
+    if ((res.headers()["content-type"] || "").includes("javascript")) js.push(await res.body().catch(() => Buffer.alloc(0)));
   });
-  await enter(page, "");
-  expect(chunks).toHaveLength(1);
-  expect(gzipSync(chunks[0]).length / 1024).toBeLessThan(450);
-  for (const [name, kb] of [[walk.height.file, 1200], [walk.world, 400]] as const) {
+  await page.getByRole("button", { name: "Enter the valley" }).click();
+  await page.locator('.walk[data-screen="ready"]').waitFor({ timeout: 60_000 });
+  // everything "Enter the valley" loads: three.js, postprocessing and the game
+  const gz = js.reduce((n, b) => n + gzipSync(b).length, 0);
+  expect(js.some((b) => b.includes("THREE.WebGLRenderer"))).toBe(true);
+  expect(gz / 1024).toBeLessThan(450);
+  let total = 0;
+  for (const [name, kb] of [[walk.height.file, 1200], [walk.world, 400], [walk.trees, 700], [walk.ground, 100], [walk.cutouts, 300]] as const) {
     const res = await page.request.get(`/_assets/walk/${name}`);
     expect(res.status()).toBe(200);
-    expect((await res.body()).length / 1024, name).toBeLessThan(kb);
+    const n = (await res.body()).length;
+    expect(n / 1024, name).toBeLessThan(kb);
+    total += n;
   }
+  expect(total / 1024 / 1024).toBeLessThan(6); // the world, behind the loading bar
 });
 
 test("the valley is drawn at eye level, smoothly", async ({ page }) => {
