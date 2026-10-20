@@ -1,0 +1,50 @@
+# Story mode's voices (design §10.4): each character speaks in one fixed voice,
+# made on this computer with Indic Parler-TTS, as the Institute of
+# Idiosyncrasies comic's voices were (IofIa2/animation/voicegen). A voice is a
+# named speaker the model was trained on, a description of how they speak, and
+# a seed: the same three give the same voice in every line and every chapter.
+#
+# Who they are comes from the novel (book/The Twice Born.docx); how they sound
+# is ours, read from it. To change a voice, edit its description or seed and
+# run `python pipeline/story_voices.py --redo --who <name>`.
+# `candidates` are auditions: `python pipeline/story_voices.py --audition`
+# renders each one saying `line`, for choosing between them.
+
+tail: The recording is very clear and close up, with no background noise.
+
+characters:
+  dvij:
+    who: a young man waking with no memory, head bandaged, arm in plaster  # novel ¶93-102
+    voice: {speaker: Aakash, seed: 2101, description: "Aakash's voice is warm, slightly husky and mid-pitched. He speaks Indian English with a neutral urban accent, at a slow, hesitant pace, a little weak and bewildered, as if just woken."}
+    line: "There... in the room where I was sleeping. Your glasses... they're on the stool by the bed."
+    candidates:
+      - {speaker: Aakash, seed: 2101, description: "Aakash's voice is warm, slightly husky and mid-pitched. He speaks Indian English with a neutral urban accent, at a slow, hesitant pace, a little weak and bewildered, as if just woken."}
+      - {speaker: Kabir, seed: 2101, description: "Kabir's voice is soft and mid-pitched. He speaks Indian English with a slight North Indian accent, at a slow, uncertain pace, quiet and tired."}
+      - {speaker: Raghav, seed: 2101, description: "Raghav's voice is clear and slightly low-pitched. He speaks Indian English at a measured, hesitant pace, puzzled and gentle."}
+
+  professor:
+    who: Dr Vidyasagar Parthasarathi, an old scholar with heavy eyebrows; talkative, ends his thoughts with "no?"  # novel ¶136-141
+    voice: {speaker: Thoma, seed: 2202, description: "Thoma's voice is old, slightly raspy and medium-pitched. He speaks English with a South Indian Tamil accent, at a lively, animated pace, warm and scholarly, like a professor delighted by his own digressions."}
+    line: "The veena... ah... it is safe. Of course I do not play it. No... no... I am no good with music. After all it is the instrument of the Goddess of learning, no?"
+    candidates:
+      - {speaker: Thoma, seed: 2202, description: "Thoma's voice is old, slightly raspy and medium-pitched. He speaks English with a South Indian Tamil accent, at a lively, animated pace, warm and scholarly, like a professor delighted by his own digressions."}
+      - {speaker: Dinesh, seed: 2202, description: "Dinesh's voice is elderly and gravelly, slightly low-pitched. He speaks English with a South Indian accent, at a moderate pace, expressive and kindly, like an old teacher."}
+      - {speaker: Ravi, seed: 2202, description: "Ravi's voice is old and a little thin, medium-pitched. He speaks English with a Tamil accent, quickly and animatedly, scholarly and amused."}
+
+  bhavi:
+    who: a young woman sitting on the well's parapet; playful, laughs, answers a question with a question  # novel ¶165-171
+    voice: {speaker: Meera, seed: 2303, description: "Meera's voice is young, clear and slightly high-pitched. She speaks Indian English at a quick, lively pace, playful and teasing, with a smile in her voice."}
+    line: "Everyone around here knows about you. You're The Wounded One with No Past, right?"
+    candidates:
+      - {speaker: Meera, seed: 2303, description: "Meera's voice is young, clear and slightly high-pitched. She speaks Indian English at a quick, lively pace, playful and teasing, with a smile in her voice."}
+      - {speaker: Priya, seed: 2303, description: "Priya's voice is young and bright, medium-pitched. She speaks Indian English at a brisk pace, confident and mischievous."}
+      - {speaker: Kavya, seed: 2303, description: "Kavya's voice is soft, young and slightly high-pitched. She speaks Indian English at a relaxed pace, amused and a little mysterious."}
+
+  maharaj:
+    who: the lodge's cook from Baswara, a village in the tarai of the Uttaranchal hills; soot on his face, deferential and afraid, talks in low tones  # novel ¶195-217
+    voice: {speaker: Rohit, seed: 2404, description: "Rohit's voice is middle-aged, soft and low-pitched. He speaks English with a rustic Pahadi Hindi accent from the Uttarakhand hills, slowly and quietly, timid and deferential, almost whispering."}
+    line: "Nobody goes out, sahib. It is an unthinkable act. Outside is an evil world, that's what Mahant has told us."
+    candidates:
+      - {speaker: Rohit, seed: 2404, description: "Rohit's voice is middle-aged, soft and low-pitched. He speaks English with a rustic Pahadi Hindi accent from the Uttarakhand hills, slowly and quietly, timid and deferential, almost whispering."}
+      - {speaker: Aman, seed: 2404, description: "Aman's voice is low-pitched and a little rough. He speaks English with a strong Hindi accent, at a slow, hushed pace, nervous and respectful."}
+      - {speaker: Jatin, seed: 2404, description: "Jatin's voice is middle-aged and medium-pitched. He speaks Indian English with a Hindi accent, quietly and hesitantly, anxious and humble."}

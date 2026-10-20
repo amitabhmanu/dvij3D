@@ -43,3 +43,4 @@ Thumbs.db
 
 # Third-party downloads (CC0 source assets; built outputs are what ship)
 /.downloads/
+/site/pipeline/.cache/

@@ -58,6 +58,7 @@ export const artFile = (name: string) => `${ASSET_BASE}/art/${name}`;
 // need CORS on the bucket. They are small (about 650 KB) and content-hashed.
 export const terrainFile = (name: string) => `/_assets/terrain/${name}`;
 export const walkFile = (name: string) => `/_assets/walk/${name}`; // same reason as terrainFile
+export const storyFile = (name: string) => `/_assets/story/${name}`; // story mode's voices: small, and shipped with the walk
 export const pdfUrl = (book: Book) => `${ASSET_BASE}/${book.pdf.file}`;
 
 export function srcset(set: Srcset): string {

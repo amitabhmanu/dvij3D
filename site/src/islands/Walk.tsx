@@ -26,6 +26,8 @@ import lodgeInfo from "../content/generated/lodge.json";
 import type { Director, Scene } from "../lib/story/director";
 import type { StoryStage } from "../lib/story/stage";
 import { loadSaved } from "../lib/story/saved";
+// (as storyFile in lib/manifest.ts, which this page can't import: it carries every book's manifest)
+const storyFile = (name: string) => `/_assets/story/${name}`;
 
 /** "b1-p004" -> Book 1, page 4. */
 const pageRef = (id: string) => ({ book: Number(id.slice(1, id.indexOf("-"))), page: Number(id.slice(id.indexOf("-p") + 2)) });
@@ -205,7 +207,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   // ---- story mode -------------------------------------------------------------
   const paused = () => screenRef.current !== "playing" || heldRef.current;
   /** Show something until a press, or for `seconds` of the story's time if given (always, when watching). */
-  const until = async (show: () => void, hide: () => void, seconds?: number, watchSeconds = seconds) => {
+  const until = async (show: () => void, hide: () => void, seconds?: number, watchSeconds = seconds, clip?: HTMLAudioElement) => {
     const { sleep } = await import("../lib/story/stage"); // already loaded with the game
     let pressed = false;
     const id = ++shownId.current;
@@ -220,19 +222,45 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     show();
     const mine = () => { pressed = true; };
     advance.current = mine;
-    await sleep(seconds ?? 1e9, paused, () => pressed || (watchingRef.current && watchSeconds !== undefined && elapsed() >= watchSeconds), () => rateRef.current);
+    // a spoken line plays along: it pauses with the story and keeps to its speed (at the same pitch)
+    const keepUp = () => {
+      if (!clip) return;
+      clip.playbackRate = rateRef.current;
+      clip.volume = Math.min(1, (prefsRef.current.volume ?? 0.7) * 1.3);
+      if (paused() && !clip.paused) clip.pause();
+      else if (!paused() && clip.paused && !clip.ended) clip.play().catch(() => {});
+    };
+    keepUp();
+    await sleep(seconds ?? 1e9, paused, () => {
+      keepUp();
+      return pressed || shownId.current !== id || (watchingRef.current && watchSeconds !== undefined && elapsed() >= watchSeconds);
+    }, () => rateRef.current);
+    clip?.pause();
     if (advance.current === mine) advance.current = null;
     if (shownId.current === id) hide();
   };
   const readTime = (text: string) => Math.max(2.5, 1.2 + text.split(/\s+/).length * 0.27);
+  /** Each character's voice for a line, if it has been made (pipeline/story_voices.py). */
+  const voices = useRef<Record<string, { file: string; seconds: number }>>({});
+  const prefsRef = useRef(prefs);
+  prefsRef.current = prefs;
 
   const setUpStory = async (g: Game) => {
-    const [{ Director }, { StoryStage }, data] = await Promise.all([
+    const [{ Director }, { StoryStage }, data, spoken] = await Promise.all([
       import("../lib/story/director"), import("../lib/story/stage"), import("../content/generated/story.json"),
+      import("../content/generated/story-voices.json"),
     ]);
+    voices.current = (spoken.default ?? spoken).lines as Record<string, { file: string; seconds: number }>;
     const st = new StoryStage(g, {
       caption: (text) => until(() => setCaption(text), () => setCaption(null), readTime(text)),
-      say: (who, line) => until(() => setSub({ who, line }), () => setSub(null), readTime(line)),
+      say: (who, line) => {
+        const v = voices.current[`${who}|${line}`];
+        if (!v) return until(() => setSub({ who, line }), () => setSub(null), readTime(line));
+        // the words stay while they're spoken, and a moment after
+        const clip = new Audio(storyFile(`voices/${v.file}`));
+        clip.preservesPitch = true;
+        return until(() => setSub({ who, line }), () => setSub(null), v.seconds + 0.5, undefined, clip);
+      },
       objective: (text, ready = false) => setObjective(text ? { text, ready } : null),
       hint: setHint,
       card: (title, subtitle) => until(() => setOverlay({ kind: "card", title, subtitle }), () => setOverlay(null), 4),

@@ -18,8 +18,8 @@ const DEV_FILES = {
   "hotspots.json": { file: "hotspots/manual.json", replace: true },
   "hotspots-auto.json": { file: "hotspots/auto.json", readonly: true },
 };
-const PUBLISHED = ["pages", "art", "pdf", "terrain", "walk"]; // never master/ or data/
-const SAME_ORIGIN = ["terrain", "walk"]; // shipped in every build (WebGL reads them; see manifest.ts)
+const PUBLISHED = ["pages", "art", "pdf", "terrain", "walk", "story"]; // never master/ or data/
+const SAME_ORIGIN = ["terrain", "walk", "story"]; // shipped in every build (WebGL reads them; see manifest.ts)
 const TYPES = {
   ".avif": "image/avif",
   ".webp": "image/webp",
@@ -27,6 +27,7 @@ const TYPES = {
   ".bin": "application/octet-stream",
   ".pdf": "application/pdf",
   ".json": "application/json",
+  ".mp3": "audio/mpeg",
 };
 
 export default function localAssets() {
