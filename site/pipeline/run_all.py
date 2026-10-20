@@ -1,7 +1,7 @@
 """Run the whole content pipeline in order (design §4, plan Phase 0).
 
 Each step is idempotent; slow steps skip work that is already done.
-Usage: python run_all.py [--from compress|render|variants|text|panels|chapters|art|contours|drape|endnotes|manifests|codex|bestiary|memory|places|places-link|terrain|walk|parchment|companions|validate]
+Usage: python run_all.py [--from compress|render|variants|text|panels|chapters|art|contours|drape|cutouts|endnotes|manifests|codex|bestiary|memory|places|places-link|terrain|walk|parchment|companions|validate]
 """
 import argparse
 import subprocess
@@ -19,6 +19,7 @@ STEPS = [
     ("art", [sys.executable, "prepare_art.py"]),
     ("contours", [sys.executable, "trace_contours.py"]),
     ("drape", [sys.executable, "extract_valley_drape.py"]),
+    ("cutouts", [sys.executable, "extract_cutouts.py"]),
     ("endnotes", [sys.executable, "extract_endnotes.py"]),
     ("manifests", [sys.executable, "build_manifests.py"]),
     ("codex", [sys.executable, "link_codex.py"]),

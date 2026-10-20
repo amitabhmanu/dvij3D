@@ -1,0 +1,47 @@
+# What pipeline/extract_cutouts.py lifts off the painted map (B1 p1, 1425x1104)
+# to stand up in the walkable valley (design §10.2). Boxes are pixel boxes on
+# the painting, [x0, y0, x1, y1], read off it by eye; the extractor separates
+# each drawing from its parchment by colour.
+#
+# `height` is how tall it stands, in metres: ours, since the painting has no
+# scale; a hut a little taller than a person, temples well above the huts.
+# Each building stands in the walkable valley where the painting draws it.
+# `place` ties a building to a place or a fictional label in places.yaml.
+
+# Trees: the painted ones stand in clumps on textured parchment and don't cut
+# out cleanly, so each tree is a crown shape dabbed in the painting's own leaf
+# colours and inked round the edge (extract_cutouts.painted_trees).
+trees:
+  count: 10
+  seed: 5
+  trunk: [92, 66, 40]   # RGB, the painting's trunk brown
+  height: [6, 14]       # metres, smallest and largest when planted
+
+buildings:
+  # huts in the village
+  - {id: hut-1, kind: hut, box: [431, 345, 468, 381], height: 5.5}
+  - {id: hut-2, kind: hut, box: [414, 381, 440, 405], height: 5}
+  - {id: hut-3, kind: hut, box: [402, 410, 425, 436], height: 5}
+  - {id: hut-4, kind: hut, box: [438, 409, 468, 442], height: 5.5}
+  - {id: hut-5, kind: hut, box: [377, 423, 401, 446], height: 4.5}
+  - {id: hut-6, kind: hut, box: [473, 474, 497, 500], height: 5}
+  - {id: hut-7, kind: hut, box: [416, 515, 445, 548], height: 5.5}
+  - {id: hut-8, kind: hut, box: [445, 502, 475, 532], height: 5}
+  - {id: house-1, kind: hut, box: [427, 577, 453, 605], height: 6}
+  - {id: house-2, kind: hut, box: [462, 600, 493, 625], height: 6}
+  - {id: cottage, kind: hut, box: [826, 272, 845, 295], height: 5}
+  # the bazaar
+  - {id: stall-blue, kind: stall, box: [497, 577, 528, 608], height: 6, place: village-bazaar}
+  - {id: stalls-red, kind: stall, box: [539, 576, 575, 600], height: 6}
+  # named buildings
+  - {id: tavern, kind: tavern, box: [550, 610, 598, 650], height: 8, place: tavern}
+  - {id: bungalow, kind: bungalow, box: [877, 392, 938, 450], height: 12, place: forest-officers-bungalow}
+  - {id: lodge, kind: lodge, box: [932, 510, 993, 553], height: 9, place: professors-lodge}
+  # temples
+  - {id: bhoothnath, kind: temple, box: [735, 197, 800, 237], height: 14, place: kaal-bhairava}
+  - {id: shrine-spire, kind: shrine, box: [812, 210, 832, 250], height: 12}
+  - {id: tall-spire, kind: shrine, box: [840, 220, 860, 265], height: 16}
+  - {id: mahavidya, kind: temple, box: [766, 322, 792, 367], height: 15, place: mahavidya-temples}
+  - {id: shrine-1, kind: shrine, box: [744, 360, 767, 392], height: 9}
+  - {id: shrine-2, kind: shrine, box: [789, 355, 812, 392], height: 10}
+  - {id: shrine-3, kind: shrine, box: [806, 334, 826, 360], height: 7}

@@ -16,6 +16,7 @@ fort, never in the lake.
 
 Inputs:  generated/contours.json, valley/terrain.yaml, valley/walk.yaml, places.yaml
 Output:  site-assets/walk/height.<hash>.bin  (gzip, int16 residuals in decimetres)
+         site-assets/walk/trees.<hash>.bin   (gzip, 6 bytes a tree; see place_world.encode_trees)
          site-assets/walk/ground.<hash>.webp (the painting's colours without its labels and icons)
          site-assets/walk/world.<hash>.json  (what stands on the land)
          src/content/generated/walk.json     (committed: file names, sizes, spawn, water)
@@ -29,10 +30,12 @@ import json
 
 import cv2
 import numpy as np
+from matplotlib.path import Path as Path_
 import yaml
 from PIL import Image
 
 import build_terrain as bt
+import place_world
 from common import ASSETS
 from valley_contours import CONTENT, load_contours
 
@@ -108,17 +111,42 @@ def main() -> None:
     rocks_cfg = copy.deepcopy(cfg)
     rocks_cfg["boulders"] = walk["boulders"]
     stones = bt.boulders(rocks_cfg, grid, final, water, ((fort[0] + fort[2]) / 2, (fort[1] + fort[3]) / 2))
-    world = {"version": 1, "boulders": stones}
-    world_name = write_hashed("world", "json", json.dumps(world, separators=(",", ":")).encode())
-
+    # What stands on the land: the painting's buildings where it draws them,
+    # and its trees where it is green (place_world.py).
     ww = cfg["worldWidth"]
     wd = ww * bt.MAP_ASPECT
+    cut = json.loads((CONTENT / "generated" / "cutouts.json").read_text(encoding="utf-8"))
+    cut_cfg = yaml.safe_load((CONTENT / "valley" / "cutouts.yaml").read_text(encoding="utf-8"))
+    cell = ww / grid.ppu
+    gy, gx = np.gradient(final, cell)
+    slope_deg = np.degrees(np.arctan(np.hypot(gx, gy)))
+
+    def px(x, z):
+        u, v = x / ww + 0.5, z / wd + 0.5
+        i, j = grid.to_px([[u, v]])[0]
+        return min(max(int(j), 0), final.shape[0] - 1), min(max(int(i), 0), final.shape[1] - 1)
+
+    ground = lambda x, z: float(final[px(x, z)])
+    slope = lambda x, z: float(slope_deg[px(x, z)])
+    lakes = [Path_(np.array([[(x - 0.5) * ww, (y - 0.5) * wd] for x, y in w["points"]])) for w in water]
+    wet = lambda x, z: any(l.contains_point((x, z)) for l in lakes)
+    houses = place_world.buildings(cut, cut_cfg, lambda u, v: ((u - 0.5) * ww, (v - 0.5) * wd), ground)
+    near_house = lambda x, z: any((x - h["x"]) ** 2 + (z - h["z"]) ** 2 < (h["r"] + 4) ** 2 for h in houses)
+    drape_img = cv2.imread(str(bt.OUT / json.loads((CONTENT / "generated" / "drape.json").read_text(encoding="utf-8"))["file"]))
+    forest = place_world.trees(walk, cut, drape_img, (ww, wd), ground, slope, wet, near_house)
+    trees_name = write_hashed("trees", "bin", place_world.encode_trees(forest))
+    stones = [s for s in stones if not near_house(s[0], s[2])]
+    world = {"version": 1, "boulders": stones, "buildings": houses}
+    world_name = write_hashed("world", "json", json.dumps(world, separators=(",", ":")).encode())
+
     sx, sz = walk["spawn"]["at"]
     data = {
         "version": 1,
         "height": {"file": height_name, "w": grid.width, "h": grid.height, "scale": SCALE},
         "world": world_name,
         "ground": ground_name,
+        "trees": trees_name,
+        "cutouts": cut["atlas"],
         "margin": grid.margin,
         "worldWidth": ww,
         "worldDepth": round(wd, 1),
@@ -134,7 +162,8 @@ def main() -> None:
     WALK_JSON.write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
     size = (OUT / height_name).stat().st_size
     print(f"Walk heights {height_name} ({size // 1024} KB, {grid.width}x{grid.height}, "
-          f"{ww / grid.ppu:.1f} m apart), {len(stones)} boulders in {world_name}")
+          f"{ww / grid.ppu:.1f} m apart), {len(stones)} boulders, {len(houses)} buildings, "
+          f"{len(forest)} trees ({(OUT / trees_name).stat().st_size // 1024} KB)")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,299 @@
+{
+ "version": 1,
+ "atlas": "cutouts.9dfbd7107c.webp",
+ "w": 1024,
+ "h": 576,
+ "treeHeight": [
+  6,
+  14
+ ],
+ "sprites": [
+  {
+   "id": "hut-1",
+   "kind": "hut",
+   "x": 91,
+   "y": 347,
+   "w": 129,
+   "h": 126,
+   "height": 5.5
+  },
+  {
+   "id": "hut-2",
+   "kind": "hut",
+   "x": 382,
+   "y": 480,
+   "w": 96,
+   "h": 90,
+   "height": 5
+  },
+  {
+   "id": "hut-3",
+   "kind": "hut",
+   "x": 0,
+   "y": 480,
+   "w": 87,
+   "h": 96,
+   "height": 5
+  },
+  {
+   "id": "hut-4",
+   "kind": "hut",
+   "x": 327,
+   "y": 347,
+   "w": 108,
+   "h": 117,
+   "height": 5.5
+  },
+  {
+   "id": "hut-5",
+   "kind": "hut",
+   "x": 612,
+   "y": 480,
+   "w": 90,
+   "h": 87,
+   "height": 4.5
+  },
+  {
+   "id": "hut-6",
+   "kind": "hut",
+   "x": 91,
+   "y": 480,
+   "w": 90,
+   "h": 96,
+   "height": 5
+  },
+  {
+   "id": "hut-7",
+   "kind": "hut",
+   "x": 439,
+   "y": 347,
+   "w": 105,
+   "h": 117,
+   "height": 5.5
+  },
+  {
+   "id": "hut-8",
+   "kind": "hut",
+   "x": 754,
+   "y": 347,
+   "w": 108,
+   "h": 108,
+   "height": 5
+  },
+  {
+   "id": "house-1",
+   "kind": "hut",
+   "x": 866,
+   "y": 347,
+   "w": 96,
+   "h": 102,
+   "height": 6
+  },
+  {
+   "id": "house-2",
+   "kind": "hut",
+   "x": 267,
+   "y": 480,
+   "w": 111,
+   "h": 93,
+   "height": 6
+  },
+  {
+   "id": "cottage",
+   "kind": "hut",
+   "x": 706,
+   "y": 480,
+   "w": 75,
+   "h": 87,
+   "height": 5
+  },
+  {
+   "id": "stall-blue",
+   "kind": "stall",
+   "x": 639,
+   "y": 347,
+   "w": 111,
+   "h": 111,
+   "height": 6
+  },
+  {
+   "id": "stalls-red",
+   "kind": "stall",
+   "x": 482,
+   "y": 480,
+   "w": 126,
+   "h": 90,
+   "height": 6
+  },
+  {
+   "id": "tavern",
+   "kind": "tavern",
+   "x": 429,
+   "y": 196,
+   "w": 162,
+   "h": 138,
+   "height": 8
+  },
+  {
+   "id": "bungalow",
+   "kind": "bungalow",
+   "x": 0,
+   "y": 0,
+   "w": 201,
+   "h": 192,
+   "height": 12
+  },
+  {
+   "id": "lodge",
+   "kind": "lodge",
+   "x": 0,
+   "y": 196,
+   "w": 201,
+   "h": 147,
+   "height": 9
+  },
+  {
+   "id": "bhoothnath",
+   "kind": "temple",
+   "x": 595,
+   "y": 196,
+   "w": 213,
+   "h": 138,
+   "height": 14
+  },
+  {
+   "id": "shrine-spire",
+   "kind": "shrine",
+   "x": 812,
+   "y": 196,
+   "w": 78,
+   "h": 138,
+   "height": 12
+  },
+  {
+   "id": "tall-spire",
+   "kind": "shrine",
+   "x": 827,
+   "y": 0,
+   "w": 78,
+   "h": 153,
+   "height": 16
+  },
+  {
+   "id": "mahavidya",
+   "kind": "temple",
+   "x": 909,
+   "y": 0,
+   "w": 96,
+   "h": 153,
+   "height": 15
+  },
+  {
+   "id": "shrine-1",
+   "kind": "shrine",
+   "x": 548,
+   "y": 347,
+   "w": 87,
+   "h": 114,
+   "height": 9
+  },
+  {
+   "id": "shrine-2",
+   "kind": "shrine",
+   "x": 0,
+   "y": 347,
+   "w": 87,
+   "h": 129,
+   "height": 10
+  },
+  {
+   "id": "shrine-3",
+   "kind": "shrine",
+   "x": 185,
+   "y": 480,
+   "w": 78,
+   "h": 96,
+   "height": 7
+  },
+  {
+   "id": "tree-1",
+   "kind": "tree",
+   "x": 403,
+   "y": 0,
+   "w": 116,
+   "h": 160
+  },
+  {
+   "id": "tree-2",
+   "kind": "tree",
+   "x": 894,
+   "y": 196,
+   "w": 98,
+   "h": 138
+  },
+  {
+   "id": "tree-3",
+   "kind": "tree",
+   "x": 224,
+   "y": 347,
+   "w": 99,
+   "h": 124
+  },
+  {
+   "id": "tree-4",
+   "kind": "tree",
+   "x": 633,
+   "y": 0,
+   "w": 91,
+   "h": 157
+  },
+  {
+   "id": "tree-5",
+   "kind": "tree",
+   "x": 205,
+   "y": 196,
+   "w": 112,
+   "h": 146
+  },
+  {
+   "id": "tree-6",
+   "kind": "tree",
+   "x": 728,
+   "y": 0,
+   "w": 95,
+   "h": 157
+  },
+  {
+   "id": "tree-7",
+   "kind": "tree",
+   "x": 321,
+   "y": 196,
+   "w": 104,
+   "h": 146
+  },
+  {
+   "id": "tree-8",
+   "kind": "tree",
+   "x": 308,
+   "y": 0,
+   "w": 91,
+   "h": 163
+  },
+  {
+   "id": "tree-9",
+   "kind": "tree",
+   "x": 205,
+   "y": 0,
+   "w": 99,
+   "h": 164
+  },
+  {
+   "id": "tree-10",
+   "kind": "tree",
+   "x": 523,
+   "y": 0,
+   "w": 106,
+   "h": 159
+  }
+ ]
+}

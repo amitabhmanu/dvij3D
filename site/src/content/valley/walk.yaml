@@ -35,3 +35,12 @@ erase:
   - note: the compass rose in the bottom-right corner
     at: [0.864, 0.915]
     r: 0.05
+
+# Trees grow where the painting is green (pipeline/place_world.py), from the
+# painted tree cut-outs. Spacing is the grid they're thinned from; thickness
+# scales how much of the green becomes trees.
+trees:
+  seed: 3
+  spacing: 12       # metres
+  thickness: 2.2
+  maxSlope: 35      # degrees; nothing grows on cliffs

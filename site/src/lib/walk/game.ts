@@ -13,10 +13,11 @@ import {
 import { decodeHeights, fieldFor, heightAt, type Field } from "./heights";
 import { groundGeometry, groundMaterial } from "./ground";
 import { inkComposer } from "./post";
+import { cutoutMesh, decodeTrees, type Stand } from "./cutouts";
 import type { EffectComposer } from "postprocessing";
 import { Input, type Settings } from "./input";
 import { Blockers, inside, step, type Player } from "./player";
-import { walk } from "./walk-data";
+import { atlas, walk, walkAsset, type Building } from "./walk-data";
 
 export type Quality = "low" | "medium" | "high";
 export type GameOptions = {
@@ -51,6 +52,7 @@ export const PAPER = lin("#c9a878");
 const SUN_DIR = new Vector3(0.85, 0.42, -0.2).normalize();
 const GRID: Record<Quality, number> = { low: 192, medium: 288, high: 384 };
 const PIXELS: Record<Quality, number> = { low: 1, medium: 1.5, high: 2 };
+const DRAW: Record<Quality, [number, number]> = { low: [450, 700], medium: [1100, 1600], high: [2000, 2800] };
 const STEP = 1 / 60;
 
 async function fetchWithProgress(url: string, onBytes: (f: number) => void): Promise<ArrayBuffer> {
@@ -101,12 +103,17 @@ function skyDome(): Mesh {
 export async function createGame(o: GameOptions): Promise<Game> {
   const h = walk.height;
   o.onProgress(0, "Unrolling the map");
-  const [heightBuf, worldJson, colours] = await Promise.all([
-    fetchWithProgress(o.heightUrl, (f) => o.onProgress(f * 0.7, "Raising the hills")),
-    fetch(o.worldUrl).then((r) => r.json() as Promise<{ boulders: [number, number, number, number, number][] }>),
+  const [heightBuf, worldJson, colours, treeBuf, cutTex] = await Promise.all([
+    fetchWithProgress(o.heightUrl, (f) => o.onProgress(f * 0.6, "Raising the hills")),
+    fetch(o.worldUrl).then((r) => r.json() as Promise<{ boulders: [number, number, number, number, number][]; buildings: Building[] }>),
     loadTexture(o.groundUrl),
+    fetch(walkAsset(walk.trees)).then((r) => r.arrayBuffer()),
+    loadTexture(walkAsset(walk.cutouts)),
   ]);
   colours.colorSpace = SRGBColorSpace;
+  cutTex.colorSpace = SRGBColorSpace;
+  cutTex.flipY = false; // the atlas rectangles count from the image's top
+  cutTex.needsUpdate = true;
   o.onProgress(0.75, "Laying the paths");
   const field: Field = fieldFor(await decodeHeights(heightBuf, h.w, h.h, h.scale), h.w, h.h, walk);
   const ground = (x: number, z: number) => heightAt(field, x, z);
@@ -174,6 +181,23 @@ export async function createGame(o: GameOptions): Promise<Game> {
   });
   stones.computeBoundingSphere();
   scene.add(stones);
+
+  // The painted cut-outs: buildings where the painting draws them, trees where it is green.
+  o.onProgress(0.85, "Planting the trees");
+  const spriteIndex = new Map(atlas.sprites.map((s, i) => [s.id, i]));
+  const stands: Stand[] = worldJson.buildings.map((b) => ({ x: b.x, y: ground(b.x, b.z), z: b.z, height: b.height, sprite: spriteIndex.get(b.sprite)! }));
+  for (const b of worldJson.buildings) blockers.add(b.x, b.z, b.r);
+  for (const t of await decodeTrees(treeBuf)) {
+    stands.push({ x: t.x, y: ground(t.x, t.z), z: t.z, height: t.height, sprite: t.sprite });
+    blockers.add(t.x, t.z, 0.35);
+  }
+  let cutouts: Mesh | null = null;
+  const buildCutouts = (q: Quality) => {
+    if (cutouts) { scene.remove(cutouts); cutouts.geometry.dispose(); (cutouts.material as ShaderMaterial).dispose(); }
+    cutouts = cutoutMesh(stands, atlas, cutTex, HAZE, [900, 7000], DRAW[q]);
+    scene.add(cutouts);
+  };
+  buildCutouts(o.quality);
   scene.add(new AmbientLight(0xffffff, 1.3));
   const sun = new DirectionalLight(0xfff1d6, 2.0);
   sun.position.copy(SUN_DIR).multiplyScalar(9000);
@@ -273,6 +297,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     setQuality: (qq) => {
       renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[qq]));
       buildGround(qq);
+      buildCutouts(qq);
       setInk(qq);
       resize();
       place();
@@ -290,6 +315,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
       sky.geometry.dispose();
       stones.dispose();
       colours.dispose();
+      cutTex.dispose();
+      cutouts?.geometry.dispose();
+      (cutouts?.material as ShaderMaterial | undefined)?.dispose();
       composer?.dispose();
       renderer.dispose();
     },

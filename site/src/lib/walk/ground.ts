@@ -136,7 +136,7 @@ const fragment = /* glsl */ `
     float green = base.g - 0.5 * (base.r + base.b);
     float big = fbm(vPos.xz * 0.045), small = fbm(vPos.xz * 0.6);
     vec3 grass = vec3(0.16, 0.2, 0.06), earth = vec3(0.38, 0.25, 0.12), rock = vec3(0.3, 0.27, 0.23);
-    vec3 near = mix(earth, grass, smoothstep(-0.005, 0.03, green + (big - 0.5) * 0.04));
+    vec3 near = mix(earth, grass, smoothstep(-0.012, 0.016, green + (big - 0.5) * 0.03));
     near = mix(near, rock, smoothstep(0.22, 0.45, steep + (small - 0.5) * 0.12));
     near = mix(near, base, 0.35) * (0.82 + 0.36 * small);
     vec3 skin = mix(base, near, (1.0 - smoothstep(80.0, 600.0, dist)) * (1.0 - beyond));

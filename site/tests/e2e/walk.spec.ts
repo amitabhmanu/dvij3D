@@ -5,6 +5,7 @@ import sharp from "sharp";
 
 // Walking the valley (design §10.2): /valley/walk/.
 const walk = JSON.parse(readFileSync(new URL("../../src/content/generated/walk.json", import.meta.url), "utf8"));
+const world = JSON.parse(readFileSync(new URL(`../../../site-assets/walk/${walk.world}`, import.meta.url), "utf8"));
 type P = { x: number; z: number; y: number; heading: number };
 type W = { walkGame: { teleport: (x: number, z: number, h?: number) => void; player: () => P } };
 
@@ -188,4 +189,15 @@ test("the quality setting applies at once and is remembered", async ({ page, isM
   await page.locator(".begin").click();
   await page.keyboard.press("Escape");
   await expect(page.getByLabel("Quality")).toHaveValue("low");
+});
+
+test("you can't walk through a building", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  const b = world.buildings.find((x: { id: string }) => x.id === "bungalow");
+  await teleport(page, b.x, b.z + 25, 0); // 25 m south of the Forest Officer's Bungalow, facing it
+  await hold(page, ["KeyW"], 6000);
+  const p = await at(page);
+  expect(Math.hypot(p.x - b.x, p.z - b.z)).toBeGreaterThanOrEqual(b.r);
+  expect(p.z).toBeLessThan(b.z + 20); // it did walk up to it
 });

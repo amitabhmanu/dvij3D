@@ -15,7 +15,7 @@ const ink = /* glsl */ `
     float behind = max(max(dist(uv + vec2(t.x, 0.0)), dist(uv - vec2(t.x, 0.0))),
                        max(dist(uv + vec2(0.0, t.y)), dist(uv - vec2(0.0, t.y))));
     float line = smoothstep(0.1, 0.22, (behind - dc) / max(dc, 1.0));
-    line *= 1.0 - smoothstep(1800.0, 4000.0, dc); // no ink in the haze, nor on the world's far edge
+    line *= 1.0 - smoothstep(1200.0, 2500.0, dc); // no ink in the haze, nor on the world's far edge
     vec3 inkColour = vec3(0.045, 0.03, 0.02);
     float grain = fract(sin(dot(floor(uv / texelSize), vec2(12.9898, 78.233))) * 43758.5453);
     vec3 c = mix(inputColor.rgb, inkColour, line * strength) * (0.975 + 0.05 * grain);
