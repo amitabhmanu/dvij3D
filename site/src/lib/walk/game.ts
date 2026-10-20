@@ -11,7 +11,7 @@ import {
   Vector2, Vector3, WebGLRenderer,
 } from "three";
 import { decodeHeights, fieldFor, heightAt, setFlat, type Field } from "./heights";
-import { loadLodge, type Lodge, type Marker } from "./lodge";
+import { loadLodge, type Look, type Lodge, type Marker } from "./lodge";
 import lodgeInfo from "../../content/generated/lodge.json";
 import { groundGeometry, groundMaterial } from "./ground";
 import { inkComposer } from "./post";
@@ -32,7 +32,7 @@ export type GameOptions = {
   volume: number;
   onProgress: (fraction: number, what: string) => void;
   /** About five times a second while walking: where you are, for the HUD and tests. */
-  onStats?: (s: { x: number; z: number; heading: number; ground: number; indoors: boolean; door: { name: string; open: boolean } | null }) => void;
+  onStats?: (s: { x: number; z: number; heading: number; ground: number; indoors: boolean; door: { name: string; open: boolean } | null; look: Look | null }) => void;
   /** Every frame: for the compass and the small map, which move with you. */
   onFrame?: (x: number, z: number, heading: number) => void;
 };
@@ -55,6 +55,9 @@ export type Game = {
   useDoor: () => boolean;
   /** Where things are in the lodge, in world metres: for fast travel and the tests. */
   lodgePoint: (name: string) => [number, number, number] | null;
+  /** Show the lodge's back-wall puzzle (for a reader who has reached it). */
+  showPatch: (on: boolean) => void;
+  patchVisible: () => boolean;
   dispose: () => void;
 };
 
@@ -332,7 +335,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       const inside = lodge?.indoors(player.x, player.z) ?? false;
       sounds?.hear({ height: inside ? 0 : player.y - rules.eye, trees: inside ? 0 : Math.min(1, woods.count(player.x, player.z, 35) / 14), water: lakeDistance(player.x, player.z) });
       o.onStats?.({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z), indoors: inside,
-        door: lodge?.doorNear(player.x, player.z) ?? null });
+        door: lodge?.doorNear(player.x, player.z) ?? null, look: lodge?.lookNear(player.x, player.z) ?? null });
     }
     raf = requestAnimationFrame(frame);
   };
@@ -388,6 +391,11 @@ export async function createGame(o: GameOptions): Promise<Game> {
       if (!d) return false;
       lodge!.toggleDoor(d.name);
       return true;
+    },
+    patchVisible: () => lodge?.patchVisible() ?? false,
+    showPatch: (on) => {
+      lodge?.showPatch(on);
+      draw();
     },
     lodgePoint: (name) => {
       const m = (lodgeInfo.markers as Marker[]).find((k) => k.name === name);

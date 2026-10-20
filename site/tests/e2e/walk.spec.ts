@@ -247,7 +247,7 @@ test("the map shows where you are and takes you to places you've reached", async
   await enter(page);
   await page.keyboard.press("KeyM");
   await expect(page.locator(".walk")).toHaveAttribute("data-screen", "map");
-  await expect(page.locator(".map-frame .spot")).toHaveCount(8);
+  await expect(page.locator(".map-frame .spot")).toHaveCount(9); // the 8 places and the lodge
   await expect(page.locator('.map-frame .spot[data-place="fort-ruins"]')).toBeDisabled(); // not reached yet
   const hill = page.locator('.map-frame .spot[data-place="gaumukh-hill"]');
   await expect(hill).toBeEnabled();
@@ -345,4 +345,40 @@ test("the lodge's model stays within its budget", async ({ page }) => {
   const res = await page.request.get(`/_assets/walk/${L.file}`);
   expect(res.status()).toBe(200);
   expect((await res.body()).length / 1024 / 1024).toBeLessThan(3);
+});
+
+test("things in the lodge can be looked at, veiled until you've read that far", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  await toLodge(page, -11.5, -11.2, -Math.PI / 2); // in the study, at the desk
+  await expect(page.locator(".prompt")).toHaveText(/Look at the Professor's desk/);
+  await page.keyboard.press("KeyE");
+  const card = page.locator('.place-card[data-look="study-desk"]');
+  await expect(card).toHaveAttribute("data-veiled", ""); // a fresh reader hasn't reached b1 p4
+  await card.getByRole("button", { name: "Show it" }).click();
+  await expect(card).toContainText("north-west corner");
+  await expect(card.getByRole("link", { name: "B2 p27" })).toHaveAttribute("href", "/read/b2/27");
+});
+
+test("the map takes you to the lodge's gate", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  await enter(page);
+  await page.keyboard.press("KeyM");
+  await page.locator('.map-frame .spot[data-place="lodge"]').click();
+  await expect(page.locator(".walk")).toHaveAttribute("data-screen", "playing");
+  const p = local(await at(page));
+  expect(Math.abs(p.x)).toBeLessThan(3);
+  expect(p.z).toBeGreaterThan(70);
+});
+
+test("the back wall's painted patch shows only to readers who have reached it", async ({ page, isMobile }) => {
+  test.skip(isMobile, "keyboard play is a desktop feature");
+  type V = { walkGame: { patchVisible: () => boolean } };
+  await enter(page);
+  expect(await page.evaluate(() => (window as unknown as V).walkGame.patchVisible())).toBe(false);
+  await page.goto("/read/b3/17");
+  await page.locator('.reader[data-hydrated="true"]').waitFor();
+  await page.waitForFunction(() => !!localStorage.getItem("twice-born:v1"));
+  await enter(page);
+  expect(await page.evaluate(() => (window as unknown as V).walkGame.patchVisible())).toBe(true);
 });

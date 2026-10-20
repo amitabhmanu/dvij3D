@@ -197,3 +197,56 @@ questions:
   shape: >
     Square round the court (novel ¶164, comic b3-p031-1). A few panels draw a
     longer house with dormers and a chimney (b1-p008-6); taken as panel licence.
+
+# Things to look at inside (design §10.3, L4). Walking up to one offers
+# "E: Look at …"; its card quotes the book briefly and links to the comic pages
+# that show it, veiled until the reader has reached the first of them, like
+# every spoiler on the site. `at` is in the plan's frame, metres.
+looks:
+  - id: dvij-bed
+    label: The bed where Dvij wakes
+    at: [-14.5, 1.2, 7.5]
+    text: He wakes in a strange room to peeling plaster, dark beams and a still ceiling fan.
+    pages: [b1-p004]
+    sources: [novel ¶160, comic b1-p004-1, comic b1-p004-5]
+  - id: courtyard
+    label: The courtyard
+    at: [0, 0.6, 3]
+    text: '"The room opened into a large, wonderfully sunlit courtyard." Rusting bars and torn fibreglass keep the monkeys out.'
+    pages: [b1-p004, b3-p031]
+    sources: [novel ¶193, comic b1-p004-7, comic b3-p031-1]
+  - id: study-desk
+    label: The Professor's desk
+    at: [-12.8, 1.5, -12.6]
+    text: The study in the north-west corner, crowded to the ceiling with books, a veena by the window and the cowry board game on the desk.
+    pages: [b1-p004, b1-p007, b2-p027, b2-p033, b3-p016]
+    sources: [novel ¶949, novel ¶1286, comic b1-p004-8, comic b2-p027-9, comic b2-p033-11]
+  - id: god-wall
+    label: The wall of god-prints
+    at: [15.2, 2.8, -13.0]
+    text: Portraits of gods on the cleanest part of the kitchen wall, a lamp and dhoop burning beneath them.
+    pages: [b1-p010, b4-p001]
+    sources: [novel ¶195, novel ¶1942, comic b1-p010-2, comic b4-p001-2]
+  - id: tandoor
+    label: Maharaj's oven
+    at: [14.7, 1.2, -14.4]
+    text: At the deep end of the kitchen Maharaj stokes the fire; the wall and ceiling around it are black with soot.
+    pages: [b1-p010]
+    sources: [novel ¶195, comic b1-p010-2]
+  - id: well
+    label: The well
+    at: [-18, 0.8, 38]
+    text: A very deep well, its brick walls slimy, the wooden frame for the bucket fallen in.
+    pages: [b1-p008, b1-p009]
+    sources: [novel ¶168, novel ¶169, comic b1-p008-6, comic b1-p009-1]
+  - id: gate
+    label: The cast-iron gate
+    at: [0, 1.5, 75]
+    text: '"The decaying magnificence of the building could be enjoyed in entirety when one leaned back on the rusting bars of the gate."'
+    pages: [b1-p008, b2-p027, b3-p030, b4-p001]
+    sources: [novel ¶164, comic b1-p008-2, comic b2-p027-5, comic b3-p030-1]
+
+# The back wall's green patch is a puzzle in the book (novel ¶1446-1451): it
+# shows only to readers who have reached the page where it is worked out
+# (comic b3-p016-8, the drawn plan of the back wall).
+back_wall_patch: {page: b3-p016, sources: [novel ¶1446, novel ¶1568, comic b3-p016-8]}

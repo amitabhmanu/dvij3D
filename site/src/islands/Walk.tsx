@@ -15,6 +15,12 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import type { Game, Quality } from "../lib/walk/game";
 import { isVeiled, revealAll, type FirstSeen } from "../lib/spoilers";
 import { walk } from "../lib/walk/walk-data";
+import type { Look } from "../lib/walk/lodge";
+import lodgeInfo from "../content/generated/lodge.json";
+
+/** "b1-p004" -> Book 1, page 4. */
+const pageRef = (id: string) => ({ book: Number(id.slice(1, id.indexOf("-"))), page: Number(id.slice(id.indexOf("-p") + 2)) });
+const PATCH_PAGE = (lodgeInfo.markers as { kind?: string; page?: string }[]).find((m) => m.kind === "spoiler")?.page ?? "b3-p016";
 
 export type WalkPlace = {
   id: string; name: string; fiction: string; book: string; firstSeen: FirstSeen;
@@ -22,7 +28,7 @@ export type WalkPlace = {
   pages: { book: number; page: number }[];
 };
 type Props = { heightUrl: string; worldUrl: string; groundUrl: string; mapUrl: string; backUrl: string; places: WalkPlace[] };
-type Screen = "start" | "loading" | "ready" | "playing" | "paused" | "card" | "map" | "nogl" | "failed";
+type Screen = "start" | "loading" | "ready" | "playing" | "paused" | "card" | "look" | "map" | "nogl" | "failed";
 type Saved = { sensitivity?: number; invertY?: boolean; quality?: Quality; real?: boolean; volume?: number };
 
 const KEY = "twice-born:walk:v1";
@@ -59,6 +65,10 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const nearRef = useRef<string | null>(null);
   nearRef.current = near;
   const [door, setDoor] = useState<{ name: string; open: boolean } | null>(null);
+  const [look, setLook] = useState<Look | null>(null);
+  const [looking, setLooking] = useState<Look | null>(null);
+  const lookRef = useRef(look);
+  lookRef.current = look;
   const [indoors, setIndoors] = useState(false);
   const doorRef = useRef(door);
   doorRef.current = door;
@@ -95,8 +105,9 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     }
   };
 
-  const onStats = (s: { x: number; z: number; heading: number; door?: { name: string; open: boolean } | null; indoors?: boolean }) => {
+  const onStats = (s: { x: number; z: number; heading: number; door?: { name: string; open: boolean } | null; indoors?: boolean; look?: Look | null }) => {
     setDoor(s.door ?? null);
+    setLook(s.look ?? null);
     setIndoors(!!s.indoors);
     setStats(s);
     let best: string | null = null, bestD = Infinity;
@@ -124,6 +135,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
       if (new URLSearchParams(location.search).has("test")) (window as unknown as { walkGame: Game }).walkGame = game.current;
       game.current.settings.sensitivity = prefs.sensitivity ?? 1;
       game.current.settings.invertY = !!prefs.invertY;
+      game.current.showPatch(patchShown());
       setScreen("ready");
     } catch (err) {
       console.error("The valley could not load:", err);
@@ -149,6 +161,14 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     if (document.pointerLockElement) document.exitPointerLock();
   };
 
+  const lookAt = (l: Look) => {
+    setLooking(l);
+    stop("look");
+  };
+
+  // The back wall's painted patch is a puzzle: shown once the reader has reached it.
+  const patchShown = () => !isVeiled(pageRef(PATCH_PAGE));
+
   const readCard = (id: string) => {
     setOpen(id);
     stop("card");
@@ -156,6 +176,12 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
 
   const travel = (id: string) => {
     const g = game.current, s = spots.get(id);
+    if (g && id === "lodge") { // the lodge's own arrival point: inside its gate, facing the house
+      const at = g.lodgePoint("arrive:gate");
+      if (at) g.teleport(at[0], at[2], 0);
+      play();
+      return;
+    }
     if (!g || !s) return;
     const [x, z] = g.standable(s.x, s.z + Math.min(60, s.r * 0.4)); // a little south of it, looking north at it
     g.teleport(x, z, Math.atan2(s.x - x, -(s.z - z)));
@@ -170,9 +196,10 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
       if (screenRef.current === "playing") {
         if (e.code === "Escape") stop("paused");
         else if (e.code === "KeyE" && doorRef.current) game.current?.useDoor(); // a door at hand comes first
+        else if (e.code === "KeyE" && lookRef.current) lookAt(lookRef.current);
         else if (e.code === "KeyE" && nearRef.current) readCard(nearRef.current);
         else if (e.code === "KeyM") stop("map");
-      } else if ((screenRef.current === "card" || screenRef.current === "map") && (e.code === "Escape" || e.code === "KeyM" || e.code === "KeyE")) {
+      } else if ((screenRef.current === "card" || screenRef.current === "map" || screenRef.current === "look") && (e.code === "Escape" || e.code === "KeyM" || e.code === "KeyE")) {
         e.preventDefault();
         stop("ready"); // back to "click to keep walking", which takes the pointer lock again
       }
@@ -240,7 +267,12 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
             <kbd>E</kbd> {door.open ? "Shut the door" : "Open the door"}
           </button>
         )}
-        {hud && !door && nearPlace && (
+        {hud && !door && look && (
+          <button type="button" class="prompt" onClick={() => lookAt(look)}>
+            <kbd>E</kbd> Look at {look.label.replace(/^The /, "the ")}
+          </button>
+        )}
+        {hud && !door && !look && nearPlace && (
           <button type="button" class="prompt" onClick={() => readCard(nearPlace.id)}>
             <kbd>E</kbd> Read about {label(nearPlace)}
           </button>
@@ -313,6 +345,36 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         </section>
       )}
 
+      {screen === "look" && looking && (() => {
+        const first = looking.pages[0] ? pageRef(looking.pages[0]) : null;
+        const hidden = !!first && !shown[`look:${looking.id}`] && isVeiled(first);
+        return (
+          <section class="card place-card" aria-labelledby="look-title" data-look={looking.id} data-veiled={hidden ? "" : undefined}>
+            <h2 id="look-title">{looking.label}</h2>
+            {hidden ? (
+              <div class="veil-notice" role="note">
+                <span>Spoiler: this first comes up in Book {first!.book}, page {first!.page}, further than you've read.</span>
+                <span class="acts">
+                  <button type="button" onClick={() => setShown({ ...shown, [`look:${looking.id}`]: true })}>Show it</button>
+                  <button type="button" onClick={() => { revealAll(); setVeilTick(veilTick + 1); game.current?.showPatch(patchShown()); }}>Show all spoilers</button>
+                </span>
+              </div>
+            ) : (
+              <>
+                <p class="book">{looking.text}</p>
+                <p class="pages">In the comic:{" "}
+                  {looking.pages.map((id, i) => {
+                    const r = pageRef(id);
+                    return <>{i > 0 && " · "}<a href={`/read/b${r.book}/${r.page}`} target="_blank" rel="noopener">B{r.book} p{r.page}</a></>;
+                  })}
+                </p>
+              </>
+            )}
+            <button type="button" class="go" onClick={play} autofocus>Keep walking</button>
+          </section>
+        );
+      })()}
+
       {screen === "card" && card && (
         <section class="card place-card" aria-labelledby="place-title" data-place={card.id} data-veiled={veiled(card) ? "" : undefined}>
           <h2 id="place-title">{label(card)}</h2>
@@ -322,7 +384,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
               <span>Spoiler: this first comes up in Book {card.firstSeen!.book}, page {card.firstSeen!.page}, further than you've read.</span>
               <span class="acts">
                 <button type="button" onClick={() => setShown({ ...shown, [card.id]: true })}>Show it</button>
-                <button type="button" onClick={() => { revealAll(); setVeilTick(veilTick + 1); }}>Show all spoilers</button>
+                <button type="button" onClick={() => { revealAll(); setVeilTick(veilTick + 1); game.current?.showPatch(patchShown()); }}>Show all spoilers</button>
               </span>
             </div>
           ) : (
@@ -348,6 +410,15 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <div class="map-frame">
             <img src={mapUrl} alt="The book's map of the valley, with you marked on it." />
             <span class="me" style={{ left: `${onMap(stats.x, stats.z)[0] * 100}%`, top: `${onMap(stats.x, stats.z)[1] * 100}%` }} />
+            {(() => {
+              const [u, v] = onMap(walk.lodge.x, walk.lodge.z);
+              return (
+                <button type="button" class="spot" style={{ left: `${u * 100}%`, top: `${v * 100}%` }}
+                        data-place="lodge" onClick={() => travel("lodge")} title="Go to the Professor's lodge">
+                  The Professor's lodge
+                </button>
+              );
+            })()}
             {places.map((p) => {
               const s = spots.get(p.id);
               if (!s) return null;

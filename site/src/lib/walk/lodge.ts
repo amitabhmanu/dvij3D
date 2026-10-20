@@ -13,7 +13,11 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { MeshBVH } from "three-mesh-bvh";
 
-export type Marker = { name: string; at: [number, number, number]; label?: string; heading?: number; kind?: string; rect?: string; room?: string };
+export type Marker = {
+  name: string; at: [number, number, number]; label?: string; heading?: number; kind?: string; rect?: string;
+  room?: string; text?: string; pages?: string[]; page?: string;
+};
+export type Look = { id: string; label: string; text: string; pages: string[] };
 export type LodgeInfo = {
   url: string;
   at: { x: number; y: number; z: number };
@@ -44,6 +48,11 @@ export type Lodge = {
   /** The doorway within reach of (x, z), if any, and whether its door is open. */
   doorNear: (x: number, z: number) => { name: string; open: boolean } | null;
   toggleDoor: (name: string) => void;
+  /** Something to look at within reach of (x, z), if any (lodge.yaml `looks`). */
+  lookNear: (x: number, z: number) => Look | null;
+  /** Show the back wall's painted patch: a puzzle, for readers who have reached it. */
+  showPatch: (on: boolean) => void;
+  patchVisible: () => boolean;
   update: (dt: number) => void;
   dispose: () => void;
 };
@@ -163,6 +172,21 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
       const pair = best.name.replace(/(\d)[LR]$/, "$1");
       return { name: pair, open: best.open };
     },
+    lookNear: (x, z) => {
+      const [lx, lz] = local(x, z);
+      let best: Marker | null = null, bestD = Infinity;
+      for (const m of info.markers) {
+        if (m.kind !== "look") continue;
+        const reachOf = Math.abs(m.at[0]) > info.half || Math.abs(m.at[2]) > info.half ? 4.5 : 2.8; // things outdoors are seen from further
+        const d = Math.hypot(lx - m.at[0], lz - m.at[2]);
+        if (d < reachOf && d < bestD) { best = m; bestD = d; }
+      }
+      return best ? { id: best.name.slice(5), label: best.label ?? "", text: best.text ?? "", pages: best.pages ?? [] } : null;
+    },
+    showPatch: (on) => {
+      if (patch) patch.visible = on;
+    },
+    patchVisible: () => !!patch?.visible,
     toggleDoor: (name) => {
       for (const d of doors) if (d.name === name || d.name.replace(/(\d)[LR]$/, "$1") === name) d.open = !d.open;
     },

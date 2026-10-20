@@ -164,6 +164,35 @@
    "rect": "[-10.5, -10.5, 10.5, 10.5]"
   },
   {
+   "name": "look:dvij-bed",
+   "at": [
+    -14.5,
+    1.2,
+    7.5
+   ],
+   "kind": "look",
+   "label": "The bed where Dvij wakes",
+   "text": "He wakes in a strange room to peeling plaster, dark beams and a still ceiling fan.",
+   "pages": [
+    "b1-p004"
+   ]
+  },
+  {
+   "name": "look:courtyard",
+   "at": [
+    0,
+    0.6,
+    3
+   ],
+   "kind": "look",
+   "label": "The courtyard",
+   "text": "\"The room opened into a large, wonderfully sunlit courtyard.\" Rusting bars and torn fibreglass keep the monkeys out.",
+   "pages": [
+    "b1-p004",
+    "b3-p031"
+   ]
+  },
+  {
    "name": "look:study-desk",
    "at": [
     -12.8,
@@ -171,8 +200,15 @@
     -12.6
    ],
    "kind": "look",
-   "label": "The Professor's desk and the board game",
-   "room": "study"
+   "label": "The Professor's desk",
+   "text": "The study in the north-west corner, crowded to the ceiling with books, a veena by the window and the cowry board game on the desk.",
+   "pages": [
+    "b1-p004",
+    "b1-p007",
+    "b2-p027",
+    "b2-p033",
+    "b3-p016"
+   ]
   },
   {
    "name": "look:god-wall",
@@ -183,40 +219,25 @@
    ],
    "kind": "look",
    "label": "The wall of god-prints",
-   "room": "kitchen"
+   "text": "Portraits of gods on the cleanest part of the kitchen wall, a lamp and dhoop burning beneath them.",
+   "pages": [
+    "b1-p010",
+    "b4-p001"
+   ]
   },
   {
    "name": "look:tandoor",
    "at": [
-    14.6,
-    1.5,
-    -15.0
-   ],
-   "kind": "look",
-   "label": "Maharaj's tandoor",
-   "room": "kitchen"
-  },
-  {
-   "name": "look:courtyard",
-   "at": [
-    0,
-    0.6,
-    0
-   ],
-   "kind": "look",
-   "label": "The courtyard",
-   "room": "corridor"
-  },
-  {
-   "name": "look:dvij-bed",
-   "at": [
-    -14.5,
+    14.7,
     1.2,
-    7.5
+    -14.4
    ],
    "kind": "look",
-   "label": "The bed where Dvij wakes",
-   "room": "dvij-room"
+   "label": "Maharaj's oven",
+   "text": "At the deep end of the kitchen Maharaj stokes the fire; the wall and ceiling around it are black with soot.",
+   "pages": [
+    "b1-p010"
+   ]
   },
   {
    "name": "look:well",
@@ -227,7 +248,11 @@
    ],
    "kind": "look",
    "label": "The well",
-   "room": ""
+   "text": "A very deep well, its brick walls slimy, the wooden frame for the bucket fallen in.",
+   "pages": [
+    "b1-p008",
+    "b1-p009"
+   ]
   },
   {
    "name": "look:gate",
@@ -238,7 +263,23 @@
    ],
    "kind": "look",
    "label": "The cast-iron gate",
-   "room": ""
+   "text": "\"The decaying magnificence of the building could be enjoyed in entirety when one leaned back on the rusting bars of the gate.\"",
+   "pages": [
+    "b1-p008",
+    "b2-p027",
+    "b3-p030",
+    "b4-p001"
+   ]
+  },
+  {
+   "name": "spoiler:back-wall-patch",
+   "at": [
+    0,
+    2.9,
+    -16.0
+   ],
+   "kind": "spoiler",
+   "page": "b3-p016"
   }
  ]
 }

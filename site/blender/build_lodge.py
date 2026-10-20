@@ -859,17 +859,10 @@ def markers():
         x0, z0, x1, z1 = r["rect"]
         empty(f"room:{r['id']}", (x0 + x1) / 2, FLOOR + 1, (z0 + z1) / 2, kind="room", label=r["name"], rect=json.dumps(r["rect"]))
     empty("room:corridor", 0, FLOOR + 1, 0, kind="room", label="The pillared corridor", rect=json.dumps([-RING, -RING, RING, RING]))
-    looks = [
-        ("study-desk", -12.8, FLOOR + 0.9, -12.6, "The Professor's desk and the board game", "study"),
-        ("god-wall", 15.2, FLOOR + 2.2, -13.0, "The wall of god-prints", "kitchen"),
-        ("tandoor", 14.6, FLOOR + 0.9, -15.0, "Maharaj's tandoor", "kitchen"),
-        ("courtyard", 0, FLOOR, 0, "The courtyard", "corridor"),
-        ("dvij-bed", -14.5, FLOOR + 0.6, 7.5, "The bed where Dvij wakes", "dvij-room"),
-        ("well", gr["well"]["at"][0], 0.8, gr["well"]["at"][1], "The well", None),
-        ("gate", gx, 1.5, gz, "The cast-iron gate", None),
-    ]
-    for lid, x, y, z, label, room in looks:
-        empty(f"look:{lid}", x, y, z, kind="look", label=label, room=room or "")
+    for lk in spec["looks"]:
+        x, y, z = lk["at"]
+        empty(f"look:{lk['id']}", x, y, z, kind="look", label=lk["label"], text=lk["text"], pages=lk["pages"])
+    empty("spoiler:back-wall-patch", 0, FLOOR + 2.3, -HALF, kind="spoiler", page=spec["back_wall_patch"]["page"])
 
 
 def collision_object(col):
