@@ -125,9 +125,27 @@ const storyPages = Object.fromEntries(
   .walk .words .subtitle b { color: #e9b77f; }
   .walk .skip { position: absolute; bottom: 14px; right: 14px; border: 0; border-radius: 999px; padding: 6px 12px;
     background: rgb(43 36 28 / 55%); color: #efe3c8; font: 600 0.8rem var(--font-ui); cursor: pointer; }
+  .walk .story-acts { position: absolute; bottom: 14px; right: 14px; display: flex; gap: 8px; }
+  .walk .story-acts .skip { position: static; }
+  .walk .film-bar { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2; pointer-events: auto;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: calc(100% - 32px);
+    padding: 6px 10px; border-radius: 999px; background: rgb(43 36 28 / 78%); color: #efe3c8; font: 600 0.85rem var(--font-ui); }
+  .walk .film-bar button { min-width: 34px; height: 34px; border: 0; border-radius: 999px; background: transparent; color: inherit;
+    font: inherit; cursor: pointer; }
+  .walk .film-bar button:hover, .walk .film-bar button:focus-visible { background: rgb(245 236 218 / 18%); outline: none; }
+  .walk .film-bar button:disabled { opacity: 0.35; cursor: default; }
+  .walk .film-bar .big { width: 42px; height: 42px; background: #efe3c8; color: var(--ink); }
+  .walk .film-bar .big:hover { background: #fff; }
+  .walk .film-bar .speeds { display: flex; gap: 2px; margin-left: 6px; padding-left: 8px; border-left: 1px solid rgb(239 227 200 / 30%); }
+  .walk .film-bar .speeds button { min-width: 38px; }
+  .walk .film-bar .speeds button[aria-pressed="true"] { background: #e9b77f; color: var(--ink); }
+  .walk .film-bar .now { padding: 0 8px; opacity: 0.85; white-space: nowrap; }
+  .walk .film-bar .take { padding: 0 12px; border: 1px solid rgb(239 227 200 / 45%); }
+  .walk[data-watching] .words { bottom: 90px; }
+  .walk[data-watching] .hud { z-index: 3; } /* the film bar stays on top of a comic page */
   .walk .story-overlay { position: absolute; inset: 0; border: 0; padding: 16px; display: grid; place-items: center; cursor: pointer;
     background: rgb(20 16 12 / 92%); color: #efe3c8; font: inherit; }
-  .walk .story-overlay.reflection { background: rgb(20 16 12 / 55%); }
+  .walk .story-overlay.is-reflection { background: rgb(20 16 12 / 55%); }
   .walk .chapter-card { display: grid; gap: 10px; text-align: center; }
   .walk .chapter-card strong { font: 2.6rem var(--font-display); }
   .walk .chapter-card em { font: italic 1.1rem var(--font-body); opacity: 0.85; }

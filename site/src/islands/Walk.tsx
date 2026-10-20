@@ -11,6 +11,8 @@
 // Story mode (design §10.4, "Play the story" or ?story): the game plays the
 // book's scenes, Dvij is the player, and the screen carries the words: captions,
 // subtitles, what to do next, chapter cards and the comic's own pages.
+// Watch mode ("Watch it play" or ?watch) is the same story playing itself, like
+// a film: pause, slow motion, fast forward, chapter back and forward, restart.
 //
 // Spoilers follow the rest of the site (§5.5): a place's name shows as the
 // book's map draws it, and what the book says about it is veiled until the
@@ -104,10 +106,26 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const advance = useRef<(() => void) | null>(null);
   const objectiveRef = useRef(objective);
   objectiveRef.current = objective;
+  // Watch mode: the story plays itself
+  const [watching, setWatching] = useState(false);
+  const watchingRef = useRef(false);
+  watchingRef.current = watching;
+  const [held, setHeld] = useState(false); // paused, with the film bar still showing
+  const heldRef = useRef(false);
+  heldRef.current = held;
+  const [rate, setRate] = useState(1);
+  const rateRef = useRef(1);
+  rateRef.current = rate;
+  const [chapters, setChapters] = useState<{ id: string; title: string }[]>([]);
+  const chaptersRef = useRef(chapters);
+  chaptersRef.current = chapters;
+  const shownId = useRef(0); // which caption, subtitle or overlay is on screen: a newer one isn't hidden by an older one ending
 
   useEffect(() => {
     setPrefs({ sensitivity: 1, invertY: false, quality: defaultQuality(), real: false, volume: 0.7, ...load() });
-    if (new URLSearchParams(location.search).has("story")) setStory(true);
+    const q = new URLSearchParams(location.search);
+    if (q.has("story") || q.has("watch")) setStory(true);
+    if (q.has("watch")) setWatching(true);
     setSaved(loadSaved());
     return () => game.current?.dispose();
   }, []);
@@ -152,9 +170,11 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     setNear(best);
   };
 
-  const enter = async (asStory = storyRef.current, from: { scene: string; beat?: string } | null = null) => {
+  const enter = async (asStory = storyRef.current, from: { scene: string; beat?: string } | null = null, watch = watchingRef.current) => {
     storyRef.current = asStory;
     setStory(asStory);
+    watchingRef.current = asStory && watch;
+    setWatching(asStory && watch);
     fromWhere.current = from;
     if (!hasWebGL2()) return setScreen("nogl");
     setScreen("loading");
@@ -183,16 +203,26 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   };
 
   // ---- story mode -------------------------------------------------------------
-  const paused = () => screenRef.current !== "playing";
-  /** Show something until a press, or for `seconds` of play if given. */
-  const until = async (show: () => void, hide: () => void, seconds?: number) => {
+  const paused = () => screenRef.current !== "playing" || heldRef.current;
+  /** Show something until a press, or for `seconds` of the story's time if given (always, when watching). */
+  const until = async (show: () => void, hide: () => void, seconds?: number, watchSeconds = seconds) => {
     const { sleep } = await import("../lib/story/stage"); // already loaded with the game
     let pressed = false;
+    const id = ++shownId.current;
+    // story time this has been showing, for watch mode's longer reads (a comic page)
+    let shownFor = 0, last = performance.now();
+    const elapsed = () => {
+      const now = performance.now();
+      if (!paused()) shownFor += ((now - last) / 1000) * rateRef.current;
+      last = now;
+      return shownFor;
+    };
     show();
-    advance.current = () => { pressed = true; };
-    await sleep(seconds ?? 1e9, paused, () => pressed);
-    advance.current = null;
-    hide();
+    const mine = () => { pressed = true; };
+    advance.current = mine;
+    await sleep(seconds ?? 1e9, paused, () => pressed || (watchingRef.current && watchSeconds !== undefined && elapsed() >= watchSeconds), () => rateRef.current);
+    if (advance.current === mine) advance.current = null;
+    if (shownId.current === id) hide();
   };
   const readTime = (text: string) => Math.max(2.5, 1.2 + text.split(/\s+/).length * 0.27);
 
@@ -207,7 +237,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
       hint: setHint,
       card: (title, subtitle) => until(() => setOverlay({ kind: "card", title, subtitle }), () => setOverlay(null), 4),
       panels: async (pages) => {
-        for (let i = 0; i < pages.length; i++) await until(() => setOverlay({ kind: "page", id: pages[i], n: i + 1, of: pages.length }), () => setOverlay(null));
+        for (let i = 0; i < pages.length; i++) await until(() => setOverlay({ kind: "page", id: pages[i], n: i + 1, of: pages.length }), () => setOverlay(null), undefined, 9);
       },
       reflection: (panel) => until(() => setOverlay({ kind: "reflection", panel }), () => setOverlay(null), 7),
       ended: (_sc: Scene, next) => {
@@ -215,9 +245,12 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         else { setSaved(null); stop("the-end"); }
       },
       paused,
+      rate: () => rateRef.current,
     });
     stage.current = st;
+    st.setAuto(watchingRef.current);
     director.current = new Director(st, (data.default ?? data).scenes as unknown as Scene[]);
+    setChapters(director.current.order);
     // the screen shows which scene and beat play, for the tests and for anyone curious
     setInterval(() => {
       const c = director.current?.current;
@@ -236,6 +269,55 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     director.current?.skip();
     advance.current?.();
   };
+  // ---- watch mode's film bar -----------------------------------------------------
+  /** Clear the words and pictures on screen: a new scene is starting. */
+  const clearScreen = () => {
+    shownId.current++;
+    advance.current?.();
+    setCaption(null); setSub(null); setObjective(null); setHint(null); setOverlay(null);
+  };
+  const goTo = (id: string) => {
+    clearScreen();
+    director.current?.play(id);
+  };
+  // (these run from the key handler, set up once: they read the chapters through a ref)
+  const chapterAt = () => chaptersRef.current.findIndex((c) => c.id === director.current?.current?.scene);
+  const nextChapter = () => {
+    const all = chaptersRef.current, i = chapterAt();
+    if (i >= 0 && i + 1 < all.length) goTo(all[i + 1].id);
+  };
+  const prevChapter = () => goTo(chaptersRef.current[Math.max(0, chapterAt() - 1)].id);
+  const restart = () => {
+    if (screenRef.current === "the-end") play();
+    goTo(chaptersRef.current[0].id);
+  };
+  const hold = (on: boolean) => {
+    heldRef.current = on;
+    setHeld(on);
+    if (on) game.current?.pause();
+    else game.current?.start();
+  };
+  const speed = (r: number) => {
+    rateRef.current = r;
+    setRate(r);
+    game.current?.body.rate(r);
+  };
+  const RATES = [0.5, 1, 2, 4];
+  const faster = (by: number) => speed(RATES[Math.min(RATES.length - 1, Math.max(0, RATES.indexOf(rateRef.current) + by))]);
+  /** Watch it play, or take over and play it yourself (and back). */
+  const watch = (on: boolean) => {
+    watchingRef.current = on;
+    setWatching(on);
+    stage.current?.setAuto(on);
+    if (on) {
+      if (document.pointerLockElement) document.exitPointerLock();
+    } else {
+      hold(false);
+      speed(1);
+      if (!touchFirst()) Promise.resolve(canvas.current?.requestPointerLock?.()).catch(() => {});
+    }
+  };
+
   const leaveStory = () => {
     director.current?.stop();
     stage.current?.dispose();
@@ -243,7 +325,8 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     if (g) { g.body.hold("free"); g.body.injured(false); g.body.sight.set({ blur: 0, double: 0, dark: 0, flash: 0, glare: 0 }); }
     storyRef.current = false;
     setStory(false);
-    setCaption(null); setSub(null); setObjective(null); setHint(null); setOverlay(null);
+    clearScreen();
+    watch(false);
     play();
   };
 
@@ -255,7 +338,9 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
       const from = fromWhere.current;
       setTimeout(() => director.current?.play(from?.scene ?? "b1-ch01", from?.beat), 0);
     }
-    if (!touchFirst()) {
+    heldRef.current = false;
+    setHeld(false);
+    if (!touchFirst() && !watchingRef.current) {
       // Ask for the pointer lock; if the browser says no, dragging still looks around.
       Promise.resolve(canvas.current?.requestPointerLock?.()).catch(() => {});
     }
@@ -299,13 +384,23 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
 
   useEffect(() => {
     const onLock = () => {
-      if (!document.pointerLockElement && screenRef.current === "playing") stop("paused");
+      if (!document.pointerLockElement && screenRef.current === "playing" && !watchingRef.current) stop("paused");
     };
     const onKey = (e: KeyboardEvent) => {
-      if (screenRef.current === "playing" && storyRef.current) {
+      if (screenRef.current === "playing" && watchingRef.current) {
+        if (e.code === "Escape") stop("paused");
+        else if (e.code === "Space" || e.code === "KeyP") { e.preventDefault(); hold(!heldRef.current); }
+        else if (e.code === "ArrowRight" || e.code === "KeyK") nextChapter();
+        else if (e.code === "ArrowLeft") prevChapter();
+        else if (e.code === "Period" || e.code === "ArrowUp") faster(1);
+        else if (e.code === "Comma" || e.code === "ArrowDown") faster(-1);
+        else if (e.code === "Home" || e.code === "KeyR") restart();
+        else if (e.code === "KeyE" || e.code === "Enter") advance.current?.();
+      } else if (screenRef.current === "playing" && storyRef.current) {
         if (e.code === "Escape") stop("paused");
         else if (e.code === "KeyE" || e.code === "Space") { e.preventDefault(); storyPress(); }
         else if (e.code === "KeyK") skipScene();
+        else if (e.code === "KeyL") watch(true);
       } else if (screenRef.current === "playing") {
         if (e.code === "Escape") stop("paused");
         else if (e.code === "KeyE" && doorRef.current) game.current?.useDoor(); // a door at hand comes first
@@ -364,7 +459,8 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
 
   return (
     <div class="walk" data-screen={screen} data-indoors={indoors ? "true" : undefined} data-x={stats.x.toFixed(1)} data-z={stats.z.toFixed(1)} data-heading={deg}
-         data-near={near ?? undefined} data-story={story ? where?.scene ?? "" : undefined} data-beat={story ? where?.beat : undefined}>
+         data-near={near ?? undefined} data-story={story ? where?.scene ?? "" : undefined} data-beat={story ? where?.beat : undefined}
+         data-watching={story && watching ? "" : undefined} data-held={held ? "" : undefined} data-rate={story ? rate : undefined}>
       <canvas ref={canvas} class="walk-canvas" />
 
       {/* The HUD stays in the page so the frame hook can move it; it shows only while walking. */}
@@ -381,7 +477,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <img src={mapUrl} alt="" />
           <span class="me" ref={dot} />
         </div>
-        {hud && door && !objective?.ready && !overlay && (
+        {hud && door && !(story && watching) && !objective?.ready && !overlay && (
           <button type="button" class="prompt" onClick={() => game.current?.useDoor()}>
             <kbd>E</kbd> {door.open ? "Shut the door" : "Open the door"}
           </button>
@@ -410,13 +506,42 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
                 {sub && <span class="subtitle"><b>{SPEAKER[sub.who] ?? sub.who}:</b> {sub.line}</span>}
               </button>
             )}
-            <button type="button" class="skip" onClick={skipScene}>Skip scene <kbd>K</kbd></button>
+            {!watching && (
+              <span class="story-acts">
+                <button type="button" class="skip" onClick={() => watch(true)}>Let it play <kbd>L</kbd></button>
+                <button type="button" class="skip" onClick={skipScene}>Skip scene <kbd>K</kbd></button>
+              </span>
+            )}
           </div>
         )}
+        {hud && story && watching && (() => {
+          const i = chapterAt();
+          return (
+            <div class="film-bar" role="toolbar" aria-label="The story's controls">
+              <button type="button" onClick={restart} aria-label="From the beginning" title="From the beginning (R)">⏮</button>
+              <button type="button" onClick={prevChapter} aria-label="Previous chapter" title="Previous chapter (←)">«</button>
+              <button type="button" class="big" onClick={() => hold(!held)} aria-label={held ? "Play" : "Pause"} title={`${held ? "Play" : "Pause"} (Space)`}>
+                {held ? "▶" : "❚❚"}
+              </button>
+              <button type="button" onClick={nextChapter} disabled={i + 1 >= chapters.length} aria-label="Next chapter" title="Next chapter (→)">»</button>
+              <span class="speeds" role="group" aria-label="Speed">
+                {RATES.map((r) => (
+                  <button type="button" key={r} aria-pressed={rate === r} onClick={() => speed(r)} title={r < 1 ? "Slow motion" : r > 1 ? "Fast forward" : "Normal speed"}>
+                    {r === 0.5 ? "½" : r}×
+                  </button>
+                ))}
+              </span>
+              <span class="now">{chapters[i]?.title ?? ""}</span>
+              <button type="button" class="take" onClick={() => watch(false)}>Play it yourself</button>
+            </div>
+          );
+        })()}
         {hud && (
           <>
             {!story && <button type="button" class="map-btn" onClick={() => stop("map")} aria-label="Map">M</button>}
-            <button type="button" class="pause-btn" onClick={() => stop("paused")} aria-label="Pause">II</button>
+            {story && watching
+              ? <button type="button" class="pause-btn" onClick={() => stop("paused")} aria-label="Menu" title="Menu: sound, quality, leave the story (Esc)">☰</button>
+              : <button type="button" class="pause-btn" onClick={() => stop("paused")} aria-label="Pause">II</button>}
           </>
         )}
       </div>
@@ -433,12 +558,13 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
             <p>Be Dvij, waking in the Professor's lodge after the accident: Book 1, chapters 1 to 5.</p>
             {saved ? (
               <>
-                <button type="button" class="go" onClick={() => enter(true, saved)} autofocus={story}>Continue the story</button>
-                <button type="button" class="go quiet" onClick={() => enter(true)}>Start from the beginning</button>
+                <button type="button" class="go" onClick={() => enter(true, saved, false)} autofocus={story && !watching}>Continue the story</button>
+                <button type="button" class="go quiet" onClick={() => enter(true, null, false)}>Start from the beginning</button>
               </>
             ) : (
-              <button type="button" class="go" onClick={() => enter(true)} autofocus={story}>Play the story</button>
+              <button type="button" class="go" onClick={() => enter(true, null, false)} autofocus={story && !watching}>Play the story</button>
             )}
+            <button type="button" class="go quiet" onClick={() => enter(true, null, true)} autofocus={watching}>Watch it play, like a film</button>
           </div>
           <Controls />
           <p class="back"><a href={backUrl}>Back to the map</a></p>
@@ -458,8 +584,9 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         <button type="button" class="card begin" onClick={play} autofocus>
           {story ? (
             <>
-              <strong>{begun.current ? "Carry on" : "You are Dvij."}</strong>
-              <span>{touchFirst() ? "Tap to begin. Tap the words to move them on." : "Click to begin. E, Space or a click does what the story asks; Esc pauses."}</span>
+              <strong>{begun.current ? "Carry on" : watching ? "The story plays by itself." : "You are Dvij."}</strong>
+              <span>{watching ? "Click to start. Space pauses, the arrows change chapter, < and > change the speed."
+                : touchFirst() ? "Tap to begin. Tap the words to move them on." : "Click to begin. E, Space or a click does what the story asks; Esc pauses."}</span>
             </>
           ) : (
             <>
@@ -597,7 +724,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
       )}
 
       {hud && story && overlay && (
-        <button type="button" class={`story-overlay ${overlay.kind}`} onClick={storyPress} data-overlay={overlay.kind}>
+        <button type="button" class={`story-overlay is-${overlay.kind}`} onClick={storyPress} data-overlay={overlay.kind}>
           {overlay.kind === "card" && (
             <span class="chapter-card"><strong>{overlay.title}</strong>{overlay.subtitle && <em>{overlay.subtitle}</em>}</span>
           )}
@@ -629,6 +756,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <h2 id="end-title">To be continued</h2>
           <p>That's as far as the story plays for now: the opening of Book 1, chapters 1 to 5. The comic carries on from page 11.</p>
           <a class="go" href="/read/b1/11">Read on in the comic</a>
+          {watching && <button type="button" class="go quiet" onClick={restart}>Watch it again</button>}
           <button type="button" class="go quiet" onClick={leaveStory}>Walk the valley freely</button>
           <p class="back"><a href={backUrl}>Back to the map</a></p>
         </section>

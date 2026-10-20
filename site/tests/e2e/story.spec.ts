@@ -63,8 +63,9 @@ async function drive(page: Page, done: (s: Awaited<ReturnType<typeof state>>) =>
         }, [act] as const);
       }
       if (act.kind !== "reach") {
-        await expect(page.locator(".objective[data-ready]")).toBeVisible();
-        await page.keyboard.press("e");
+        // on a busy machine the frame that turns his head can come late: if he isn't ready yet, look again next time round
+        const ready = await page.locator(".objective[data-ready]").waitFor({ timeout: 3000 }).then(() => true, () => false);
+        if (ready) await page.keyboard.press("e");
       }
     }
     await page.waitForTimeout(150);

@@ -49,6 +49,11 @@ export class Director {
 
   constructor(private stage: Stage, private scenes: Scene[]) {}
 
+  /** The scenes in the order they play. */
+  get order(): { id: string; title: string }[] {
+    return this.scenes.map((s) => ({ id: s.scene, title: s.title }));
+  }
+
   scene(id: string): Scene {
     const s = this.scenes.find((x) => x.scene === id);
     if (!s) throw new Error(`story: no scene ${id}`);

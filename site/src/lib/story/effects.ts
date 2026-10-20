@@ -49,6 +49,8 @@ export const CLEAR: Sight = { blur: 0, double: 0, dark: 0, flash: 0, glare: 0 };
 export class SightEffect extends Effect {
   private target: Sight = { ...CLEAR };
   private now: Sight = { ...CLEAR };
+  /** How fast the story's time runs (watch mode's slow motion and fast forward). */
+  speed = 1;
   private rate: Record<keyof Sight, number> = { blur: 1, double: 1, dark: 1, flash: 1, glare: 1 };
 
   constructor() {
@@ -75,7 +77,7 @@ export class SightEffect extends Effect {
   }
 
   override update(_r: unknown, _i: unknown, dt?: number): void {
-    const step = dt ?? 1 / 60;
+    const step = (dt ?? 1 / 60) * this.speed;
     for (const k of Object.keys(this.now) as (keyof Sight)[]) {
       const gap = this.target[k] - this.now[k];
       const move = Math.min(Math.abs(gap), this.rate[k] * step);

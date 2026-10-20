@@ -19,18 +19,21 @@ export type StoryScreen = {
   ended: (scene: Scene, next: string | null) => void;
   /** Is the game paused (the story's clock stops with it)? */
   paused: () => boolean;
+  /** How fast the story's clock runs: 0.5 slow motion, 1, 2, 4 fast forward. */
+  rate: () => number;
 };
 
 import { writeSaved } from "./saved";
 
-/** Waits `seconds` of play: paused time doesn't count. Resolves early if `early()` turns true. */
-export function sleep(seconds: number, paused: () => boolean, early: () => boolean = () => false): Promise<void> {
+/** Waits `seconds` of the story's time: paused time doesn't count, and `rate` speeds or slows it.
+ * Resolves early if `early()` turns true. */
+export function sleep(seconds: number, paused: () => boolean, early: () => boolean = () => false, rate: () => number = () => 1): Promise<void> {
   return new Promise((done) => {
     let left = seconds * 1000;
     let last = performance.now();
     const tick = () => {
       const now = performance.now();
-      if (!paused()) left -= now - last;
+      if (!paused()) left -= (now - last) * rate();
       last = now;
       if (left <= 0 || early()) done();
       else setTimeout(tick, 50);
@@ -46,6 +49,9 @@ export class StoryStage implements Stage {
   private pressed = false;
   private advance = false;
   private cancelled = false;
+  private pose = "stand";
+  /** Watch mode: the story does what each beat asks by itself, and Dvij can't be steered. */
+  private auto = false;
 
   constructor(private game: Game, private screen: StoryScreen) {}
 
@@ -60,10 +66,35 @@ export class StoryStage implements Stage {
   }
 
   private holdFor(pose: string) {
-    this.game.body.hold(pose === "stand" ? "free" : pose === "floor" ? "none" : "look");
+    this.pose = pose;
+    this.game.body.hold(this.auto ? "none" : pose === "stand" ? "free" : pose === "floor" || pose === "interlude" ? "none" : "look");
+  }
+
+  /** Watch the story (it plays itself) or play it (Dvij does what each beat asks). */
+  setAuto(on: boolean): void {
+    this.auto = on;
+    this.holdFor(this.pose);
+  }
+
+  private sleep(seconds: number, early?: () => boolean) {
+    return sleep(seconds, this.screen.paused, early, this.screen.rate);
+  }
+
+  /** Watch mode: do what the beat asks, as Dvij would. */
+  private async acted(act: Act, t: [number, number, number] | null): Promise<void> {
+    const body = this.game.body;
+    if (act.kind === "press" || !t) return this.sleep(1.2, () => this.cancelled);
+    if (act.kind === "reach") return body.walkTo([t[0], t[2]]);
+    const me = this.game.player();
+    const d = Math.hypot(t[0] - me.x, t[2] - me.z);
+    if (d > 2.2 && this.pose === "stand") await body.walkTo([t[0] + ((me.x - t[0]) / d) * 1.1, t[2] + ((me.z - t[2]) / d) * 1.1]);
+    if (this.cancelled) return;
+    await body.turnTo(t, 0.9);
+    await this.sleep(0.5, () => this.cancelled);
   }
 
   async setUp(sc: Scene): Promise<void> {
+    this.game.body.halt();
     this.props?.dispose();
     this.props = new Props((sc.props ?? []) as never);
     this.game.body.lodgeRoot()?.add(this.props.group);
@@ -71,7 +102,7 @@ export class StoryStage implements Stage {
     this.game.body.injured(false);
     const st = sc.start;
     if (st.pose === "interlude") {
-      this.game.body.hold("none");
+      this.holdFor("interlude");
       return;
     }
     const at = st.at ? this.world(st.at) : undefined;
@@ -92,7 +123,7 @@ export class StoryStage implements Stage {
         return this.screen.say(arg.who, arg.line);
       case "wait":
         this.advance = false;
-        return sleep(arg, this.screen.paused, () => this.advance);
+        return this.sleep(arg, () => this.advance);
       case "effect": {
         if (arg.faint) {
           body.hold("none");
@@ -172,14 +203,19 @@ export class StoryStage implements Stage {
       }
       return act.target ? this.world(act.target as Vec2 | Vec3) : null;
     };
-    this.screen.objective(act.objective);
+    let acting = false, acted = false;
+    this.screen.objective(this.auto ? null : act.objective);
     await new Promise<void>((done) => {
       const tick = () => {
         const me = this.game.player();
         const t = target();
         let ok = false;
         let ready = false;
-        if (act.kind === "press") {
+        if (this.auto || acting) {
+          // watching: the story does it (and once begun, finishes it, even if you take over)
+          if (!acting) { acting = true; this.acted(act, t).then(() => { acted = true; }); }
+          ok = acted;
+        } else if (act.kind === "press") {
           ok = this.pressed;
         } else if (act.kind === "reach" && t) {
           ok = Math.hypot(me.x - t[0], me.z - t[2]) < (act.radius ?? 1.5);
@@ -187,9 +223,9 @@ export class StoryStage implements Stage {
           ready = Math.hypot(me.x - t[0], me.z - t[2]) < 3.0 && body.lookingAt(t, 22);
           ok = ready && this.pressed;
         }
-        this.screen.objective(act.objective, act.kind === "press" || ready);
+        if (!acting) this.screen.objective(act.objective, act.kind === "press" || ready);
         if (!ok && this.pressed) this.pressed = false; // a press that did nothing doesn't count later
-        if (!hinted && !this.screen.paused() && performance.now() - started > 25000) {
+        if (!hinted && !acting && !this.screen.paused() && performance.now() - started > 25000) {
           hinted = true;
           this.screen.hint(act.kind === "reach" ? "Look for the way: the objective is up at the top." : "Look straight at it and press E.");
         }

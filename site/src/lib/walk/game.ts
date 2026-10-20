@@ -16,6 +16,7 @@ import lodgeInfo from "../../content/generated/lodge.json";
 import { groundGeometry, groundMaterial } from "./ground";
 import { inkComposer } from "./post";
 import { SightEffect } from "../story/effects";
+import { findRoute } from "../story/route";
 import { cutoutMesh, decodeTrees, type Stand } from "./cutouts";
 import type { EffectComposer } from "postprocessing";
 import { Input, type Settings } from "./input";
@@ -83,6 +84,14 @@ export type Body = {
   lookingAt: (p: [number, number, number], degrees: number) => boolean;
   /** Turn his head to this point, at once. */
   face: (p: [number, number, number]) => void;
+  /** Turn to look at this point over `seconds` (watch mode). */
+  turnTo: (p: [number, number, number], seconds: number) => Promise<void>;
+  /** Walk there by himself, round the walls (watch mode). */
+  walkTo: (at: [number, number]) => Promise<void>;
+  /** Stop whatever he was moving through: a new scene is starting. */
+  halt: () => void;
+  /** How fast the story's time runs: 0.5 slow motion, 1, 2 or 4 fast forward. */
+  rate: (r: number) => void;
   /** The lodge's frame -> the world's. */
   fromLodge: (x: number, y: number, z: number) => [number, number, number];
   lodgeRoot: () => import("three").Object3D | null;
@@ -293,14 +302,20 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // Story mode's hold on the body (design §10.4).
   let hold: "free" | "look" | "none" = "free";
   let eye = rules.eye, speed = 1, sway = 0, roll = 0, swayT = 0;
+  let route: { pts: [number, number][]; done: () => void } | null = null;
+  let rate = 1;
+  const release = () => {
+    for (let k = 0; tween && k < 3; k++) { const d = tween.done; tween = null; d(); } // a glance has two halves
+    if (route) { const d = route.done; route = null; d(); }
+  };
   let tween: { t: number; dur: number; from: { x: number; z: number; eye: number; heading: number; pitch: number; roll: number };
                to: { x: number; z: number; eye: number; heading: number; pitch: number; roll: number }; done: () => void } | null = null;
   const moveBy = (m: ReturnType<Input["sample"]>) => {
     if (hold !== "free") { m.forward = 0; m.strafe = 0; m.run = false; }
-    if (hold === "none" || tween) { m.turn = 0; m.look = 0; }
+    if (hold === "none" || tween || route) { m.turn = 0; m.look = 0; }
     const r = { ...rules, eye, walk: rules.walk * speed, run: rules.run * speed };
     if (tween) {
-      tween.t = Math.min(tween.dur, tween.t + STEP);
+      tween.t = Math.min(tween.dur, tween.t + STEP * rate);
       const k = tween.dur > 0 ? tween.t / tween.dur : 1;
       const e = k * k * (3 - 2 * k);
       const L = (a: number, b: number) => a + (b - a) * e;
@@ -308,6 +323,20 @@ export async function createGame(o: GameOptions): Promise<Game> {
       eye = L(tween.from.eye, tween.to.eye);
       roll = L(tween.from.roll, tween.to.roll);
       if (k >= 1) { const d = tween.done; tween = null; d(); }
+    } else if (route) {
+      // walking by himself: turn toward the next corner, and go
+      const [tx, tz] = route.pts[0];
+      const dx = tx - player.x, dz = tz - player.z, d = Math.hypot(dx, dz);
+      const dh = Math.atan2(Math.sin(Math.atan2(dx, -dz) - player.heading), Math.cos(Math.atan2(dx, -dz) - player.heading));
+      const go = rules.walk * speed * STEP * rate * (Math.abs(dh) > 1.0 ? 0.25 : 1);
+      const heading = player.heading + Math.sign(dh) * Math.min(Math.abs(dh), 3 * STEP * rate);
+      const pitch = player.pitch + (-0.08 - player.pitch) * Math.min(1, 3 * STEP * rate);
+      if (d <= go) {
+        player = { ...player, x: tx, z: tz, heading, pitch };
+        route.pts.shift();
+        if (!route.pts.length) { const r = route; route = null; r.done(); }
+      } else player = { ...player, x: player.x + (dx / d) * go, z: player.z + (dz / d) * go, heading, pitch };
+      if (speed < 1) swayT += go * 3.2;
     }
     player = step(player, m, STEP, { ...r, eye }, world);
     if (speed < 1) {
@@ -410,6 +439,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
         const flat = Math.hypot(look[0] - x, look[2] - z);
         pitch = Math.atan2(look[1] - (ground(x, z) + POSE_EYE[pose]), Math.max(flat, 0.01));
       }
+      release();
       if (seconds <= 0) {
         player = { ...player, x, z, heading, pitch, y: 0 };
         eye = POSE_EYE[pose];
@@ -425,6 +455,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     hold: (h) => { hold = h; },
     injured: (on) => { speed = on ? 0.45 : 1; sway = on ? 1 : 0; },
     glance: (pitch, seconds) => new Promise<void>((done) => {
+      release();
       const back = player.pitch;
       tween = { t: 0, dur: seconds / 2, from: { x: player.x, z: player.z, eye, heading: player.heading, pitch: back, roll },
                 to: { x: player.x, z: player.z, eye, heading: player.heading, pitch, roll }, done: () => {
@@ -433,6 +464,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       } };
     }),
     faint: (seconds) => new Promise<void>((done) => {
+      release();
       sight.set({ dark: 1, blur: 0.8 }, seconds);
       tween = { t: 0, dur: seconds, from: { x: player.x, z: player.z, eye, heading: player.heading, pitch: player.pitch, roll },
                 to: { x: player.x, z: player.z, eye: 0.3, heading: player.heading, pitch: -0.3, roll: 1.1 }, done };
@@ -449,6 +481,21 @@ export async function createGame(o: GameOptions): Promise<Game> {
       camera.rotation.set(player.pitch, -player.heading, roll);
       camera.updateMatrixWorld();
     },
+    turnTo: (p, seconds) => new Promise<void>((done) => {
+      release();
+      const c = camera.position;
+      const want = Math.atan2(p[0] - c.x, -(p[2] - c.z));
+      const heading = player.heading + Math.atan2(Math.sin(want - player.heading), Math.cos(want - player.heading));
+      const pitch = Math.atan2(p[1] - c.y, Math.max(Math.hypot(p[0] - c.x, p[2] - c.z), 0.01));
+      tween = { t: 0, dur: seconds, from: { x: player.x, z: player.z, eye, heading: player.heading, pitch: player.pitch, roll },
+                to: { x: player.x, z: player.z, eye, heading, pitch, roll }, done };
+    }),
+    walkTo: (at) => new Promise<void>((done) => {
+      release();
+      route = { pts: findRoute([player.x, player.z], at, (x, z) => blocked(x, z, 0.32)), done };
+    }),
+    halt: release,
+    rate: (r) => { rate = r; sight.speed = r; },
     fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
     lodgeRoot: () => lodge?.root ?? null,
     fx: (name) => sounds?.fx(name),
