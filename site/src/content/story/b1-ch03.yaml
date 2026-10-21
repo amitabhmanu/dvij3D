@@ -15,7 +15,7 @@ start:
   at: [-14.6, -13.0]
   look: [-14.0, 1.6, -12.4]                     # up at the Professor leaning over him
 cast:
-  - {who: professor, at: [-14.0, -12.4], pose: kneel, holding: tumbler}
+  - {who: professor, at: [-14.0, -12.4], pose: kneel, face: player, holding: tumbler}
 props:
   - {id: study-clutter, kind: clutter, room: study, state: knocked}
   - {id: tumbler, kind: glass, held-by: professor}
@@ -33,6 +33,7 @@ beats:
       - caption: "He awoke the second time, jerked out of his stupor by vigorous shaking and cold water."
       - effect: {blur: 0.1, over: 2}
       - say: {who: professor, line: "Have you seen my glasses?", sources: [novel ¶134, novel ¶137]}
+      - actor: {who: professor, anim: offer}                       # the tumbler held out to him (comic b1-p007-2)
 
   - id: drink
     sources: [breakdown ch3 p2, breakdown ch3 p3, novel ¶138]
@@ -44,9 +45,9 @@ beats:
       - animate: {player: drink}
       - sound: gulp
       - say: {who: dvij, line: "There... in the room where I was sleeping. Your glasses... they're on the stool by the bed.", sources: [novel ¶139]}
-      - actor: {who: professor, walk: [-8.5, 3.0], via: [[-7.75, -10.0]], then: pick-up, item: spectacles}   # fetches them from Dvij's room (novel ¶140)
+      - actor: {who: professor, pose: stand, walk: [-8.5, 3.0], via: [[-7.75, -10.0]], then: pick-up, item: spectacles}   # fetches them from Dvij's room (novel ¶140)
       - camera: {pose: sit, at: [-12.8, -11.7], over: 2.0}       # meanwhile he gets himself into the cushioned chair (novel ¶140)
-      - actor: {who: professor, walk: [-13.4, -12.0], wearing: spectacles}
+      - actor: {who: professor, walk: [-13.4, -12.0], wearing: spectacles, look: player}
 
   - id: veena
     sources: [breakdown ch3 p4, novel ¶140, novel ¶141, novel ¶142]
@@ -75,6 +76,7 @@ beats:
     do:
       - say: {who: dvij, line: "Why is my head bandaged?", sources: [novel ¶150]}
       - actor: {who: professor, take: manuscript, anim: talk}
+      - actor: {who: professor, anim: finger-raise}                # "Look here... at the edges of the birch barks" (comic b1-p007-9)
       - say: {who: professor, line: "Why indeed? Because of the accident, I should think. Careless driving, I dare say. Must you fret about those things when we are in the midst of such secret knowledge?", sources: [novel ¶151]}
       - say: {who: dvij, line: "I had a car accident?", sources: [novel ¶152]}
       - say: {who: professor, line: "Yes, yes, of course you had an accident. You were in coma. Look here... at the edges of the birch barks... see how they have frayed over time. Beautiful!", sources: [novel ¶153]}
@@ -87,6 +89,7 @@ beats:
     do:
       - say: {who: professor, line: "Become the intrepid explorer and find the text, my boy, for it would help you find your past.", sources: [novel ¶157]}
       - say: {who: dvij, line: "My past?", sources: [novel ¶158]}
+      - actor: {who: professor, anim: hand-on-chest}
       - say: {who: professor, line: "I haven't really introduced myself, have I? How embarrassing. I am Doctor Vidyasagar Parthasarathi, owner of this room and the rest of the lodge that came along with it.", sources: [novel ¶159]}
       - say: {who: dvij, line: "I woke up in a strange room, walked out into a courtyard, and then into this room. Next thing I remember is you asking me for your glasses.", sources: [novel ¶160]}
       - say: {who: professor, line: "Think nothing of it! It's your turn to introduce yourself. What's your name? Come on, out with it.", sources: [novel ¶161]}

@@ -7,12 +7,16 @@ import { reachPage } from "../progress";
 import type { Act, Scene, Stage, Vec2, Vec3 } from "./director";
 import { Props } from "./props";
 import { Hands } from "./hands";
+import { Cast, type CastSpec, type PeopleInfo } from "./cast";
+import { walkAsset } from "../walk/walk-data";
+import people from "../../content/generated/people.json";
 import { Vector3 } from "three";
 
 /** What the screen offers the story. */
 export type StoryScreen = {
   caption: (text: string) => Promise<void>;
-  say: (who: string, line: string) => Promise<void>;
+  /** A line spoken: `voice` hears of its recording (null: none) and how far through it is, for the speaker's mouth. */
+  say: (who: string, line: string, voice?: (file: string | null, time: () => number) => void) => Promise<void>;
   objective: (text: string | null, ready?: boolean) => void;
   hint: (text: string | null) => void;
   card: (title: string, subtitle?: string) => Promise<void>;
@@ -50,6 +54,7 @@ const POSES = new Set(["lie", "sit", "sit-low", "stand", "floor"]);
 
 export class StoryStage implements Stage {
   private props: Props | null = null;
+  private cast: Cast | null = null;
   private unstep: (() => void) | null = null;
   private frame = "lodge";
   private pressed = false;
@@ -121,8 +126,25 @@ export class StoryStage implements Stage {
       sound: (name) => body.fx(name),
     });
     const props = this.props;
-    this.unstep = body.every((dt) => props.update(dt));
-    (this.frame === "lodge" ? this.game.body.lodgeRoot() : this.game.body.siteRoot(this.frame))?.add(this.props.group);
+    const root = this.frame === "lodge" ? this.game.body.lodgeRoot() : this.game.body.siteRoot(this.frame);
+    root?.add(this.props.group);
+    // the people: in the frame's root as the props are, standing on whatever is under them
+    this.cast?.dispose();
+    this.cast = null;
+    if (root && sc.cast?.length) {
+      const cast = new Cast(people as PeopleInfo, {
+        root,
+        ground: (x, z, y = 3) => body.surface(x + origin[0], y + origin[1], z + origin[2]) - origin[1],
+        eyes: () => { const p = this.game.player(); return new Vector3(p.x, p.y, p.z); },
+        prop: (id) => props.handle(id),
+        url: walkAsset,
+        seen: (p) => body.lookingAt([p.x, p.y, p.z], 50),
+      });
+      this.cast = cast;
+      await cast.setUp(sc.cast as CastSpec[], sc.start.at);
+    }
+    const cast = this.cast;
+    this.unstep = body.every((dt) => { props.update(dt); cast?.update(dt); });
     this.game.body.sight.set({ blur: 0, double: 0, dark: 0, flash: 0, glare: 0 });
     this.game.body.injured(false);
     const st = sc.start;
@@ -143,9 +165,25 @@ export class StoryStage implements Stage {
       case "caption":
         this.advance = false;
         return this.screen.caption(arg);
-      case "say":
+      case "say": {
         this.advance = false;
-        return this.screen.say(arg.who, arg.line);
+        const cast = this.cast;
+        cast?.speaking(arg.who, null);
+        // watching: Dvij turns to whoever speaks, if he can see them from where he is
+        const speaker = cast?.get(arg.who);
+        if (this.auto && !hurried && speaker?.visible && this.pose !== "lie" && this.pose !== "floor") {
+          const h = speaker.headAt();
+          const me = this.game.player();
+          if (Math.hypot(h.x - me.x, h.z - me.z) < 12) void body.turnTo([h.x, h.y - 0.1, h.z], 0.7);
+        }
+        await this.screen.say(arg.who, arg.line, (file, time) => {
+          if (!cast || !cast.get(arg.who)) return;
+          if (!file) { cast.get(arg.who)!.speak(() => 0.35 + Math.sin(time() * 17) * 0.3); return; }
+          void cast.level(file, time).then((level) => cast.get(arg.who)?.speak(level));
+        });
+        cast?.get(arg.who)?.speak(null);
+        return;
+      }
       case "wait":
         this.advance = false;
         return this.sleep(arg, () => this.advance);
@@ -227,7 +265,7 @@ export class StoryStage implements Stage {
         if (!hurried) await this.screen.panels(arg.pages);
         return;
       case "actor":
-        return; // the cast arrives in S4; until then their lines play as subtitles
+        return this.cast?.beat(arg, hurried);
       default:
         return;
     }
@@ -304,6 +342,7 @@ export class StoryStage implements Stage {
 
   dispose(): void {
     this.unstep?.();
+    this.cast?.dispose();
     this.props?.dispose();
   }
 }

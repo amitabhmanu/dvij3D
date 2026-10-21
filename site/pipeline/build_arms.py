@@ -20,12 +20,6 @@ PACK = ASSETS / "characters" / "universal-base-characters-standard.zip"
 BASE = "Universal Base Characters[Standard]/Base Characters/Godot - UE/"
 BUILD = SITE / "pipeline" / ".build" / "arms"
 OUT = ASSETS / "walk"
-CREDIT = """# Model credits
-
-| Model | Author | Source | Licence | Used for |
-|---|---|---|---|---|
-| Universal Base Characters (Standard): Superhero Male | Quaternius | https://quaternius.com/packs/universalbasecharacters.html (https://quaternius.itch.io/universal-base-characters) | CC0 1.0 | Dvij's first-person arms (arms.*.glb), cut down and dressed by pipeline/build_arms.py |
-"""
 
 
 def main() -> None:
@@ -56,8 +50,9 @@ def main() -> None:
             old.unlink()
     (OUT / name).write_bytes(data)
     (SITE / "src" / "content" / "generated" / "arms.json").write_text(json.dumps({"file": name, "bytes": len(data)}, indent=1) + "\n", encoding="utf-8")
-    for dest in (SITE / "docs" / "model-credits.md", OUT / "MODEL-CREDITS.md"):
-        dest.write_text(CREDIT, encoding="utf-8")
+    from build_people import credit  # (one credits file for every model: the arms' row is among the people's)
+
+    credit()
     print(f"Arms {name} ({len(data) // 1024} KB)")
 
 

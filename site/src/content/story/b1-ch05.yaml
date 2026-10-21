@@ -15,7 +15,7 @@ start:
   at: [0, 13.0]                                  # back inside, in the entrance hall
   look: [0, 1.6, 0]
 cast:
-  - {who: maharaj, at: [14.2, -14.0], pose: stoke, sources: [novel ¶195, breakdown ch5 p3]}
+  - {who: maharaj, at: [14.2, -13.9], pose: stoke, face: [14.6, -15.0], sources: [novel ¶195, breakdown ch5 p3]}   # crouched at the tandoor's mouth
 props:
   - {id: stool-low, kind: stool, at: [12.0, -12.6], sources: [novel ¶203, breakdown ch5 p5]}
   - {id: tea, kind: tea-pot, at: [11.2, -12.9], on: stove, sources: [novel ¶209]}
@@ -43,7 +43,8 @@ beats:
     then:
       - caption: "The sound led him to an open, wide kitchen that had all kinds of brass vessels and earthen pots."
       - actor: {who: maharaj, anim: turn, look: player}
-      - actor: {who: maharaj, anim: namaste}     # he supplicates himself (novel ¶196, breakdown ch5 p4)
+      - actor: {who: maharaj, pose: stand, anim: wipe-eyes}   # wiping the soot out of his eyes with his gamchha (novel ¶196)
+      - actor: {who: maharaj, anim: supplicate}  # he supplicates himself (novel ¶196, breakdown ch5 p4, comic b1-p010-2)
       - say: {who: dvij, line: "What's this? What are you doing?", sources: [novel ¶197]}
       - say: {who: maharaj, line: "Are you really an incarnation, sahib?", sources: [novel ¶198]}
       - say: {who: dvij, line: "You think I am an incarnation?", sources: [novel ¶199]}
@@ -66,7 +67,7 @@ beats:
   - id: fear
     sources: [breakdown ch5 p6, breakdown ch5 p7, novel ¶207-210]
     do:
-      - actor: {who: maharaj, walk: [11.4, -12.0], look: player, anim: lean-in}
+      - actor: {who: maharaj, walk: [11.4, -12.0], look: player, face: player, anim: lean-in}
       - say: {who: maharaj, line: "People are scared of Mahantji. But I do not fear anyone above God. And may He strike me down if I say or do anything wrong. Mahantji is an evil man. He has many vices.", sources: [novel ¶208]}
       - prop: {id: tea, state: boiling-over}
       - sound: hiss
@@ -85,7 +86,7 @@ beats:
   - id: tulsi
     sources: [breakdown ch5 p10, novel ¶213-216]
     do:
-      - actor: {who: maharaj, walk: [0, 0.9], anim: tend}   # at the pedestal's south face (lodge.yaml planter)
+      - actor: {who: maharaj, walk: [0, 0.9], face: [0, 0], anim: tend}   # at the pedestal's south face (lodge.yaml planter)
       - say: {who: maharaj, line: "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.", sources: [novel ¶214]}
 
   - id: way-out
@@ -97,6 +98,7 @@ beats:
       radius: 2.5
     then:
       - say: {who: dvij, line: "How does one go out from this valley? Don't worry. I am not looking to go away so soon.", sources: [novel ¶217]}
+      - actor: {who: maharaj, face: player, anim: mop-brow}
       - say: {who: maharaj, line: "The valley is surrounded from all sides by mountains. There are forests at the bottom of these mountains, forests full of lions and tigers and other wild animals. Then there are the tribals.", sources: [novel ¶218]}
       - say: {who: dvij, line: "Yes, but there must be roads connecting this place to the outside world.", sources: [novel ¶219]}
       - say: {who: maharaj, line: "There is one road. It was built when the national park was set up. But it is too steep.", sources: [novel ¶220]}

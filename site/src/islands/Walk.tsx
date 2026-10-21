@@ -255,12 +255,17 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     voices.current = (spoken.default ?? spoken).lines as Record<string, { file: string; seconds: number }>;
     const st = new StoryStage(g, {
       caption: (text) => until(() => setCaption(text), () => setCaption(null), readTime(text)),
-      say: (who, line) => {
+      say: (who, line, voice) => {
         const v = voices.current[`${who}|${line}`];
-        if (!v) return until(() => setSub({ who, line }), () => setSub(null), readTime(line));
+        if (!v) {
+          const from = performance.now();
+          voice?.(null, () => (performance.now() - from) / 1000);
+          return until(() => setSub({ who, line }), () => setSub(null), readTime(line));
+        }
         // the words stay while they're spoken, and a moment after
         const clip = new Audio(storyFile(`voices/${v.file}`));
         clip.preservesPitch = true;
+        voice?.(v.file, () => clip.currentTime); // (the speaker's mouth keeps to it)
         return until(() => setSub({ who, line }), () => setSub(null), v.seconds + 0.5, undefined, clip);
       },
       objective: (text, ready = false) => setObjective(text ? { text, ready } : null),

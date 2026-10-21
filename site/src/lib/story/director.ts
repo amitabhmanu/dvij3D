@@ -23,7 +23,7 @@ export type Scene = {
   start: { pose: string; at?: Vec2; look?: "up" | Vec3 };
   /** The scene's time of day, the courtyard's cover, and the fans that run (default: morning, open, as the lodge has them). */
   setting?: { sun?: string; court?: "covered" | "open"; fans?: Record<string, number> };
-  cast?: { who: string; at: Vec2; pose?: string }[];
+  cast?: { who: string; at: Vec2; pose?: string; on?: string; face?: Vec2 | "player"; holding?: string; enters?: boolean }[];
   props?: Record<string, any>[]; // eslint-disable-line @typescript-eslint/no-explicit-any
   beats: Beat[];
 };

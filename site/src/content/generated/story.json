@@ -494,6 +494,7 @@
       -12.4
      ],
      "pose": "kneel",
+     "face": "player",
      "holding": "tumbler"
     }
    ],
@@ -592,6 +593,12 @@
          "novel ¶137"
         ]
        }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "offer"
+       }
       }
      ]
     },
@@ -628,6 +635,7 @@
       {
        "actor": {
         "who": "professor",
+        "pose": "stand",
         "walk": [
          -8.5,
          3.0
@@ -659,7 +667,8 @@
          -13.4,
          -12.0
         ],
-        "wearing": "spectacles"
+        "wearing": "spectacles",
+        "look": "player"
        }
       }
      ]
@@ -794,6 +803,12 @@
        }
       },
       {
+       "actor": {
+        "who": "professor",
+        "anim": "finger-raise"
+       }
+      },
+      {
        "say": {
         "who": "professor",
         "line": "Why indeed? Because of the accident, I should think. Careless driving, I dare say. Must you fret about those things when we are in the midst of such secret knowledge?",
@@ -869,6 +884,12 @@
         "sources": [
          "novel ¶158"
         ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "hand-on-chest"
        }
       },
       {
@@ -963,13 +984,18 @@
      "who": "bhavi",
      "at": [
       -18,
-      38
+      39.45
      ],
      "pose": "sit",
      "on": "well-rim",
+     "face": [
+      -18,
+      30
+     ],
      "sources": [
       "novel ¶165",
-      "breakdown ch4 p5"
+      "breakdown ch4 p5",
+      "comic b1-p008-4"
      ]
     }
    ],
@@ -1317,9 +1343,13 @@
      "who": "maharaj",
      "at": [
       14.2,
-      -14.0
+      -13.9
      ],
      "pose": "stoke",
+     "face": [
+      14.6,
+      -15.0
+     ],
      "sources": [
       "novel ¶195",
       "breakdown ch5 p3"
@@ -1411,7 +1441,14 @@
       {
        "actor": {
         "who": "maharaj",
-        "anim": "namaste"
+        "pose": "stand",
+        "anim": "wipe-eyes"
+       }
+      },
+      {
+       "actor": {
+        "who": "maharaj",
+        "anim": "supplicate"
        }
       },
       {
@@ -1537,6 +1574,7 @@
          -12.0
         ],
         "look": "player",
+        "face": "player",
         "anim": "lean-in"
        }
       },
@@ -1625,6 +1663,10 @@
          0,
          0.9
         ],
+        "face": [
+         0,
+         0
+        ],
         "anim": "tend"
        }
       },
@@ -1662,6 +1704,13 @@
         "sources": [
          "novel ¶217"
         ]
+       }
+      },
+      {
+       "actor": {
+        "who": "maharaj",
+        "face": "player",
+        "anim": "mop-brow"
        }
       },
       {
@@ -1762,6 +1811,10 @@
      ],
      "pose": "sit",
      "on": "deck-chair",
+     "face": [
+      10.5,
+      30.4
+     ],
      "sources": [
       "novel ¶249",
       "breakdown ch7 p3"
@@ -1775,6 +1828,10 @@
      ],
      "pose": "sit",
      "on": "deck-chair",
+     "face": [
+      10.5,
+      30.4
+     ],
      "sources": [
       "novel ¶249",
       "breakdown ch7 p3"
@@ -1787,6 +1844,7 @@
       20.4
      ],
      "pose": "stand",
+     "enters": true,
      "sources": [
       "novel ¶257",
       "breakdown ch7 p6"
@@ -2106,6 +2164,12 @@
       },
       {
        "actor": {
+        "who": "bhavi",
+        "anim": "nod"
+       }
+      },
+      {
+       "actor": {
         "who": "maharaj",
         "walk": [
          9.6,
@@ -2115,7 +2179,12 @@
          0,
          20.4
         ],
-        "holding": "pitcher"
+        "holding": "pitcher",
+        "face": [
+         9.6,
+         31.5
+        ],
+        "anim": "pour"
        }
       },
       {
@@ -2131,6 +2200,16 @@
        "prop": {
         "id": "tumbler",
         "state": "full"
+       }
+      },
+      {
+       "actor": {
+        "who": "maharaj",
+        "walk": [
+         0,
+         20.4
+        ],
+        "exit": true
        }
       }
      ]
@@ -2369,6 +2448,7 @@
       {
        "actor": {
         "who": "bhavi",
+        "pose": "stand",
         "walk": [
          0,
          20.4
@@ -2465,6 +2545,7 @@
       6.0
      ],
      "pose": "stand",
+     "face": "player",
      "sources": [
       "breakdown ch8 p1",
       "comic b1-p013-1"
@@ -2478,9 +2559,26 @@
      ],
      "pose": "sit",
      "on": "armchair",
+     "face": "player",
      "sources": [
       "comic b1-p013-1",
       "novel ¶97"
+     ]
+    },
+    {
+     "who": "henchman",
+     "at": [
+      0.6,
+      23.4
+     ],
+     "pose": "stand",
+     "face": [
+      0,
+      20.4
+     ],
+     "sources": [
+      "novel ¶288",
+      "novel ¶293"
      ]
     }
    ],
@@ -2528,6 +2626,12 @@
         "sources": [
          "novel ¶281"
         ]
+       }
+      },
+      {
+       "actor": {
+        "who": "bhavi",
+        "anim": "tape-yank"
        }
       },
       {
@@ -2651,6 +2755,12 @@
       {
        "actor": {
         "who": "bhavi",
+        "anim": "fold-arms"
+       }
+      },
+      {
+       "actor": {
+        "who": "bhavi",
         "walk": [
          -9.8,
          5.25
@@ -2695,7 +2805,9 @@
         "from": [
          -9.8,
          5.25
-        ]
+        ],
+        "face": "player",
+        "anim": "fold-arms"
        }
       },
       {
@@ -2834,10 +2946,11 @@
      "who": "mahant",
      "at": [
       1.4,
-      -2.3
+      -2.0
      ],
      "pose": "recline",
      "on": "divan",
+     "face": "player",
      "sources": [
       "novel ¶296",
       "comic b1-p014-1"
@@ -2851,6 +2964,10 @@
      ],
      "pose": "sit",
      "on": "chair",
+     "face": [
+      0.2,
+      -0.9
+     ],
      "sources": [
       "novel ¶296",
       "comic b1-p014-1"
@@ -2864,10 +2981,30 @@
      ],
      "pose": "sit",
      "on": "chair",
+     "face": [
+      0.2,
+      0.6
+     ],
      "sources": [
       "novel ¶296",
       "novel ¶299",
       "comic b1-p014-1"
+     ]
+    },
+    {
+     "who": "attendant",
+     "at": [
+      -0.9,
+      1.6
+     ],
+     "pose": "stand",
+     "face": [
+      1.4,
+      -2.3
+     ],
+     "sources": [
+      "novel ¶295",
+      "novel ¶296"
      ]
     }
    ],
@@ -2887,12 +3024,46 @@
        "caption": "Mahant looked at Dvij with his hawk-like eyes and said something in a dialect he did not understand. He seemed pleased to note that, and switched to one he did."
       },
       {
+       "actor": {
+        "who": "mahant",
+        "anim": "wave-off"
+       }
+      },
+      {
        "say": {
         "who": "mahant",
         "line": "Come, come. I have been expecting you. You may leave us.",
         "sources": [
          "novel ¶295"
         ]
+       }
+      },
+      {
+       "actor": {
+        "who": "attendant",
+        "anim": "bow",
+        "then": {
+         "walk": [
+          0.6,
+          4.3
+         ],
+         "via": [
+          [
+           0.2,
+           2.9
+          ]
+         ],
+         "face": [
+          0.6,
+          8
+         ]
+        }
+       }
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "wipe-fingers"
        }
       },
       {
@@ -2922,6 +3093,19 @@
      "do": [
       {
        "caption": "The man with the rubicund face proffered him a paan, extending a tray full of them towards him."
+      },
+      {
+       "actor": {
+        "who": "vaidji",
+        "look": "player",
+        "anim": "offer"
+       }
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "anim": "chew"
+       }
       },
       {
        "say": {
@@ -2954,6 +3138,12 @@
      "then": [
       {
        "caption": "He understood the message and partook in the ceremonial offering."
+      },
+      {
+       "actor": {
+        "who": "vaidji",
+        "anim": "nod"
+       }
       }
      ]
     },
@@ -2966,6 +3156,12 @@
       "novel ¶303-310"
      ],
      "do": [
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "steeple"
+       }
+      },
       {
        "say": {
         "who": "mahant",
@@ -3089,6 +3285,35 @@
       },
       {
        "caption": "Dvij nodded with as much humility as he could feign and settled down on folded legs. Mahant stood, smeared a tilak up his forehead and muttered some shlokas."
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "pose": "stand",
+        "walk": [
+         0.7,
+         -0.2
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "pose": "stand"
+       }
+      },
+      {
+       "actor": {
+        "who": "vaidji",
+        "pose": "stand"
+       }
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "face": "player",
+        "anim": "tilak"
+       }
       }
      ]
     },
@@ -3103,6 +3328,12 @@
       "novel ¶316"
      ],
      "do": [
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "circle"
+       }
+      },
       {
        "say": {
         "who": "mahant",
@@ -3126,6 +3357,12 @@
       },
       {
        "caption": "Mahant blessed him and asked him to rise."
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "bless"
+       }
       },
       {
        "camera": {
@@ -3170,6 +3407,12 @@
        }
       },
       {
+       "actor": {
+        "who": "mahant",
+        "anim": "proclaim"
+       }
+      },
+      {
        "say": {
         "who": "mahant",
         "line": "Yes! Yes! That is what you shall be named from now onwards. Dvij it shall be! For in forgetting your past you have taken birth again. You are the twice-born. Come, follow me. It is the shubh muhurat for the consecration rite.",
@@ -3186,6 +3429,76 @@
       },
       {
        "checkpoint": "named"
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "walk": [
+         1.6,
+         14.0
+        ],
+        "via": [
+         [
+          0.6,
+          3.2
+         ],
+         [
+          1.2,
+          9.0
+         ]
+        ],
+        "face": [
+         0,
+         14
+        ],
+        "exit": false
+       }
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "walk": [
+         3.2,
+         15.6
+        ],
+        "via": [
+         [
+          -0.4,
+          3.2
+         ],
+         [
+          2.4,
+          9.0
+         ]
+        ],
+        "face": [
+         0,
+         14
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "vaidji",
+        "walk": [
+         3.4,
+         13.0
+        ],
+        "via": [
+         [
+          0.8,
+          3.4
+         ],
+         [
+          3.0,
+          9.0
+         ]
+        ],
+        "face": [
+         0,
+         14
+        ]
+       }
       }
      ]
     },
@@ -3217,6 +3530,13 @@
         "sources": [
          "novel ¶321"
         ]
+       }
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "pose": "kneel",
+        "anim": "beckon"
        }
       }
      ]
@@ -3302,6 +3622,12 @@
       },
       {
        "caption": "He faithfully followed all orders given by Mahant, reciting the complex mantras with him and offering the right ahutis at the right junctures. By the end, Mahant was immensely pleased with how he had conducted himself."
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "nod"
+       }
       }
      ]
     },
@@ -3321,6 +3647,12 @@
       {
        "look": {
         "at": "down"
+       }
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "bless"
        }
       },
       {

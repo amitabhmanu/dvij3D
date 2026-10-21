@@ -1,0 +1,55 @@
+{
+ "people": {
+  "professor": {
+   "file": "people-professor.06c4d1ba36.glb",
+   "height": 1.68,
+   "body": "standin-male"
+  },
+  "bhavi": {
+   "file": "people-bhavi.a9a7c0da0e.glb",
+   "height": 1.62,
+   "body": "standin-female"
+  },
+  "maharaj": {
+   "file": "people-maharaj.fd31926336.glb",
+   "height": 1.65,
+   "body": "standin-male"
+  },
+  "mahant": {
+   "file": "people-mahant.c061341336.glb",
+   "height": 1.8,
+   "body": "standin-male"
+  },
+  "baldev": {
+   "file": "people-baldev.06a71eb12c.glb",
+   "height": 1.86,
+   "body": "standin-male"
+  },
+  "vaidji": {
+   "file": "people-vaidji.978129c681.glb",
+   "height": 1.63,
+   "body": "standin-male"
+  },
+  "attendant": {
+   "file": "people-attendant.06c4d1ba36.glb",
+   "height": 1.68,
+   "body": "standin-male"
+  },
+  "henchman": {
+   "file": "people-henchman.f331d4284b.glb",
+   "height": 1.72,
+   "body": "standin-male"
+  },
+  "villager": {
+   "file": "people-villager.1e3ed33677.glb",
+   "height": 1.66,
+   "body": "standin-male"
+  },
+  "default": {
+   "file": "people-villager.1e3ed33677.glb",
+   "height": 1.66,
+   "body": "standin-male"
+  }
+ },
+ "mouths": "voice-mouths.53d5a72096.json"
+}

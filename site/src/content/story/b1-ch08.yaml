@@ -16,8 +16,9 @@ start:
   at: [-14.4, 6.75]
   look: [-14.4, 1.55, 5.9]
 cast:
-  - {who: bhavi, at: [-14.4, 6.0], pose: stand, sources: [breakdown ch8 p1, comic b1-p013-1]}
-  - {who: professor, at: [-13.6, 1.4], pose: sit, on: armchair, sources: [comic b1-p013-1, novel ¶97]}
+  - {who: bhavi, at: [-14.4, 6.0], pose: stand, face: player, sources: [breakdown ch8 p1, comic b1-p013-1]}
+  - {who: professor, at: [-13.6, 1.4], pose: sit, on: armchair, face: player, sources: [comic b1-p013-1, novel ¶97]}
+  - {who: henchman, at: [0.6, 23.4], pose: stand, face: [0, 20.4], sources: [novel ¶288, novel ¶293]}   # Mahant's henchman, waiting outside the front door (not the attendant: the author, 21 Oct)
 props:
   - {id: stool, kind: stool, at: [-13.3, 6.55], sources: [novel ¶94, ours]}   # the bedside stool
   - {id: kit, kind: medical-kit, at: [-13.3, 6.55], on: stool, sources: [novel ¶282, novel ¶283]}   # tape, gauze, cotton wool, crystal violet
@@ -27,6 +28,7 @@ beats:
     sources: [breakdown ch8 p1, comic b1-p013-1, novel ¶281, novel ¶282]
     do:
       - say: {who: bhavi, line: "Stop moving! Don't fidget like a baby!", sources: [novel ¶281]}
+      - actor: {who: bhavi, anim: tape-yank}
       - sound: hiss                              # the tape yanked off (breakdown ch8 p1: "RIP!")
       - effect: {flash: 0.35, blur: 0.4}
       - effect: {blur: 0, over: 2.5}
@@ -59,6 +61,7 @@ beats:
       - sound: gong
       - caption: "A gong rang loud somewhere in the lodge."
       - say: {who: professor, line: "Will you stop bickering with your only patient and answer the door?", sources: [novel ¶284]}
+      - actor: {who: bhavi, anim: fold-arms}
       - actor: {who: bhavi, walk: [-9.8, 5.25], exit: true}   # out through the room's door to the corridor, in a huff (novel ¶285)
       - caption: "Bhavi left the room in a huff."
       - say: {who: professor, line: "She's a firebrand, my niece. She is bored of living with me, but naturally. She finds nothing meaningful to do around here, so she keeps wandering about the hills and the forests. The wild berries have poisoned her tongue.", sources: [novel ¶286]}
@@ -67,7 +70,7 @@ beats:
   - id: the-summons
     sources: [breakdown ch8 p6, breakdown ch8 p7, comic b1-p013-6, comic b1-p013-7, novel ¶287-289]
     do:
-      - actor: {who: bhavi, walk: [-14.4, 6.0], from: [-9.8, 5.25]}
+      - actor: {who: bhavi, walk: [-14.4, 6.0], from: [-9.8, 5.25], face: player, anim: fold-arms}
       - caption: "Bhavi was back, and her huffing, if anything, was more than before."
       - say: {who: bhavi, line: "Talk of the devil... it's the Mahant's henchman. He wants the Wounded One to attend some ceremony at the main temple. Today! Would you believe that? I guess word must have travelled around that the Wounded One is Wounded No More.", sources: [novel ¶288]}
       - say: {who: professor, line: "I wonder how?", sources: [novel ¶289]}
