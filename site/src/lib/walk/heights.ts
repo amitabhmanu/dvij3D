@@ -88,18 +88,22 @@ export function ripple(x: number, z: number): number {
 /** Levelled ground under a building's grounds (build_walk.py): no ripples there,
  * so the model's lawn and floors sit flush. [x0, z0, x1, z1] and a blend in metres. */
 export type Flat = { rect: [number, number, number, number]; blend: number };
-let flat: Flat | null = null;
-export function setFlat(f: Flat | null) {
-  flat = f;
+let flats: Flat[] = [];
+/** The levelled pads: the lodge's, and any other site's (the temple site). */
+export function setFlat(f: Flat | Flat[] | null) {
+  flats = f ? (Array.isArray(f) ? f : [f]) : [];
 }
 
-/** 1 inside the levelled pad, easing to 0 over its blend; 0 everywhere else. */
+/** 1 inside a levelled pad, easing to 0 over its blend; 0 everywhere else. */
 export function flatWeight(x: number, z: number): number {
-  if (!flat) return 0;
-  const [x0, z0, x1, z1] = flat.rect;
-  const d = Math.hypot(Math.max(x0 - x, x - x1, 0), Math.max(z0 - z, z - z1, 0));
-  const t = Math.min(1, d / Math.max(flat.blend, 1e-6));
-  return 1 - t * t * (3 - 2 * t);
+  let w = 0;
+  for (const flat of flats) {
+    const [x0, z0, x1, z1] = flat.rect;
+    const d = Math.hypot(Math.max(x0 - x, x - x1, 0), Math.max(z0 - z, z - z1, 0));
+    const t = Math.min(1, d / Math.max(flat.blend, 1e-6));
+    w = Math.max(w, 1 - t * t * (3 - 2 * t));
+  }
+  return w;
 }
 
 export function heightAt(f: Field, x: number, z: number): number {

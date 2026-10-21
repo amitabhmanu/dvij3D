@@ -48,6 +48,7 @@ const POSES = new Set(["lie", "sit", "sit-low", "stand", "floor"]);
 
 export class StoryStage implements Stage {
   private props: Props | null = null;
+  private frame = "lodge";
   private pressed = false;
   private advance = false;
   private cancelled = false;
@@ -63,8 +64,11 @@ export class StoryStage implements Stage {
     this.advance = true;
   }
 
+  /** A place in the scene's frame (the lodge's, or the temple site's) -> the world. */
   private world(p: Vec2 | Vec3): [number, number, number] {
-    return p.length === 2 ? this.game.body.fromLodge(p[0], 1.2, p[1]) : this.game.body.fromLodge(p[0], p[1], p[2]);
+    const [x, y, z] = p.length === 2 ? [p[0], 1.2, p[1]] : p;
+    const b = this.game.body;
+    return this.frame === "lodge" ? b.fromLodge(x, y, z) : b.fromSite(this.frame, x, y, z);
   }
 
   private holdFor(pose: string) {
@@ -99,8 +103,9 @@ export class StoryStage implements Stage {
     this.game.body.halt();
     this.screen.panel(null);
     this.props?.dispose();
+    this.frame = sc.frame ?? "lodge";
     this.props = new Props((sc.props ?? []) as never, this.game.body.lodgeRoot());
-    this.game.body.lodgeRoot()?.add(this.props.group);
+    (this.frame === "lodge" ? this.game.body.lodgeRoot() : this.game.body.siteRoot(this.frame))?.add(this.props.group);
     this.game.body.sight.set({ blur: 0, double: 0, dark: 0, flash: 0, glare: 0 });
     this.game.body.injured(false);
     const st = sc.start;

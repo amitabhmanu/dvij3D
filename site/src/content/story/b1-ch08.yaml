@@ -91,4 +91,4 @@ beats:
     then:
       - caption: "Dvij went on smiling as he walked out to meet the Mahant's henchman, leaving behind the Professor deep in thought and Bhavi bitterly chewing her lips."
       - progress: {book: 1, page: 13}
-      - end: {next: null}
+      - end: {next: b1-ch09}

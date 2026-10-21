@@ -23,6 +23,7 @@ import { isVeiled, revealAll, type FirstSeen } from "../lib/spoilers";
 import { walk } from "../lib/walk/walk-data";
 import type { Look } from "../lib/walk/lodge";
 import lodgeInfo from "../content/generated/lodge.json";
+import siteInfo from "../content/generated/temple-site.json";
 import type { Director, Scene } from "../lib/story/director";
 import type { StoryStage } from "../lib/story/stage";
 import { loadSaved } from "../lib/story/saved";
@@ -44,7 +45,7 @@ type Props = { heightUrl: string; worldUrl: string; groundUrl: string; mapUrl: s
 type Screen = "start" | "loading" | "ready" | "playing" | "paused" | "card" | "look" | "map" | "nogl" | "failed" | "the-end";
 /** Story mode's full-screen moments: a chapter card, a comic page, the reflection. */
 type Overlay = { kind: "card"; title: string; subtitle?: string } | { kind: "page"; id: string; n: number; of: number } | { kind: "reflection"; panel: string };
-const SPEAKER: Record<string, string> = { dvij: "Dvij", professor: "The Professor", bhavi: "Bhavi", maharaj: "Maharaj", mahant: "Mahant", baldev: "Baldev" };
+const SPEAKER: Record<string, string> = { dvij: "Dvij", professor: "The Professor", bhavi: "Bhavi", maharaj: "Maharaj", mahant: "Mahant", baldev: "Baldev", vaidji: "Vaidji" };
 type Saved = { sensitivity?: number; invertY?: boolean; quality?: Quality; real?: boolean; volume?: number };
 
 const KEY = "twice-born:walk:v1";
@@ -406,6 +407,13 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
       play();
       return;
     }
+    const st = walk.sites.find((k) => k.id === id);
+    if (g && st) { // a built place's own arrival point (the temple site's: south of the tent, facing it)
+      const m = (siteInfo.markers as { name: string; at: number[]; heading?: number }[]).find((k) => k.name === "arrive:site");
+      if (m) g.teleport(st.x + m.at[0], st.z + m.at[2], ((m.heading ?? 0) * Math.PI) / 180);
+      play();
+      return;
+    }
     if (!g || !s) return;
     const [x, z] = g.standable(s.x, s.z + Math.min(60, s.r * 0.4)); // a little south of it, looking north at it
     g.teleport(x, z, Math.atan2(s.x - x, -(s.z - z)));
@@ -601,7 +609,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <button type="button" class="go" onClick={() => enter(false)} autofocus={!story}>Enter the valley</button>
           <div class="story-start">
             <p class="eyebrow">Or play the story</p>
-            <p>Be Dvij, waking in the Professor's lodge after the accident: the chapters of Book 1 he is in, from 1 to 8.</p>
+            <p>Be Dvij, waking in the Professor's lodge after the accident: the chapters of Book 1 he is in, from 1 to 9.</p>
             {saved ? (
               <>
                 <button type="button" class="go" onClick={() => enter(true, saved, false)} autofocus={story && !watching}>Continue the story</button>
@@ -750,6 +758,18 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
                 </button>
               );
             })()}
+            {walk.sites.map((st) => {
+              // the temple site: on the map once the reader has reached it in the book (Chapter 9, page 14)
+              const [u, v] = onMap(st.x, st.z);
+              const locked = isVeiled({ book: 1, page: 14 }) && !shown[st.id];
+              return (
+                <button type="button" class="spot" key={st.id} style={{ left: `${u * 100}%`, top: `${v * 100}%` }}
+                        disabled={locked} data-place={st.id} onClick={() => travel(st.id)}
+                        title={locked ? "You haven't reached this in the book yet" : "Go to the temple site"}>
+                  The temple site
+                </button>
+              );
+            })}
             {places.map((p) => {
               const s = spots.get(p.id);
               if (!s) return null;
@@ -800,8 +820,8 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         <section class="card" aria-labelledby="end-title">
           <p class="eyebrow">The Twice Born, Book 1</p>
           <h2 id="end-title">To be continued</h2>
-          <p>That's as far as the story plays for now: the opening of Book 1, up to Chapter 8. The comic carries on from page 14.</p>
-          <a class="go" href="/read/b1/14">Read on in the comic</a>
+          <p>That's as far as the story plays for now: the opening of Book 1, up to Chapter 9. The comic carries on from page 16.</p>
+          <a class="go" href="/read/b1/16">Read on in the comic</a>
           {watching && <button type="button" class="go quiet" onClick={restart}>Watch it again</button>}
           <button type="button" class="go quiet" onClick={leaveStory}>Walk the valley freely</button>
           <p class="back"><a href={backUrl}>Back to the map</a></p>

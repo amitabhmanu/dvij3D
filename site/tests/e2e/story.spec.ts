@@ -12,7 +12,10 @@ type G = {
   walkGame: {
     teleport: (x: number, z: number, h?: number) => void;
     player: () => { x: number; y: number; z: number };
-    body: { fromLodge: (x: number, y: number, z: number) => number[]; face: (p: number[]) => void };
+    body: {
+      fromLodge: (x: number, y: number, z: number) => number[]; face: (p: number[]) => void;
+      fromSite: (id: string, x: number, y: number, z: number) => number[];
+    };
   };
   walkStory: { stage: { props: { point: (id: string) => number[] | null } } };
 };
@@ -38,8 +41,8 @@ const state = (page: Page) => page.evaluate(() => {
 async function drive(page: Page, done: (s: Awaited<ReturnType<typeof state>>) => boolean, seen: string[] = []) {
   for (let i = 0; i < 400; i++) {
     const s = await state(page);
+    if (s.scene && !seen.includes(`${s.scene}/${s.beat}`)) seen.push(`${s.scene}/${s.beat}`);
     if (done(s)) return s;
-    if (!seen.includes(`${s.scene}/${s.beat}`)) seen.push(`${s.scene}/${s.beat}`);
     if (s.words || s.overlay) {
       await page.keyboard.press("e");
     } else if (s.objective) {
@@ -48,11 +51,14 @@ async function drive(page: Page, done: (s: Awaited<ReturnType<typeof state>>) =>
       expect(act, s.objective).toBeTruthy();
       if (!act) return s;
       if (act.kind === "reach" || act.kind === "look-press" || act.kind === "use") {
-        await page.evaluate(([act]) => {
+        const frame: string = story.scenes.find((x: { scene: string }) => x.scene === s.scene)?.frame ?? "lodge";
+        await page.evaluate(([act, frame]) => {
           const w = window as unknown as G, g = w.walkGame;
+          // the scene's own frame: the lodge's, or another built place's (the temple site)
+          const at = (x: number, y: number, z: number) => (frame === "lodge" ? g.body.fromLodge(x, y, z) : g.body.fromSite(frame, x, y, z));
           const t = typeof act.target === "string"
-            ? g.body.fromLodge(...(w.walkStory.stage.props.point(act.target) as [number, number, number]))
-            : act.target!.length === 2 ? g.body.fromLodge(act.target![0], 1.2, act.target![1]) : g.body.fromLodge(...(act.target as [number, number, number]));
+            ? at(...(w.walkStory.stage.props.point(act.target) as [number, number, number]))
+            : act.target!.length === 2 ? at(act.target![0], 1.2, act.target![1]) : at(...(act.target as [number, number, number]));
           const me = g.player();
           const d = Math.hypot(t[0] - me.x, t[2] - me.z);
           if (act.kind === "reach") g.teleport(t[0], t[2]);
@@ -60,7 +66,7 @@ async function drive(page: Page, done: (s: Awaited<ReturnType<typeof state>>) =>
             if (d > 2.2) g.teleport(t[0] + ((me.x - t[0]) / d) * 1.2, t[2] + ((me.z - t[2]) / d) * 1.2);
             g.body.face(t);
           }
-        }, [act] as const);
+        }, [act, frame] as const);
       }
       if (act.kind !== "reach") {
         // on a busy machine the frame that turns his head can come late: if he isn't ready yet, look again next time round
@@ -148,7 +154,7 @@ test.describe("story mode", () => {
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:v1") || "{}").furthest?.b1)).toBeGreaterThanOrEqual(12);
   });
 
-  test("Chapter 8 takes off his bandage and sends him out to the henchman, and the story ends there", async ({ page }) => {
+  test("Chapter 8 takes off his bandage and sends him out to the henchman", async ({ page }) => {
     test.setTimeout(300_000);
     await page.addInitScript(() => localStorage.setItem("twice-born:story:v1", JSON.stringify({ scene: "b1-ch08" })));
     await page.goto("/valley/walk/?story&test");
@@ -158,12 +164,38 @@ test.describe("story mode", () => {
     const stool = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(-8.8, 0, -13.2));
     expect(Math.hypot(sat.x - stool[0], sat.z - stool[2])).toBeLessThan(0.3);
     const seen: string[] = [];
-    await drive(page, (s) => s.screen === "the-end", seen);
+    await drive(page, (s) => s.beat === "the-henchman" && s.words, seen);
     for (const b of ["the-wound", "the-arm", "the-gong", "the-summons", "the-cowherd", "the-henchman"]) expect(seen).toContain(`b1-ch08/${b}`);
     // out on the front doorsteps
     const p = await page.evaluate(() => (window as unknown as G).walkGame.player());
     const steps = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(0, 0, 20.4));
     expect(Math.hypot(p.x - steps[0], p.z - steps[2])).toBeLessThan(1.6);
+    await drive(page, (s) => s.scene === "b1-ch09", seen); // and on to the temple site
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:v1") || "{}").furthest?.b1)).toBeGreaterThanOrEqual(13);
+  });
+
+  test("Chapter 9 at the temple site: the tent, the name, the fire, and the story ends there", async ({ page }) => {
+    test.setTimeout(400_000);
+    await page.addInitScript(() => localStorage.setItem("twice-born:story:v1", JSON.stringify({ scene: "b1-ch09" })));
+    await page.goto("/valley/walk/?story&test");
+    await begin(page, "Continue the story");
+    type S = { walkGame: { player: () => { x: number; z: number }; body: { fromSite: (id: string, x: number, y: number, z: number) => number[] } } };
+    const where = (x: number, z: number) => page.evaluate(([x, z]) => (window as unknown as S).walkGame.body.fromSite("temple-site", x, 0, z), [x, z]);
+    const me = () => page.evaluate(() => (window as unknown as S).walkGame.player());
+    // standing in Mahant's tent, before the divan
+    const stand = await where(0.2, 0.9);
+    const p0 = await me();
+    expect(Math.hypot(p0.x - stand[0], p0.z - stand[2])).toBeLessThan(0.3);
+    await expect(page.locator(".walk")).toHaveAttribute("data-indoors", "true");
+    const seen: string[] = [];
+    await drive(page, (s) => s.beat === "the-rite", seen);
+    const seat = await where(1.6, 12.7);
+    const p1 = await me();
+    expect(Math.hypot(p1.x - seat[0], p1.z - seat[2])).toBeLessThan(0.5); // at Mahant's right hand, by the fire
+    await drive(page, (s) => s.screen === "the-end", seen);
+    for (const b of ["the-paan", "the-prophecy", "the-duties", "the-saviour", "the-name", "the-altar", "the-seat", "the-rite", "dismissed", "the-plain"]) {
+      expect(seen).toContain(`b1-ch09/${b}`);
+    }
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:v1") || "{}").furthest?.b1)).toBeGreaterThanOrEqual(15);
   });
 });

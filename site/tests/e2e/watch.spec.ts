@@ -110,17 +110,17 @@ test.describe("watch mode", () => {
     for (const u of heard) expect(files.has(u.split("/").pop()!)).toBe(true);
   });
 
-  test("only the chapters Dvij is in play: 1, 3, 4, 5, 7 and 8", async ({ page }) => {
+  test("only the chapters Dvij is in play: 1, 3, 4, 5, 7, 8 and 9", async ({ page }) => {
     test.setTimeout(120_000);
     await watch(page);
     const went: string[] = ["b1-ch01"];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       await bar(page).getByRole("button", { name: "Next chapter" }).click();
       await expect(walkEl(page)).not.toHaveAttribute("data-story", went.at(-1)!);
       went.push((await walkEl(page).getAttribute("data-story"))!);
       if (went.at(-1) === "b1-ch07") await expect(page.locator(".story-panel[data-panel='b1-p012-1']")).toBeVisible({ timeout: 30_000 }); // his days going by
     }
-    expect(went).toEqual(["b1-ch01", "b1-ch03", "b1-ch04", "b1-ch05", "b1-ch07", "b1-ch08"]);
+    expect(went).toEqual(["b1-ch01", "b1-ch03", "b1-ch04", "b1-ch05", "b1-ch07", "b1-ch08", "b1-ch09"]);
     await expect(bar(page).getByRole("button", { name: "Next chapter" })).toBeDisabled();
   });
 
@@ -130,9 +130,23 @@ test.describe("watch mode", () => {
     for (let i = 0; i < 5; i++) await bar(page).getByRole("button", { name: "Next chapter" }).click();
     await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch08");
     await bar(page).getByRole("button", { name: "4×" }).click();
-    await expect(walkEl(page)).toHaveAttribute("data-screen", "the-end", { timeout: 200_000 });
+    await expect(walkEl(page)).toHaveAttribute("data-beat", "the-henchman", { timeout: 200_000 });
+    await expect(page.locator(".words")).toBeVisible({ timeout: 60_000 }); // he has reached the door
     const p = await page.evaluate(() => (window as unknown as G).walkGame.player());
     const steps = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(0, 0, 20.4));
     expect(Math.hypot(p.x - steps[0], p.z - steps[2])).toBeLessThan(1.5);
+  });
+
+  test("Chapter 9 plays by itself: out of the tent to the fire, then away across the site", async ({ page }) => {
+    test.setTimeout(300_000);
+    await watch(page);
+    for (let i = 0; i < 6; i++) await bar(page).getByRole("button", { name: "Next chapter" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch09");
+    await bar(page).getByRole("button", { name: "4×" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-screen", "the-end", { timeout: 280_000 });
+    type S = { walkGame: { player: () => { x: number; z: number }; body: { fromSite: (id: string, x: number, y: number, z: number) => number[] } } };
+    const p = await page.evaluate(() => (window as unknown as S).walkGame.player());
+    const out = await page.evaluate(() => (window as unknown as S).walkGame.body.fromSite("temple-site", -34, 0, 40));
+    expect(Math.hypot(p.x - out[0], p.z - out[2])).toBeLessThan(4.5);
   });
 });
