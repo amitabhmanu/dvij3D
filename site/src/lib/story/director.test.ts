@@ -42,7 +42,7 @@ describe("the director", () => {
     expect(f.log.at(-1)).toBe("end:b1-ch01->b1-ch03");
     const order = f.log.filter((l) => l.startsWith("act:"));
     expect(order).toEqual([
-      "act:Reach for the glass on the stool.", "act:Sit up.", "act:Stand up.", "act:Open the boarded window.",
+      "act:Reach for the glass on the stool.", "act:Sit up.", "act:Stand up.", "act:Try the spectacles on the stool.", "act:Open the boarded window.",
       "act:Find water.", "act:Look for someone.", "act:Go to the windows.",
     ]);
   });
