@@ -22,6 +22,7 @@ import { applyWear } from "./wear";
 import { lodgeFx } from "./lodge-fx";
 import { openFire } from "./fire-fx";
 import { Arms } from "./arms";
+import { lawnGrass } from "./grass";
 import armsInfo from "../../content/generated/arms.json";
 import { inkComposer } from "./post";
 import { SightEffect } from "../story/effects";
@@ -413,6 +414,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
   let walking = 0; // 0 still, 1 at a walk: for the arms' bob
   // the kitchen fire's flicker, the dhoop batti's smoke, the dust in the air
   const moving = lodgeFx(lodge.root);
+  // the unkempt lawn's dry grass, and the clearing cut in it for the deck chairs (novel ¶249; Ch7's chairs at 9.6, 31.5)
+  const grass = lawnGrass(lodge.root, lodgeInfo.grounds as [number, number, number, number], { half: lodgeInfo.half, clearings: [[9.6, 31.5, 3.2]] });
   // its decay: mould, grime, flaking paint, rust (lodge.yaml `character`)
   const wearFile = (lodgeInfo as { wear?: string }).wear;
   if (wearFile) applyWear(lodge.root, await loadTexture(walkAsset(wearFile)), lodge.root.position);
@@ -632,6 +635,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     if (moved || ++shadowAge > 30) { shadowDirty = true; shadowAge = 0; }
     lightFor(1 / 60); // (the sight pass eases itself, each time the composer renders)
     moving.update(1 / 60, camera);
+    grass.update(1 / 60);
     for (const f of fires) f.update(1 / 60, camera);
     arms?.update(1 / 60, walking);
     place();
@@ -845,6 +849,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       colours.dispose();
       if (detail) for (const d of Object.values(detail)) { d.color.dispose(); d.normal.dispose(); }
       moving.dispose();
+      grass.dispose();
       arms?.dispose();
       for (const f of fires) f.dispose();
       lodge?.dispose();

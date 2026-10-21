@@ -248,6 +248,37 @@
      ]
     },
     {
+     "id": "spectacles",
+     "sources": [
+      "novel ¶98"
+     ],
+     "act": {
+      "objective": "Try the spectacles on the stool.",
+      "kind": "look-press",
+      "target": "spectacles"
+     },
+     "then": [
+      {
+       "caption": "On the bed stool were a pair of thick spectacles and an open book laying upside-down over a shawl."
+      },
+      {
+       "effect": {
+        "blur": 0.9,
+        "over": 0.4
+       }
+      },
+      {
+       "caption": "He tried the spectacles but they blurred his vision to the point of blindness."
+      },
+      {
+       "effect": {
+        "blur": 0,
+        "over": 1.5
+       }
+      }
+     ]
+    },
+    {
      "id": "shutters",
      "sources": [
       "breakdown ch1 p5",

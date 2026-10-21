@@ -204,10 +204,21 @@ function make(p: PropSpec): Made {
         g.add(m);
       }
       const upright = items.map((m) => m.position.clone());
+      // and what broke when they fell: "there were broken pieces of sculpture everywhere" (novel ¶140)
+      const pieces = new Group();
+      for (let k = 0; k < 14; k++) {
+        const m = new Mesh(new BoxGeometry(0.03 + (k % 4) * 0.012, 0.02 + (k % 3) * 0.01, 0.025 + (k % 5) * 0.008), k % 3 ? CLAY : mat("#4a4d45", { roughness: 0.5 }));
+        m.position.set(Math.sin(k * 2.7) * 0.6, FLOOR + 0.012, Math.cos(k * 1.9) * 0.55);
+        m.rotation.set(k * 0.7, k * 1.3, k * 0.4);
+        pieces.add(m);
+      }
+      pieces.visible = false;
+      g.add(pieces);
       return {
         obj: at(g, x, 0, z),
         set: (s) => {
           state = s;
+          pieces.visible = s === "knocked";
           items.forEach((m, k) => {
             if (s === "knocked") {
               m.position.set(upright[k].x + Math.sin(k * 2.1) * 0.5, FLOOR + 0.05, upright[k].z + Math.cos(k * 1.7) * 0.5);

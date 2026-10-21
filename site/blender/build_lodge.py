@@ -1446,6 +1446,12 @@ def wear_masks(baked):
         inside = down & (X > x0) & (X < x1) & (Z > z0) & (Z < z1)
         d = np.minimum(np.minimum(X - x0 - T / 2, x1 - T / 2 - X), np.minimum(Z - z0 - T / 2, z1 - T / 2 - Z))
         wear = np.maximum(wear, np.where(inside, (1 - ramp(d, 0, 0.6)) * 0.8, 0))
+        # "marks around the corners told tales of cobwebs recently dusted off" (novel ¶93): grey smudges
+        # where two walls meet the ceiling
+        dx = np.minimum(X - x0 - T / 2, x1 - T / 2 - X)
+        dz = np.minimum(Z - z0 - T / 2, z1 - T / 2 - Z)
+        corner = (1 - ramp(np.sqrt(dx ** 2 + dz ** 2), 0, 0.55)) * 0.85
+        grime = np.maximum(grime, np.where(inside, corner, 0))
     # rust: dripped from the bars over the court, on its floor
     court = up & (np.abs(X) < COURT) & (np.abs(Z) < COURT) & (Y < FLOOR)
     bars = np.full(X.shape, 9.0, np.float32)
