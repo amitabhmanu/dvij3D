@@ -1,5 +1,9 @@
 {
  "lines": {
+  "baldev|Go on, have one. It freshens the breath.": {
+   "file": "baldev-4a5b91e985.mp3",
+   "seconds": 3.11
+  },
   "bhavi|Are you?": {
    "file": "bhavi-7ad8c80003.mp3",
    "seconds": 0.92
@@ -16,6 +20,14 @@
    "file": "bhavi-2e1265f89e.mp3",
    "seconds": 4.98
   },
+  "bhavi|Does it hurt there? No? Good. You can take off the cast. Or keep it on for a few more days. It will go well with that wounded image you are supposed to carry.": {
+   "file": "bhavi-1fa3d4ddc9.mp3",
+   "seconds": 8.5
+  },
+  "bhavi|Does it hurt? It does? Good. It might force you to remember things. The gash is still open but it's getting better. The skin is pink around the wound. That means it is healing.": {
+   "file": "bhavi-23585c740c.mp3",
+   "seconds": 10.66
+  },
   "bhavi|Dr. Parathasarathi, have you seen a loony old man around here?": {
    "file": "bhavi-bc55e360f0.mp3",
    "seconds": 3.48
@@ -24,6 +36,10 @@
    "file": "bhavi-01b8e63505.mp3",
    "seconds": 4.42
   },
+  "bhavi|Hmm... too bad the scar will remain. Now your arm. Move it up.": {
+   "file": "bhavi-1772a70a7e.mp3",
+   "seconds": 3.29
+  },
   "bhavi|I don't think... I know. How else do you explain your arrival on that exact date?": {
    "file": "bhavi-8714032cf1.mp3",
    "seconds": 5.22
@@ -31,6 +47,18 @@
   "bhavi|Nobody ever comes to this valley any more. Why did you?": {
    "file": "bhavi-d57c25a847.mp3",
    "seconds": 3.13
+  },
+  "bhavi|Stop moving! Don't fidget like a baby!": {
+   "file": "bhavi-260dd88717.mp3",
+   "seconds": 2.31
+  },
+  "bhavi|Talk of the devil... it's the Mahant's henchman. He wants the Wounded One to attend some ceremony at the main temple. Today! Would you believe that? I guess word must have travelled around that the Wounded One is Wounded No More.": {
+   "file": "bhavi-dafc5e329e.mp3",
+   "seconds": 13.77
+  },
+  "bhavi|That also means you will have the constant urge to itch... don't do that unless you want me to reopen your skull. We'll just swab it with a cotton ball soaked in crystal violet... and put a plaster on it... There.": {
+   "file": "bhavi-b3af61acc2.mp3",
+   "seconds": 13.12
   },
   "bhavi|Then what is your name?": {
    "file": "bhavi-ea686ed3dc.mp3",
@@ -43,6 +71,10 @@
   "bhavi|Why should you? You already died once.": {
    "file": "bhavi-196dc966c3.mp3",
    "seconds": 2.46
+  },
+  "dvij|Am I not supposed to know everything? I am the Wounded One after all.": {
+   "file": "dvij-6b7719a919.mp3",
+   "seconds": 4.09
   },
   "dvij|And she thinks this Mahant has planted me here as a part of some nefarious scheme. But why? Why would Mahant want to hurt you?": {
    "file": "dvij-675f392477.mp3",
@@ -63,6 +95,10 @@
   "dvij|Doctor Parthasarathi. The old man who lives here. Likable, but loony. Do you know him?": {
    "file": "dvij-8d6410cc62.mp3",
    "seconds": 5.71
+  },
+  "dvij|Dvij, O holy one. Name me Dvij, the twice-born.": {
+   "file": "dvij-557e7406af.mp3",
+   "seconds": 3.83
   },
   "dvij|Go ahead. Let's have tea.": {
    "file": "dvij-10f7fef9ac.mp3",
@@ -116,6 +152,10 @@
    "file": "dvij-3fd5c76651.mp3",
    "seconds": 2.98
   },
+  "dvij|It's the cowherd who gets the milk. He finds out what's happening at the lodge and spreads the word around.": {
+   "file": "dvij-88ab9acecb.mp3",
+   "seconds": 7.19
+  },
   "dvij|Just a sec! I may have been a bad guy or maybe not. I just don't know. The only thing I know is that I have lost my memory... even my name.": {
    "file": "dvij-d061836f5c.mp3",
    "seconds": 10.0
@@ -131,6 +171,10 @@
   "dvij|My past?": {
    "file": "dvij-c5685311d8.mp3",
    "seconds": 0.93
+  },
+  "dvij|Om agnimile purohitam, yajnasya devam ritvijam, hotaram ratnadhatamam. Svaha... svaha...": {
+   "file": "dvij-fb7ebb9b3b.mp3",
+   "seconds": 7.52
   },
   "dvij|Tell me about this valley. What is this place? Where are we?": {
    "file": "dvij-5abed11d66.mp3",
@@ -156,6 +200,10 @@
    "file": "dvij-b04ea5d831.mp3",
    "seconds": 3.21
   },
+  "dvij|What are these duties, O Mahant?": {
+   "file": "dvij-fcf711338f.mp3",
+   "seconds": 2.11
+  },
   "dvij|What's this? What are you doing?": {
    "file": "dvij-b525bcb5ae.mp3",
    "seconds": 2.06
@@ -168,6 +216,10 @@
    "file": "dvij-0d382f0966.mp3",
    "seconds": 2.29
   },
+  "dvij|Yes I have.": {
+   "file": "dvij-950ef1918a.mp3",
+   "seconds": 0.87
+  },
   "dvij|Yes doctor, I do think you saved me, and I would like to thank you for that.": {
    "file": "dvij-9e7d03146b.mp3",
    "seconds": 5.02
@@ -176,9 +228,17 @@
    "file": "dvij-c47bc84448.mp3",
    "seconds": 5.46
   },
+  "dvij|Yes, O Mahant. Just like you predicted, I have lost my memory in the terrible accident. Without my memory I have no past. But of course you know everything.": {
+   "file": "dvij-55ac31377b.mp3",
+   "seconds": 11.0
+  },
   "dvij|Yes, but there must be roads connecting this place to the outside world.": {
    "file": "dvij-1700846eeb.mp3",
    "seconds": 4.38
+  },
+  "dvij|Yes. I know that that prediction has also come true, O wise one.": {
+   "file": "dvij-8b8f1eaf50.mp3",
+   "seconds": 4.39
   },
   "dvij|You did... didn't you? You don't belong here yourself.": {
    "file": "dvij-a247fca113.mp3",
@@ -191,6 +251,58 @@
   "dvij|You think I am an incarnation?": {
    "file": "dvij-04d3a03abb.mp3",
    "seconds": 1.98
+  },
+  "mahant|Ah, the paan. It's nothing less than a holy alliance between the areca nut and the betel leaf. The areca nut represents the male and the betel leaf the female principle. But of course you would not know that. For you it is enough to know that it is inauspicious for a guest to not have one. So you must.": {
+   "file": "mahant-05c220a091.mp3",
+   "seconds": 19.97
+  },
+  "mahant|Come, come. I have been expecting you. You may leave us.": {
+   "file": "mahant-9232334e2e.mp3",
+   "seconds": 3.98
+  },
+  "mahant|Come, sit by my side. Let the people see you sitting with me.": {
+   "file": "mahant-44da64bd76.mp3",
+   "seconds": 4.27
+  },
+  "mahant|Does that smell bother you?": {
+   "file": "mahant-be985ebe69.mp3",
+   "seconds": 1.84
+  },
+  "mahant|No doubt you know by now that I predicted your arrival in this valley, and that I predicted that you would arrive wounded.": {
+   "file": "mahant-53f6eb7cb9.mp3",
+   "seconds": 9.03
+  },
+  "mahant|Now go and wait till I give the word to come back, on the night when the new moon will dawn.": {
+   "file": "mahant-b2f1ae13f6.mp3",
+   "seconds": 6.34
+  },
+  "mahant|The God has chosen you to be His instrument, and me to be the medium of instruction. As such you shall do everything I ask you to. For in my asking you will see the God Himself asking you. Your faith and your love will bring back your memories.": {
+   "file": "mahant-d968c42ae8.mp3",
+   "seconds": 18.1
+  },
+  "mahant|The peasants in this valley perish like rats, for their immoral ways have invoked the wrath of the Gods. You have been chosen to be their saviour, and you shall be so.": {
+   "file": "mahant-ba54429d05.mp3",
+   "seconds": 11.33
+  },
+  "mahant|Then you know that the prediction has come true. I also predicted that you would have no past.": {
+   "file": "mahant-500afad556.mp3",
+   "seconds": 6.53
+  },
+  "mahant|Yes! Yes! That is what you shall be named from now onwards. Dvij it shall be! For in forgetting your past you have taken birth again. You are the twice-born. Come, follow me. It is the shubh muhurat for the consecration rite.": {
+   "file": "mahant-f4c69fef2b.mp3",
+   "seconds": 14.72
+  },
+  "mahant|Yes, of course I know. Do not worry. It is as per His divine plan. You were meant to have an accident and lose your memory. But it will all come back to you once you have fulfilled your duties for which He has sent you to the valley.": {
+   "file": "mahant-798f75f37b.mp3",
+   "seconds": 16.01
+  },
+  "mahant|You do?": {
+   "file": "mahant-aa22517aa9.mp3",
+   "seconds": 0.7
+  },
+  "mahant|You have taken a new birth, and thus you shall have a new name. And that shall be...": {
+   "file": "mahant-68ed1c2ff9.mp3",
+   "seconds": 5.29
   },
   "maharaj|Are you really an incarnation, sahib?": {
    "file": "maharaj-2d52339cbd.mp3",
@@ -272,6 +384,10 @@
    "file": "professor-2a5bb11720.mp3",
    "seconds": 7.59
   },
+  "professor|I wonder how?": {
+   "file": "professor-c44dfcb631.mp3",
+   "seconds": 1.07
+  },
   "professor|Let me explain, my boy. The Mahant, he's the head priest of the main temple in the village, he predicted the arrival of The Wounded One with No Past on a specific date.": {
    "file": "professor-51f0429c0b.mp3",
    "seconds": 11.0
@@ -287,6 +403,10 @@
   "professor|She is Varahi, one of the saptamatrikas. She is pot bellied, for she holds in her womb the universe.": {
    "file": "professor-8269f87cbf.mp3",
    "seconds": 7.09
+  },
+  "professor|She's a firebrand, my niece. She is bored of living with me, but naturally. She finds nothing meaningful to do around here, so she keeps wandering about the hills and the forests. The wild berries have poisoned her tongue.": {
+   "file": "professor-328f0c4cba.mp3",
+   "seconds": 14.36
   },
   "professor|That is a part of the problem. The other part is that you arrived wounded.": {
    "file": "professor-5e13db43d5.mp3",
@@ -311,6 +431,10 @@
   "professor|Why indeed? Because of the accident, I should think. Careless driving, I dare say. Must you fret about those things when we are in the midst of such secret knowledge?": {
    "file": "professor-5d844c5af0.mp3",
    "seconds": 11.27
+  },
+  "professor|Will you stop bickering with your only patient and answer the door?": {
+   "file": "professor-1e6426d3f6.mp3",
+   "seconds": 3.69
   },
   "professor|Yes of course, I am Dr. Parthasarathi. But that is because I have done my doctorate. I am a mere professor. Bhavi is the doctor around here. She fixed you up, my boy.": {
    "file": "professor-c2d5174288.mp3",
