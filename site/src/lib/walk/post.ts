@@ -35,7 +35,8 @@ export class InkEffect extends Effect {
 
 /** The ink, and any other passes over the picture (story mode's sight effects). */
 export function inkComposer(renderer: WebGLRenderer, scene: Scene, camera: Camera, extra: Effect[] = [], ink = true): EffectComposer {
-  const composer = new EffectComposer(renderer, { frameBufferType: HalfFloatType });
+  // the renderer's own antialias is lost drawing into the composer's buffers: multisample them instead
+  const composer = new EffectComposer(renderer, { frameBufferType: HalfFloatType, multisampling: Math.min(4, renderer.capabilities.maxSamples) });
   composer.addPass(new RenderPass(scene, camera));
   const effects = [...(ink ? [new InkEffect()] : []), ...extra];
   if (effects.length) composer.addPass(new EffectPass(camera, ...effects));

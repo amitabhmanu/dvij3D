@@ -5,11 +5,12 @@
 // A fixed 60 Hz step moves the player; every animation frame draws. Nothing
 // runs while paused.
 import {
-  AmbientLight, BackSide, Color, DirectionalLight, DoubleSide, Euler, Fog, IcosahedronGeometry,
-  InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, PerspectiveCamera, Quaternion,
+  BackSide, Color, DirectionalLight, DoubleSide, Euler, Fog, HemisphereLight, IcosahedronGeometry,
+  InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, PerspectiveCamera, PMREMGenerator, Quaternion,
   Scene, ShaderMaterial, Shape, ShapeGeometry, SphereGeometry, SRGBColorSpace, Texture, TextureLoader,
-  Vector2, Vector3, WebGLRenderer,
+  Vector2, Vector3, WebGLRenderer, type Material,
 } from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { decodeHeights, fieldFor, heightAt, setFlat, type Field } from "./heights";
 import { loadLodge, type Look, type Lodge, type Marker } from "./lodge";
 import lodgeInfo from "../../content/generated/lodge.json";
@@ -109,6 +110,8 @@ const GRID: Record<Quality, number> = { low: 192, medium: 288, high: 384 };
 const PIXELS: Record<Quality, number> = { low: 1, medium: 1.5, high: 2 };
 const DRAW: Record<Quality, [number, number]> = { low: [450, 700], medium: [1100, 1600], high: [2000, 2800] };
 const STEP = 1 / 60;
+const HEMI = 1.3; // the sky's light all round (dimmed indoors)
+const ENV = 0.12; // how much the lodge's materials reflect their surroundings (dimmed indoors)
 
 async function fetchWithProgress(url: string, onBytes: (f: number) => void): Promise<ArrayBuffer> {
   const res = await fetch(url);
@@ -185,7 +188,16 @@ export async function createGame(o: GameOptions): Promise<Game> {
 
   const renderer = new WebGLRenderer({ canvas: o.canvas, antialias: true, powerPreference: "high-performance" });
   renderer.outputColorSpace = SRGBColorSpace;
+  const sharp = renderer.capabilities.getMaxAnisotropy();
   const scene = new Scene();
+  // Something soft for the lodge's walls and floors to reflect.
+  const pmrem = new PMREMGenerator(renderer);
+  const room = new RoomEnvironment();
+  const envMap = pmrem.fromScene(room, 0.04);
+  room.dispose();
+  pmrem.dispose();
+  scene.environment = envMap.texture;
+  scene.environmentIntensity = ENV;
   scene.fog = new Fog(new Color(HAZE.x, HAZE.y, HAZE.z), 900, 7000);
   // near 0.5 m, not 0.1: the ink pass reads distances back from the depth buffer,
   // and a closer near plane leaves too little precision for the far valley
@@ -272,7 +284,19 @@ export async function createGame(o: GameOptions): Promise<Game> {
     url: walkAsset(walk.lodge.file), at: { x: walk.lodge.x, y: walk.lodge.y, z: walk.lodge.z },
     half: lodgeInfo.half, court: 8, markers: lodgeInfo.markers as Marker[],
   }, scene);
-  const ambient = new AmbientLight(0xffffff, 1.3);
+  // keep the lodge's textures sharp seen along a wall or a floor
+  lodge.root.traverse((obj) => {
+    const mesh = obj as Mesh;
+    if (!mesh.isMesh) return;
+    for (const mat of ([] as Material[]).concat(mesh.material)) {
+      for (const v of Object.values(mat)) {
+        if (v instanceof Texture) { v.anisotropy = sharp; v.needsUpdate = true; }
+      }
+    }
+  });
+  for (const t of [colours, cutTex]) { t.anisotropy = sharp; t.needsUpdate = true; } // and the land, seen low and far
+  // pale sky from above, the warm brown of the dry ground from below
+  const ambient = new HemisphereLight(0xdde8f0, 0x8a6a48, HEMI);
   scene.add(ambient);
   const sun = new DirectionalLight(0xfff1d6, 2.0);
   sun.position.copy(SUN_DIR).multiplyScalar(9000);
@@ -296,7 +320,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
   const lightFor = (dt: number) => {
     const target = lodge?.indoors(player.x, player.z) ? 1 : 0;
     indoor += (target - indoor) * Math.min(1, dt * 3);
-    ambient.intensity = 1.3 - 0.65 * indoor;
+    ambient.intensity = HEMI * (1 - 0.35 * indoor);
+    scene.environmentIntensity = ENV * (1 - 0.35 * indoor);
     sun.intensity = 2.0 - 1.4 * indoor;
   };
   // Story mode's hold on the body (design §10.4).
@@ -587,6 +612,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       cutouts?.geometry.dispose();
       (cutouts?.material as ShaderMaterial | undefined)?.dispose();
       composer?.dispose();
+      envMap.dispose();
       renderer.dispose();
     },
   };
