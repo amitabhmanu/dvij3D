@@ -165,14 +165,32 @@ function make(p: PropSpec): Made {
       break;
     }
     case "shutters": {
-      // planks nailed across the inside of the window (novel ¶97 "heavily boarded")
-      const planks = new Group();
-      for (let k = 0; k < 6; k++) planks.add(at(new Mesh(new BoxGeometry(0.05, 0.28, 1.6), PLANK), 0, FLOOR + 1.05 + k * 0.31, 0));
-      g.add(planks);
+      // the window "heavily boarded" (novel ¶97): two wooden shutters, battened, jammed shut with
+      // disuse; tugged at and jabbed with an ankle, they "creak open" into the room (¶99, comic b1-p004-5)
+      const W = 1.4, H = 1.9, y0 = FLOOR + 0.9;
+      const leaves = [-1, 1].map((side) => {
+        const hinge = at(new Group(), 0, 0, side * W / 2);
+        const leaf = new Group();
+        leaf.add(at(new Mesh(new BoxGeometry(0.035, H, W / 2 - 0.01), PLANK), 0, y0 + H / 2, -side * W / 4));
+        for (const y of [0.25, H / 2, H - 0.25]) leaf.add(at(new Mesh(new BoxGeometry(0.05, 0.12, W / 2 - 0.06), PLANK), 0.02, y0 + y, -side * W / 4)); // the battens
+        const brace = at(new Mesh(new BoxGeometry(0.05, H * 0.85, 0.1), PLANK), 0.02, y0 + H / 2, -side * W / 4);
+        brace.rotation.x = side * 0.32;
+        leaf.add(brace);
+        hinge.add(leaf);
+        g.add(hinge);
+        return { hinge, side };
+      });
+      let open = 0, target = 0;
+      const pose = () => { for (const l of leaves) l.hinge.rotation.y = l.side * -1.85 * open * (1 + 0.06 * Math.sin(open * Math.PI)); };
       return {
         obj: at(g, x, 0, z),
-        set: (s) => { state = s; planks.visible = s !== "open"; },
+        set: (s) => { state = s; target = s === "open" ? 1 : 0; }, // (the script plays the creak)
         point: () => [x, FLOOR + 1.85, z],
+        update: (dt) => {
+          if (open === target) return;
+          open = Math.min(1, Math.max(0, open + Math.sign(target - open) * dt / 0.8));
+          pose();
+        },
       };
     }
     case "clutter": {
