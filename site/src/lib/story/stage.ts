@@ -6,6 +6,8 @@ import type { Game } from "../walk/game";
 import { reachPage } from "../progress";
 import type { Act, Scene, Stage, Vec2, Vec3 } from "./director";
 import { Props } from "./props";
+import { Hands } from "./hands";
+import { Vector3 } from "three";
 
 /** What the screen offers the story. */
 export type StoryScreen = {
@@ -57,7 +59,11 @@ export class StoryStage implements Stage {
   /** Watch mode: the story does what each beat asks by itself, and Dvij can't be steered. */
   private auto = false;
 
-  constructor(private game: Game, private screen: StoryScreen) {}
+  private hands: Hands;
+
+  constructor(private game: Game, private screen: StoryScreen) {
+    this.hands = new Hands(() => game.body.arms(), (s) => this.sleep(s));
+  }
 
   /** E, Space or a click: does the thing asked, or moves the words on. */
   press(): void {
@@ -172,21 +178,36 @@ export class StoryStage implements Stage {
         return;
       }
       case "look":
-        if (!hurried && arg.at === "arm") await body.glance(-1.0, 2.2);
+        if (!hurried && arg.at === "arm") await Promise.all([body.glance(-0.75, 2.4), this.hands.lookAtArm(2.4)]);
         if (!hurried && arg.at === "down") await body.glance(-0.7, 1.4); // a bow of the head
         return;
       case "animate":
         if (!hurried && String(arg.player).startsWith("drink")) {
-          body.fx("gulp");
-          await body.glance(-0.5, 1.4);
+          // whatever there is to drink from in the scene: the glass, the tumbler
+          const id = ["glass", "tumbler"].find((k) => this.props?.handle(k));
+          const cup = id ? this.props!.handle(id) : null;
+          const spill = String(arg.player) === "drink-spill" && id ? () => { this.props!.set(id, "spilled"); body.fx("splash"); } : null;
+          await this.hands.drink(cup, cup?.parent ?? null, new Vector3(0, 0.05, 0), spill, () => body.fx("gulp"));
+          if (!spill) this.hands.putDown();
         }
         return;
       case "body":
         body.injured(!!arg.injured);
         return;
-      case "prop":
+      case "prop": {
+        const handle = this.props?.handle(arg.id);
+        if (handle && this.hands.holding() === handle) {
+          // he lets go of it: "he let the glass roll down the blanket" (¶95)
+          if (!hurried) await this.sleep(0.3);
+          this.hands.release();
+        }
+        if (arg.id === "shutters" && arg.state === "open" && !hurried) {
+          const p = this.props?.point("shutters");
+          if (p) return this.hands.pull(new Vector3(...this.world(p as Vec3)), () => this.props?.set(arg.id, arg.state));
+        }
         this.props?.set(arg.id, arg.state);
         return;
+      }
       case "sound":
         body.fx(arg);
         return;
@@ -251,6 +272,10 @@ export class StoryStage implements Stage {
         if (!hinted && !acting && !this.screen.paused() && performance.now() - started > 25000) {
           hinted = true;
           this.screen.hint(act.kind === "reach" ? "Look for the way: the objective is up at the top." : "Look straight at it and press E.");
+        }
+        if (ok && !this.cancelled && t && (act.kind === "use" || act.kind === "look-press")
+            && !(typeof act.target === "string" && ["glass", "tumbler", "shutters"].includes(act.target))) {
+          void this.hands.touch(new Vector3(...t)); // a hand goes out to what he takes or touches (the drink and the shutters have their own)
         }
         if (ok || this.cancelled) {
           this.pressed = false;

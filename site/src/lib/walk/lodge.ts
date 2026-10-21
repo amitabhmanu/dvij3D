@@ -46,7 +46,7 @@ export type Lodge = {
   /** Under the roof, rather than outside or in the open courtyard. */
   indoors: (x: number, z: number) => boolean;
   /** The doorway within reach of (x, z), if any, and whether its door is open. */
-  doorNear: (x: number, z: number) => { name: string; open: boolean } | null;
+  doorNear: (x: number, z: number) => { name: string; open: boolean; at: [number, number, number] } | null;
   toggleDoor: (name: string) => void;
   /** Something to look at within reach of (x, z), if any (lodge.yaml `looks`). */
   lookNear: (x: number, z: number) => Look | null;
@@ -187,7 +187,7 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
       if (!best) return null;
       // double doors open and shut together
       const pair = best.name.replace(/(\d)[LR]$/, "$1");
-      return { name: pair, open: best.open };
+      return { name: pair, open: best.open, at: [best.centre.x + info.at.x, best.centre.y + info.at.y, best.centre.z + info.at.z] };
     },
     lookNear: (x, z) => {
       const [lx, lz] = local(x, z);

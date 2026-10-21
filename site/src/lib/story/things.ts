@@ -15,7 +15,12 @@ import {
 } from "three";
 
 export type Mats = { WOOD: Material; BRASS: Material; PAPER: Material; CLOTH: Material; CLAY: Material; IRON: Material; PLASTER: Material };
-export type Thing = { obj: Object3D; set: (state: string) => void; point: () => [number, number, number]; update?: (dt: number) => void; dispose?: () => void };
+export type Thing = {
+  obj: Object3D; set: (state: string) => void; point: () => [number, number, number];
+  /** what a hand picks up of it (a cup), if anything */
+  handle?: Object3D;
+  update?: (dt: number) => void; dispose?: () => void;
+};
 
 const std = (hex: string, o: Partial<MeshStandardMaterial> = {}) => new MeshStandardMaterial({ color: new Color(hex), roughness: 0.8, ...o });
 const at = <T extends Object3D>(o: T, x: number, y: number, z: number) => { o.position.set(x, y, z); return o; };
@@ -278,7 +283,7 @@ export function makeThing(kind: string, x: number, z: number, floor: number, sta
         drink.visible = froth.visible = st !== "empty";
       };
       set(state);
-      return { obj: at(g, x, 0, z), set, point: () => [x, floor + h, z] };
+      return { obj: at(g, x, 0, z), set, point: () => [x, floor + h, z], handle: big ? undefined : t };
     }
     case "medical-kit": {
       // what Bhavi works with (novel ¶282-283): an enamel tray, a roll of medical tape, gauze, cotton

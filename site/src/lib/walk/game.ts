@@ -21,6 +21,8 @@ import groundDetail from "../../content/generated/ground-detail.json";
 import { applyWear } from "./wear";
 import { lodgeFx } from "./lodge-fx";
 import { openFire } from "./fire-fx";
+import { Arms } from "./arms";
+import armsInfo from "../../content/generated/arms.json";
 import { inkComposer } from "./post";
 import { SightEffect } from "../story/effects";
 import { findRoute } from "../story/route";
@@ -102,6 +104,8 @@ export type Body = {
   /** The lodge's frame -> the world's. */
   fromLodge: (x: number, y: number, z: number) => [number, number, number];
   lodgeRoot: () => import("three").Object3D | null;
+  /** Dvij's own arms (arms.ts), if they loaded. */
+  arms: () => Arms | null;
   /** Another built place's frame -> the world's, and its model: "temple-site" (Chapter 9). */
   fromSite: (id: string, x: number, y: number, z: number) => [number, number, number];
   siteRoot: (id: string) => import("three").Object3D | null;
@@ -248,9 +252,10 @@ export async function createGame(o: GameOptions): Promise<Game> {
   scene.environment = envMap.texture;
   scene.environmentIntensity = ENV;
   scene.fog = new Fog(new Color(HAZE.x, HAZE.y, HAZE.z), 900, 7000);
-  // near 0.5 m, not 0.1: the ink pass reads distances back from the depth buffer,
-  // and a closer near plane leaves too little precision for the far valley
-  const camera = new PerspectiveCamera(70, 1, 0.5, 12000);
+  // near 12 cm, for Dvij's own hands close in front of him (arms.ts); the ink pass reads distances
+  // back from the 24-bit depth buffer, which still tells them apart to about 2 m at 2 km, finer
+  // than the ink's test (a tenth of the distance) needs
+  const camera = new PerspectiveCamera(70, 1, 0.12, 12000);
   camera.rotation.order = "YXZ";
   const sunDir = SUN_DIR.clone(); // (moved by Body.setting, for a scene's time of day)
   const sky = skyDome(sunDir);
@@ -402,6 +407,10 @@ export async function createGame(o: GameOptions): Promise<Game> {
       }
     }
   });
+  // Dvij's own arms, riding on the camera (the camera joins the scene so they're drawn)
+  scene.add(camera);
+  const arms = (armsInfo as { file?: string }).file ? await Arms.load(walkAsset((armsInfo as { file: string }).file), camera).catch((e) => { console.warn("no arms:", e); return null; }) : null;
+  let walking = 0; // 0 still, 1 at a walk: for the arms' bob
   // the kitchen fire's flicker, the dhoop batti's smoke, the dust in the air
   const moving = lodgeFx(lodge.root);
   // its decay: mould, grime, flaking paint, rust (lodge.yaml `character`)
@@ -609,7 +618,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
       moveBy(move);
       for (const f of steppers) f(STEP * rate);
       acc -= STEP;
-      stride += Math.hypot(player.x - before.x, player.z - before.z);
+      const moved = Math.hypot(player.x - before.x, player.z - before.z);
+      stride += moved;
+      walking += (Math.min(1.5, moved / (rules.walk * STEP)) - walking) * 0.1;
       if (stride > (move.run ? 1.7 : 0.85)) {
         stride = 0;
         sounds?.step(surface(player.x, player.z), move.run);
@@ -622,6 +633,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     lightFor(1 / 60); // (the sight pass eases itself, each time the composer renders)
     moving.update(1 / 60, camera);
     for (const f of fires) f.update(1 / 60, camera);
+    arms?.update(1 / 60, walking);
     place();
     draw();
     o.onFrame?.(player.x, player.z, player.heading);
@@ -717,6 +729,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     rate: (r) => { rate = r; sight.speed = r; },
     fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
     lodgeRoot: () => lodge?.root ?? null,
+    arms: () => arms,
     fromSite: (id, x, y, z) => {
       const st = (walk.sites ?? []).find((k) => k.id === id);
       return st ? [x + st.x, y + st.y, z + st.z] : [x, y, z];
@@ -782,6 +795,14 @@ export async function createGame(o: GameOptions): Promise<Game> {
     useDoor: () => {
       const d = lodge?.doorNear(player.x, player.z);
       if (!d) return false;
+      // a hand goes out to it: pushing it open, or pulling it to (comic b1-p004-7 "holding the doorframe")
+      if (arms) {
+        const at = arms.toCamera(new Vector3(...d.at));
+        at.y = Math.max(-0.25, Math.min(0.0, at.y));
+        at.setLength(Math.min(at.length(), 0.55));
+        arms.go("l", { at, grip: d.open ? 0.7 : 0.15, show: true }, 0.35);
+        setTimeout(() => arms.go("l", { at: Arms.rest("l"), grip: 0.25, show: false }, 0.6), 650);
+      }
       lodge!.toggleDoor(d.name);
       return true;
     },
@@ -824,6 +845,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       colours.dispose();
       if (detail) for (const d of Object.values(detail)) { d.color.dispose(); d.normal.dispose(); }
       moving.dispose();
+      arms?.dispose();
       for (const f of fires) f.dispose();
       lodge?.dispose();
       for (const m of sites.values()) m.dispose();

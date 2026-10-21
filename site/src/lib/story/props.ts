@@ -272,6 +272,7 @@ export class Props {
       const spec = { ...p, at: p.at ?? (p.window ? WINDOWS[p.window] : p.room ? CLUTTER[p.room] : undefined) };
       const m = make(spec);
       if (p.state) m.set(p.state);
+      if ((p as { "held-by"?: string })["held-by"]) m.obj.visible = false; // someone else has it until it's handed over
       this.made.set(p.id, m);
       this.group.add(m.obj);
     }
