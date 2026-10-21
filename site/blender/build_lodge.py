@@ -278,8 +278,8 @@ def build_walls(g, col):
                 wall_piece(g, orient, line, lo, hi, o[5], TOP, mat, col)  # lintel
                 if o[4] > FLOOR + 0.01:
                     wall_piece(g, orient, line, lo, hi, 0, o[4], mat, col)  # sill
-                else:
-                    wall_piece(g, orient, line, lo, hi, 0, FLOOR, mat, None)
+                else:  # the threshold, just under the floor: two faces in one place bake black
+                    wall_piece(g, orient, line, lo, hi, 0, FLOOR - 0.005, mat, None)
                 cur = hi
             wall_piece(g, orient, line, cur, b, 0, TOP, mat, col)
     # the kitchen's soot-black deep end (novel ¶195)
@@ -342,7 +342,8 @@ def build_floors(g, col):
     # ceilings with sal-wood crossbeams (novel ¶194)
     for r in spec["rooms"]:
         x0, z0, x1, z1 = r["rect"]
-        g.box(x0, x1, TOP, TOP + 0.08, z0, z1, "whitewash", faces=("-y",))
+        # (to the walls' faces, not into them, so the baked shade at the edge isn't the wall's inside)
+        g.box(x0 + T / 2, x1 - T / 2, TOP, TOP + 0.08, z0 + T / 2, z1 - T / 2, "whitewash", faces=("-y",))
         span_x = (x1 - x0) >= (z1 - z0)
         n = max(1, int((x1 - x0 if span_x else z1 - z0) / 2.4))
         for i in range(1, n + 1):
@@ -699,8 +700,9 @@ def build_grounds(g, col):
                 g.sphere(x, 0.75, zz, 0.32, "foliage", seg=8)
         zz += 6
     ring = HALF + 3
+    # (the strips meet without overlapping: two faces in one place bake black)
     for x0, x1, z0, z1 in ((-ring, ring, -ring, -HALF - 1), (-ring, -1.6, HALF + 0.2, ring + 3.4), (1.6, ring, HALF + 0.2, ring + 3.4),
-                           (-ring, -HALF - 1, -ring, ring), (HALF + 1, ring, -ring, ring)):
+                           (-ring, -HALF - 1, -HALF - 1, HALF + 0.2), (HALF + 1, ring, -HALF - 1, HALF + 0.2)):
         g.box(x0, x1, 0.0, 0.03, z0, z1, "gravel", faces=("+y",))
     # the deep well with its slimy brick walls and fallen hoist (novel ¶168-169)
     wx, wz = gr["well"]["at"]
@@ -912,6 +914,171 @@ def render_views():
         bpy.data.objects.remove(o)
 
 
+AO_SIZE = 2048  # one atlas for the whole lodge; the pipeline keeps it at this size
+AO_DISTANCE = 1.2  # metres: corners, skirting lines, the eaves' undersides, beam joints, pillar feet
+AO_SAMPLES = 512
+
+
+def gpu_or_cpu():
+    """Cycles on the GPU if there is one: the bake is many rays."""
+    try:
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+        for kind in ("OPTIX", "CUDA", "HIP", "ONEAPI", "METAL"):
+            try:
+                prefs.compute_device_type = kind
+            except TypeError:
+                continue
+            prefs.get_devices()
+            if any(d.type == kind for d in prefs.devices):
+                for d in prefs.devices:
+                    d.use = True
+                scene.cycles.device = "GPU"
+                return kind
+    except Exception as e:  # noqa: BLE001 (any failure: the CPU will do)
+        print("no GPU for the bake:", e)
+    scene.cycles.device = "CPU"
+    return "CPU"
+
+
+AO_PAD = 2  # texels of gutter round each quad, which the bake's margin fills
+AO_MAX = 320  # texels: the lawn and the drive needn't be as sharp as a skirting line
+AO_GAP = 10  # texels between one object's islands and the next's: more than the bake's margin
+
+
+def lightmap_pack(objs):
+    """Every quad (Geo makes each its own island) gets a rectangle of the atlas
+    in proportion to its size in metres, shelf-packed, at the largest scale that
+    fits. Blender's own unwrappers choke on this many separate islands."""
+    rects = []  # (texel w and h at scale 1, object, polygon)
+    for o in objs:
+        me = o.data
+        for poly in me.polygons:
+            v = [Vector(me.vertices[i].co) for i in poly.vertices]
+            w = max((v[1] - v[0]).length, (v[2] - v[3]).length)
+            h = max((v[3] - v[0]).length, (v[2] - v[1]).length)
+            rects.append((w, h, o, poly))
+
+    def size(w, h, s):
+        return max(2, min(AO_MAX, math.ceil(w * s))), max(2, min(AO_MAX, math.ceil(h * s)))
+
+    index = {o.name: i for i, o in enumerate(objs)}
+
+    def pack(s):
+        """Shelves, tallest first, each object in shelves of its own: Cycles bakes the
+        objects one at a time, and each one's margin would paint over the edges of the
+        others' islands if they were near."""
+        order = sorted(range(len(rects)), key=lambda k: (index[rects[k][2].name], -size(rects[k][0], rects[k][1], s)[1]))
+        at = [None] * len(rects)
+        x = y = shelf = 0
+        last = None
+        for k in order:
+            w, h = size(rects[k][0], rects[k][1], s)
+            W, H = w + 2 * AO_PAD, h + 2 * AO_PAD
+            if rects[k][2] is not last and last is not None:
+                x, y, shelf = 0, y + shelf + AO_GAP, 0
+            last = rects[k][2]
+            if x + W > AO_SIZE:
+                x, y, shelf = 0, y + shelf, 0
+            if y + H > AO_SIZE:
+                return None
+            at[k] = (x + AO_PAD, y + AO_PAD, w, h)
+            x += W
+            shelf = max(shelf, H)
+        return at
+
+    lo, hi = 0.5, 200.0  # texels per metre
+    best = pack(lo)
+    for _ in range(18):
+        mid = (lo + hi) / 2
+        got = pack(mid)
+        if got:
+            lo, best = mid, got
+        else:
+            hi = mid
+    print(f"AO atlas: {len(rects)} quads at {lo:.1f} texels per metre")
+    for (w, h, o, poly), (x, y, pw, ph) in zip(rects, best):
+        uv = o.data.uv_layers["AO"].data
+        corners = [(x, y), (x + pw, y), (x + pw, y + ph), (x, y + ph)]
+        for li, (u, v) in zip(poly.loop_indices, corners):
+            uv[li].uv = (u / AO_SIZE, v / AO_SIZE)
+
+
+def bake_ao(baked):
+    """Ambient occlusion, baked with Cycles into one atlas on a second UV set,
+    and handed to glTF as each material's occlusion texture (the game reads it
+    as aoMap on uv channel 1). The door leaves move, so they're left out of the
+    bake: they and the hidden collision copy point their second UVs at a texel
+    that saw open sky."""
+    others = [o for o in scene.objects if o.type == "MESH" and o not in baked]
+    for o in baked + others:
+        o.data.uv_layers.new(name="AO")
+    lightmap_pack(baked)
+
+    img = bpy.data.images.new("lodge-ao", AO_SIZE, AO_SIZE, alpha=False)
+    img.generated_color = (1, 1, 1, 1)
+    mats = {s.material for o in baked + others for s in o.material_slots if s.material}
+    mats.discard(MATS.get("green-patch"))  # the spoiler patch: hidden at first, and flat on a wall
+    group = bpy.data.node_groups.new("glTF Material Output", "ShaderNodeTree")
+    group.interface.new_socket(name="Occlusion", in_out="INPUT", socket_type="NodeSocketFloat")
+    for m in mats:
+        nt = m.node_tree
+        uv = nt.nodes.new("ShaderNodeUVMap")
+        uv.uv_map = "AO"
+        tex = nt.nodes.new("ShaderNodeTexImage")
+        tex.image = img
+        tex.interpolation = "Linear"
+        nt.links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        nt.nodes.active = tex  # the bake writes into the active image node
+        sep = nt.nodes.new("ShaderNodeSeparateColor")
+        nt.links.new(tex.outputs["Color"], sep.inputs["Color"])
+        out = nt.nodes.new("ShaderNodeGroup")
+        out.node_tree = group
+        nt.links.new(sep.outputs["Red"], out.inputs["Occlusion"])
+
+    scene.render.engine = "CYCLES"
+    print("AO bake on", gpu_or_cpu())
+    scene.cycles.samples = AO_SAMPLES
+    if scene.world is None:
+        scene.world = bpy.data.worlds.new("bake")
+    scene.world.light_settings.distance = AO_DISTANCE
+    hidden = [o for o in scene.objects if o.type == "MESH" and o not in baked]
+    for o in hidden:  # the doors (they swing), the collision copy (it would shade everything), the patch
+        o.hide_render = True
+    for o in scene.objects:
+        o.select_set(o in baked)
+    bpy.context.view_layer.objects.active = baked[0]
+    bpy.ops.object.bake(type="AO", margin=6, margin_type="EXTEND", use_clear=True, target="IMAGE_TEXTURES", uv_layer="AO")
+    for o in hidden:
+        o.hide_render = False
+    img.filepath_raw = f"{TEX}/lodge-ao.png"
+    img.file_format = "PNG"
+    img.save()
+    if RENDERS != "-":
+        img.save_render(f"{RENDERS}/lodge-ao.png")
+
+    # a texel in open sky for the things left out of the bake
+    import numpy as np
+    px = np.empty(AO_SIZE * AO_SIZE * 4, np.float32)
+    img.pixels.foreach_get(px)
+    ao = px.reshape(AO_SIZE, AO_SIZE, 4)[:, :, 0]
+    r = 6
+    ok = ao > 0.995
+    for dy in (-r, r):  # white across a block, so mipmaps and the 1024 fallback keep it white
+        ok &= np.roll(ok, dy, 0)
+    for dx in (-r, r):
+        ok &= np.roll(ok, dx, 1)
+    ys, xs = np.nonzero(ok[r:-r, r:-r])
+    if len(ys):
+        u, v = (xs[0] + r + 0.5) / AO_SIZE, (ys[0] + r + 0.5) / AO_SIZE
+    else:
+        k = int(np.argmax(ao))
+        u, v = (k % AO_SIZE + 0.5) / AO_SIZE, (k // AO_SIZE + 0.5) / AO_SIZE
+    print(f"AO open-sky texel at {u:.4f}, {v:.4f}; mean AO {ao.mean():.3f}")
+    for o in others:
+        for d in o.data.uv_layers["AO"].data:
+            d.uv = (u, v)
+
+
 def main():
     setup_materials()
     house, grounds, furniture, col = Geo(), Geo(), Geo(), Geo()
@@ -925,14 +1092,14 @@ def main():
     furnish(furniture, col)
     from_the_comic(furniture, col)
     build_grounds(grounds, col)
-    house.to_object("house")
-    furniture.to_object("furniture")
-    grounds.to_object("grounds")
+    baked = [house.to_object("house"), furniture.to_object("furniture"), grounds.to_object("grounds")]
+    baked += [o for o in scene.objects if o.name.startswith("gate:")]  # the iron gates stand open for good
     build_back_wall_patch()
     markers()
     collision_object(col)
     if RENDERS != "-":
         render_views()
+    bake_ao(baked)
     bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", export_extras=True, export_yup=True,
                               export_apply=True, export_image_format="WEBP", use_selection=False)
     json.dump(MARKERS, open(OUT + ".markers.json", "w", encoding="utf-8"), indent=1)

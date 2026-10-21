@@ -5,9 +5,12 @@
    the comic's own drawing of it (b4-p001 panel 2).
 3. Run Blender headless on site/blender/build_lodge.py, which builds the house,
    its furniture, its grounds, a collision copy and the named points the game
-   reads, renders it from the comic's own viewpoints, and exports a glTF.
-4. Compress it (meshopt geometry, WebP textures at most 1024 px) and publish it
-   under its hash.
+   reads, renders it from the comic's own viewpoints, bakes its ambient
+   occlusion into one 2048 px atlas (the materials' glTF occlusion texture, on
+   a second UV set), and exports a glTF.
+4. Compress it (meshopt geometry, WebP textures; the 512 px colour textures
+   stay as they are, the occlusion atlas stays 2048 px) and publish it under
+   its hash.
 5. Put each render beside the comic panel it answers, for review.
 
 Inputs:  src/content/valley/lodge.yaml, site-assets/master/b4-p001.png, the comic panels
@@ -101,10 +104,13 @@ def main() -> None:
     if "LODGE OK" not in run.stdout:
         print(run.stdout[-4000:], run.stderr[-4000:])
         raise SystemExit("Blender did not build the lodge")
+    for line in run.stdout.splitlines():
+        if line.startswith("AO"):
+            print(line)  # the occlusion bake: its device, its texel density, its open-sky texel
     small = BUILD / "lodge.small.glb"
     npx = "npx.cmd" if os.name == "nt" else "npx"
     subprocess.run([npx, "gltf-transform", "optimize", str(raw), str(small), "--compress", "meshopt",
-                    "--texture-compress", "webp", "--texture-size", "1024", "--simplify", "false",
+                    "--texture-compress", "webp", "--texture-size", "2048", "--simplify", "false",
                     "--join", "false", "--flatten", "false", "--instance", "false", "--palette", "false"],
                    check=True, cwd=SITE, capture_output=True)
     data = small.read_bytes()

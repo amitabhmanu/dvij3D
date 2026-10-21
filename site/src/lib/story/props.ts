@@ -166,6 +166,13 @@ export class Props {
       this.made.set(p.id, m);
       this.group.add(m.obj);
     }
+    // in the sun's shadows like the lodge's own furniture (glass and water let it through)
+    this.group.traverse((o) => {
+      const m = o as Mesh;
+      if (!m.isMesh) return;
+      m.receiveShadow = true;
+      m.castShadow = !(m.material as MeshStandardMaterial).transparent;
+    });
   }
 
   has(id: string) {

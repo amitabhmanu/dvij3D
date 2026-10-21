@@ -6,7 +6,8 @@
 // runs while paused.
 import {
   BackSide, Color, DirectionalLight, DoubleSide, Euler, Fog, HemisphereLight, IcosahedronGeometry,
-  InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, PerspectiveCamera, PMREMGenerator, Quaternion,
+  InstancedMesh, LinearFilter, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshStandardMaterial, PCFShadowMap, PerspectiveCamera,
+  PMREMGenerator, Quaternion,
   Scene, ShaderMaterial, Shape, ShapeGeometry, SphereGeometry, SRGBColorSpace, Texture, TextureLoader,
   Vector2, Vector3, WebGLRenderer, type Material,
 } from "three";
@@ -112,6 +113,12 @@ const DRAW: Record<Quality, [number, number]> = { low: [450, 700], medium: [1100
 const STEP = 1 / 60;
 const HEMI = 1.3; // the sky's light all round (dimmed indoors)
 const ENV = 0.12; // how much the lodge's materials reflect their surroundings (dimmed indoors)
+const SUN = 2.0;
+// The sun's shadows (medium and high): a square this many metres each way of
+// where you look, in a map this many texels across.
+const SHADOW_REACH = 32;
+const SHADOW_MAP: Record<Quality, number> = { low: 0, medium: 1024, high: 2048 };
+const AO = 0.7; // how much the lodge's baked occlusion darkens the sky's light and reflections (1 makes its tightest corners black)
 
 async function fetchWithProgress(url: string, onBytes: (f: number) => void): Promise<ArrayBuffer> {
   const res = await fetch(url);
@@ -188,6 +195,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
 
   const renderer = new WebGLRenderer({ canvas: o.canvas, antialias: true, powerPreference: "high-performance" });
   renderer.outputColorSpace = SRGBColorSpace;
+  renderer.shadowMap.type = PCFShadowMap; // (three's soft PCF; PCFSoftShadowMap is gone)
+  renderer.shadowMap.autoUpdate = false; // drawn again only when something in it changes (shadowDirty)
+  let shadowDirty = true;
   const sharp = renderer.capabilities.getMaxAnisotropy();
   const scene = new Scene();
   // Something soft for the lodge's walls and floors to reflect.
@@ -221,6 +231,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     }
     groundMesh = new Mesh(groundGeometry(GRID[q]), groundMat(GRID[q]));
     groundMesh.frustumCulled = false; // it moves with you; the shader places it
+    groundMesh.receiveShadow = true; // (it can't cast: the shadow pass wouldn't raise the grid into hills)
     scene.add(groundMesh);
   };
   buildGround(o.quality);
@@ -257,7 +268,26 @@ export async function createGame(o: GameOptions): Promise<Game> {
     blockers.add(x, z, size * 0.45);
   });
   stones.computeBoundingSphere();
+  stones.receiveShadow = true;
   scene.add(stones);
+  // Only the boulders near the sun's shadow square cast: a small copy of them that
+  // draws nothing itself (all of them, valley-wide, cost more than the rest of the shadow).
+  const NEAR_STONES = 400;
+  const castMat = new MeshBasicMaterial({ colorWrite: false, depthWrite: false });
+  const casters = new InstancedMesh(rock, castMat, NEAR_STONES);
+  casters.count = 0;
+  casters.castShadow = true;
+  casters.frustumCulled = false;
+  scene.add(casters);
+  const stoneAt = worldJson.boulders.map((_, i) => { stones.getMatrixAt(i, m4); return m4.clone(); });
+  const castNear = (x: number, z: number) => {
+    let n = 0;
+    worldJson.boulders.forEach(([bx, , bz], i) => {
+      if (n < NEAR_STONES && Math.abs(bx - x) < SHADOW_REACH * 1.6 && Math.abs(bz - z) < SHADOW_REACH * 1.6) casters.setMatrixAt(n++, stoneAt[i]);
+    });
+    casters.count = n;
+    casters.instanceMatrix.needsUpdate = true;
+  };
 
   // The painted cut-outs: buildings where the painting draws them, trees where it is green.
   o.onProgress(0.85, "Planting the trees");
@@ -284,13 +314,24 @@ export async function createGame(o: GameOptions): Promise<Game> {
     url: walkAsset(walk.lodge.file), at: { x: walk.lodge.x, y: walk.lodge.y, z: walk.lodge.z },
     half: lodgeInfo.half, court: 8, markers: lodgeInfo.markers as Marker[],
   }, scene);
-  // keep the lodge's textures sharp seen along a wall or a floor
+  // keep the lodge's textures sharp seen along a wall or a floor; its roof, walls and
+  // furniture cast the sun's shadows and take them, and its baked occlusion (on its own
+  // UV set) darkens the sky's light in its corners
   lodge.root.traverse((obj) => {
     const mesh = obj as Mesh;
     if (!mesh.isMesh) return;
+    mesh.castShadow = mesh.receiveShadow = true;
     for (const mat of ([] as Material[]).concat(mesh.material)) {
       for (const v of Object.values(mat)) {
         if (v instanceof Texture) { v.anisotropy = sharp; v.needsUpdate = true; }
+      }
+      if (mat instanceof MeshStandardMaterial && mat.aoMap) {
+        mat.aoMapIntensity = AO;
+        // the atlas packs thousands of small islands a few texels apart: its smaller mips
+        // would blend each with its neighbours (some black), so it is read at full size only
+        mat.aoMap.generateMipmaps = false;
+        mat.aoMap.minFilter = LinearFilter;
+        mat.aoMap.needsUpdate = true;
       }
     }
   });
@@ -298,9 +339,58 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // pale sky from above, the warm brown of the dry ground from below
   const ambient = new HemisphereLight(0xdde8f0, 0x8a6a48, HEMI);
   scene.add(ambient);
-  const sun = new DirectionalLight(0xfff1d6, 2.0);
+  const sun = new DirectionalLight(0xfff1d6, SUN);
   sun.position.copy(SUN_DIR).multiplyScalar(9000);
-  scene.add(sun);
+  scene.add(sun, sun.target);
+  const shade = sun.shadow.camera;
+  shade.left = shade.bottom = -SHADOW_REACH;
+  shade.right = shade.top = SHADOW_REACH;
+  shade.near = 1;
+  shade.far = 400;
+  sun.shadow.bias = -0.0004;
+  sun.shadow.normalBias = 0.03;
+  sun.shadow.radius = 1.5;
+  const setShadows = (q: Quality) => {
+    const size = SHADOW_MAP[q];
+    sun.castShadow = size > 0;
+    renderer.shadowMap.enabled = size > 0;
+    if (!size || sun.shadow.mapSize.x !== size) {
+      if (size) sun.shadow.mapSize.set(size, size);
+      sun.shadow.map?.dispose();
+      sun.shadow.map = null; // made again at the new size (on low, not at all)
+    }
+    shadowDirty = true;
+    // the shaders are built with or without shadows: build them again
+    scene.traverse((obj) => {
+      const mesh = obj as Mesh;
+      if (mesh.isMesh) for (const m of ([] as Material[]).concat(mesh.material)) m.needsUpdate = true;
+    });
+  };
+  setShadows(o.quality);
+  // The shadow's square follows your eyes, a little ahead of you. It moves in steps of a
+  // couple of metres (the map is drawn again only then), each a whole number of its
+  // texels, so the edges of shadows don't crawl.
+  const sunFrame = new Matrix4().lookAt(SUN_DIR, new Vector3(), new Vector3(0, 1, 0));
+  const sunFrameInv = sunFrame.clone().transpose();
+  const ahead = new Vector3();
+  const RECENTRE = 2;
+  const followSun = () => {
+    if (!sun.castShadow) return;
+    const texel = (2 * SHADOW_REACH) / sun.shadow.mapSize.x;
+    camera.getWorldDirection(ahead);
+    ahead.y = 0;
+    ahead.normalize().multiplyScalar(SHADOW_REACH * 0.45).add(camera.position);
+    if (!shadowDirty && ahead.distanceTo(sun.target.position) < RECENTRE) return;
+    ahead.applyMatrix4(sunFrameInv);
+    ahead.x = Math.round(ahead.x / texel) * texel;
+    ahead.y = Math.round(ahead.y / texel) * texel;
+    ahead.applyMatrix4(sunFrame);
+    sun.target.position.copy(ahead);
+    sun.position.copy(ahead).addScaledVector(SUN_DIR, 200);
+    sun.target.updateMatrixWorld();
+    castNear(ahead.x, ahead.z);
+    shadowDirty = true;
+  };
 
   const halfW = walk.worldWidth / 2 - 3, halfD = walk.worldDepth / 2 - 3;
   const blocked = (x: number, z: number, r: number) =>
@@ -316,13 +406,17 @@ export async function createGame(o: GameOptions): Promise<Game> {
   };
   const world = { ground, blocked, built };
   // Indoors it is darker, lit from the windows and the courtyard, and the haze stands off.
+  // With shadows the roof keeps the sun out: the sky's light drops and the sun's rises a
+  // little, so the patches it throws through the windows and doors read as the room's
+  // light. Without shadows the sun itself is dimmed.
   let indoor = 0;
   const lightFor = (dt: number) => {
     const target = lodge?.indoors(player.x, player.z) ? 1 : 0;
     indoor += (target - indoor) * Math.min(1, dt * 3);
-    ambient.intensity = HEMI * (1 - 0.35 * indoor);
-    scene.environmentIntensity = ENV * (1 - 0.35 * indoor);
-    sun.intensity = 2.0 - 1.4 * indoor;
+    const shadows = sun.castShadow;
+    ambient.intensity = HEMI * (1 - (shadows ? 0.6 : 0.35) * indoor);
+    scene.environmentIntensity = ENV * (1 - (shadows ? 0.5 : 0.35) * indoor);
+    sun.intensity = SUN + (shadows ? 1.0 : -1.4) * indoor;
   };
   // Story mode's hold on the body (design §10.4).
   let hold: "free" | "look" | "none" = "free";
@@ -387,7 +481,11 @@ export async function createGame(o: GameOptions): Promise<Game> {
     composer = q === "low" && !o.story ? null : inkComposer(renderer, scene, camera, o.story ? [sight] : [], q !== "low");
   };
   setInk(o.quality);
-  const draw = () => (composer ? composer.render() : renderer.render(scene, camera));
+  const draw = () => {
+    if (shadowDirty) { renderer.shadowMap.needsUpdate = true; shadowDirty = false; }
+    if (composer) composer.render();
+    else renderer.render(scene, camera);
+  };
   const ro = new ResizeObserver(resize);
   ro.observe(o.canvas);
   resize();
@@ -396,6 +494,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
     camera.position.set(player.x, player.y, player.z);
     camera.rotation.set(player.pitch, -player.heading, roll + sway * Math.sin(swayT) * 0.045);
     sky.position.copy(camera.position);
+    camera.updateMatrixWorld();
+    followSun();
     const mat = groundMesh!.material as ShaderMaterial;
     // snap the grid's centre to its own spacing near you, so the land doesn't swim
     (mat.uniforms.center.value as Vector2).set(Math.round(player.x / 2) * 2, Math.round(player.z / 2) * 2);
@@ -413,7 +513,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     return woods.count(x, z, 20) > 3 ? "grass" : "earth";
   };
 
-  let raf = 0, running = false, last = 0, acc = 0, statsAt = 0;
+  let raf = 0, running = false, last = 0, acc = 0, statsAt = 0, shadowAge = 0;
   const frame = (now: number) => {
     raf = 0;
     if (!running) return;
@@ -430,7 +530,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
         sounds?.step(surface(player.x, player.z), move.run);
       }
     }
-    lodge?.update(1 / 60);
+    // a door swinging, or (now and then) a story prop moved: the shadows change
+    if (lodge?.update(1 / 60) || ++shadowAge > 30) { shadowDirty = true; shadowAge = 0; }
     lightFor(1 / 60); // (the sight pass eases itself, each time the composer renders)
     place();
     draw();
@@ -590,6 +691,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       buildGround(qq);
       buildCutouts(qq);
       setInk(qq);
+      setShadows(qq);
       resize();
       place();
       draw();
@@ -603,7 +705,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
       groundMesh?.geometry.dispose();
       (groundMesh?.material as ShaderMaterial | undefined)?.dispose();
       for (const g of [rock, ...waterGeos]) g.dispose();
-      for (const m of [rockMat, waterMat, sky.material as ShaderMaterial]) m.dispose();
+      for (const m of [rockMat, castMat, waterMat, sky.material as ShaderMaterial]) m.dispose();
+      casters.dispose();
       sky.geometry.dispose();
       stones.dispose();
       colours.dispose();

@@ -2,10 +2,11 @@
 // cells are under a metre wide at your feet and grow to over 100 m at the
 // horizon, so the whole valley is one draw call. The vertex shader raises each
 // vertex with exactly the heights and ripples heights.ts gives the player, so
-// what you see is what you stand on.
+// what you see is what you stand on. It takes the sun's shadows through three's
+// own shadow-map chunks (the renderer fills in the light's uniforms).
 import {
   BufferAttribute, BufferGeometry, DataTexture, FloatType, NearestFilter, RedFormat, ShaderMaterial,
-  Texture, Vector2, Vector3, Vector4,
+  Texture, UniformsLib, UniformsUtils, Vector2, Vector3, Vector4,
 } from "three";
 import { RIPPLE, RISE, type Field, type Flat } from "./heights";
 
@@ -91,6 +92,8 @@ const common = /* glsl */ `
 `;
 
 const vertex = /* glsl */ `
+  #include <common>
+  #include <shadowmap_pars_vertex>
   ${common}
   uniform vec2 center;
   uniform float reach;
@@ -109,11 +112,20 @@ const vertex = /* glsl */ `
     float hz = groundAt(p + vec2(0.0, e)) - groundAt(p - vec2(0.0, e));
     vNormal = normalize(vec3(-hx, 2.0 * e, -hz));
     vPos = vec3(p.x, h, p.y);
-    gl_Position = projectionMatrix * viewMatrix * vec4(vPos, 1.0);
+    vec4 worldPosition = vec4(vPos, 1.0); // (the mesh stands at the origin: world is model)
+    vec4 mvPosition = viewMatrix * worldPosition;
+    vec3 transformedNormal = (viewMatrix * vec4(vNormal, 0.0)).xyz;
+    gl_Position = projectionMatrix * mvPosition;
+    #include <shadowmap_vertex>
   }
 `;
 
 const fragment = /* glsl */ `
+  #include <common>
+  #include <packing>
+  #include <lights_pars_begin>
+  #include <shadowmap_pars_fragment>
+  #include <shadowmask_pars_fragment>
   ${common}
   uniform sampler2D colours;  // the painting's colours, labels smoothed away (build_walk.py)
   uniform vec2 mapSize;
@@ -148,7 +160,7 @@ const fragment = /* glsl */ `
     near = mix(near, base, 0.35) * (0.82 + 0.36 * small);
     vec3 skin = mix(base, near, (1.0 - smoothstep(80.0, 600.0, dist)) * (1.0 - beyond));
 
-    float d = max(dot(n, sun), 0.0);
+    float d = max(dot(n, sun), 0.0) * getShadowMask();
     float banded = floor(d * 4.0 + 0.5) / 4.0;
     vec3 col = skin * (0.5 + 0.75 * mix(d, banded, 0.35));
     float far = smoothstep(hazeRange.x, hazeRange.y, dist);
@@ -166,7 +178,10 @@ export function groundMaterial(o: GroundOptions): ShaderMaterial {
   return new ShaderMaterial({
     vertexShader: vertex,
     fragmentShader: fragment,
+    lights: true,
+    defines: { HAS_NORMAL: "" }, // the normal is made in the shader, but the shadow's normal offset wants it
     uniforms: {
+      ...UniformsUtils.clone(UniformsLib.lights),
       heights: { value: heightTexture(o.field) },
       fieldSize: { value: new Vector2(o.field.w, o.field.h) },
       cell: { value: o.field.cell },

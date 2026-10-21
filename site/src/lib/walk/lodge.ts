@@ -53,7 +53,8 @@ export type Lodge = {
   /** Show the back wall's painted patch: a puzzle, for readers who have reached it. */
   showPatch: (on: boolean) => void;
   patchVisible: () => boolean;
-  update: (dt: number) => void;
+  /** Moves the doors on; true if any moved. */
+  update: (dt: number) => boolean;
   dispose: () => void;
 };
 
@@ -191,12 +192,15 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
       for (const d of doors) if (d.name === name || d.name.replace(/(\d)[LR]$/, "$1") === name) d.open = !d.open;
     },
     update: (dt) => {
+      let moved = false;
       for (const d of doors) {
         const target = d.open ? 1 : 0;
         if (d.t === target) continue;
         d.t = Math.max(0, Math.min(1, d.t + Math.sign(target - d.t) * dt * 2.2));
         d.leaf.rotation.y = d.closed + d.swing * d.t;
+        moved = true;
       }
+      return moved;
     },
     dispose: () => {
       scene.remove(root);
