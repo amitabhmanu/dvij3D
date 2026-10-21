@@ -19,6 +19,8 @@ import siteInfo from "../../content/generated/temple-site.json";
 import { groundGeometry, groundMaterial, type Detail } from "./ground";
 import groundDetail from "../../content/generated/ground-detail.json";
 import { applyWear } from "./wear";
+import { lodgeFx } from "./lodge-fx";
+import { openFire } from "./fire-fx";
 import { inkComposer } from "./post";
 import { SightEffect } from "../story/effects";
 import { findRoute } from "../story/route";
@@ -104,6 +106,15 @@ export type Body = {
   fromSite: (id: string, x: number, y: number, z: number) => [number, number, number];
   siteRoot: (id: string) => import("three").Object3D | null;
   fx: (name: string) => void;
+  /** The height of whatever lies under (x, z) at or below y (world metres): a floor, a bed, the land. */
+  surface: (x: number, y: number, z: number) => number;
+  /** Call this every step of the story's time (seconds, slowed or sped with it); returns a way to stop. */
+  every: (f: (dt: number) => void) => () => void;
+  /** Switch a room's ceiling fan on (turns a second) or off (0). */
+  fan: (room: string, speed: number) => void;
+  /** A scene's time of day and the state of the lodge: where the sun stands ("morning", "midday",
+   * "afternoon", "evening"), the courtyard's fibreglass curtain drawn over its bars or torn open. */
+  setting: (s: { sun?: string; court?: "covered" | "open" }) => void;
 };
 
 // Colours are written as the eye sees them (sRGB); Color() turns them into the
@@ -150,7 +161,16 @@ function loadTexture(url: string): Promise<Texture> {
   return new Promise((resolve, reject) => new TextureLoader().load(url, resolve, undefined, reject));
 }
 
-function skyDome(): Mesh {
+/** Where the sun stands at each time of day a scene can ask for (towards it: x east, y up, z south),
+ * and its colour then. The default is the walk's own morning. */
+const SUNS: Record<string, { dir: [number, number, number]; colour: string; strength: number }> = {
+  morning: { dir: [0.85, 0.42, -0.2], colour: "#fff1d6", strength: 2.0 },
+  midday: { dir: [0.25, 0.94, 0.22], colour: "#fff6e8", strength: 2.4 },
+  afternoon: { dir: [-0.6, 0.55, 0.58], colour: "#ffefcf", strength: 2.2 },
+  evening: { dir: [-0.85, 0.22, 0.45], colour: "#ffc98f", strength: 1.6 },
+};
+
+function skyDome(SUN_DIR: Vector3): Mesh {
   const mat = new ShaderMaterial({
     side: BackSide,
     depthWrite: false,
@@ -232,7 +252,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // and a closer near plane leaves too little precision for the far valley
   const camera = new PerspectiveCamera(70, 1, 0.5, 12000);
   camera.rotation.order = "YXZ";
-  const sky = skyDome();
+  const sunDir = SUN_DIR.clone(); // (moved by Body.setting, for a scene's time of day)
+  const sky = skyDome(sunDir);
   scene.add(sky);
 
   // The land.
@@ -254,7 +275,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   }
   const groundMat = (cells: number) => groundMaterial({
     field, colours, mapW: walk.worldWidth, mapD: walk.worldDepth, paper: PAPER, haze: HAZE,
-    hazeRange: [900, 7000], reach, cells, flat: pads, detail,
+    hazeRange: [900, 7000], reach, cells, flat: pads, detail, sun: sunDir,
   });
   const buildGround = (q: Quality) => {
     if (groundMesh) {
@@ -354,13 +375,18 @@ export async function createGame(o: GameOptions): Promise<Game> {
       half: siteInfo.tent[2], court: 0, markers: siteInfo.markers as Marker[],
     }, scene));
   }
+  // the altar's fire, burning (novel ¶320)
+  const altar = (siteInfo.markers as Marker[]).find((m) => m.name === "look:altar");
+  const fires = altar ? [...sites.values()].map((s) => openFire(s.root, [altar.at[0], 0.35, altar.at[2]])) : [];
   // keep the lodge's textures sharp seen along a wall or a floor; its roof, walls and
   // furniture cast the sun's shadows and take them, and its baked occlusion (on its own
   // UV set) darkens the sky's light in its corners
   for (const model of [lodge, ...sites.values()]) model.root.traverse((obj) => {
     const mesh = obj as Mesh;
     if (!mesh.isMesh) return;
-    mesh.castShadow = mesh.receiveShadow = true;
+    // (the windows' glass lets the sun through)
+    mesh.castShadow = !mesh.userData.noShadow && !/^window-glass/.test(mesh.name);
+    mesh.receiveShadow = true;
     for (const mat of ([] as Material[]).concat(mesh.material)) {
       for (const [k, v] of Object.entries(mat)) {
         // full sharpness for the colours; relief and roughness don't show it, and cost
@@ -376,6 +402,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
       }
     }
   });
+  // the kitchen fire's flicker, the dhoop batti's smoke, the dust in the air
+  const moving = lodgeFx(lodge.root);
   // its decay: mould, grime, flaking paint, rust (lodge.yaml `character`)
   const wearFile = (lodgeInfo as { wear?: string }).wear;
   if (wearFile) applyWear(lodge.root, await loadTexture(walkAsset(wearFile)), lodge.root.position);
@@ -384,7 +412,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   const ambient = new HemisphereLight(0xdde8f0, 0x8a6a48, HEMI);
   scene.add(ambient);
   const sun = new DirectionalLight(0xfff1d6, SUN);
-  sun.position.copy(SUN_DIR).multiplyScalar(9000);
+  sun.position.copy(sunDir).multiplyScalar(9000);
   scene.add(sun, sun.target);
   const shade = sun.shadow.camera;
   shade.left = shade.bottom = -SHADOW_REACH;
@@ -414,8 +442,19 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // The shadow's square follows your eyes, a little ahead of you. It moves in steps of a
   // couple of metres (the map is drawn again only then), each a whole number of its
   // texels, so the edges of shadows don't crawl.
-  const sunFrame = new Matrix4().lookAt(SUN_DIR, new Vector3(), new Vector3(0, 1, 0));
+  const sunFrame = new Matrix4().lookAt(sunDir, new Vector3(), new Vector3(0, 1, 0));
   const sunFrameInv = sunFrame.clone().transpose();
+  let sunStrength = SUN;
+  /** Move the sun to a time of day (SUNS). */
+  const setSun = (when: string) => {
+    const s = SUNS[when] ?? SUNS.morning;
+    sunDir.set(...s.dir).normalize();
+    sun.color.set(s.colour);
+    sunStrength = s.strength;
+    sunFrame.lookAt(sunDir, new Vector3(), new Vector3(0, 1, 0));
+    sunFrameInv.copy(sunFrame).transpose();
+    shadowDirty = true; // and recentre the shadow's square on the next frame
+  };
   const ahead = new Vector3();
   const RECENTRE = 2;
   const followSun = () => {
@@ -430,7 +469,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     ahead.y = Math.round(ahead.y / texel) * texel;
     ahead.applyMatrix4(sunFrame);
     sun.target.position.copy(ahead);
-    sun.position.copy(ahead).addScaledVector(SUN_DIR, 200);
+    sun.position.copy(ahead).addScaledVector(sunDir, 200);
     sun.target.updateMatrixWorld();
     castNear(ahead.x, ahead.z);
     shadowDirty = true;
@@ -460,7 +499,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     const shadows = sun.castShadow;
     ambient.intensity = HEMI * (1 - (shadows ? 0.6 : 0.35) * indoor);
     scene.environmentIntensity = ENV * (1 - (shadows ? 0.5 : 0.35) * indoor);
-    sun.intensity = SUN + (shadows ? 1.0 : -1.4) * indoor;
+    sun.intensity = sunStrength + (shadows ? 1.0 : -1.4) * indoor;
   };
   // Story mode's hold on the body (design §10.4).
   let hold: "free" | "look" | "none" = "free";
@@ -558,6 +597,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   };
 
   let raf = 0, running = false, last = 0, acc = 0, statsAt = 0, shadowAge = 0;
+  const steppers = new Set<(dt: number) => void>(); // the story's loose things (Body.every)
   const frame = (now: number) => {
     raf = 0;
     if (!running) return;
@@ -567,6 +607,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       const move = input.sample();
       const before = player;
       moveBy(move);
+      for (const f of steppers) f(STEP * rate);
       acc -= STEP;
       stride += Math.hypot(player.x - before.x, player.z - before.z);
       if (stride > (move.run ? 1.7 : 0.85)) {
@@ -579,6 +620,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
     for (const m of models()) moved = m.update(1 / 60) || moved;
     if (moved || ++shadowAge > 30) { shadowDirty = true; shadowAge = 0; }
     lightFor(1 / 60); // (the sight pass eases itself, each time the composer renders)
+    moving.update(1 / 60, camera);
+    for (const f of fires) f.update(1 / 60, camera);
     place();
     draw();
     o.onFrame?.(player.x, player.z, player.heading);
@@ -586,6 +629,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
       statsAt = now;
       const inside = indoorsAt(player.x, player.z);
       sounds?.hear({ indoors: inside, height: inside ? 0 : player.y - rules.eye, trees: inside ? 0 : Math.min(1, woods.count(player.x, player.z, 35) / 14), water: lakeDistance(player.x, player.z) });
+      // the running fans, by how far away each is (through walls too: the rooms are open-doored)
+      sounds?.fans(models().flatMap((m) => m.fans()).filter((f) => f.speed > 0.02)
+        .map((f) => ({ d: Math.hypot(f.at.x - player.x, f.at.y - player.y, f.at.z - player.z), speed: f.speed, creak: f.room === "dvij-room" })));
       o.onStats?.({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z), indoors: inside,
         door: lodge?.doorNear(player.x, player.z) ?? null,
         look: models().map((m) => m.lookNear(player.x, player.z)).find((l) => l) ?? null });
@@ -677,6 +723,20 @@ export async function createGame(o: GameOptions): Promise<Game> {
     },
     siteRoot: (id) => sites.get(id)?.root ?? null,
     fx: (name) => sounds?.fx(name),
+    surface: (x, y, z) => {
+      let top = terrain(x, z);
+      for (const m of models()) {
+        const f = m.floorAt(x, z, y - 0.55); // (floorAt looks down from 0.6 m above the feet it's given)
+        if (f != null && f <= y + 0.05) top = Math.max(top, f);
+      }
+      return top;
+    },
+    every: (f) => { steppers.add(f); return () => steppers.delete(f); },
+    fan: (room, speed) => { for (const m of models()) m.setFan(room, speed); },
+    setting: (s) => {
+      setSun(s.sun ?? "morning");
+      moving.court(s.court === "covered");
+    },
   };
 
   return {
@@ -763,6 +823,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
       stones.dispose();
       colours.dispose();
       if (detail) for (const d of Object.values(detail)) { d.color.dispose(); d.normal.dispose(); }
+      moving.dispose();
+      for (const f of fires) f.dispose();
       lodge?.dispose();
       for (const m of sites.values()) m.dispose();
       cutTex.dispose();

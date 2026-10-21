@@ -223,6 +223,8 @@ export type GroundOptions = {
   paper: Vector3; haze: Vector3; hazeRange: [number, number]; reach: number; cells: number; flat?: Flat[];
   /** Photo-scanned close-up ground, if the walk has it (src/content/generated/ground-detail.json). */
   detail?: { earth: Detail; grass: Detail; rock: Detail };
+  /** Towards the sun (shared with the game, which moves it with the time of day). */
+  sun?: Vector3;
 };
 
 export function groundMaterial(o: GroundOptions): ShaderMaterial {
@@ -254,7 +256,7 @@ export function groundMaterial(o: GroundOptions): ShaderMaterial {
       colours: { value: o.colours },
       rimFade: { value: o.mapW * 0.05 },
       mapSize: { value: new Vector2(o.mapW, o.mapD) },
-      sun: { value: new Vector3(0.85, 0.42, -0.2).normalize() },
+      sun: { value: o.sun ?? new Vector3(0.85, 0.42, -0.2).normalize() },
       paper: { value: o.paper },
       haze: { value: o.haze },
       hazeRange: { value: new Vector2(...o.hazeRange) },

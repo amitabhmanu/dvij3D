@@ -66,7 +66,7 @@ export function applyWear(root: Object3D, wear: Texture, origin: Vector3): void 
     const mesh = o as Mesh;
     if (!mesh.isMesh) return;
     for (const mat of ([] as Material[]).concat(mesh.material)) {
-      if (!(mat instanceof MeshStandardMaterial) || !mat.aoMap || done.has(mat)) continue;
+      if (!(mat instanceof MeshStandardMaterial) || !mat.aoMap || mat.transparent || done.has(mat)) continue;
       done.add(mat);
       const kind = PAINTED.has(mat.name) ? 1 : RUSTED.has(mat.name) ? 2 : 0;
       mat.onBeforeCompile = (sh) => {

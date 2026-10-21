@@ -53,8 +53,12 @@ export type Lodge = {
   /** Show the back wall's painted patch: a puzzle, for readers who have reached it. */
   showPatch: (on: boolean) => void;
   patchVisible: () => boolean;
-  /** Moves the doors on; true if any moved. */
+  /** Moves the doors on (and turns the fans); true if a door moved. */
   update: (dt: number) => boolean;
+  /** The ceiling fans: where each hangs (world metres) and how fast it turns (turns a second). */
+  fans: () => { room: string; at: Vector3; speed: number }[];
+  /** Switch a room's fan on (turns a second) or off (0). */
+  setFan: (room: string, speed: number) => void;
   dispose: () => void;
 };
 
@@ -62,6 +66,9 @@ const STEP_UP = 0.6; // rays start this far above the feet, so steps are found a
 const KNEE = 0.75; // the body is two spheres, at these heights above the feet
 const CHEST = 1.45;
 const SWING = 1.5;
+// Which fans run, and how fast, unless the story says otherwise: the one over Dvij's bed creaks
+// round slowly (novel ¶93), the study's whirrs gently (¶1567); the rest hang still under their dust (¶194).
+const FANS: Record<string, number> = { "dvij-room": 0.55, study: 1.1 };
 
 /** Every triangle under `obj`, as plain floats in the model's frame. (A glTF node
  * with several materials loads as a group of meshes, and meshopt files quantise
@@ -120,6 +127,15 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
     doors.push({ name: o.name, leaf: o, closed: o.rotation.y, swing: side * SWING, centre: box.getCenter(new Vector3()), box, open: true, t: 1 });
     o.rotation.y = o.rotation.y + side * SWING; // they start open: the house is lived in
   }
+
+  // the ceiling fans: their blades turn (blender/build_lodge.py ceiling_fan)
+  type Fan = { room: string; body: Object3D; blades: Object3D; speed: number; turn: number; t: number };
+  const fans: Fan[] = [];
+  root.traverse((o) => {
+    const m = /^fan-(.+)-blades$/.exec(o.name);
+    if (m && o.parent) fans.push({ room: m[1], body: o.parent, blades: o, speed: FANS[m[1]] ?? 0, turn: FANS[m[1]] ?? 0, t: Math.random() * 10 });
+  });
+  for (const f of fans) f.body.traverse((o) => { o.userData.noShadow = true; }); // (their shadows would redraw the map every frame)
 
   root.position.set(info.at.x, info.at.y, info.at.z);
   scene.add(root);
@@ -192,6 +208,15 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
       for (const d of doors) if (d.name === name || d.name.replace(/(\d)[LR]$/, "$1") === name) d.open = !d.open;
     },
     update: (dt) => {
+      for (const f of fans) {
+        // spin up and run down like a real motor, and wobble a little on the downrod
+        f.turn += (f.speed - f.turn) * Math.min(1, dt * 0.6);
+        f.blades.rotation.y -= f.turn * dt * Math.PI * 2;
+        f.t += dt;
+        const w = 0.012 * Math.min(1, f.turn);
+        f.body.rotation.x = Math.sin(f.t * 5.1) * w;
+        f.body.rotation.z = Math.cos(f.t * 4.3) * w;
+      }
       let moved = false;
       for (const d of doors) {
         const target = d.open ? 1 : 0;
@@ -202,6 +227,8 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
       }
       return moved;
     },
+    fans: () => fans.map((f) => ({ room: f.room, at: f.blades.getWorldPosition(new Vector3()), speed: f.turn })),
+    setFan: (room, speed) => { for (const f of fans) if (f.room === room) f.speed = speed; },
     dispose: () => {
       scene.remove(root);
       geo.dispose();

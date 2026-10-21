@@ -62,6 +62,9 @@ export class Sounds {
   private birdsLevel = 0;
   private nextBird = 0;
   private stepGain: GainNode;
+  private fanGain: GainNode;
+  private fanPulse: OscillatorNode;
+  private nextTick = 0;
 
   constructor(volume: number) {
     this.ctx = new AudioContext();
@@ -98,6 +101,54 @@ export class Sounds {
     this.stepGain = this.ctx.createGain();
     this.stepGain.gain.value = 0.5;
     this.stepGain.connect(this.master);
+
+    // a ceiling fan: air chopped by its blades (a low band of noise, pulsing at the blade rate)
+    const whir = this.ctx.createBiquadFilter();
+    whir.type = "bandpass";
+    whir.frequency.value = 160;
+    whir.Q.value = 1.1;
+    const chop = this.ctx.createGain();
+    chop.gain.value = 0.7;
+    this.fanPulse = this.ctx.createOscillator();
+    this.fanPulse.frequency.value = 2;
+    const depth = this.ctx.createGain();
+    depth.gain.value = 0.3;
+    this.fanPulse.connect(depth).connect(chop.gain);
+    this.fanPulse.start();
+    this.fanGain = this.ctx.createGain();
+    this.fanGain.gain.value = 0;
+    loop(this.ctx, this.noise).connect(whir).connect(chop).connect(this.fanGain).connect(this.master);
+  }
+
+  /** The running ceiling fans, a few times a second: how far each is (metres), how fast it turns
+   * (turns a second), and whether it creaks (novel ¶93). The nearest ticks once a turn. */
+  fans(running: { d: number; speed: number; creak: boolean }[]) {
+    const t = this.ctx.currentTime;
+    const near = (d: number) => Math.max(0, 1 - d / 14) ** 2;
+    const level = running.reduce((a, f) => a + Math.min(1, f.speed) * near(f.d), 0);
+    this.fanGain.gain.setTargetAtTime(Math.min(1, level) * 0.22, t, 0.4);
+    const loudest = running.reduce<{ d: number; speed: number; creak: boolean } | null>((a, f) => (!a || f.speed * near(f.d) > a.speed * near(a.d) ? f : a), null);
+    if (!loudest || loudest.speed < 0.05 || near(loudest.d) <= 0) return;
+    this.fanPulse.frequency.setTargetAtTime(loudest.speed * 4, t, 0.5); // four blades
+    if (t < this.nextTick) return;
+    this.nextTick = t + 1 / loudest.speed;
+    // once a turn: a soft tick from the bearing, and for an old fan a creak of the apparatus
+    const at = t + 0.02;
+    for (const [f, q, len, peak] of loudest.creak ? [[2600, 18, 0.05, 0.12], [520, 14, 0.35, 0.09]] : [[2600, 18, 0.05, 0.08]]) {
+      const src = this.ctx.createBufferSource();
+      src.buffer = this.noise;
+      const bp = this.ctx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.frequency.value = f * (0.9 + Math.random() * 0.2);
+      bp.Q.value = q;
+      const g = this.ctx.createGain();
+      g.gain.setValueAtTime(0, at);
+      g.gain.linearRampToValueAtTime(peak * near(loudest.d), at + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + len);
+      src.connect(bp).connect(g).connect(this.master);
+      src.start(at, Math.random() * 3);
+      src.stop(at + len + 0.05);
+    }
   }
 
   setVolume(v: number) {
