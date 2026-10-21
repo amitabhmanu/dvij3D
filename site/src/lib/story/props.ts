@@ -3,7 +3,8 @@
 // study's clutter that falls when Dvij faints. Simple shapes in the lodge's
 // colours, placed in the lodge's own frame and parented to it.
 import {
-  BoxGeometry, Color, CylinderGeometry, Group, Mesh, MeshLambertMaterial, MeshStandardMaterial, Object3D, SphereGeometry, TorusGeometry,
+  BoxGeometry, BufferAttribute, BufferGeometry, Color, CylinderGeometry, Group, Mesh, MeshLambertMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
+  Object3D, SphereGeometry, TorusGeometry, Vector3, type Material,
 } from "three";
 
 export type PropSpec = {
@@ -18,8 +19,32 @@ type Made = { obj: Object3D; set: (state: string) => void; point: () => [number,
 const PLINTH = 0.6; // the lodge's plinth: rooms' floors stand this high (lodge.yaml house.plinth)
 let FLOOR = PLINTH; // the floor of the prop being made (see make)
 const mat = (hex: string, opts: Partial<MeshStandardMaterial> = {}) => new MeshStandardMaterial({ color: new Color(hex), roughness: 0.8, ...opts });
-const WOOD = mat("#5c3a22"), BRASS = mat("#b08a3a", { metalness: 0.7, roughness: 0.35 }), GLASS = mat("#cfe3e6", { transparent: true, opacity: 0.45, roughness: 0.1 });
+const WOOD = mat("#5c3a22"), BRASS = mat("#b08a3a", { metalness: 0.7, roughness: 0.35 });
+// real glass: it bends and tints what lies behind it
+const GLASS = new MeshPhysicalMaterial({ color: new Color("#dfeeed"), transparent: true, opacity: 0.32, roughness: 0.04, metalness: 0, specularIntensity: 1, envMapIntensity: 2.5 });
 const PAPER = mat("#e6d8b4"), CLOTH = mat("#7a2e20"), CLAY = mat("#8a4a2a"), PLANK = mat("#6b4a2c"), IRON = mat("#3a332c");
+/** Which of the lodge's own materials (blender/build_lodge.py) each stands for, and the
+ * metres one repeat of its texture covers there: a prop made of wood looks like the lodge's wood. */
+const LODGE: [MeshStandardMaterial, string, number][] = [
+  [WOOD, "wood", 2.0], [PLANK, "wood", 2.0], [BRASS, "brass", 1], [PAPER, "paper", 1], [CLOTH, "cloth", 1],
+  [CLAY, "clay", 1], [IRON, "iron", 1],
+];
+
+/** UVs in metres, laid flat along whichever axis each face looks down, so a texture
+ * keeps the lodge's scale whatever the shape. */
+function metreUVs(g: BufferGeometry, tile: number) {
+  const pos = g.getAttribute("position"), nrm = g.getAttribute("normal");
+  const uv = new Float32Array(pos.count * 2);
+  const n = new Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    n.fromBufferAttribute(nrm, i);
+    const [x, y, z] = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+    const [a, b] = Math.abs(n.y) >= Math.max(Math.abs(n.x), Math.abs(n.z)) ? [x, z] : Math.abs(n.x) >= Math.abs(n.z) ? [z, y] : [x, y];
+    uv[i * 2] = a / tile;
+    uv[i * 2 + 1] = b / tile;
+  }
+  g.setAttribute("uv", new BufferAttribute(uv, 2));
+}
 
 function at(o: Object3D, x: number, y: number, z: number) {
   o.position.set(x, y, z);
@@ -157,8 +182,10 @@ const CLUTTER: Record<string, [number, number]> = {
 export class Props {
   readonly group = new Group();
   private made = new Map<string, Made>();
+  private owned: Material[] = [];
 
-  constructor(specs: PropSpec[]) {
+  /** `lodge`: the lodge's model, whose materials the props borrow (by name) if given. */
+  constructor(specs: PropSpec[], lodge?: Object3D | null) {
     for (const p of specs) {
       const spec = { ...p, at: p.at ?? (p.window ? WINDOWS[p.window] : p.room ? CLUTTER[p.room] : undefined) };
       const m = make(spec);
@@ -166,12 +193,38 @@ export class Props {
       this.made.set(p.id, m);
       this.group.add(m.obj);
     }
+    // the lodge's own materials, without its occlusion atlas and decay (props have no
+    // atlas UVs): a copy of each, once
+    const borrowed = new Map<Material, [Material, number]>();
+    if (lodge) {
+      const named = new Map<string, Material>();
+      lodge.traverse((o) => {
+        const m = o as Mesh;
+        if (m.isMesh) for (const x of ([] as Material[]).concat(m.material)) named.set(x.name, x);
+      });
+      for (const [plain, name, tile] of LODGE) {
+        const theirs = named.get(name);
+        if (!(theirs instanceof MeshStandardMaterial)) continue;
+        const mine = theirs.clone();
+        mine.aoMap = null;
+        mine.onBeforeCompile = () => {};
+        mine.customProgramCacheKey = () => "prop";
+        borrowed.set(plain, [mine, tile]);
+        this.owned.push(mine);
+      }
+    }
     // in the sun's shadows like the lodge's own furniture (glass and water let it through)
     this.group.traverse((o) => {
       const m = o as Mesh;
       if (!m.isMesh) return;
+      const swap = borrowed.get(m.material as Material);
+      if (swap) {
+        metreUVs(m.geometry, swap[1]);
+        m.material = swap[0];
+      }
       m.receiveShadow = true;
-      m.castShadow = !(m.material as MeshStandardMaterial).transparent;
+      const look = m.material as MeshPhysicalMaterial;
+      m.castShadow = !(look.transparent || look.transmission > 0);
     });
   }
 
@@ -194,5 +247,6 @@ export class Props {
       const m = o as Mesh;
       if (m.isMesh) m.geometry.dispose();
     });
+    for (const m of this.owned) m.dispose();
   }
 }

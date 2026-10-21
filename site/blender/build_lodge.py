@@ -23,6 +23,7 @@ What the game reads from the file, by name:
 """
 import json
 import math
+import os
 import sys
 
 import bpy
@@ -57,17 +58,34 @@ TILE = {  # metres one texture repeat covers
 }
 
 
+# The photo-scanned sets (pipeline/lodge_photos.py): material -> metres one repeat covers
+PHOTOS = json.load(open(f"{TEX}/photos.json", encoding="utf-8")) if os.path.exists(f"{TEX}/photos.json") else {}
+TILE.update(PHOTOS)
+
+
 def material(name, tex=None, color=None, rough=0.9, metal=0.0, alpha=False, double=True):
     if name in MATS:
         return MATS[name]
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     m.use_backface_culling = not double
-    bsdf = m.node_tree.nodes["Principled BSDF"]
+    nt = m.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
     bsdf.inputs["Roughness"].default_value = rough
     bsdf.inputs["Metallic"].default_value = metal
+    if tex in PHOTOS:  # its relief and its roughness, which glTF carries as normal and metallic-roughness maps
+        nm = nt.nodes.new("ShaderNodeTexImage")
+        nm.image = bpy.data.images.load(f"{TEX}/{tex}-normal.png")
+        nm.image.colorspace_settings.name = "Non-Color"
+        bump = nt.nodes.new("ShaderNodeNormalMap")
+        nt.links.new(nm.outputs["Color"], bump.inputs["Color"])
+        nt.links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
+        rm = nt.nodes.new("ShaderNodeTexImage")
+        rm.image = bpy.data.images.load(f"{TEX}/{tex}-rough.png")
+        rm.image.colorspace_settings.name = "Non-Color"
+        nt.links.new(rm.outputs["Color"], bsdf.inputs["Roughness"])
     if tex:
-        node = m.node_tree.nodes.new("ShaderNodeTexImage")
+        node = nt.nodes.new("ShaderNodeTexImage")
         node.image = bpy.data.images.load(f"{TEX}/{tex}.png")
         m.node_tree.links.new(node.outputs["Color"], bsdf.inputs["Base Color"])
         if alpha:
@@ -1079,6 +1097,126 @@ def bake_ao(baked):
             d.uv = (u, v)
 
 
+def bake_surface(baked, what):
+    """Each atlas texel's position or normal (the plan's frame), as a float image:
+    an emission bake of the geometry, for wear_masks to work from."""
+    import numpy as np
+    img = bpy.data.images.new(f"lodge-{what}", AO_SIZE, AO_SIZE, alpha=True, float_buffer=True)
+    undo = []
+    for m in {s.material for o in baked for s in o.material_slots if s.material}:
+        nt = m.node_tree
+        tex = next(n for n in nt.nodes if n.type == "TEX_IMAGE" and n.image and n.image.name == "lodge-ao")
+        out = next(n for n in nt.nodes if n.type == "OUTPUT_MATERIAL")
+        before = [l.from_socket for l in out.inputs["Surface"].links]
+        geo = nt.nodes.new("ShaderNodeNewGeometry")
+        emit = nt.nodes.new("ShaderNodeEmission")
+        nt.links.new(geo.outputs["Position" if what == "position" else "Normal"], emit.inputs["Color"])
+        nt.links.new(emit.outputs["Emission"], out.inputs["Surface"])
+        tex.image = img
+        nt.nodes.active = tex
+        undo.append((nt, tex, out, before, (geo, emit)))
+    samples = scene.cycles.samples
+    scene.cycles.samples = 1
+    for o in scene.objects:
+        o.select_set(o in baked)
+    bpy.context.view_layer.objects.active = baked[0]
+    bpy.ops.object.bake(type="EMIT", margin=6, margin_type="EXTEND", use_clear=True, target="IMAGE_TEXTURES", uv_layer="AO")
+    scene.cycles.samples = samples
+    for nt, tex, out, before, made in undo:
+        for n in made:
+            nt.nodes.remove(n)
+        for s in before:
+            nt.links.new(s, out.inputs["Surface"])
+        tex.image = bpy.data.images["lodge-ao"]
+    px = np.empty(AO_SIZE * AO_SIZE * 4, np.float32)
+    img.pixels.foreach_get(px)
+    px = px.reshape(AO_SIZE, AO_SIZE, 4)
+    # Blender (x, y north, z up) -> the plan (x, y up, z south); alpha marks texels the bake reached
+    return np.stack([px[:, :, 0], px[:, :, 2], -px[:, :, 1]], -1), px[:, :, 3] > 0.5
+
+
+def wear_masks(baked):
+    """Where the house has decayed (lodge.yaml `character`), as three masks over the
+    occlusion atlas, written to lodge-wear.png; the game draws the detail (streaks,
+    flakes, spots) with noise where they say:
+        red    grime: the feet of walls, tight corners, the kitchen's soot
+        green  damp: mould below the roof line and under the windows, damp rising
+               at the walls' feet; the back wall worst (novel ¶164, ¶1446)
+        blue   wear: paint peeling about the windows, doors and pillars (novel ¶164)
+               on walls; rust dripped from the courtyard's bars on the floor (¶193)"""
+    import numpy as np
+    P, covered = bake_surface(baked, "position")
+    N, _ = bake_surface(baked, "normal")
+    ao = np.empty(AO_SIZE * AO_SIZE * 4, np.float32)
+    bpy.data.images["lodge-ao"].pixels.foreach_get(ao)
+    ao = ao.reshape(AO_SIZE, AO_SIZE, 4)[:, :, 0]
+    X, Y, Z = P[..., 0], P[..., 1], P[..., 2]
+    wall = np.abs(N[..., 1]) < 0.5
+    up = N[..., 1] > 0.7
+
+    def ramp(v, a, b):  # 0 at a, 1 at b
+        return np.clip((v - a) / (b - a), 0, 1)
+
+    # grime: the feet of walls (outside on the ground, inside on the floor, in the court a step down)
+    h = np.full(X.shape, 9.0, np.float32)
+    for base in (0.0, FLOOR, FLOOR - 0.3):
+        d = Y - base
+        h = np.where((d > -0.03) & (d < h), d, h)
+    grime = np.where(wall, (1 - ramp(h, 0, 0.5)) ** 1.5 * 0.8, 0)
+    grime = np.maximum(grime, (1 - ao) ** 2 * 0.9)
+    # soot: the hearth and oven blacken the kitchen's deep end and the ceiling over them (novel ¶195)
+    for hx, hy, hz, r in ((14.75, FLOOR + 0.8, -14.6, 3.2), (10.5, TOP - 1.1, -13.2, 1.2)):
+        d = np.sqrt((X - hx) ** 2 + ((Y - hy) * 0.6) ** 2 + (Z - hz) ** 2)
+        grime = np.maximum(grime, (1 - ramp(d, 0, r)) * np.where(Y > hy - 0.4, 1.0, 0.4))
+    kitchen = (X > 5) & (X < 16) & (Z > -16) & (Z < -10.5)
+    grime = np.maximum(grime, np.where(kitchen, ramp(Y, TOP - 1.8, TOP) * 0.7, 0))
+
+    # damp: under the roof line on the outer walls, under the windows, rising at the feet
+    outer = wall & ((np.abs(X) > HALF - 0.05) | (np.abs(Z) > HALF - 0.05)) & (Y < TOP + 1.5)
+    damp = np.where(outer, ramp(Y, TOP - 2.0, TOP - 0.2) * 0.9, 0)
+    damp = np.maximum(damp, np.where(wall, (1 - ramp(h, 0, 0.9)) * 0.45, 0))
+    damp = np.where(outer & (Z < -HALF + 0.05), np.maximum(damp, 0.35), damp)  # the grey stained back wall
+    ops = openings()
+    for orient, line, c, w, bottom, top, kind, room, n, raw in ops:
+        along, across = (X, Z) if orient == "h" else (Z, X)
+        near_wall = np.abs(across - line) < T / 2 + 0.06
+        if kind == "window":
+            under = near_wall & (np.abs(along - c) < w / 2 + 0.08) & (Y < bottom)
+            damp = np.maximum(damp, np.where(under, 1 - ramp(bottom - Y, 0, 1.5), 0))
+
+    # wear: peeling paint about the openings and the pillars' feet and heads
+    wear = np.zeros(X.shape, np.float32)
+    for orient, line, c, w, bottom, top, kind, room, n, raw in ops:
+        along, across = (X, Z) if orient == "h" else (Z, X)
+        near_wall = np.abs(across - line) < T / 2 + 0.06
+        du = np.maximum(np.abs(along - c) - w / 2, 0)
+        dv = np.maximum(np.maximum(bottom - Y, Y - top), 0)
+        d = np.sqrt(du ** 2 + dv ** 2)
+        facing = np.abs(N[..., 2] if orient == "h" else N[..., 0]) > 0.7  # the wall's own faces, not the opening's reveals
+        wear = np.maximum(wear, np.where(near_wall & facing, (1 - ramp(d, 0, 0.5)) * 0.85, 0))
+    p = H["pillars"]
+    for k in np.arange(-COURT, COURT + 1e-3, p["spacing"]):
+        for px_, pz in ((k, -COURT), (k, COURT), (-COURT, k), (COURT, k)):
+            d = np.sqrt((X - px_) ** 2 + (Z - pz) ** 2)
+            ends = np.minimum(np.abs(Y - FLOOR), np.abs(Y - TOP))
+            wear = np.maximum(wear, np.where(d < p["diameter"] / 2 + 0.2, (1 - ramp(ends, 0, 0.7)) * 0.8, 0))
+    # rust: dripped from the bars over the court, on its floor
+    court = up & (np.abs(X) < COURT) & (np.abs(Z) < COURT) & (Y < FLOOR)
+    bars = np.full(X.shape, 9.0, np.float32)
+    for i in range(-7, 8, 2):
+        bars = np.minimum(bars, np.minimum(np.abs(X - i), np.abs(Z - i)))
+    wear = np.where(court, (1 - ramp(bars, 0, 0.35)) * 0.9, wear)
+
+    rgb = np.stack([grime, damp, wear], -1)
+    rgb = np.where(covered[..., None], np.clip(rgb, 0, 1), 0)
+    out = bpy.data.images.new("lodge-wear", AO_SIZE, AO_SIZE, alpha=False)
+    out.pixels.foreach_set(np.concatenate([rgb, np.ones(X.shape + (1,))], -1).astype(np.float32).ravel())
+    out.filepath_raw = f"{TEX}/lodge-wear.png"
+    out.file_format = "PNG"
+    out.save()
+    print(f"AO wear masks: grime {grime[covered].mean():.3f}, damp {damp[covered].mean():.3f}, wear {wear[covered].mean():.3f}")
+
+
 def main():
     setup_materials()
     house, grounds, furniture, col = Geo(), Geo(), Geo(), Geo()
@@ -1100,6 +1238,7 @@ def main():
     if RENDERS != "-":
         render_views()
     bake_ao(baked)
+    wear_masks(baked)
     bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", export_extras=True, export_yup=True,
                               export_apply=True, export_image_format="WEBP", use_selection=False)
     json.dump(MARKERS, open(OUT + ".markers.json", "w", encoding="utf-8"), indent=1)

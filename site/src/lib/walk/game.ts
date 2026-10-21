@@ -9,13 +9,15 @@ import {
   InstancedMesh, LinearFilter, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshStandardMaterial, PCFShadowMap, PerspectiveCamera,
   PMREMGenerator, Quaternion,
   Scene, ShaderMaterial, Shape, ShapeGeometry, SphereGeometry, SRGBColorSpace, Texture, TextureLoader,
-  Vector2, Vector3, WebGLRenderer, type Material,
+  NoColorSpace, RepeatWrapping, Vector2, Vector3, WebGLRenderer, type Material,
 } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { decodeHeights, fieldFor, heightAt, setFlat, type Field } from "./heights";
 import { loadLodge, type Look, type Lodge, type Marker } from "./lodge";
 import lodgeInfo from "../../content/generated/lodge.json";
-import { groundGeometry, groundMaterial } from "./ground";
+import { groundGeometry, groundMaterial, type Detail } from "./ground";
+import groundDetail from "../../content/generated/ground-detail.json";
+import { applyWear } from "./wear";
 import { inkComposer } from "./post";
 import { SightEffect } from "../story/effects";
 import { findRoute } from "../story/route";
@@ -219,9 +221,23 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // The land.
   const reach = 8000;
   let groundMesh: Mesh | null = null;
+  // the photo-scanned close-up ground, if the walk has it (pipeline/lodge_photos.py)
+  const listed = groundDetail as Partial<Record<"earth" | "grass" | "rock", { color: string; normal: string; metres: number }>>;
+  let detail: { earth: Detail; grass: Detail; rock: Detail } | undefined;
+  if (listed.earth && listed.grass && listed.rock) {
+    const pair = async (d: { color: string; normal: string; metres: number }): Promise<Detail> => {
+      const [color, normal] = await Promise.all([loadTexture(walkAsset(d.color)), loadTexture(walkAsset(d.normal))]);
+      color.colorSpace = SRGBColorSpace;
+      normal.colorSpace = NoColorSpace;
+      for (const t of [color, normal]) { t.wrapS = t.wrapT = RepeatWrapping; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.needsUpdate = true; }
+      return { color, normal, metres: d.metres };
+    };
+    const [earth, grass, rock] = await Promise.all([pair(listed.earth), pair(listed.grass), pair(listed.rock)]);
+    detail = { earth, grass, rock };
+  }
   const groundMat = (cells: number) => groundMaterial({
     field, colours, mapW: walk.worldWidth, mapD: walk.worldDepth, paper: PAPER, haze: HAZE,
-    hazeRange: [900, 7000], reach, cells, flat: { rect: walk.lodge.pad, blend: walk.lodge.blend },
+    hazeRange: [900, 7000], reach, cells, flat: { rect: walk.lodge.pad, blend: walk.lodge.blend }, detail,
   });
   const buildGround = (q: Quality) => {
     if (groundMesh) {
@@ -322,8 +338,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
     if (!mesh.isMesh) return;
     mesh.castShadow = mesh.receiveShadow = true;
     for (const mat of ([] as Material[]).concat(mesh.material)) {
-      for (const v of Object.values(mat)) {
-        if (v instanceof Texture) { v.anisotropy = sharp; v.needsUpdate = true; }
+      for (const [k, v] of Object.entries(mat)) {
+        // full sharpness for the colours; relief and roughness don't show it, and cost
+        if (v instanceof Texture) { v.anisotropy = k === "map" ? sharp : Math.min(4, sharp); v.needsUpdate = true; }
       }
       if (mat instanceof MeshStandardMaterial && mat.aoMap) {
         mat.aoMapIntensity = AO;
@@ -335,6 +352,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
       }
     }
   });
+  // its decay: mould, grime, flaking paint, rust (lodge.yaml `character`)
+  const wearFile = (lodgeInfo as { wear?: string }).wear;
+  if (wearFile) applyWear(lodge.root, await loadTexture(walkAsset(wearFile)), lodge.root.position);
   for (const t of [colours, cutTex]) { t.anisotropy = sharp; t.needsUpdate = true; } // and the land, seen low and far
   // pale sky from above, the warm brown of the dry ground from below
   const ambient = new HemisphereLight(0xdde8f0, 0x8a6a48, HEMI);
@@ -710,6 +730,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       sky.geometry.dispose();
       stones.dispose();
       colours.dispose();
+      if (detail) for (const d of Object.values(detail)) { d.color.dispose(); d.normal.dispose(); }
       lodge?.dispose();
       cutTex.dispose();
       cutouts?.geometry.dispose();

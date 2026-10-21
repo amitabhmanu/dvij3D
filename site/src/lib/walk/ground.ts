@@ -141,6 +141,24 @@ const fragment = /* glsl */ `
     return valueNoise(p) * 0.55 + valueNoise(p * 2.13 + 17.0) * 0.3 + valueNoise(p * 4.7 + 41.0) * 0.15;
   }
 
+  #ifdef DETAIL
+  // Photo-scanned earth, grass and rock (pipeline/lodge_photos.py), in world metres.
+  // Each is looked up twice, the second turned and shifted, and the two blended by a
+  // slow noise, so no repeat shows.
+  uniform sampler2D earthMap, earthNormal, grassMap, grassNormal, rockMap, rockNormal;
+  uniform vec3 detailScale; // repeats per metre: earth, grass, rock
+  // (one blend, from the world position, for all of them; only the second lookup where it shows)
+  const mat2 TURN = mat2(0.8, -0.6, 0.6, 0.8);
+  vec3 untiled(sampler2D t, vec2 p, float k) {
+    vec3 a = texture2D(t, p).rgb;
+    return k > 0.0 ? mix(a, texture2D(t, TURN * p * 0.71 + vec2(0.37, 0.61)).rgb, k) : a;
+  }
+  vec2 untiledNormal(sampler2D t, vec2 p, float k) { // the tangent-space tilt, turned back for the turned lookup
+    vec2 a = texture2D(t, p).xy * 2.0 - 1.0;
+    return k > 0.0 ? mix(a, (texture2D(t, TURN * p * 0.71 + vec2(0.37, 0.61)).xy * 2.0 - 1.0) * TURN, k) : a;
+  }
+  #endif
+
   void main() {
     vec2 uv = vec2(vPos.x / mapSize.x + 0.5, vPos.z / mapSize.y + 0.5);
     vec2 outside = max(max(-uv, uv - 1.0), 0.0) * mapSize;
@@ -154,11 +172,37 @@ const fragment = /* glsl */ `
     float steep = 1.0 - n.y;
     float green = base.g - 0.5 * (base.r + base.b);
     float big = fbm(vPos.xz * 0.045), small = fbm(vPos.xz * 0.6);
+    float isGrass = smoothstep(-0.012, 0.016, green + (big - 0.5) * 0.03);
+    float isRock = smoothstep(0.22, 0.45, steep + (small - 0.5) * 0.12);
+    float close = (1.0 - smoothstep(80.0, 600.0, dist)) * (1.0 - beyond);
+    #ifdef DETAIL
+    // each only where it shows: most ground is earth or grass, and none of it far off
     vec3 grass = vec3(0.16, 0.2, 0.06), earth = vec3(0.38, 0.25, 0.12), rock = vec3(0.3, 0.27, 0.23);
-    vec3 near = mix(earth, grass, smoothstep(-0.012, 0.016, green + (big - 0.5) * 0.03));
-    near = mix(near, rock, smoothstep(0.22, 0.45, steep + (small - 0.5) * 0.12));
-    near = mix(near, base, 0.35) * (0.82 + 0.36 * small);
-    vec3 skin = mix(base, near, (1.0 - smoothstep(80.0, 600.0, dist)) * (1.0 - beyond));
+    float k = smoothstep(0.35, 0.65, valueNoise(vPos.xz * 0.09 + 3.1));
+    if (close > 0.0) {
+      if (isGrass < 0.99 && isRock < 0.99) earth = untiled(earthMap, vPos.xz * detailScale.x, k);
+      if (isGrass > 0.01 && isRock < 0.99) grass = untiled(grassMap, vPos.xz * detailScale.y, k);
+      if (isRock > 0.01) rock = untiled(rockMap, vPos.xz * detailScale.z, k);
+    }
+    float mottle = 0.92 + 0.16 * small;
+    #else
+    vec3 grass = vec3(0.16, 0.2, 0.06), earth = vec3(0.38, 0.25, 0.12), rock = vec3(0.3, 0.27, 0.23);
+    float mottle = 0.82 + 0.36 * small;
+    #endif
+    vec3 near = mix(mix(earth, grass, isGrass), rock, isRock);
+    near = mix(near, base, 0.35) * mottle;
+    vec3 skin = mix(base, near, close);
+    #ifdef DETAIL
+    // and their relief, near you, tilting the land's own normal
+    float relief = 1.0 - smoothstep(15.0, 60.0, dist);
+    if (relief > 0.0) {
+      vec2 te = isGrass < 0.99 && isRock < 0.99 ? untiledNormal(earthNormal, vPos.xz * detailScale.x, k) : vec2(0.0);
+      vec2 tg = isGrass > 0.01 && isRock < 0.99 ? untiledNormal(grassNormal, vPos.xz * detailScale.y, k) : vec2(0.0);
+      vec2 tr = isRock > 0.01 ? untiledNormal(rockNormal, vPos.xz * detailScale.z, k) : vec2(0.0);
+      vec2 t = mix(mix(te, tg, isGrass), tr, isRock);
+      n = normalize(n + vec3(t.x, 0.0, -t.y) * 0.8 * relief);
+    }
+    #endif
 
     float d = max(dot(n, sun), 0.0) * getShadowMask();
     float banded = floor(d * 4.0 + 0.5) / 4.0;
@@ -169,19 +213,30 @@ const fragment = /* glsl */ `
   }
 `;
 
+export type Detail = { color: Texture; normal: Texture; metres: number };
 export type GroundOptions = {
   field: Field; colours: Texture; mapW: number; mapD: number;
   paper: Vector3; haze: Vector3; hazeRange: [number, number]; reach: number; cells: number; flat?: Flat;
+  /** Photo-scanned close-up ground, if the walk has it (src/content/generated/ground-detail.json). */
+  detail?: { earth: Detail; grass: Detail; rock: Detail };
 };
 
 export function groundMaterial(o: GroundOptions): ShaderMaterial {
+  const dt = o.detail;
   return new ShaderMaterial({
     vertexShader: vertex,
     fragmentShader: fragment,
     lights: true,
-    defines: { HAS_NORMAL: "" }, // the normal is made in the shader, but the shadow's normal offset wants it
+    // (the normal is made in the shader, but the shadow's normal offset wants it)
+    defines: { HAS_NORMAL: "", ...(dt ? { DETAIL: "" } : {}) },
     uniforms: {
       ...UniformsUtils.clone(UniformsLib.lights),
+      ...(dt ? {
+        earthMap: { value: dt.earth.color }, earthNormal: { value: dt.earth.normal },
+        grassMap: { value: dt.grass.color }, grassNormal: { value: dt.grass.normal },
+        rockMap: { value: dt.rock.color }, rockNormal: { value: dt.rock.normal },
+        detailScale: { value: new Vector3(1 / dt.earth.metres, 1 / dt.grass.metres, 1 / dt.rock.metres) },
+      } : {}),
       heights: { value: heightTexture(o.field) },
       fieldSize: { value: new Vector2(o.field.w, o.field.h) },
       cell: { value: o.field.cell },

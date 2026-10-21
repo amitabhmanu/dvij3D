@@ -1,0 +1,17 @@
+{
+ "earth": {
+  "metres": 4.0,
+  "color": "ground-earth-color.cc0ced0db5.webp",
+  "normal": "ground-earth-normal.395aaa4a02.webp"
+ },
+ "grass": {
+  "metres": 1.9999996423721313,
+  "color": "ground-grass-color.522ab8e7cb.webp",
+  "normal": "ground-grass-normal.8334d69402.webp"
+ },
+ "rock": {
+  "metres": 2.0,
+  "color": "ground-rock-color.039a72aa03.webp",
+  "normal": "ground-rock-normal.efa3a5656b.webp"
+ }
+}

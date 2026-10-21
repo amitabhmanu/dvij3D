@@ -99,7 +99,7 @@ export class StoryStage implements Stage {
     this.game.body.halt();
     this.screen.panel(null);
     this.props?.dispose();
-    this.props = new Props((sc.props ?? []) as never);
+    this.props = new Props((sc.props ?? []) as never, this.game.body.lodgeRoot());
     this.game.body.lodgeRoot()?.add(this.props.group);
     this.game.body.sight.set({ blur: 0, double: 0, dark: 0, flash: 0, glare: 0 });
     this.game.body.injured(false);

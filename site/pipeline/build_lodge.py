@@ -28,6 +28,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+import lodge_photos
 import lodge_plan
 import lodge_textures
 from common import ASSETS, REPORTS, SITE
@@ -79,6 +80,20 @@ def compare_sheet() -> None:
     sheet.save(REPORTS / "lodge-compare.png")
 
 
+def publish_wear(png: Path) -> str:
+    """The decay masks (blender/build_lodge.py wear_masks), at 1024 px: the game
+    draws their detail itself, so they needn't be sharp."""
+    buf = BUILD / "lodge-wear.webp"
+    Image.open(png).convert("RGB").resize((1024, 1024), Image.LANCZOS).save(buf, "WEBP", quality=88, method=6)
+    data = buf.read_bytes()
+    name = f"lodge-wear.{hashlib.sha256(data).hexdigest()[:10]}.webp"
+    for old in OUT.glob("lodge-wear.*.webp"):
+        if old.name != name:
+            old.unlink()
+    (OUT / name).write_bytes(data)
+    return name
+
+
 def main() -> None:
     plan = lodge_plan.load()
     bad = lodge_plan.problems(plan)
@@ -90,8 +105,15 @@ def main() -> None:
         shutil.rmtree(BUILD)
     tex = BUILD / "textures"
     tex.mkdir(parents=True)
-    for name, img in lodge_textures.all_textures().items():
-        img.save(tex / f"{name}.png")
+    made = lodge_textures.all_textures()
+    photos = lodge_photos.lodge_maps(made)  # the photo-scanned sets on this machine (lodge_photos.py fetch)
+    for name, img in made.items():
+        (photos[name]["color"] if name in photos else img).save(tex / f"{name}.png")
+    for name, p in photos.items():
+        p["normal"].save(tex / f"{name}-normal.png")
+        p["rough"].save(tex / f"{name}-rough.png")
+    (tex / "photos.json").write_text(json.dumps({n: p["metres"] for n, p in photos.items()}), encoding="utf-8")
+    print(f"photo materials: {', '.join(photos) or 'none (run lodge_photos.py fetch)'}")
     gods_wall(tex / "gods.png")
     spec = BUILD / "lodge.json"
     spec.write_text(json.dumps(plan), encoding="utf-8")
@@ -121,9 +143,12 @@ def main() -> None:
         if old.name != name:
             old.unlink()
     (OUT / name).write_bytes(data)
+    wear = publish_wear(tex / "lodge-wear.png")
     markers = json.loads(Path(str(raw) + ".markers.json").read_text(encoding="utf-8"))
     LODGE_JSON.write_text(json.dumps({
         "version": 1, "file": name, "bytes": len(data),
+        # where it has decayed: grime, damp, wear masks over the occlusion atlas (uv channel 1)
+        "wear": wear,
         # in the model's own frame: metres, x east, y up, z south, origin at the courtyard's centre
         "half": plan["house"]["outer"] / 2, "floor": plan["house"]["plinth"],
         "grounds": plan["grounds"]["boundary"]["rect"],

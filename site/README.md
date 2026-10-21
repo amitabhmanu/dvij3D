@@ -265,9 +265,16 @@ The Professor's lodge is the first building you can walk into (design §10.3). I
 from `src/content/valley/lodge.yaml`, which cites the novel or the comic for everything in it:
 
 ```bash
+python pipeline/lodge_photos.py fetch   # once: the photo-scanned materials (CC0, Poly Haven) into site-assets/textures/
 python pipeline/build_lodge.py          # needs Blender 4.5 LTS (or set BLENDER to its blender.exe)
+python pipeline/lodge_photos.py ground  # the walk's close-up earth, grass and rock
 python pipeline/build_walk.py           # places it in the valley
 ```
+
+Its surfaces are photo-scanned CC0 materials, graded to the comic's colours, with the house's decay (mould, grime,
+flaking paint, rust) baked as masks from where it would build up. Each texture's source and author are in
+`docs/texture-credits.md` (and `site-assets/walk/TEXTURE-CREDITS.md` beside the files); without the fetched sets the
+lodge falls back to generated textures.
 
 Review `pipeline/reports/lodge-compare.png` (renders beside the comic panels) after a change.
 
