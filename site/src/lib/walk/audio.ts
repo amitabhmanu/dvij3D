@@ -189,6 +189,7 @@ export class Sounds {
       thud: { f: 120, q: 1, len: 0.25, peak: 0.8, hits: 1 },
       hiss: { f: 5000, q: 0.7, len: 1.2, peak: 0.25, hits: 1 },
       clink: { f: 4200, q: 30, len: 0.35, peak: 0.6, hits: 2 },
+      gong: { f: 220, q: 40, len: 2.8, peak: 0.8, hits: 1 },
     };
     const s = shape[name] ?? shape.thud;
     for (let i = 0; i < s.hits; i++) {

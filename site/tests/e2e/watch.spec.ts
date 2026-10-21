@@ -110,17 +110,29 @@ test.describe("watch mode", () => {
     for (const u of heard) expect(files.has(u.split("/").pop()!)).toBe(true);
   });
 
-  test("only the chapters Dvij is in play: 1, 3, 4, 5 and 7", async ({ page }) => {
+  test("only the chapters Dvij is in play: 1, 3, 4, 5, 7 and 8", async ({ page }) => {
     test.setTimeout(120_000);
     await watch(page);
     const went: string[] = ["b1-ch01"];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       await bar(page).getByRole("button", { name: "Next chapter" }).click();
       await expect(walkEl(page)).not.toHaveAttribute("data-story", went.at(-1)!);
       went.push((await walkEl(page).getAttribute("data-story"))!);
+      if (went.at(-1) === "b1-ch07") await expect(page.locator(".story-panel[data-panel='b1-p012-1']")).toBeVisible({ timeout: 30_000 }); // his days going by
     }
-    expect(went).toEqual(["b1-ch01", "b1-ch03", "b1-ch04", "b1-ch05", "b1-ch07"]);
+    expect(went).toEqual(["b1-ch01", "b1-ch03", "b1-ch04", "b1-ch05", "b1-ch07", "b1-ch08"]);
     await expect(bar(page).getByRole("button", { name: "Next chapter" })).toBeDisabled();
-    await expect(page.locator(".story-panel[data-panel='b1-p012-1']")).toBeVisible({ timeout: 30_000 }); // his days going by
+  });
+
+  test("Chapter 8 plays by itself: Dvij walks himself out of the study to the front door", async ({ page }) => {
+    test.setTimeout(240_000);
+    await watch(page);
+    for (let i = 0; i < 5; i++) await bar(page).getByRole("button", { name: "Next chapter" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch08");
+    await bar(page).getByRole("button", { name: "4×" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-screen", "the-end", { timeout: 200_000 });
+    const p = await page.evaluate(() => (window as unknown as G).walkGame.player());
+    const steps = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(0, 0, 20.4));
+    expect(Math.hypot(p.x - steps[0], p.z - steps[2])).toBeLessThan(1.5);
   });
 });

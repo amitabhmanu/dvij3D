@@ -601,7 +601,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <button type="button" class="go" onClick={() => enter(false)} autofocus={!story}>Enter the valley</button>
           <div class="story-start">
             <p class="eyebrow">Or play the story</p>
-            <p>Be Dvij, waking in the Professor's lodge after the accident: the chapters of Book 1 he is in, from 1 to 7.</p>
+            <p>Be Dvij, waking in the Professor's lodge after the accident: the chapters of Book 1 he is in, from 1 to 8.</p>
             {saved ? (
               <>
                 <button type="button" class="go" onClick={() => enter(true, saved, false)} autofocus={story && !watching}>Continue the story</button>
@@ -800,8 +800,8 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         <section class="card" aria-labelledby="end-title">
           <p class="eyebrow">The Twice Born, Book 1</p>
           <h2 id="end-title">To be continued</h2>
-          <p>That's as far as the story plays for now: the opening of Book 1, chapters 1 to 7. The comic carries on from page 13.</p>
-          <a class="go" href="/read/b1/13">Read on in the comic</a>
+          <p>That's as far as the story plays for now: the opening of Book 1, up to Chapter 8. The comic carries on from page 14.</p>
+          <a class="go" href="/read/b1/14">Read on in the comic</a>
           {watching && <button type="button" class="go quiet" onClick={restart}>Watch it again</button>}
           <button type="button" class="go quiet" onClick={leaveStory}>Walk the valley freely</button>
           <p class="back"><a href={backUrl}>Back to the map</a></p>

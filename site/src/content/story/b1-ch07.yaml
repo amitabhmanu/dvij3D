@@ -150,4 +150,4 @@ beats:
       - say: {who: professor, line: "Because of what I know, my boy. Sometimes what you do can become your undoing. At other times, it could happen simply because of what you know, and you may not know it.", sources: [novel ¶279]}
       - caption: "The Professor ended the conversation by gulping down the rest of his panchamrita, with those cryptic words that only he would have understood."
       - progress: {book: 1, page: 12}
-      - end: {next: null}
+      - end: {next: b1-ch08}

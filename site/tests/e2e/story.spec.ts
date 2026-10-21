@@ -132,19 +132,38 @@ test.describe("story mode", () => {
     await expect(img).toHaveAttribute("alt", /reflection/i);
   });
 
-  test("Chapter 7 plays from his recovery to his naming, and the story ends there", async ({ page }) => {
+  test("Chapter 7 plays from his recovery to his naming, then Chapter 8 begins", async ({ page }) => {
     test.setTimeout(300_000);
     await page.addInitScript(() => localStorage.setItem("twice-born:story:v1", JSON.stringify({ scene: "b1-ch07", beat: "healed" })));
     await page.goto("/valley/walk/?story&test");
     await begin(page, "Continue the story");
     const seen: string[] = [];
-    await drive(page, (s) => s.screen === "the-end", seen);
-    await expect(page.locator(".walk")).toHaveAttribute("data-screen", "the-end", { timeout: 30_000 });
-    for (const b of ["healed", "outside", "the-clearing", "the-bow", "panchamrita", "the-name", "what-you-know"]) expect(seen).toContain(`b1-ch07/${b}`);
+    await drive(page, (s) => s.beat === "what-you-know", seen);
     // he sat opposite the girl, on the lawn
     const p = await page.evaluate(() => (window as unknown as G).walkGame.player());
     const chair = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(10.5, 0, 30.4));
     expect(Math.hypot(p.x - chair[0], p.z - chair[2])).toBeLessThan(0.5);
+    await drive(page, (s) => s.scene === "b1-ch08", seen);
+    for (const b of ["healed", "outside", "the-clearing", "the-bow", "panchamrita", "the-name", "what-you-know"]) expect(seen).toContain(`b1-ch07/${b}`);
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:v1") || "{}").furthest?.b1)).toBeGreaterThanOrEqual(12);
+  });
+
+  test("Chapter 8 takes off his bandage and sends him out to the henchman, and the story ends there", async ({ page }) => {
+    test.setTimeout(300_000);
+    await page.addInitScript(() => localStorage.setItem("twice-born:story:v1", JSON.stringify({ scene: "b1-ch08" })));
+    await page.goto("/valley/walk/?story&test");
+    await begin(page, "Continue the story");
+    // on the stool in the study, facing Bhavi
+    const sat = await page.evaluate(() => (window as unknown as G).walkGame.player());
+    const stool = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(-8.8, 0, -13.2));
+    expect(Math.hypot(sat.x - stool[0], sat.z - stool[2])).toBeLessThan(0.3);
+    const seen: string[] = [];
+    await drive(page, (s) => s.screen === "the-end", seen);
+    for (const b of ["the-wound", "the-arm", "the-gong", "the-summons", "the-cowherd", "the-henchman"]) expect(seen).toContain(`b1-ch08/${b}`);
+    // out on the front doorsteps
+    const p = await page.evaluate(() => (window as unknown as G).walkGame.player());
+    const steps = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(0, 0, 20.4));
+    expect(Math.hypot(p.x - steps[0], p.z - steps[2])).toBeLessThan(1.6);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("twice-born:v1") || "{}").furthest?.b1)).toBeGreaterThanOrEqual(13);
   });
 });
