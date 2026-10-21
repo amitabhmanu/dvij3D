@@ -20,6 +20,7 @@ cast:
   - {who: baldev, at: [-2.6, -0.9], pose: sit, on: chair, face: [0.2, -0.9], sources: [novel ¶296, comic b1-p014-1]}
   - {who: vaidji, at: [2.9, 0.6], pose: sit, on: chair, face: [0.2, 0.6], sources: [novel ¶296, novel ¶299, comic b1-p014-1]}
   - {who: attendant, at: [-0.9, 1.6], pose: stand, face: [1.4, -2.3], sources: [novel ¶295, novel ¶296]}   # "the obsequious attendant", until he is sent out
+  - {who: villager, at: [-6.5, 14], crowd: 18, rect: [-9, 10, -4, 18], pose: crosslegged, face: [0, 14], enters: true, sources: [novel ¶320, comic b1-p015-1]}   # back from lunch by the time of the rite: men in white on the west durrie (no women: the author, 21 Oct)
 
 beats:
   - id: the-tent
@@ -125,9 +126,10 @@ beats:
       target: [1.6, 11.2]
       radius: 2.0
     then:
+      - actor: {who: villager, show: true, anim: pray}    # rows of villagers in white, sat cross-legged, palms together (comic b1-p015-1)
       - caption: "By now many of the volunteers had returned. An altar had been set with a fire already burning. A totem rose at its side, made of five kinds of leaves."
       - say: {who: mahant, line: "Come, sit by my side. Let the people see you sitting with me.", sources: [novel ¶321]}
-      - actor: {who: mahant, pose: kneel, anim: beckon}   # (comic b1-p015-2: seated, he beckons)
+      - actor: {who: mahant, pose: crosslegged, anim: beckon}   # (comic b1-p015-2: seated, he beckons)
 
   - id: the-seat
     sources: [comic b1-p015-2, comic b1-p015-3, novel ¶320]
@@ -137,6 +139,7 @@ beats:
       target: [1.6, 0.1, 12.7]                   # the seat to the right of Mahant's, east of the altar
     then:
       - camera: {pose: sit-low, at: [1.6, 12.7], look: [0, 0.8, 14], over: 1.5}
+      - actor: {who: villager, look: player}         # "Let the people see you sitting with me" (novel ¶321)
       - caption: "It was a small ritual, a dry run before the much more elaborate garbhadhanam, and a test for Dvij."
 
   - id: the-rite

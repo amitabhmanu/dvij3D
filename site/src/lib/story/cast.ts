@@ -14,7 +14,11 @@ import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import { aim, bindLook, look, reach } from "./ik";
 
 export type V2 = [number, number];
-export type CastSpec = { who: string; at: V2; pose?: string; on?: string; face?: V2 | "player"; holding?: string; enters?: boolean };
+export type CastSpec = {
+  who: string; at: V2; pose?: string; on?: string; face?: V2 | "player"; holding?: string; enters?: boolean;
+  /** A crowd of this many, in rows over `rect` [x0, z0, x1, z1] (frame metres), all facing `face`. */
+  crowd?: number; rect?: [number, number, number, number];
+};
 /** What the cast needs from the stage. */
 export type CastEnv = {
   /** The scene's frame: the lodge's or the temple site's root; the cast stand in it. */
@@ -33,7 +37,7 @@ export type CastEnv = {
 export type PeopleInfo = { people: Record<string, { file: string; height: number }>; mouths?: string };
 
 /** How high each kind of seat is above the floor (m): the hips go there (build_lodge.py, build_site.py, props.ts). */
-const SEATS: Record<string, number> = { "deck-chair": 0.36, armchair: 0.44, chair: 0.47, divan: 0.46, stool: 0.42, "well-rim": 0.8 };
+const SEATS: Record<string, number> = { ground: 0.08, "deck-chair": 0.36, armchair: 0.44, chair: 0.47, divan: 0.46, stool: 0.42, "well-rim": 0.8 };
 /** The clip each pose loops in, and what it talks in. */
 const POSE_CLIP: Record<string, [string, string]> = {
   stand: ["Idle_Loop", "Idle_Talking_Loop"],
@@ -42,6 +46,7 @@ const POSE_CLIP: Record<string, [string, string]> = {
   kneel: ["Fixing_Kneeling", "Fixing_Kneeling"],
   stoke: ["Crouch_Idle_Loop", "Crouch_Idle_Loop"],
   crouch: ["Crouch_Idle_Loop", "Crouch_Idle_Loop"],
+  crosslegged: ["Sitting_Idle_Loop", "Sitting_Talking_Loop"],
 };
 const WALK_SPEED = 1.05; // m/s (the old and the heavy go a little slower)
 const SLOW: Record<string, number> = { professor: 0.85, vaidji: 0.8, maharaj: 0.9, baldev: 0.95 };
@@ -51,6 +56,8 @@ type Layer = {
   spine?: number; head?: number;
   /** Where the hands go (world), and how far the elbows point out. */
   handL?: Vector3 | null; handR?: Vector3 | null;
+  /** Where the feet go (world): crossed under the knees, for sitting on the ground. */
+  footL?: Vector3 | null; footR?: Vector3 | null;
 };
 type Gesture = { seconds: number; hold?: boolean; clip?: string; at: (a: Actor, t: number) => Layer };
 
@@ -59,6 +66,7 @@ const up = (a: Actor, h: number, fwd = 0.3, side = 0) => a.point(side, h, fwd);
 const GESTURES: Record<string, Gesture> = {
   namaste: { seconds: 2.4, at: (a) => ({ spine: 0.35, head: 0.3, handL: up(a, 1.18, 0.28, -0.02), handR: up(a, 1.18, 0.28, 0.02) }) },
   supplicate: { seconds: 2.8, at: (a) => ({ spine: 0.75, head: 0.35, handL: up(a, 0.95, 0.42, -0.02), handR: up(a, 0.95, 0.42, 0.02) }) },
+  pray: { seconds: 1.2, hold: true, at: (a) => ({ head: 0.15, handL: up(a, 1.16, 0.26, -0.015), handR: up(a, 1.16, 0.26, 0.015) }) },
   bow: { seconds: 1.8, at: () => ({ spine: 0.45, head: 0.35 }) },
   nod: { seconds: 1.0, at: (_a, t) => ({ head: Math.sin(t * Math.PI * 2) * 0.22 }) },
   laugh: { seconds: 1.6, at: (_a, t) => ({ spine: -0.12 + Math.sin(t * 40) * 0.03, head: -0.35 }) },
@@ -131,6 +139,8 @@ export class Actor {
   private carried: Object3D | null = null;
   private hidden = false;
   talking = false;
+  /** Time not yet played (a far one is moved every few frames). */
+  pending = 0;
 
   constructor(readonly who: string, made: { scene: Object3D; clips: AnimationClip[] }, private env: CastEnv) {
     this.model = cloneSkinned(made.scene);
@@ -164,6 +174,10 @@ export class Actor {
     const chest = this.obj.worldToLocal((this.bone("spine_03") ?? this.obj).getWorldPosition(new Vector3()));
     return this.obj.localToWorld(new Vector3(-side, chest.y + (height - 1.3), chest.z + fwd));
   }
+  /** A point on the floor they sit on (a little above it), `side` to the body's right and `fwd` ahead of its middle (world). */
+  onFloor(side: number, fwd: number): Vector3 {
+    return this.obj.localToWorld(new Vector3(-side, this.seat - 0.08 + 0.07 - this.obj.position.y, fwd));
+  }
   /** Out from the chest towards `target` (world), `dist` metres, `drop` lower, `side` to the right. */
   toward(target: Vector3, dist: number, drop = 0, side = 0): Vector3 {
     const chest = this.point(side, 1.3, 0.1);
@@ -189,6 +203,7 @@ export class Actor {
     if (face) this.faceTo(face);
     this.seat = 0;
     this.lean = pose === "recline" ? -0.42 : on === "deck-chair" ? -0.3 : 0;
+    if (pose === "crosslegged") on = "ground"; // (on the durrie, the carpet: the comic's villagers, b1-p015-1)
     if (on) {
       // the floor round the seat (a seat may be solid to the ground's query: the well, a chair, the divan)
       let floor = Infinity;
@@ -291,6 +306,9 @@ export class Actor {
     });
   }
 
+  /** Move the clips on by `seconds` (a crowd's people aren't all at the same moment). */
+  skip(seconds: number) { this.mixer.update(seconds); }
+
   /** Look at something: a point, someone's head, or nothing (null: straight ahead). */
   lookAt(target: Vector3 | (() => Vector3) | null) { this.gaze = target; }
 
@@ -378,6 +396,10 @@ export class Actor {
     } else this.layerW = Object.keys(this.held).length ? Math.min(1, this.layerW + dt * 3) : Math.max(0, this.layerW - dt * 3);
     this.layer = layer;
     if (this.lean) this.pose_({ spine: this.lean }, 1);
+    if (this.pose === "crosslegged") {
+      // the legs folded, each foot under the other knee, the knees out and down; the back straight
+      this.pose_({ spine: -0.25, footL: this.onFloor(0.14, 0.24), footR: this.onFloor(-0.14, 0.16) }, 1);
+    }
     this.pose_(this.layer, this.layerW);
     // the eyes and head: towards what they look at (eased), within a neck's reach
     const target = typeof this.gaze === "function" ? this.gaze() : this.gaze;
@@ -418,6 +440,13 @@ export class Actor {
     if (l.spine) { bend(this.bone("spine_01"), l.spine * 0.4); bend(this.bone("spine_02"), l.spine * 0.35); bend(this.bone("spine_03"), l.spine * 0.25); }
     if (l.head) bend(this.bone("head"), l.head);
     for (const s of ["l", "r"] as const) {
+      const goal = s === "l" ? l.footL : l.footR;
+      const t = this.bone(`thigh_${s}`), c = this.bone(`calf_${s}`), f = this.bone(`foot_${s}`);
+      if (!goal || !t || !c || !f) continue;
+      const knee = new Vector3(s === "l" ? 1 : -1, 0.6, 0.5).applyQuaternion(this.obj.getWorldQuaternion(new Quaternion()));
+      reach(t, c, f, goal, knee, w);
+    }
+    for (const s of ["l", "r"] as const) {
       const goal = s === "l" ? l.handL : l.handR;
       const u = this.bone(`upperarm_${s}`), lo = this.bone(`lowerarm_${s}`), h = this.bone(`hand_${s}`);
       if (!goal || !u || !lo || !h) continue;
@@ -442,6 +471,9 @@ export class Actor {
 export class Cast {
   readonly group = new Group();
   private actors = new Map<string, Actor>();
+  /** The crowds: a name, and its people (each also in `actors` as name#k). */
+  private crowds = new Map<string, Actor[]>();
+  private frame = 0;
   private mouths: Record<string, string> | null = null;
 
   constructor(private info: PeopleInfo, private env: CastEnv) {
@@ -463,6 +495,7 @@ export class Cast {
     await Promise.all(list.map(async (c) => {
       const made = await this.load(c.who)?.catch((e) => { console.warn(`no ${c.who}:`, e); return null; });
       if (!made) return;
+      if (c.crowd && c.rect) return this.crowd(c, made);
       const a = new Actor(c.who, made, this.env);
       this.group.add(a.obj);
       this.actors.set(c.who, a);
@@ -476,6 +509,31 @@ export class Cast {
   }
 
   private start: V2 | null = null;
+
+  /** A crowd: sat in rows over its rect, a little out of line, each at their own moment in the clip. */
+  private crowd(c: CastSpec, made: { scene: Object3D; clips: AnimationClip[] }) {
+    const [x0, z0, x1, z1] = c.rect!;
+    const n = c.crowd!;
+    const across = Math.max(1, Math.round(Math.sqrt((n * (x1 - x0)) / (z1 - z0))));
+    const rows = Math.ceil(n / across);
+    let seed = 17;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const people: Actor[] = [];
+    for (let k = 0; k < n; k++) {
+      const i = k % across, j = Math.floor(k / across);
+      const at: V2 = [x0 + ((i + 0.5) / across) * (x1 - x0) + (rnd() - 0.5) * 0.3, z0 + ((j + 0.5) / rows) * (z1 - z0) + (rnd() - 0.5) * 0.3];
+      const a = new Actor(c.who, made, this.env);
+      this.group.add(a.obj);
+      this.actors.set(`${c.who}#${k}`, a);
+      people.push(a);
+      const face = c.face === "player" ? this.playerAt() : c.face;
+      a.place(at, c.pose ?? "stand", c.on, face ? [face[0] + (rnd() - 0.5) * 2, face[1] + (rnd() - 0.5) * 2] : undefined);
+      a.obj.scale.setScalar(0.94 + rnd() * 0.1);
+      a.skip(rnd() * 4);
+      if (c.enters) a.show(false);
+    }
+    this.crowds.set(c.who, people);
+  }
   private playerAt(): V2 {
     if (this.start) return this.start; // (while setting up: Dvij isn't in his place yet)
     const e = this.env.root.worldToLocal(this.env.eyes().clone());
@@ -486,6 +544,15 @@ export class Cast {
 
   /** A scene's `actor` beat (the story yaml): come on, walk, look, take, gesture, give, go. */
   async beat(a: Record<string, any>, hurried: boolean): Promise<void> { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const many = this.crowds.get(a.who);
+    if (many) { // a crowd does it together, each a moment apart
+      await Promise.all(many.map((m, k) => new Promise<void>((done) => setTimeout(() => {
+        if (a.show !== undefined) m.show(!!a.show);
+        if (a.look) m.lookAt(this.target(a.look));
+        void (a.anim && !hurried ? m.act(a.anim) : Promise.resolve()).then(done);
+      }, hurried ? 0 : (k % 7) * 90))));
+      return;
+    }
     const ac = this.actors.get(a.who);
     if (!ac) return;
     if (a.from) { ac.place(a.from, "stand"); ac.show(true); }
@@ -558,7 +625,19 @@ export class Cast {
   }
 
   update(dt: number) {
-    for (const a of this.actors.values()) if (a.visible) a.update(dt);
+    this.frame++;
+    const eyes = this.env.eyes();
+    let k = 0;
+    for (const a of this.actors.values()) {
+      k++;
+      if (!a.visible) continue;
+      // the far ones move less often: a crowd's back rows every third frame
+      const far = a.obj.getWorldPosition(new Vector3()).distanceTo(eyes) > 7;
+      a.pending += dt;
+      if (far && (this.frame + k) % 3) continue;
+      a.update(a.pending);
+      a.pending = 0;
+    }
   }
 
   dispose() {
