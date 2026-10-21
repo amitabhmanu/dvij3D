@@ -12,13 +12,21 @@
     93,
     102
    ],
+   "setting": {
+    "sun": "morning",
+    "court": "open"
+   },
    "start": {
     "pose": "lie",
     "at": [
      -15.0,
      7.5
     ],
-    "look": "up"
+    "look": [
+     -13.4,
+     3.5,
+     5.3
+    ]
    },
    "props": [
     {
@@ -431,6 +439,10 @@
     134,
     162
    ],
+   "setting": {
+    "sun": "morning",
+    "court": "open"
+   },
    "start": {
     "pose": "floor",
     "at": [
@@ -900,6 +912,9 @@
     163,
     192
    ],
+   "setting": {
+    "sun": "afternoon"
+   },
    "start": {
     "pose": "stand",
     "at": [
@@ -1250,6 +1265,10 @@
     193,
     223
    ],
+   "setting": {
+    "sun": "afternoon",
+    "court": "covered"
+   },
    "start": {
     "pose": "stand",
     "at": [
@@ -1299,18 +1318,6 @@
      "on": "stove",
      "sources": [
       "novel ¶209"
-     ]
-    },
-    {
-     "id": "tulsi",
-     "kind": "tulsi-pedestal",
-     "at": [
-      0,
-      4.5
-     ],
-     "sources": [
-      "novel ¶213",
-      "breakdown ch5 p10"
      ]
     }
    ],
@@ -1585,7 +1592,7 @@
         "who": "maharaj",
         "walk": [
          0,
-         3.2
+         0.9
         ],
         "anim": "tend"
        }
@@ -1700,13 +1707,20 @@
     247,
     280
    ],
+   "setting": {
+    "sun": "morning"
+   },
    "start": {
     "pose": "lie",
     "at": [
      -15.0,
      7.5
     ],
-    "look": "up"
+    "look": [
+     -13.4,
+     3.5,
+     5.3
+    ]
    },
    "cast": [
     {
@@ -1792,7 +1806,7 @@
     {
      "id": "tumbler",
      "floor": 0,
-     "kind": "glass",
+     "kind": "steel-tumbler",
      "at": [
       9.6,
       31.5
@@ -1800,7 +1814,23 @@
      "on": "table",
      "state": "gone",
      "sources": [
-      "novel ¶258"
+      "novel ¶258",
+      "comic b1-p012-7"
+     ]
+    },
+    {
+     "id": "pitcher",
+     "floor": 0,
+     "kind": "pitcher",
+     "at": [
+      9.68,
+      31.62
+     ],
+     "on": "table",
+     "state": "gone",
+     "sources": [
+      "novel ¶257",
+      "comic b1-p012-6"
      ]
     },
     {
@@ -2059,6 +2089,12 @@
       },
       {
        "caption": "Maharaj had brought in a pitcher of a thick, strongly smelling drink."
+      },
+      {
+       "prop": {
+        "id": "pitcher",
+        "state": "full"
+       }
       },
       {
        "prop": {
@@ -2375,24 +2411,27 @@
     281,
     293
    ],
+   "setting": {
+    "sun": "morning"
+   },
    "start": {
-    "pose": "sit-low",
+    "pose": "sit",
     "at": [
-     -8.8,
-     -13.2
+     -14.4,
+     6.75
     ],
     "look": [
-     -10.0,
+     -14.4,
      1.55,
-     -13.2
+     5.9
     ]
    },
    "cast": [
     {
      "who": "bhavi",
      "at": [
-      -9.7,
-      -13.2
+      -14.4,
+      6.0
      ],
      "pose": "stand",
      "sources": [
@@ -2403,14 +2442,14 @@
     {
      "who": "professor",
      "at": [
-      -12.4,
-      -12.0
+      -13.6,
+      1.4
      ],
      "pose": "sit",
-     "on": "desk",
+     "on": "armchair",
      "sources": [
       "comic b1-p013-1",
-      "comic b1-p013-9"
+      "novel ¶97"
      ]
     }
    ],
@@ -2419,19 +2458,25 @@
      "id": "stool",
      "kind": "stool",
      "at": [
-      -8.8,
-      -13.2
+      -13.3,
+      6.55
      ],
      "sources": [
+      "novel ¶94",
       "ours"
      ]
     },
     {
-     "id": "study-clutter",
-     "kind": "clutter",
-     "room": "study",
+     "id": "kit",
+     "kind": "medical-kit",
+     "at": [
+      -13.3,
+      6.55
+     ],
+     "on": "stool",
      "sources": [
-      "novel ¶100"
+      "novel ¶282",
+      "novel ¶283"
      ]
     }
    ],
@@ -2576,8 +2621,8 @@
        "actor": {
         "who": "bhavi",
         "walk": [
-         -7.75,
-         -9.5
+         -9.8,
+         5.25
         ],
         "exit": true
        }
@@ -2613,12 +2658,12 @@
        "actor": {
         "who": "bhavi",
         "walk": [
-         -9.7,
-         -13.2
+         -14.4,
+         6.0
         ],
         "from": [
-         -7.75,
-         -9.5
+         -9.8,
+         5.25
         ]
        }
       },
@@ -2738,6 +2783,9 @@
     324
    ],
    "frame": "temple-site",
+   "setting": {
+    "sun": "midday"
+   },
    "start": {
     "pose": "stand",
     "at": [

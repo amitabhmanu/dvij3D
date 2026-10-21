@@ -7,6 +7,9 @@ book: 1
 pages: [10]
 title: Chapter 5
 novel: [193, 223]
+setting:                                         # back inside, the court's light "diffused by a curtain of thin fibreglass" (novel ¶193, breakdown ch5 p1)
+  sun: afternoon
+  court: covered
 start:
   pose: stand
   at: [0, 13.0]                                  # back inside, in the entrance hall
@@ -16,7 +19,6 @@ cast:
 props:
   - {id: stool-low, kind: stool, at: [12.0, -12.6], sources: [novel ¶203, breakdown ch5 p5]}
   - {id: tea, kind: tea-pot, at: [11.2, -12.9], on: stove, sources: [novel ¶209]}
-  - {id: tulsi, kind: tulsi-pedestal, at: [0, 4.5], sources: [novel ¶213, breakdown ch5 p10]}
 
 beats:
   - id: courtyard
@@ -83,7 +85,7 @@ beats:
   - id: tulsi
     sources: [breakdown ch5 p10, novel ¶213-216]
     do:
-      - actor: {who: maharaj, walk: [0, 3.2], anim: tend}
+      - actor: {who: maharaj, walk: [0, 0.9], anim: tend}   # at the pedestal's south face (lodge.yaml planter)
       - say: {who: maharaj, line: "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.", sources: [novel ¶214]}
 
   - id: way-out

@@ -7,6 +7,9 @@ book: 1
 pages: [7]
 title: Chapter 3
 novel: [134, 162]
+setting:                                         # half an hour on (novel ¶135)
+  sun: morning
+  court: open
 start:
   pose: floor                                   # where he fell in Chapter 1
   at: [-14.6, -13.0]

@@ -9,6 +9,8 @@ pages: [14, 15]
 title: Chapter 9
 novel: [294, 324]
 frame: temple-site
+setting:                                         # "It was mid-day" (novel ¶296)
+  sun: midday
 start:
   pose: stand                                    # kept standing before the divan (novel ¶298)
   at: [0.2, 0.9]

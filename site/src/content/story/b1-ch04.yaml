@@ -6,6 +6,8 @@ book: 1
 pages: [8, 9]
 title: Chapter 4
 novel: [163, 192]
+setting:                                         # "the sun was harsh and had moved over in front of him" as he walks to the well (novel ¶165, breakdown ch4 p3)
+  sun: afternoon
 start:
   pose: stand                                    # "later, having woken up yet again after gorged down cold khichdi" (novel ¶163)
   at: [0, 13.0]                                  # in the entrance hall, facing the front door

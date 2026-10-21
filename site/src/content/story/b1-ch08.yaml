@@ -1,23 +1,26 @@
 # Book 1, Chapter 8: the last bandage, and the summons (story mode, design §10.4).
 # DRAFT for the author's review. Novel ¶281-293; breakdown chapter 8; comic b1-p013.
-# The room: the comic ends with Dvij walking out "through the open door into the bright garden"
-# while "the Professor sits at his desk" (b1-p013-9), so it is the study; where in it he sits is ours.
+# The room: Dvij's own, the room he woke in (the author, 21 Oct: neither the novel nor the
+# breakdown names it). He sits on the edge of his bed, Bhavi standing over him; the Professor
+# in one of the room's armchairs (novel ¶97). Where each is in it is ours.
 
 scene: b1-ch08
 book: 1
 pages: [13]
 title: Chapter 8
 novel: [281, 293]
+setting:
+  sun: morning
 start:
-  pose: sit-low                                  # on a stool, while Bhavi works on his forehead (breakdown ch8 p1)
-  at: [-8.8, -13.2]
-  look: [-10.0, 1.55, -13.2]
+  pose: sit                                      # on the edge of his bed, while Bhavi works on his forehead (breakdown ch8 p1)
+  at: [-14.4, 6.75]
+  look: [-14.4, 1.55, 5.9]
 cast:
-  - {who: bhavi, at: [-9.7, -13.2], pose: stand, sources: [breakdown ch8 p1, comic b1-p013-1]}
-  - {who: professor, at: [-12.4, -12.0], pose: sit, on: desk, sources: [comic b1-p013-1, comic b1-p013-9]}
+  - {who: bhavi, at: [-14.4, 6.0], pose: stand, sources: [breakdown ch8 p1, comic b1-p013-1]}
+  - {who: professor, at: [-13.6, 1.4], pose: sit, on: armchair, sources: [comic b1-p013-1, novel ¶97]}
 props:
-  - {id: stool, kind: stool, at: [-8.8, -13.2], sources: [ours]}
-  - {id: study-clutter, kind: clutter, room: study, sources: [novel ¶100]}
+  - {id: stool, kind: stool, at: [-13.3, 6.55], sources: [novel ¶94, ours]}   # the bedside stool
+  - {id: kit, kind: medical-kit, at: [-13.3, 6.55], on: stool, sources: [novel ¶282, novel ¶283]}   # tape, gauze, cotton wool, crystal violet
 
 beats:
   - id: the-tape
@@ -56,7 +59,7 @@ beats:
       - sound: gong
       - caption: "A gong rang loud somewhere in the lodge."
       - say: {who: professor, line: "Will you stop bickering with your only patient and answer the door?", sources: [novel ¶284]}
-      - actor: {who: bhavi, walk: [-7.75, -9.5], exit: true}   # out through the study door, in a huff (novel ¶285)
+      - actor: {who: bhavi, walk: [-9.8, 5.25], exit: true}   # out through the room's door to the corridor, in a huff (novel ¶285)
       - caption: "Bhavi left the room in a huff."
       - say: {who: professor, line: "She's a firebrand, my niece. She is bored of living with me, but naturally. She finds nothing meaningful to do around here, so she keeps wandering about the hills and the forests. The wild berries have poisoned her tongue.", sources: [novel ¶286]}
       - wait: 2
@@ -64,7 +67,7 @@ beats:
   - id: the-summons
     sources: [breakdown ch8 p6, breakdown ch8 p7, comic b1-p013-6, comic b1-p013-7, novel ¶287-289]
     do:
-      - actor: {who: bhavi, walk: [-9.7, -13.2], from: [-7.75, -9.5]}
+      - actor: {who: bhavi, walk: [-14.4, 6.0], from: [-9.8, 5.25]}
       - caption: "Bhavi was back, and her huffing, if anything, was more than before."
       - say: {who: bhavi, line: "Talk of the devil... it's the Mahant's henchman. He wants the Wounded One to attend some ceremony at the main temple. Today! Would you believe that? I guess word must have travelled around that the Wounded One is Wounded No More.", sources: [novel ¶288]}
       - say: {who: professor, line: "I wonder how?", sources: [novel ¶289]}

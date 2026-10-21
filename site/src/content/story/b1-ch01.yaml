@@ -12,11 +12,14 @@ book: 1
 pages: [4]
 title: Chapter 1
 novel: [93, 102]
+setting:                                         # soft daylight, the court "wonderfully sunlit" (novel ¶100, breakdown ch1 p1, p7)
+  sun: morning
+  court: open
 start:
   # flat on his back in the iron bed, staring up at the fan (breakdown ch1 p2; novel ¶93)
   pose: lie
   at: [-15.0, 7.5]
-  look: up
+  look: [-13.4, 3.5, 5.3]                        # up past the iron beam to the fan hanging from it (novel ¶93, breakdown ch1 p2)
 props:
   # what the scene needs beyond the lodge's own furniture
   - {id: stool, kind: stool, at: [-14.3, 6.75], sources: [novel ¶94]}

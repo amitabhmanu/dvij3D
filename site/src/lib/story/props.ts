@@ -6,6 +6,8 @@ import {
   BoxGeometry, BufferAttribute, BufferGeometry, Color, CylinderGeometry, Group, Mesh, MeshLambertMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
   Object3D, SphereGeometry, TorusGeometry, Vector3, type Material,
 } from "three";
+import { makeGlass, type World } from "./glass";
+import { makeThing } from "./things";
 
 export type PropSpec = {
   id: string; kind: string; at?: [number, number]; on?: string; state?: string; window?: string; room?: string;
@@ -14,20 +16,28 @@ export type PropSpec = {
   /** a point it faces (a chair turned to the others) */
   facing?: [number, number];
 };
-type Made = { obj: Object3D; set: (state: string) => void; point: () => [number, number, number] };
+type Made = {
+  obj: Object3D; set: (state: string) => void; point: () => [number, number, number];
+  /** Something a hand can pick up: the object, in the lodge's frame. */
+  handle?: Object3D;
+  update?: (dt: number) => void;
+  dispose?: () => void;
+};
+let WORLD: World | null = null; // the props' surroundings: what's under them, and sound (see Props)
+/** The tops of the props that hold things up (a stool, a small table), for things that fall: x, z, radius, height. */
+let SUPPORTS: [number, number, number, number][] = [];
 
 const PLINTH = 0.6; // the lodge's plinth: rooms' floors stand this high (lodge.yaml house.plinth)
 let FLOOR = PLINTH; // the floor of the prop being made (see make)
 const mat = (hex: string, opts: Partial<MeshStandardMaterial> = {}) => new MeshStandardMaterial({ color: new Color(hex), roughness: 0.8, ...opts });
 const WOOD = mat("#5c3a22"), BRASS = mat("#b08a3a", { metalness: 0.7, roughness: 0.35 });
-// real glass: it bends and tints what lies behind it
-const GLASS = new MeshPhysicalMaterial({ color: new Color("#dfeeed"), transparent: true, opacity: 0.32, roughness: 0.04, metalness: 0, specularIntensity: 1, envMapIntensity: 2.5 });
 const PAPER = mat("#e6d8b4"), CLOTH = mat("#7a2e20"), CLAY = mat("#8a4a2a"), PLANK = mat("#6b4a2c"), IRON = mat("#3a332c");
+const PLASTER = mat("#e8dcc0");
 /** Which of the lodge's own materials (blender/build_lodge.py) each stands for, and the
  * metres one repeat of its texture covers there: a prop made of wood looks like the lodge's wood. */
 const LODGE: [MeshStandardMaterial, string, number][] = [
   [WOOD, "wood", 2.0], [PLANK, "wood", 2.0], [BRASS, "brass", 1], [PAPER, "paper", 1], [CLOTH, "cloth", 1],
-  [CLAY, "clay", 1], [IRON, "iron", 1],
+  [CLAY, "clay", 1], [IRON, "iron", 1], [PLASTER, "whitewash", 2.0],
 ];
 
 /** UVs in metres, laid flat along whichever axis each face looks down, so a texture
@@ -61,6 +71,7 @@ function make(p: PropSpec): Made {
   const set: (s: string) => void = (s) => { state = s; };
   switch (p.kind) {
     case "stool": {
+      SUPPORTS.push([x, z, 0.22, FLOOR + 0.505]);
       g.add(at(new Mesh(new CylinderGeometry(0.22, 0.22, 0.05, 14), WOOD), 0, FLOOR + 0.48, 0));
       for (let k = 0; k < 3; k++) {
         const a = (k * Math.PI * 2) / 3;
@@ -69,19 +80,44 @@ function make(p: PropSpec): Made {
       break;
     }
     case "glass": {
-      const glass = at(new Mesh(new CylinderGeometry(0.035, 0.03, 0.11, 12), GLASS), 0, (p.on ? FLOOR + 0.5 : FLOOR) + 0.055, 0);
-      const water = at(new Mesh(new CylinderGeometry(0.03, 0.028, 0.05, 12), mat("#7fa7b0", { transparent: true, opacity: 0.7 })), 0, glass.position.y - 0.02, 0);
-      g.add(glass, water);
+      // a real tumbler, half full (novel ¶94), in the lodge's own frame so it can fall (glass.ts)
+      const glass = makeGlass(WORLD);
+      at(glass.obj, x, p.on ? FLOOR + 0.5 : FLOOR, z);
+      g.add(glass.obj);
+      let dropped = false;
+      const drop = (breaks: boolean) => {
+        if (dropped) return;
+        dropped = true;
+        g.attach(glass.obj); // (from a hand, if it was in one)
+        // let go: a hand's release sets its own push; otherwise it is knocked over where it stands,
+        // already falling on its side, and rolls away from the bed
+        // (on its side, its axis east-west, rolling north at 0.9 m/s: spin = speed / radius)
+        if (!glass.obj.userData.v) {
+          glass.obj.position.y += 0.036;
+          glass.obj.rotation.set(0, 0, Math.PI / 2);
+        }
+        glass.drop(glass.obj.userData.v ?? new Vector3(0.05, 0, -0.9), glass.obj.userData.w ?? new Vector3(-0.9 / 0.034, 0, 0), breaks);
+      };
       return {
-        obj: at(g, x, 0, z),
+        obj: g,
+        handle: glass.obj,
         set: (s) => {
           state = s;
           g.visible = s !== "gone";
-          water.visible = s !== "rolled-off" && s !== "empty";
-          if (s === "rolled-off") { g.position.set(x - 0.4, 0, z - 0.3); glass.rotation.z = Math.PI / 2; glass.position.y = FLOOR + 0.035; }
-          if (s === "gone") g.visible = false;
+          if (s === "full") glass.level(1);
+          if (s === "half") glass.level(0.5);
+          if (s === "spilled") glass.level(0.08); // "spilled most of the water over the stack of pillows" (¶95)
+          if (s === "empty" || s === "rolled-off" || s === "shattered") glass.level(0);
+          if (s === "rolled-off") drop(false); // "a clatter onto the floor" (¶95): it doesn't say it broke
+          if (s === "shattered") drop(true);
         },
-        point: () => [g.position.x, glass.position.y, g.position.z],
+        point: () => {
+          const w = glass.obj.getWorldPosition(new Vector3());
+          const local = g.worldToLocal(w);
+          return [local.x, local.y + 0.05, local.z];
+        },
+        update: glass.update,
+        dispose: glass.dispose,
       };
     }
     case "spectacles": {
@@ -107,9 +143,15 @@ function make(p: PropSpec): Made {
       break;
     }
     case "open-book": {
-      const b = at(new Mesh(new BoxGeometry(0.22, 0.03, 0.15), CLOTH), 0, FLOOR + 0.515, 0);
-      b.rotation.y = 0.4;
-      g.add(b);
+      // "an open book laying upside-down over a shawl" (novel ¶98): the shawl folded under it, hanging off the stool's edge
+      const shawl = at(new Mesh(new BoxGeometry(0.34, 0.012, 0.26), mat("#6d5a3c", { roughness: 1 })), 0.02, FLOOR + 0.506, 0.02);
+      shawl.rotation.y = -0.2;
+      const fold = at(new Mesh(new BoxGeometry(0.1, 0.16, 0.24), mat("#6d5a3c", { roughness: 1 })), 0.21, FLOOR + 0.43, 0.04);
+      fold.rotation.set(0, -0.2, 0.15);
+      const pages = at(new Mesh(new BoxGeometry(0.21, 0.026, 0.145), PAPER), 0, FLOOR + 0.527, 0);
+      const cover = at(new Mesh(new BoxGeometry(0.225, 0.006, 0.155), CLOTH), 0, FLOOR + 0.543, 0); // upside-down: its cover up
+      for (const m of [pages, cover]) m.rotation.y = 0.4;
+      g.add(shawl, fold, pages, cover);
       break;
     }
     case "rocking-chair": {
@@ -162,6 +204,10 @@ function make(p: PropSpec): Made {
       };
     }
     default: {
+      // the story's own things (things.ts): on a stool or table if it says so
+      const base = p.on && p.on !== "desk" ? FLOOR + 0.5 : FLOOR;
+      const thing = makeThing(p.kind, x, z, base, state, { WOOD, BRASS, PAPER, CLOTH, CLAY, IRON, PLASTER });
+      if (thing) return thing;
       g.add(at(new Mesh(new BoxGeometry(0.2, 0.2, 0.2), new MeshLambertMaterial({ color: "#a08060" })), 0, FLOOR + 0.1, 0));
       top = FLOOR + 0.2;
     }
@@ -183,9 +229,27 @@ export class Props {
   readonly group = new Group();
   private made = new Map<string, Made>();
   private owned: Material[] = [];
+  private restore: (() => void)[] = [];
 
-  /** `lodge`: the lodge's model, whose materials the props borrow (by name) if given. */
-  constructor(specs: PropSpec[], lodge?: Object3D | null) {
+  /** `lodge`: the lodge's model, whose materials the props borrow (by name) if given;
+   * `world`: what's under each point (in the props' own frame) and how to make a sound, for things that fall. */
+  constructor(specs: PropSpec[], lodge?: Object3D | null, world?: World) {
+    SUPPORTS = [];
+    const supports = SUPPORTS;
+    // what's under a point: the room's own surfaces, or the top of a stool the scene has put there
+    WORLD = world ? {
+      ...world,
+      surface: (x, y, z) => {
+        let top = world.surface(x, y, z);
+        for (const [sx, sz, r, h] of supports) if (h <= y + 0.05 && (x - sx) ** 2 + (z - sz) ** 2 < r * r) top = top == null ? h : Math.max(top, h);
+        return top;
+      },
+    } : null;
+    // a scene's own veena stands in for the lodge's (blender/build_lodge.py builds it apart, as "veena")
+    if (specs.some((p) => p.kind === "veena")) {
+      const theirs = lodge?.getObjectByName("veena");
+      if (theirs) { theirs.visible = false; this.restore.push(() => { theirs.visible = true; }); }
+    }
     for (const p of specs) {
       const spec = { ...p, at: p.at ?? (p.window ? WINDOWS[p.window] : p.room ? CLUTTER[p.room] : undefined) };
       const m = make(spec);
@@ -228,6 +292,16 @@ export class Props {
     });
   }
 
+  /** Move loose things on (a falling glass, its shards): every game step. */
+  update(dt: number) {
+    for (const m of this.made.values()) m.update?.(dt);
+  }
+
+  /** What a hand would pick up of this prop, if anything. */
+  handle(id: string): Object3D | null {
+    return this.made.get(id)?.handle ?? null;
+  }
+
   has(id: string) {
     return this.made.has(id);
   }
@@ -248,5 +322,7 @@ export class Props {
       if (m.isMesh) m.geometry.dispose();
     });
     for (const m of this.owned) m.dispose();
+    for (const m of this.made.values()) m.dispose?.();
+    for (const r of this.restore) r();
   }
 }

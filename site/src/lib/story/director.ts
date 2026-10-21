@@ -21,6 +21,8 @@ export type Scene = {
   /** Whose frame its places are in: the lodge's (the default) or another built place's ("temple-site"). */
   frame?: string;
   start: { pose: string; at?: Vec2; look?: "up" | Vec3 };
+  /** The scene's time of day, the courtyard's cover, and the fans that run (default: morning, open, as the lodge has them). */
+  setting?: { sun?: string; court?: "covered" | "open"; fans?: Record<string, number> };
   cast?: { who: string; at: Vec2; pose?: string }[];
   props?: Record<string, any>[]; // eslint-disable-line @typescript-eslint/no-explicit-any
   beats: Beat[];

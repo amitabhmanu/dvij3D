@@ -48,6 +48,7 @@ const POSES = new Set(["lie", "sit", "sit-low", "stand", "floor"]);
 
 export class StoryStage implements Stage {
   private props: Props | null = null;
+  private unstep: (() => void) | null = null;
   private frame = "lodge";
   private pressed = false;
   private advance = false;
@@ -104,7 +105,17 @@ export class StoryStage implements Stage {
     this.screen.panel(null);
     this.props?.dispose();
     this.frame = sc.frame ?? "lodge";
-    this.props = new Props((sc.props ?? []) as never, this.game.body.lodgeRoot());
+    const body = this.game.body;
+    body.setting({ sun: sc.setting?.sun, court: sc.setting?.court });
+    for (const [room, speed] of Object.entries(sc.setting?.fans ?? {})) body.fan(room, speed);
+    const origin = this.world([0, 0, 0]); // (the props stand in the scene's frame: translated only)
+    this.unstep?.();
+    this.props = new Props((sc.props ?? []) as never, body.lodgeRoot(), {
+      surface: (x, y, z) => body.surface(x + origin[0], y + origin[1], z + origin[2]) - origin[1],
+      sound: (name) => body.fx(name),
+    });
+    const props = this.props;
+    this.unstep = body.every((dt) => props.update(dt));
     (this.frame === "lodge" ? this.game.body.lodgeRoot() : this.game.body.siteRoot(this.frame))?.add(this.props.group);
     this.game.body.sight.set({ blur: 0, double: 0, dark: 0, flash: 0, glare: 0 });
     this.game.body.injured(false);
@@ -267,6 +278,7 @@ export class StoryStage implements Stage {
   }
 
   dispose(): void {
+    this.unstep?.();
     this.props?.dispose();
   }
 }

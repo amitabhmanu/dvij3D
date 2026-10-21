@@ -8,10 +8,12 @@ book: 1
 pages: [12]
 title: Chapter 7
 novel: [247, 280]
+setting:                                         # "pleasant morning sunlight creating long soft shadows" (breakdown ch7 p3)
+  sun: morning
 start:
   pose: lie                                      # in his bed again, days later (novel ¶247)
   at: [-15.0, 7.5]
-  look: up
+  look: [-13.4, 3.5, 5.3]                        # up past the iron beam to the fan hanging from it (novel ¶93, breakdown ch1 p2)
 cast:
   - {who: professor, at: [8.5, 32.6], pose: sit, on: deck-chair, sources: [novel ¶249, breakdown ch7 p3]}
   - {who: bhavi, at: [10.5, 32.6], pose: sit, on: deck-chair, sources: [novel ¶249, breakdown ch7 p3]}
@@ -20,7 +22,8 @@ props:
   - {id: chair-professor, floor: 0, kind: deck-chair, at: [8.5, 32.6], sources: [novel ¶249]}
   - {id: chair-bhavi, floor: 0, kind: deck-chair, at: [10.5, 32.6], sources: [novel ¶249]}
   - {id: chair-dvij, floor: 0, kind: deck-chair, at: [10.5, 30.4], facing: [10.5, 32.6], sources: [novel ¶249]}   # "sat opposite the girl"
-  - {id: tumbler, floor: 0, kind: glass, at: [9.6, 31.5], on: table, state: gone, sources: [novel ¶258]}
+  - {id: tumbler, floor: 0, kind: steel-tumbler, at: [9.6, 31.5], on: table, state: gone, sources: [novel ¶258, comic b1-p012-7]}   # "a steel tumbler full to the brim with a frothy liquid"
+  - {id: pitcher, floor: 0, kind: pitcher, at: [9.68, 31.62], on: table, state: gone, sources: [novel ¶257, comic b1-p012-6]}
   - {id: table, floor: 0, kind: stool, at: [9.6, 31.5], sources: [ours]}   # somewhere to put the tumblers down
 
 beats:
@@ -88,6 +91,7 @@ beats:
       - caption: "Bhavi was laughing at his confusion. She accepted his bow with a very graceful nod of her pretty head."
       - actor: {who: maharaj, walk: [9.6, 33.5], from: [0, 20.4], holding: pitcher}   # Maharaj brings the pitcher (novel ¶257)
       - caption: "Maharaj had brought in a pitcher of a thick, strongly smelling drink."
+      - prop: {id: pitcher, state: full}
       - prop: {id: tumbler, state: full}
 
   - id: panchamrita
