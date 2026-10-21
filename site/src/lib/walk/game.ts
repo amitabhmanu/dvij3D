@@ -13,6 +13,7 @@ import {
 import { decodeHeights, fieldFor, heightAt, setFlat, type Field } from "./heights";
 import { loadLodge, type Look, type Lodge, type Marker } from "./lodge";
 import lodgeInfo from "../../content/generated/lodge.json";
+import siteInfo from "../../content/generated/temple-site.json";
 import { groundGeometry, groundMaterial } from "./ground";
 import { inkComposer } from "./post";
 import { SightEffect } from "../story/effects";
@@ -95,6 +96,9 @@ export type Body = {
   /** The lodge's frame -> the world's. */
   fromLodge: (x: number, y: number, z: number) => [number, number, number];
   lodgeRoot: () => import("three").Object3D | null;
+  /** Another built place's frame -> the world's, and its model: "temple-site" (Chapter 9). */
+  fromSite: (id: string, x: number, y: number, z: number) => [number, number, number];
+  siteRoot: (id: string) => import("three").Object3D | null;
   fx: (name: string) => void;
 };
 
@@ -171,17 +175,30 @@ export async function createGame(o: GameOptions): Promise<Game> {
   cutTex.needsUpdate = true;
   o.onProgress(0.75, "Laying the paths");
   const field: Field = fieldFor(await decodeHeights(heightBuf, h.w, h.h, h.scale), h.w, h.h, walk);
-  setFlat({ rect: walk.lodge.pad, blend: walk.lodge.blend }); // the lodge stands on levelled ground
+  // the lodge and the temple site stand on levelled ground
+  const pads = [{ rect: walk.lodge.pad, blend: walk.lodge.blend }, ...(walk.sites ?? []).map((s) => ({ rect: s.pad, blend: s.blend }))];
+  setFlat(pads);
   const terrain = (x: number, z: number) => heightAt(field, x, z);
   // The ground you stand on: the land, or the lodge's floors and steps under you.
   let feet = Infinity; // where your feet were at the last step; Infinity when you've just arrived
   let lodge: Lodge | null = null;
+  const sites = new Map<string, Lodge>(); // the other built places (the temple site), loaded like the lodge
+  const models = () => (lodge ? [lodge, ...sites.values()] : [...sites.values()]);
+  const floorAt = (x: number, z: number) => {
+    let best: number | null = null;
+    for (const m of models()) {
+      const f = m.floorAt(x, z, feet);
+      if (f != null && (best == null || f > best)) best = f;
+    }
+    return best;
+  };
   const ground = (x: number, z: number) => {
     const land = terrain(x, z);
-    const floor = lodge?.floorAt(x, z, feet);
+    const floor = floorAt(x, z);
     return floor != null && floor > land - 0.05 ? floor : land;
   };
-  const built = (x: number, z: number) => (lodge?.floorAt(x, z, feet) ?? -Infinity) > terrain(x, z) + 0.02;
+  const built = (x: number, z: number) => (floorAt(x, z) ?? -Infinity) > terrain(x, z) + 0.02;
+  const indoorsAt = (x: number, z: number) => models().some((m) => m.indoors(x, z));
 
   const renderer = new WebGLRenderer({ canvas: o.canvas, antialias: true, powerPreference: "high-performance" });
   renderer.outputColorSpace = SRGBColorSpace;
@@ -199,7 +216,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   let groundMesh: Mesh | null = null;
   const groundMat = (cells: number) => groundMaterial({
     field, colours, mapW: walk.worldWidth, mapD: walk.worldDepth, paper: PAPER, haze: HAZE,
-    hazeRange: [900, 7000], reach, cells, flat: { rect: walk.lodge.pad, blend: walk.lodge.blend },
+    hazeRange: [900, 7000], reach, cells, flat: pads,
   });
   const buildGround = (q: Quality) => {
     if (groundMesh) {
@@ -272,6 +289,13 @@ export async function createGame(o: GameOptions): Promise<Game> {
     url: walkAsset(walk.lodge.file), at: { x: walk.lodge.x, y: walk.lodge.y, z: walk.lodge.z },
     half: lodgeInfo.half, court: 8, markers: lodgeInfo.markers as Marker[],
   }, scene);
+  // The temple site (Chapter 9): about 200 KB, loaded with the lodge. Indoors is the tent.
+  for (const st of walk.sites ?? []) {
+    sites.set(st.id, await loadLodge({
+      url: walkAsset(st.file), at: { x: st.x, y: st.y, z: st.z },
+      half: siteInfo.tent[2], court: 0, markers: siteInfo.markers as Marker[],
+    }, scene));
+  }
   const ambient = new AmbientLight(0xffffff, 1.3);
   scene.add(ambient);
   const sun = new DirectionalLight(0xfff1d6, 2.0);
@@ -283,7 +307,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     Math.abs(x) > halfW || Math.abs(z) > halfD ||
     walk.water.some((lake) => inside(lake.points, x, z)) ||
     blockers.hits(x, z, r) ||
-    (lodge?.hits(x, z, Number.isFinite(feet) ? feet : ground(x, z), r) ?? false);
+    models().some((m) => m.hits(x, z, Number.isFinite(feet) ? feet : ground(x, z), r));
 
   const input = new Input(o.canvas);
   const rules = walk.player;
@@ -294,7 +318,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // Indoors it is darker, lit from the windows and the courtyard, and the haze stands off.
   let indoor = 0;
   const lightFor = (dt: number) => {
-    const target = lodge?.indoors(player.x, player.z) ? 1 : 0;
+    const target = indoorsAt(player.x, player.z) ? 1 : 0;
     indoor += (target - indoor) * Math.min(1, dt * 3);
     ambient.intensity = 1.3 - 0.65 * indoor;
     sun.intensity = 2.0 - 1.4 * indoor;
@@ -405,17 +429,18 @@ export async function createGame(o: GameOptions): Promise<Game> {
         sounds?.step(surface(player.x, player.z), move.run);
       }
     }
-    lodge?.update(1 / 60);
+    for (const m of models()) m.update(1 / 60);
     lightFor(1 / 60); // (the sight pass eases itself, each time the composer renders)
     place();
     draw();
     o.onFrame?.(player.x, player.z, player.heading);
     if (now - statsAt > 200) {
       statsAt = now;
-      const inside = lodge?.indoors(player.x, player.z) ?? false;
+      const inside = indoorsAt(player.x, player.z);
       sounds?.hear({ indoors: inside, height: inside ? 0 : player.y - rules.eye, trees: inside ? 0 : Math.min(1, woods.count(player.x, player.z, 35) / 14), water: lakeDistance(player.x, player.z) });
       o.onStats?.({ x: player.x, z: player.z, heading: player.heading, ground: ground(player.x, player.z), indoors: inside,
-        door: lodge?.doorNear(player.x, player.z) ?? null, look: lodge?.lookNear(player.x, player.z) ?? null });
+        door: lodge?.doorNear(player.x, player.z) ?? null,
+        look: models().map((m) => m.lookNear(player.x, player.z)).find((l) => l) ?? null });
     }
     raf = requestAnimationFrame(frame);
   };
@@ -498,6 +523,11 @@ export async function createGame(o: GameOptions): Promise<Game> {
     rate: (r) => { rate = r; sight.speed = r; },
     fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
     lodgeRoot: () => lodge?.root ?? null,
+    fromSite: (id, x, y, z) => {
+      const st = (walk.sites ?? []).find((k) => k.id === id);
+      return st ? [x + st.x, y + st.y, z + st.z] : [x, y, z];
+    },
+    siteRoot: (id) => sites.get(id)?.root ?? null,
     fx: (name) => sounds?.fx(name),
   };
 
@@ -583,6 +613,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       stones.dispose();
       colours.dispose();
       lodge?.dispose();
+      for (const m of sites.values()) m.dispose();
       cutTex.dispose();
       cutouts?.geometry.dispose();
       (cutouts?.material as ShaderMaterial | undefined)?.dispose();

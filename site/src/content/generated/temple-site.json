@@ -1,0 +1,106 @@
+{
+ "version": 1,
+ "file": "temple-site.a20052e4ef.glb",
+ "bytes": 202752,
+ "where": [
+  0.555,
+  0.615
+ ],
+ "tent": [
+  -4.5,
+  -3.5,
+  4.5,
+  3.5
+ ],
+ "grounds": [
+  -40,
+  -30,
+  40,
+  45
+ ],
+ "markers": [
+  {
+   "name": "arrive:site",
+   "at": [
+    0,
+    0,
+    30
+   ],
+   "heading": 180,
+   "label": "The temple site"
+  },
+  {
+   "name": "mark:dvij-stand",
+   "at": [
+    0.2,
+    0,
+    0.9
+   ]
+  },
+  {
+   "name": "mark:way-out",
+   "at": [
+    -34,
+    0,
+    40
+   ]
+  },
+  {
+   "name": "room:tent",
+   "at": [
+    0,
+    1.0,
+    0
+   ],
+   "kind": "room",
+   "label": "Mahant's pandaal",
+   "rect": "[-4.5, -3.5, 4.5, 3.5]"
+  },
+  {
+   "name": "seat:mahant-seat",
+   "at": [
+    1.6,
+    0.08,
+    14
+   ],
+   "face": "w"
+  },
+  {
+   "name": "seat:dvij-seat",
+   "at": [
+    1.6,
+    0.08,
+    12.7
+   ],
+   "face": "w"
+  },
+  {
+   "name": "look:altar",
+   "at": [
+    0,
+    0.8,
+    14
+   ],
+   "kind": "look",
+   "label": "The fire altar",
+   "text": "\"An altar had been set with a fire already burning. A totem rose at its side, appeared to be made of five kinds of leaves.\"",
+   "pages": [
+    "b1-p015"
+   ]
+  },
+  {
+   "name": "look:diagram",
+   "at": [
+    0.1,
+    0.6,
+    -0.6
+   ],
+   "kind": "look",
+   "label": "The temple's plan",
+   "text": "\"A large sheet of paper lay over a table, with a large diagram and text written around it.\"",
+   "pages": [
+    "b1-p014"
+   ]
+  }
+ ]
+}

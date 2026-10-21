@@ -146,6 +146,22 @@
   ],
   "blend": 40.0
  },
+ "sites": [
+  {
+   "id": "temple-site",
+   "file": "temple-site.a20052e4ef.glb",
+   "x": 550.0,
+   "y": 0.0,
+   "z": 779.5,
+   "pad": [
+    504.0,
+    743.5,
+    596.0,
+    830.5
+   ],
+   "blend": 40.0
+  }
+ ],
  "places": [
   {
    "id": "fort-ruins",

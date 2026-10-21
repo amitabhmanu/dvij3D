@@ -18,6 +18,8 @@ export type Act = {
 export type Beat = { id: string; sources: string[]; do?: Action[]; act?: Act; then?: Action[] };
 export type Scene = {
   scene: string; book: number; pages: number[]; title: string;
+  /** Whose frame its places are in: the lodge's (the default) or another built place's ("temple-site"). */
+  frame?: string;
   start: { pose: string; at?: Vec2; look?: "up" | Vec3 };
   cast?: { who: string; at: Vec2; pose?: string }[];
   props?: Record<string, any>[]; // eslint-disable-line @typescript-eslint/no-explicit-any

@@ -20,6 +20,8 @@ export type WalkData = {
   check: { i: number; j: number; h: number }[];
   /** The lodge you can walk into (design §10.3): its model, where it stands, its levelled pad. */
   lodge: { file: string; x: number; y: number; z: number; pad: [number, number, number, number]; blend: number };
+  /** Other places built as models, each on its own levelled pad: the temple site (Chapter 9). */
+  sites: { id: string; file: string; x: number; y: number; z: number; pad: [number, number, number, number]; blend: number }[];
   /** Where walking up to each labelled place offers its card. */
   places: { id: string; x: number; y: number; z: number; r: number }[];
 };

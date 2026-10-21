@@ -23,7 +23,7 @@ import lodge_reference
 
 STORY = SITE / "src" / "content" / "story"
 REVIEW = SITE / "docs" / "story" / "review.md"
-SPEAKERS = {"dvij", "professor", "bhavi", "maharaj", "mahant", "baldev"}
+SPEAKERS = {"dvij", "professor", "bhavi", "maharaj", "mahant", "baldev", "vaidji"}
 ACT_KINDS = {"press", "look-press", "reach", "use"}
 ACTIONS = {"effect", "caption", "wait", "animate", "prop", "sound", "camera", "look", "body", "checkpoint",
            "reflection", "progress", "end", "say", "actor", "chapter", "panels", "panel"}

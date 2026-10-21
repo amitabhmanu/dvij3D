@@ -111,6 +111,7 @@ def place_spots(cfg: dict, places: list[dict], contours: dict, houses: list[dict
 
 
 LODGE_JSON = CONTENT / "generated" / "lodge.json"
+SITE_JSON = CONTENT / "generated" / "temple-site.json"  # Chapter 9's temple site (build_site.py)
 PAD_MARGIN = 6.0  # metres of level ground beyond the lodge's boundary wall
 PAD_BLEND = 40.0  # metres over which the levelled pad eases back into the land
 
@@ -187,7 +188,14 @@ def main() -> None:
     pad = (lx + gx0 - PAD_MARGIN, lz + gz0 - PAD_MARGIN, lx + gx1 + PAD_MARGIN, lz + gz1 + PAD_MARGIN)
     level = flatten(final, grid, ww, wd, pad)
     home.update({"model": "lodge", "y": round(level, 2), "r": 0})  # no cut-out, and the model is its own collision
-    in_grounds = lambda x, z: pad[0] - 4 < x < pad[2] + 4 and pad[1] - 4 < z < pad[3] + 4
+    # The temple site (Chapter 9): where its plan puts it on the book's map, on levelled ground too.
+    site = json.loads(SITE_JSON.read_text(encoding="utf-8"))
+    sx_, sz_ = (site["where"][0] - 0.5) * ww, (site["where"][1] - 0.5) * wd
+    sg = site["grounds"]
+    site_pad = (sx_ + sg[0] - PAD_MARGIN, sz_ + sg[1] - PAD_MARGIN, sx_ + sg[2] + PAD_MARGIN, sz_ + sg[3] + PAD_MARGIN)
+    site_level = flatten(final, grid, ww, wd, site_pad)
+    pads = (pad, site_pad)
+    in_grounds = lambda x, z: any(p[0] - 4 < x < p[2] + 4 and p[1] - 4 < z < p[3] + 4 for p in pads)
     near_house = lambda x, z: in_grounds(x, z) or any((x - h["x"]) ** 2 + (z - h["z"]) ** 2 < (h["r"] + 4) ** 2 for h in houses)
     drape_img = cv2.imread(str(bt.OUT / json.loads((CONTENT / "generated" / "drape.json").read_text(encoding="utf-8"))["file"]))
     forest = place_world.trees(walk, cut, drape_img, (ww, wd), ground, slope, wet, near_house)
@@ -215,6 +223,8 @@ def main() -> None:
         "player": walk["player"],
         "lodge": {"file": lodge["file"], "x": lx, "y": round(level, 2), "z": lz, "pad": [round(v, 1) for v in pad],
                   "blend": PAD_BLEND},
+        "sites": [{"id": "temple-site", "file": site["file"], "x": round(sx_, 1), "y": round(site_level, 2), "z": round(sz_, 1),
+                   "pad": [round(v, 1) for v in site_pad], "blend": PAD_BLEND}],
         "places": place_spots(walk["places"], places, contours, houses, ww, wd, ground),
         # exact samples for the browser's decoder to be checked against (tests)
         "check": [{"i": i, "j": j, "h": round(float(final[j, i]), 2)}

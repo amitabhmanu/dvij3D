@@ -247,7 +247,7 @@ test("the map shows where you are and takes you to places you've reached", async
   await enter(page);
   await page.keyboard.press("KeyM");
   await expect(page.locator(".walk")).toHaveAttribute("data-screen", "map");
-  await expect(page.locator(".map-frame .spot")).toHaveCount(9); // the 8 places and the lodge
+  await expect(page.locator(".map-frame .spot")).toHaveCount(10); // the 8 places, the lodge and the temple site
   await expect(page.locator('.map-frame .spot[data-place="fort-ruins"]')).toBeDisabled(); // not reached yet
   const hill = page.locator('.map-frame .spot[data-place="gaumukh-hill"]');
   await expect(hill).toBeEnabled();

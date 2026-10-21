@@ -50,7 +50,8 @@ const common = /* glsl */ `
   uniform vec2 fieldSize;
   uniform float cell;
   uniform vec2 origin;
-  uniform vec4 flatRect;   // heights.ts's flat pad: x0, z0, x1, z1
+  uniform vec4 flatRect;   // heights.ts's flat pads: x0, z0, x1, z1 (the lodge's)
+  uniform vec4 flatRect2;  // (the temple site's)
   uniform float flatBlend;
 
   float fetchH(int i, int j) {
@@ -82,10 +83,13 @@ const common = /* glsl */ `
   float ripple(vec2 p) {
     return ${RIPPLE.map((o) => `(valueNoise(p / ${o.wave.toFixed(3)}) - 0.5) * ${(2 * o.amp).toFixed(4)}`).join(" + ")};
   }
-  float flatWeight(vec2 p) {
-    vec2 d = max(max(flatRect.xy - p, p - flatRect.zw), 0.0);
+  float padWeight(vec4 r, vec2 p) {
+    vec2 d = max(max(r.xy - p, p - r.zw), 0.0);
     float t = clamp(length(d) / max(flatBlend, 1e-6), 0.0, 1.0);
-    return flatBlend > 0.0 ? 1.0 - t * t * (3.0 - 2.0 * t) : 0.0;
+    return flatBlend > 0.0 && r.z > r.x ? 1.0 - t * t * (3.0 - 2.0 * t) : 0.0;
+  }
+  float flatWeight(vec2 p) {
+    return max(padWeight(flatRect, p), padWeight(flatRect2, p));
   }
   float groundAt(vec2 p) { return sampleField(p) + ripple(p) * (1.0 - flatWeight(p)); }
 `;
@@ -159,7 +163,7 @@ const fragment = /* glsl */ `
 
 export type GroundOptions = {
   field: Field; colours: Texture; mapW: number; mapD: number;
-  paper: Vector3; haze: Vector3; hazeRange: [number, number]; reach: number; cells: number; flat?: Flat;
+  paper: Vector3; haze: Vector3; hazeRange: [number, number]; reach: number; cells: number; flat?: Flat[];
 };
 
 export function groundMaterial(o: GroundOptions): ShaderMaterial {
@@ -171,8 +175,9 @@ export function groundMaterial(o: GroundOptions): ShaderMaterial {
       fieldSize: { value: new Vector2(o.field.w, o.field.h) },
       cell: { value: o.field.cell },
       origin: { value: new Vector2(o.field.x0, o.field.z0) },
-      flatRect: { value: new Vector4(...(o.flat?.rect ?? [0, 0, 0, 0])) },
-      flatBlend: { value: o.flat?.blend ?? 0 },
+      flatRect: { value: new Vector4(...(o.flat?.[0]?.rect ?? [0, 0, 0, 0])) },
+      flatRect2: { value: new Vector4(...(o.flat?.[1]?.rect ?? [0, 0, 0, 0])) },
+      flatBlend: { value: o.flat?.[0]?.blend ?? 0 },
       center: { value: new Vector2() },
       reach: { value: o.reach },
       lin: { value: Math.min(1, 0.75 / (o.reach * (2 / o.cells))) },
