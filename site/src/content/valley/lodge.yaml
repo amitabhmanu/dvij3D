@@ -49,7 +49,9 @@ house:
     kind: rusting bars with torn fibreglass
     sources: [novel ¶193]
     ask: court-cover
-  planter: {at: [0, 0], radius: 2.2, kind: round stone planter with a palm, sources: [comic b3-p031-1, comic b1-p004-7]}
+  # "At its centre was a tall pedestal with a plant growing on it" (novel ¶213): the tulsi. The comic
+  # draws a round planter with a palm there (b3-p031-1, b1-p004-7); the author chose the tulsi (21 Oct).
+  planter: {at: [0, 0], radius: 0.55, kind: tulsi pedestal, sources: [novel ¶213, comic b1-p010-10]}
 
 verandah:
   # "fretted verandahs with decorated railings" (novel ¶164); a deep front

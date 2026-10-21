@@ -105,6 +105,23 @@ def setup_materials():
         material(t, tex=t)
     material("fretwork", tex="fretwork", alpha=True)
     material("brass", color=(0.62, 0.42, 0.12), rough=0.35, metal=0.9)
+    material("sheet", color=(0.62, 0.58, 0.5), rough=0.95)  # "the dirty bed sheet" (¶94)
+    material("kumkum", color=(0.45, 0.08, 0.04), rough=0.7)
+    material("soil", color=(0.18, 0.12, 0.08), rough=1.0)
+    material("tulsi", color=(0.12, 0.22, 0.07), rough=0.7)
+    material("tulsi-dark", color=(0.15, 0.08, 0.14), rough=0.7)
+    material("grass-grey", color=(0.4, 0.4, 0.33), rough=1.0)  # "grey grass growing all over it" (¶99)
+    wg = material("window-glass", color=(0.32, 0.34, 0.3), rough=0.25)  # dirty panes (¶101)
+    wg.node_tree.nodes["Principled BSDF"].inputs["Alpha"].default_value = 0.32
+    if hasattr(wg, "blend_method"):
+        wg.blend_method = "BLEND"
+    if hasattr(wg, "surface_render_method"):
+        wg.surface_render_method = "BLENDED"
+    material("blanket", color=(0.32, 0.27, 0.22), rough=1.0)  # coarse grey-brown wool
+    material("schist", color=(0.3, 0.31, 0.29), rough=0.55)
+    material("specimen", color=(0.38, 0.4, 0.22), rough=0.2)  # something pale floating in old spirit
+    material("fan-metal", color=(0.5, 0.47, 0.4), rough=0.8, metal=0.35)  # old cream enamel under years of dust (¶194)
+    material("cast-iron", color=(0.035, 0.035, 0.035), rough=0.45, metal=0.75)  # "large black polished bolts" (¶93)
     material("clay", color=(0.42, 0.2, 0.1))
     material("glass", color=(0.08, 0.1, 0.1), rough=0.1)
     material("water", color=(0.02, 0.04, 0.03), rough=0.05)
@@ -312,7 +329,8 @@ def build_windows_and_doors(g, furniture):
     for o in openings():
         orient, line, c, w, bottom, top, kind, room, n, raw = o
         outer_side = 1 if line > 0 else -1
-        if kind == "window":  # unglazed: the panes are long gone, the shutters folded back (ours)
+        if kind == "window":  # the shutters folded back (ours), and dirty glass in a wooden frame (below)
+            glaze(orient, line, c, w, bottom, top)
             if orient == "h":
                 for s in (-1, 1):
                     x = c + s * (w / 2 + w / 4)
@@ -346,6 +364,31 @@ def build_windows_and_doors(g, furniture):
             obj["room"] = room
             obj["to"] = raw["to"]
             obj["open"] = 1.4  # radians it swings open; the game owns the rest
+
+
+PANES = None  # the windows' glass: its own object, so it neither bakes nor casts the sun's shadow
+
+
+def glaze(orient, line, c, w, bottom, top):
+    """A window's dirty panes in a wooden frame, a mullion and a transom across them: "windows that
+    revealed a wide lawn through their dirty panes. They also revealed the reflection of a bearded
+    face" (novel ¶101; glazed at the author's word, 21 Oct)."""
+    global PANES
+    if PANES is None:
+        PANES = (Geo(), Geo())
+    glass, frame = PANES
+    def at(u, y, d=0.0):  # a point in the window's plane: u along the wall, d out of it
+        return (u, y, line + d) if orient == "h" else (line + d, y, u)
+    n = (0, 0, 1) if orient == "h" else (1, 0, 0)
+    pane = [at(c - w / 2, bottom), at(c + w / 2, bottom), at(c + w / 2, top), at(c - w / 2, top)]
+    glass.quad(pane, n, "window-glass", uv=[(0, 0), (1, 0), (1, 1), (0, 1)])
+    glass.quad(pane, tuple(-v for v in n), "window-glass", uv=[(0, 0), (1, 0), (1, 1), (0, 1)])
+    mid, tr = c, bottom + (top - bottom) * 0.62
+    for u0, u1, y0, y1 in ((c - w / 2, c - w / 2 + 0.05, bottom, top), (c + w / 2 - 0.05, c + w / 2, bottom, top),
+                           (c - w / 2, c + w / 2, bottom, bottom + 0.05), (c - w / 2, c + w / 2, top - 0.05, top),
+                           (mid - 0.025, mid + 0.025, bottom, top), (c - w / 2, c + w / 2, tr - 0.025, tr + 0.025)):
+        a, b = at(u0, y0, -0.03), at(u1, y1, 0.03)
+        frame.box(min(a[0], b[0]), max(a[0], b[0]), y0, y1, min(a[2], b[2]), max(a[2], b[2]), "wood")
 
 
 def build_floors(g, col):
@@ -409,19 +452,33 @@ def build_court_cover(g, col):
         g.box(-COURT, COURT, y, y + 0.08, i - 0.04, i + 0.04, "iron")
     for x0, z0, x1, z1 in ((-8, -8, -3, -5), (3, 4, 8, 8), (-8, 5, -5, 8)):  # what's left of the sheets
         g.box(x0, x1, y + 0.09, y + 0.1, z0, z1, "paper")
-    pl = H["planter"]
-    g.cylinder(pl["at"][0], pl["at"][1], pl["radius"], FLOOR - 0.3, FLOOR + 0.3, "whitewash-grey", seg=16)
-    r = pl["radius"]
-    col.box(pl["at"][0] - r * 0.85, pl["at"][0] + r * 0.85, FLOOR - 0.3, FLOOR + 1.2, pl["at"][1] - r * 0.85, pl["at"][1] + r * 0.85, "whitewash")
-    g.cylinder(pl["at"][0], pl["at"][1], pl["radius"] - 0.15, FLOOR + 0.25, FLOOR + 0.32, "clay", seg=16)
-    for a in range(6):
-        ang = a * math.pi / 3
-        g.sphere(pl["at"][0] + 0.9 * math.cos(ang), FLOOR + 0.8, pl["at"][1] + 0.9 * math.sin(ang), 0.55, "foliage", seg=8)
-    g.cylinder(pl["at"][0], pl["at"][1], 0.15, FLOOR + 0.3, FLOOR + 2.8, "wood", seg=6)  # the palm
-    for a in range(7):
-        ang = a * 2 * math.pi / 7
-        g.box(pl["at"][0], pl["at"][0] + 1.4 * math.cos(ang), FLOOR + 2.7, FLOOR + 2.85,
-              pl["at"][1], pl["at"][1] + 1.4 * math.sin(ang) + 0.2, "foliage")
+    tulsi(g, col, *H["planter"]["at"])
+
+
+def tulsi(g, col, x, z):
+    """The tulsi vrindavan at the court's centre: "a tall pedestal with a plant growing on it ...
+    He tended carefully to its fledgling shoots" (novel ¶213, comic b1-p010-10): a stepped square
+    pedestal, a niche for the lamp on its south face, a band of kumkum red, the basin at the top,
+    and the young tulsi in it."""
+    y = FLOOR - 0.3  # the court's floor
+    g.box(x - 0.5, x + 0.5, y, y + 0.14, z - 0.5, z + 0.5, "whitewash")
+    g.box(x - 0.4, x + 0.4, y + 0.14, y + 0.26, z - 0.4, z + 0.4, "whitewash")
+    g.box(x - 0.3, x + 0.3, y + 0.26, y + 1.1, z - 0.3, z + 0.3, "whitewash")
+    g.box(x - 0.31, x + 0.31, y + 0.98, y + 1.04, z - 0.31, z + 0.31, "kumkum")
+    g.box(x - 0.36, x + 0.36, y + 1.1, y + 1.18, z - 0.36, z + 0.36, "whitewash")
+    g.box(x - 0.08, x + 0.08, y + 0.45, y + 0.7, z + 0.29, z + 0.302, "soot-dark")  # the lamp's niche, sooted
+    g.sphere(x, y + 0.48, z + 0.31, 0.025, "clay", seg=6)  # a clay diya in it
+    g.cylinder(x, z, 0.26, y + 1.18, y + 1.32, "clay", seg=12)  # the basin
+    g.cylinder(x, z, 0.23, y + 1.3, y + 1.31, "soil", seg=12)
+    g.cylinder(x, z, 0.008, y + 1.3, y + 1.62, "wood", seg=4)  # the stem
+    import random
+    rnd = random.Random(213)
+    for k in range(60):  # its small leaves, round the young shoots, some the dark purple of krishna tulsi
+        h = rnd.uniform(0.06, 0.32)
+        a = rnd.uniform(0, 2 * math.pi)
+        r = rnd.uniform(0.02, 0.15 - h * 0.25)
+        g.sphere(x + math.cos(a) * r, y + 1.31 + h, z + math.sin(a) * r, 0.017, "tulsi" if k % 3 else "tulsi-dark", seg=4)
+    col.box(x - 0.5, x + 0.5, y, y + 1.4, z - 0.5, z + 0.5, "whitewash")
 
 
 def build_roof(g):
@@ -507,6 +564,62 @@ def build_verandah(g, col):
 
 # --- furniture ---------------------------------------------------------------
 
+def beam_near(x0, z0, x1, z1, cx, cz):
+    """The sal crossbeam nearest a room's middle (as build_floors lays them): where its fan hangs."""
+    span_x = (x1 - x0) >= (z1 - z0)
+    n = max(1, int((x1 - x0 if span_x else z1 - z0) / 2.4))
+    if span_x:
+        return min((x0 + i * (x1 - x0) / (n + 1) for i in range(1, n + 1)), key=lambda x: abs(x - cx)), cz
+    return cx, min((z0 + i * (z1 - z0) / (n + 1) for i in range(1, n + 1)), key=lambda z: abs(z - cz))
+
+
+def iron_beam(g, x, z0, z1):
+    """"A heavy cast-iron beam stretched across [the] big room. Timber could be seen beyond the
+    beam, holding preciously on to the heavy load with large black polished bolts" (novel ¶93):
+    an I-section under the sal crossbeams, bolted up to each."""
+    y1 = TOP - 0.3  # under the crossbeams
+    y0 = y1 - 0.25
+    g.box(x - 0.11, x + 0.11, y1 - 0.025, y1, z0, z1, "cast-iron")  # the flanges
+    g.box(x - 0.11, x + 0.11, y0, y0 + 0.025, z0, z1, "cast-iron")
+    g.box(x - 0.012, x + 0.012, y0, y1, z0, z1, "cast-iron")  # the web
+    span = z1 - z0
+    n = max(1, int(span / 2.4))
+    for i in range(1, n + 1):
+        bz = z0 + i * span / (n + 1)
+        for s in (-1, 1):  # a bolt each side of the web, up through the flange into the timber
+            g.cylinder(x + s * 0.07, bz, 0.022, y1 - 0.06, y1 + 0.12, "cast-iron", seg=6)
+            g.cylinder(x + s * 0.07, bz, 0.035, y1 - 0.075, y1 - 0.045, "cast-iron", seg=6)  # the nut
+
+
+def ceiling_fan(room, x, z, hang, drop):
+    """A period ceiling fan: canopy, downrod, coupling, motor housing and four blades on their
+    irons (the comic's fan casts a cross-shaped shadow, b1-p004-2), dust-ridden (novel ¶194).
+    Built about its own hub: "fan-<room>" stays still, "fan-<room>-blades" (its child) turns."""
+    body = Geo()
+    hub = -drop  # the housing's middle, below where it hangs
+    body.cylinder(0, 0, 0.075, -0.1, 0.0, "fan-metal", seg=12)  # the canopy
+    body.cylinder(0, 0, 0.016, hub + 0.12, -0.1, "fan-metal", seg=6)  # the downrod
+    body.cylinder(0, 0, 0.035, hub + 0.1, hub + 0.16, "fan-metal", seg=8)  # the coupling
+    body.cylinder(0, 0, 0.17, hub - 0.06, hub + 0.1, "fan-metal", seg=16)  # the motor housing
+    body.cylinder(0, 0, 0.12, hub - 0.11, hub - 0.06, "fan-metal", seg=16)
+    body.sphere(0, hub - 0.11, 0, 0.05, "fan-metal", seg=8)  # the finial under it
+    obj = body.to_object(f"fan-{room}")
+    obj.location = B(x, hang, z)
+    blades = Geo()
+    for k in range(4):
+        a = k * math.pi / 2
+        c, s_ = math.cos(a), math.sin(a)
+        def at(r, w, y):  # a point r out along this blade, w across it, y up
+            return (r * c - w * s_, y, r * s_ + w * c)
+        blades.quad([at(0.12, -0.02, 0), at(0.24, -0.02, 0), at(0.24, 0.02, 0), at(0.12, 0.02, 0)], (0, 1, 0), "fan-metal")  # the iron
+        tilt = 0.022  # the blade's pitch: its leading edge a little lower
+        blades.quad([at(0.22, -0.065, -tilt), at(0.78, -0.07, -tilt), at(0.78, 0.07, tilt), at(0.22, 0.065, tilt)], (0, 1, 0), "fan-metal")
+        blades.quad([at(0.22, -0.065, -tilt - 0.004), at(0.78, -0.07, -tilt - 0.004), at(0.78, 0.07, tilt - 0.004), at(0.22, 0.065, tilt - 0.004)], (0, -1, 0), "fan-metal")
+    bo = blades.to_object(f"fan-{room}-blades")
+    bo.parent = obj
+    bo.location = B(0, hub + 0.02, 0)  # (Blender frame, relative to the fan's own origin)
+
+
 def table(g, col, x, z, w, d, h=0.78, mat="wood"):
     g.box(x - w / 2, x + w / 2, FLOOR + h - 0.05, FLOOR + h, z - d / 2, z + d / 2, mat)
     for sx in (-1, 1):
@@ -546,14 +659,63 @@ def sofa(g, col, x, z, w, against, cloth="cloth"):
 
 
 def bed(g, col, x, z, along_x=True):
+    """An iron bed, made up: the mattress under a dirty sheet, a blanket over the lower part, a
+    stack of pillows at the head (novel ¶94-95: "the folds of the dirty bed sheet", "the stack of
+    pillows behind his neck", the glass rolling "down the blanket"; comic b1-p004-3)."""
     w, l = (2.0, 1.0) if along_x else (1.0, 2.0)
-    g.box(x - w / 2, x + w / 2, FLOOR + 0.35, FLOOR + 0.55, z - l / 2, z + l / 2, "cloth-pale")
+    g.box(x - w / 2, x + w / 2, FLOOR + 0.35, FLOOR + 0.53, z - l / 2, z + l / 2, "sheet")
     g.box(x - w / 2, x + w / 2, FLOOR, FLOOR + 0.35, z - l / 2, z + l / 2, "iron")
     if along_x:
         g.box(x - w / 2 - 0.05, x - w / 2, FLOOR, FLOOR + 1.1, z - l / 2, z + l / 2, "iron")
+        hx, hz, ax, az = x - w / 2, z, 1, 0  # the head, and which way the bed runs from it
     else:
         g.box(x - w / 2, x + w / 2, FLOOR, FLOOR + 1.1, z - l / 2 - 0.05, z - l / 2, "iron")
-    col.box(x - w / 2, x + w / 2, FLOOR, FLOOR + 0.6, z - l / 2, z + l / 2, "wood")
+        hx, hz, ax, az = x, z - l / 2, 0, 1
+    across = l if along_x else w
+    # the blanket over the foot two-thirds, hanging a little over the sides
+    f0, f1 = 0.65, 2.0
+    bx0, bx1 = (hx + f0, hx + f1) if ax else (x - across / 2 - 0.04, x + across / 2 + 0.04)
+    bz0, bz1 = (z - across / 2 - 0.04, z + across / 2 + 0.04) if ax else (hz + f0, hz + f1)
+    g.box(bx0, bx1, FLOOR + 0.42, FLOOR + 0.58, bz0, bz1, "blanket")
+    # three pillows, stacked a little askew
+    for k in range(3):
+        px, pz = hx + ax * (0.3 + 0.02 * k), hz + az * (0.3 + 0.02 * k)
+        half = across * 0.36 - 0.03 * k
+        g.box(px - (0.17 if ax else half), px + (0.17 if ax else half), FLOOR + 0.53 + k * 0.09, FLOOR + 0.62 + k * 0.09,
+              pz - (half if ax else 0.17), pz + (half if ax else 0.17), "sheet")
+    col.box(x - w / 2, x + w / 2, FLOOR, FLOOR + 0.58, z - l / 2, z + l / 2, "wood")
+
+
+def armchair(g, col, x, z, face=0.0, cloth="cloth"):
+    """An old sissoo armchair with a cushioned seat and back (novel ¶97, ¶140, ¶194), turned by face (radians)."""
+    c, s_ = math.cos(face), math.sin(face)
+
+    def box(lx0, lx1, y0, y1, lz0, lz1, mat):  # a box in the chair's own frame, turned to face
+        ring = [(x + px * c - pz * s_, z + px * s_ + pz * c) for px, pz in ((lx0, lz0), (lx1, lz0), (lx1, lz1), (lx0, lz1))]
+        cx_, cz_ = sum(r[0] for r in ring) / 4, sum(r[1] for r in ring) / 4
+        for k in range(4):
+            (ax_, az_), (bx_, bz_) = ring[k], ring[(k + 1) % 4]
+            nx, nz = bz_ - az_, -(bx_ - ax_)
+            if nx * ((ax_ + bx_) / 2 - cx_) + nz * ((az_ + bz_) / 2 - cz_) < 0:
+                nx, nz = -nx, -nz
+            g.quad([(ax_, y0, az_), (bx_, y0, bz_), (bx_, y1, bz_), (ax_, y1, az_)], (nx, 0, nz), mat)
+        g.quad([(px_, y1, pz_) for px_, pz_ in ring], (0, 1, 0), mat)
+
+    for sx in (-0.27, 0.27):
+        for sz in (-0.25, 0.25):
+            box(sx - 0.03, sx + 0.03, FLOOR, FLOOR + 0.42, sz - 0.03, sz + 0.03, "wood")
+        box(sx - 0.04, sx + 0.04, FLOOR + 0.42, FLOOR + 0.68, -0.25, 0.28, "wood")  # the arms
+    box(-0.27, 0.27, FLOOR + 0.36, FLOOR + 0.42, -0.27, 0.27, "wood")
+    box(-0.24, 0.24, FLOOR + 0.42, FLOOR + 0.52, -0.24, 0.22, cloth)  # the cushion
+    box(-0.25, 0.25, FLOOR + 0.42, FLOOR + 1.0, 0.24, 0.3, "wood")  # the back
+    box(-0.22, 0.22, FLOOR + 0.52, FLOOR + 0.92, 0.17, 0.24, cloth)
+    col.box(x - 0.35, x + 0.35, FLOOR, FLOOR + 0.7, z - 0.35, z + 0.35, "wood")
+
+
+def sheet(g, x, y, z, w, d, a, mat="paper"):
+    """A loose sheet lying flat, turned by a (radians)."""
+    c, s_ = math.cos(a), math.sin(a)
+    g.quad([(x + px * c - pz * s_, y, z + px * s_ + pz * c) for px, pz in ((-w / 2, -d / 2), (w / 2, -d / 2), (w / 2, d / 2), (-w / 2, d / 2))], (0, 1, 0), mat)
 
 
 def shelves(g, col, x0, x1, z0, z1):
@@ -584,6 +746,9 @@ def furnish(g, col):
     # beds
     bed(g, col, -14.5, 7.5, along_x=True)  # the room where Dvij wakes
     chair(g, -12.5, 3.0)
+    # "a couple of randomly placed armchairs" behind him, backlit by the boarded window (novel ¶97, comic b1-p004-4)
+    armchair(g, col, -15.0, 3.2, 0.6, cloth="cloth-pale")
+    armchair(g, col, -13.6, 1.4, -0.35, cloth="cloth-pale")
     bed(g, col, -14.5, -7.5, along_x=True)  # Bhavi's room
     table(g, col, -14.8, -2.5, 1.2, 0.5, 1.0)
     bed(g, col, 0, -14.6, along_x=False)  # the Professor's bedroom
@@ -593,7 +758,7 @@ def furnish(g, col):
     shelves(g, col, -15.7, -15.2, -15.6, -14.3)  # clear of the west window (novel ¶949)
     shelves(g, col, -9.5, -6.0, -15.7, -15.2)  # clear of the back door to the mound path (novel ¶1450)
     table(g, col, -12.8, -12.6, 1.8, 0.9)
-    chair(g, -12.8, -11.7, math.pi)
+    armchair(g, col, -12.8, -11.55, 0.0)  # the cushioned chair Dvij is sat in (novel ¶140, comic b1-p007-3)
     g.box(-13.0, -12.2, FLOOR + 0.78, FLOOR + 0.83, -12.9, -12.3, "wood")  # the board game
     for i in range(10):
         g.sphere(-12.95 + (i % 5) * 0.16, FLOOR + 0.86, -12.8 + (i // 5) * 0.3, 0.03, "paper", seg=6)  # cowries
@@ -645,15 +810,18 @@ def furnish(g, col):
     for x in (-5.0, -3.6, 3.6, 5.0):
         chair(g, x, HALF + 1.5, math.pi)
     table(g, col, -4.3, HALF + 2.3, 0.8, 0.5, 0.45)
-    # dusty ceiling fans (novel ¶194)
+    # dust-ridden ceiling fans hanging from the sal crossbeams (novel ¶194), each its own
+    # object so the game can turn its blades; in Dvij's room it hangs a long way down from
+    # a heavy cast-iron beam (novel ¶93, comic b1-p004-2)
     for r in ("sitting", "dining", "study", "dvij-room", "bhavi-room", "prof-room"):
         x0, z0, x1, z1 = R[r]["rect"]
         cx, cz = (x0 + x1) / 2, (z0 + z1) / 2
-        g.cylinder(cx, cz, 0.03, TOP - 0.9, TOP, "iron", seg=4)
-        g.cylinder(cx, cz, 0.12, TOP - 1.0, TOP - 0.85, "iron", seg=8)
-        for a in range(3):
-            ang = a * 2 * math.pi / 3
-            g.box(cx, cx + 0.75 * math.cos(ang) + 0.01, TOP - 0.95, TOP - 0.92, cz, cz + 0.75 * math.sin(ang) + 0.12, "wood")
+        if r == "dvij-room":
+            iron_beam(g, cx, z0, z1)
+            ceiling_fan(r, cx, cz, TOP - 0.55, 1.75)
+        else:
+            bx, bz = beam_near(x0, z0, x1, z1, cx, cz)
+            ceiling_fan(r, bx, bz, TOP - 0.3, 0.85)
 
 
 # --- the grounds -------------------------------------------------------------
@@ -736,6 +904,25 @@ def build_grounds(g, col):
     for s in (-1, 1):
         g.box(wx + s * 0.9 - 0.08, wx + s * 0.9 + 0.08, 0.8, 1.3 + 0.3 * s, wz - 0.08, wz + 0.08, "wood")  # broken stumps of the hoist
     col.box(wx - wr, wx + wr, 0, 0.8, wz - wr, wz + wr, "whitewash")
+    # "What greeted him was a battered boundary wall with grey grass growing all over it" (novel ¶99,
+    # comic b1-p004-6): close outside the west wing, blocking any view (the author, 21 Oct)
+    import random
+    rnd = random.Random(99)
+    wx = -HALF - 4.8
+    z = -HALF + 2
+    while z < HALF - 2:  # in lengths of uneven height, its top broken
+        z1 = min(HALF - 2, z + rnd.uniform(1.2, 2.6))
+        h = rnd.uniform(3.0, 3.6)
+        g.box(wx - 0.22, wx + 0.22, -0.3, h, z, z1, "whitewash-grey")
+        for k in range(int((z1 - z) * 5)):  # grey grass in its top and its cracks
+            gz = rnd.uniform(z, z1)
+            gy = h if rnd.random() < 0.6 else rnd.uniform(0.4, h - 0.3)
+            gx = wx + (0.0 if gy >= h else rnd.choice((-0.23, 0.23)))
+            tall = rnd.uniform(0.12, 0.35)
+            for s in (-1, 1):
+                g.quad([(gx - 0.08, gy, gz + s * 0.02), (gx + 0.08, gy, gz - s * 0.02), (gx + 0.03, gy + tall, gz), (gx - 0.03, gy + tall, gz)], (s, 0, 1), "grass-grey")
+        z = z1
+    col.box(wx - 0.22, wx + 0.22, 0, 3.0, -HALF + 2, HALF - 2, "whitewash")
     # the servant quarters and Kurup's shed (novel ¶193, ¶1854)
     for key, roofmat in (("servant_quarters", "tiles"), ("kurup_shed", "iron")):
         x0, z0, x1, z1 = gr[key]["rect"]
@@ -787,11 +974,63 @@ def from_the_comic(g, col):
     """Things the comic draws in each room that the plan's first pass left out
     (design §10.3). Each line names the panel it comes from."""
     # --- the study (comic b1-p004-8, b1-p007-2, b2-p027-9, b2-p033-11, b3-p016-6) ---
-    # the veena leaning by the window (b1-p004-8, b1-p007-2)
-    g.sphere(-14.9, FLOOR + 0.35, -11.4, 0.32, "wood", seg=10)
-    g.box(-14.97, -14.83, FLOOR + 0.5, FLOOR + 1.75, -11.47, -11.33, "wood")
-    g.sphere(-14.9, FLOOR + 1.85, -11.4, 0.14, "wood", seg=8)
+    # the veena leaning by the window (b1-p004-8, b1-p007-2): its own object, so a scene can
+    # put its own in its place (Chapter 3 topples it)
+    veena = Geo()
+    veena.sphere(-14.9, FLOOR + 0.35, -11.4, 0.32, "wood", seg=10)
+    veena.box(-14.97, -14.83, FLOOR + 0.5, FLOOR + 1.75, -11.47, -11.33, "wood")
+    veena.sphere(-14.9, FLOOR + 1.85, -11.4, 0.14, "wood", seg=8)
+    veena.to_object("veena")
     col.box(-15.25, -14.55, FLOOR, FLOOR + 0.8, -11.75, -11.05, "wood")
+    # "It was as if the occupant had intended to cover every inch of available space with books" (novel ¶100,
+    # comic b1-p004-9): another bookcase on the east wall, a low one along the south, and books in stacks
+    # everywhere; specimens of flora and fauna in jars, not all labelled; small figurines of cast metal,
+    # schist and clay crowding the shelves; large statues littering the floor; papers strewn about
+    shelves(g, col, -5.5, -5.05, -15.5, -13.6)
+    g.box(-14.3, -9.2, FLOOR, FLOOR + 1.2, -11.05, -10.73, "wood")
+    g.quad([(-14.3, FLOOR + 0.08, -11.06), (-9.2, FLOOR + 0.08, -11.06), (-9.2, FLOOR + 1.1, -11.06), (-14.3, FLOOR + 1.1, -11.06)], (0, 0, -1), "books")
+    col.box(-14.3, -9.2, FLOOR, FLOOR + 1.2, -11.05, -10.73, "wood")
+    import random
+    rnd = random.Random(100)
+    for k in range(9):  # jars along the low bookcase's top
+        jx = -14.0 + k * 0.5 + rnd.uniform(-0.08, 0.08)
+        r = rnd.uniform(0.05, 0.09)
+        h = rnd.uniform(0.16, 0.3)
+        g.cylinder(jx, -10.9, r, FLOOR + 1.2, FLOOR + 1.2 + h, "glass", seg=10)
+        g.cylinder(jx, -10.9, r * 0.9, FLOOR + 1.21, FLOOR + 1.2 + h * 0.75, "specimen", seg=10)
+        g.cylinder(jx, -10.9, r * 1.05, FLOOR + 1.2 + h, FLOOR + 1.22 + h, "brass" if k % 3 else "clay", seg=10)
+        if k % 2 == 0:
+            g.box(jx - r * 0.6, jx + r * 0.6, FLOOR + 1.25, FLOOR + 1.29, -10.9 - r - 0.002, -10.9 - r, "paper")  # a label
+    for k in range(8):  # figurines: cast metal, schist, clay (novel ¶100)
+        fx_ = -13.9 + k * 0.6 + rnd.uniform(0.05, 0.2)
+        m = ("brass", "schist", "clay")[k % 3]
+        hh = rnd.uniform(0.12, 0.25)
+        g.box(fx_ - 0.04, fx_ + 0.04, FLOOR + 1.2, FLOOR + 1.22, -10.84, -10.76, m)
+        g.cylinder(fx_, -10.8, 0.025, FLOOR + 1.22, FLOOR + 1.22 + hh * 0.75, m, seg=6)
+        g.sphere(fx_, FLOOR + 1.22 + hh * 0.85, -10.8, 0.025, m, seg=6)
+    for x, z, mat, hh in ((-11.2, -14.3, "clay", 0.95), (-8.0, -11.8, "schist", 0.75), (-10.2, -11.6, "brass", 0.6)):
+        # large statues, eroded, littering the floor (novel ¶100, comic b1-p004-9)
+        g.cylinder(x, z, 0.16, FLOOR, FLOOR + 0.12, mat, seg=8)
+        g.cylinder(x, z, 0.1, FLOOR + 0.12, FLOOR + hh * 0.8, mat, seg=8)
+        g.sphere(x, FLOOR + hh * 0.88, z, 0.1, mat, seg=8)
+        col.box(x - 0.18, x + 0.18, FLOOR, FLOOR + hh, z - 0.18, z + 0.18, "wood")
+    for x, z, n in ((-10.3, -14.2, 7), (-6.2, -13.6, 5), (-9.6, -12.6, 4), (-14.0, -12.0, 6), (-12.0, -15.2, 8), (-7.4, -11.3, 3)):
+        for k in range(n):  # more stacks of books, askew
+            dx, dz = rnd.uniform(-0.03, 0.03), rnd.uniform(-0.03, 0.03)
+            g.box(x - 0.17 + dx, x + 0.15 + dx, FLOOR + k * 0.065, FLOOR + (k + 1) * 0.065, z - 0.12 + dz, z + 0.12 + dz,
+                  ("cloth", "wood", "paper", "cloth-pale")[rnd.randrange(4)])
+        col.box(x - 0.2, x + 0.2, FLOOR, FLOOR + n * 0.065, z - 0.15, z + 0.15, "wood")
+    for k in range(10):  # books lying on the desk and the couch
+        bx_, bz_ = (rnd.uniform(-13.6, -12.0), rnd.uniform(-12.95, -12.3)) if k < 4 else (rnd.uniform(-7.35, -6.7), rnd.uniform(-13.4, -11.8))
+        y = FLOOR + (0.83 if k < 4 else 0.46)
+        g.box(bx_ - 0.09, bx_ + 0.09, y, y + 0.024, bz_ - 0.065, bz_ + 0.065, "paper")
+        sheet(g, bx_, y + 0.026, bz_, 0.2, 0.15, rnd.uniform(0, 3), "cloth" if k % 2 else "wood")
+    for k in range(26):  # working papers strewn all about: on the desk, on the floor round it
+        if k < 9:
+            sx_, sz_, y = rnd.uniform(-13.6, -12.0), rnd.uniform(-12.95, -12.25), FLOOR + 0.84 + k * 0.0012
+        else:
+            sx_, sz_, y = rnd.uniform(-14.6, -10.8), rnd.uniform(-13.9, -11.4), FLOOR + 0.017 + k * 0.0003
+        sheet(g, sx_, y, sz_, 0.21, 0.297, rnd.uniform(0, math.pi), "paper")
     # clay pots on the floor (b1-p004-8, b1-p004-10)
     pot(g, -15.2, -14.0, 0.28)
     pot(g, -14.6, -14.3, 0.2)
@@ -1200,6 +1439,13 @@ def wear_masks(baked):
             d = np.sqrt((X - px_) ** 2 + (Z - pz) ** 2)
             ends = np.minimum(np.abs(Y - FLOOR), np.abs(Y - TOP))
             wear = np.maximum(wear, np.where(d < p["diameter"] / 2 + 0.2, (1 - ramp(ends, 0, 0.7)) * 0.8, 0))
+    # the ceilings: "yellowed out paint had peeled off around the edges of the unusually high walls" (novel ¶93)
+    down = (N[..., 1] < -0.7) & (np.abs(Y - TOP) < 0.05)
+    for r in spec["rooms"]:
+        x0, z0, x1, z1 = r["rect"]
+        inside = down & (X > x0) & (X < x1) & (Z > z0) & (Z < z1)
+        d = np.minimum(np.minimum(X - x0 - T / 2, x1 - T / 2 - X), np.minimum(Z - z0 - T / 2, z1 - T / 2 - Z))
+        wear = np.maximum(wear, np.where(inside, (1 - ramp(d, 0, 0.6)) * 0.8, 0))
     # rust: dripped from the bars over the court, on its floor
     court = up & (np.abs(X) < COURT) & (np.abs(Z) < COURT) & (Y < FLOOR)
     bars = np.full(X.shape, 9.0, np.float32)
@@ -1232,6 +1478,9 @@ def main():
     build_grounds(grounds, col)
     baked = [house.to_object("house"), furniture.to_object("furniture"), grounds.to_object("grounds")]
     baked += [o for o in scene.objects if o.name.startswith("gate:")]  # the iron gates stand open for good
+    if PANES:
+        PANES[0].to_object("window-glass")
+        PANES[1].to_object("window-frames")
     build_back_wall_patch()
     markers()
     collision_object(col)
