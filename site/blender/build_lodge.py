@@ -748,7 +748,7 @@ def furnish(g, col):
     chair(g, -12.5, 3.0)
     # "a couple of randomly placed armchairs" behind him, backlit by the boarded window (novel ¶97, comic b1-p004-4)
     armchair(g, col, -15.0, 3.2, 0.6, cloth="cloth-pale")
-    armchair(g, col, -13.6, 1.4, -0.35, cloth="cloth-pale")
+    armchair(g, col, -13.6, 1.4, math.pi + 0.15, cloth="cloth-pale")  # turned to the bed: where the Professor sits to watch Bhavi at work (comic b1-p013-1)
     bed(g, col, -14.5, -7.5, along_x=True)  # Bhavi's room
     table(g, col, -14.8, -2.5, 1.2, 0.5, 1.0)
     bed(g, col, 0, -14.6, along_x=False)  # the Professor's bedroom
