@@ -71,12 +71,13 @@ PEOPLE = {
                   dict(kind="socks", name="socks", color=[0.9, 0.89, 0.85]),
                   dict(kind="sole", name="shoes", color=[0.32, 0.19, 0.1]),
                   dict(kind="moustache", name="moustache", color=[0.88, 0.87, 0.84]),
-                  dict(kind="spectacles", name="spectacles", color=[0.22, 0.17, 0.12])]),
+                  dict(kind="spectacles", name="spectacles", color=[0.22, 0.17, 0.12]),
+                  dict(kind="ear-hair", name="ear-hair", color=[0.9, 0.89, 0.86])]),
     # Bhavi in her rustling morning gown, Ch7-8 (¶249; comic b1-p012-2, b1-p013-1): long, mostly straight hair (the author, 21 Oct)
     "bhavi": dict(
         height=1.62, macro=dict(gender=0.0, age=age(25), muscle=0.45, weight=0.42, height=0.42, proportions=0.65, race=south_asian(0.2, 0.15)),
         targets={"eyes/l-eye-scale-incr": 0.45, "eyes/r-eye-scale-incr": 0.45, "chin/chin-width-decr": 0.5, "head/head-oval": 0.5, "nose/nose-scale-horiz-decr": 0.25, "mouth/mouth-lowerlip-volume-incr": 0.3, "mouth/mouth-upperlip-volume-incr": 0.2, "eyebrows/eyebrows-angle-up": 0.2}, face=dict(smile=0.12),
-        skin=dict(texture="young_caucasian_female", tone=[0.76, 0.56, 0.43]), hair="long01", hair_color=BLACK_HAIR,
+        skin=dict(texture="young_caucasian_female", tone=[0.76, 0.56, 0.43]), hair="long01", hair_color=BLACK_HAIR, hair_length=1.9,
         eyebrows="eyebrow006", eyelashes="eyelashes02",
         garments=[dict(kind="top", name="gown", color=[0.95, 0.86, 0.86], print="floral", ink=[0.86, 0.38, 0.46], sleeve=2.0, loose=0.1, **{"from": 0.9}),
                   dict(kind="skirt", name="gown-skirt", color=[0.95, 0.86, 0.86], print="floral", ink=[0.86, 0.38, 0.46], flare=0.07, pleats=0.008),
@@ -111,7 +112,8 @@ PEOPLE = {
                   dict(kind="band", name="janeyu", color=[0.95, 0.88, 0.7], over="l", width=0.022, offset=0.032),
                   dict(kind="beads", name="beads", color=[0.36, 0.2, 0.12], drop=0.16),
                   dict(kind="choti", name="choti", color=[0.05, 0.04, 0.035]),
-                  dict(kind="tilak", name="tilak", color=WHITE)]),
+                  dict(kind="tilak", name="tilak", color=WHITE),
+                  dict(kind="clogs", name="khadau", color=[0.5, 0.33, 0.18])]),
     # Baldev Singh, the mukhiya's eldest son: large, coarse, a moustache, a cream shirt and a maroon lungi, leather chappals,
     # chewing tobacco (¶104, ¶108, ¶296; b1-p005-4, b1-p014-5)
     "baldev": dict(

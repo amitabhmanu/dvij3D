@@ -179,8 +179,9 @@ for kind in ("eyebrows", "eyelashes"):
     tex = mhmat_texture(kind, name)
     img = toned(tex, spec.get("brow_color", spec.get("hair_color", [0.06, 0.05, 0.05])), kind, 0.5) if tex else None
     replace_material(o, material(kind, image=img, alpha=True, rough=0.8))
+hair_obj = None
 if spec.get("hair"):
-    o = mhclo("hair", spec["hair"])
+    o = hair_obj = mhclo("hair", spec["hair"])
     tex = mhmat_texture("hair", spec["hair"])
     img = toned(tex, spec.get("hair_color", [0.05, 0.04, 0.035]), "hair", 0.7) if tex else None
     replace_material(o, material("hair", image=img, alpha=True, rough=0.55))
@@ -260,6 +261,20 @@ def blush(where, color, strength):
     skin_img.pixels.foreach_set(px.ravel())
     skin_img.pack()
 
+
+if hair_obj is not None and spec.get("hair_length"):
+    # longer, down the back: the strands behind the neck drawn down (Bhavi's "cascaded down ... to almost her mid-ribs", ¶166)
+    k = spec["hair_length"]
+    back = bone_head("neck_01").y
+    for v in hair_obj.data.vertices:
+        w = hair_obj.matrix_world @ v.co
+        if w.z < NECK and w.y > back - 0.02:
+            drop = (NECK - w.z) * (k - 1)
+            w2 = Vector((w.x * 0.97, w.y + drop * 0.12, w.z - drop))  # (falling a little out, over the shoulder blades)
+            v.co = hair_obj.matrix_world.inverted() @ w2
+    if hair_obj.data.shape_keys:
+        for kb in hair_obj.data.shape_keys.key_blocks:
+            kb.data.foreach_set("co", [c for v in hair_obj.data.vertices for c in v.co]) if kb.name == "Basis" else None
 
 if spec.get("blush"):
     bl = spec["blush"]
@@ -647,6 +662,27 @@ for g in spec.get("garments", []):
             pts.append(nk + Vector((math.sin(t) * 0.075, math.cos(t) * 0.06 - front * 0.02, -0.02 - front ** 2 * g.get("drop", 0.16))))
         for j, p in enumerate(pts):
             sphere_mesh(f"{nm}-{j}", p, 0.0075, mat, "spine_03", seg=6)
+    elif k == "ear-hair":  # "large ... ears ... with white hair in and around them" (the Professor, ¶136)
+        for side in (1, -1):
+            pts = [V[i] for i in in_body if "ears" in member[i] and V[i].x * side > 0]
+            c = sum(pts, Vector()) / len(pts)
+            c = c + Vector((-side * 0.004, -0.006, -0.004))
+            r = random.Random(side)
+            for j in range(9):
+                d = Vector((side * (0.6 + r.random()), -0.3 + r.random() * 0.6, -0.2 + r.random() * 0.8)).normalized()
+                tube_mesh(f"{nm}-{side}-{j}", [c, c + d * (0.006 + r.random() * 0.006)], 0.0009, mat, "head", seg=4)
+    elif k == "clogs":  # khadau: a wooden sole, "toes tightly gripping the only knob" (Mahant, ¶104)
+        for s_ in ("l", "r"):
+            fv = [V[i] for i in in_body if dominant[i] in (f"foot_{s_}", f"ball_{s_}")]
+            x0, x1 = min(p.x for p in fv) - 0.006, max(p.x for p in fv) + 0.006
+            y0, y1 = min(p.y for p in fv) - 0.008, max(p.y for p in fv) + 0.004
+            vs = [Vector((x, y, z)) for z in (-0.03, -0.002) for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))]
+            fs = [(0, 1, 2, 3), (4, 7, 6, 5), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)]
+            rigid(f"{nm}-{s_}", vs, fs, mat, f"foot_{s_}")
+            inner = x1 - 0.022 if s_ == "l" else x0 + 0.022  # (between the big toe and the next)
+            knob = Vector((inner, y0 + 0.035, -0.002))
+            tube_mesh(f"{nm}-post-{s_}", [knob, knob + Vector((0, 0, 0.022))], 0.004, mat, f"foot_{s_}", seg=6)
+            sphere_mesh(f"{nm}-knob-{s_}", knob + Vector((0, 0, 0.026)), 0.007, mat, f"foot_{s_}", seg=8)
     elif k == "sole":  # chappals: a leather sole under each foot (Baldev, ¶104)
         for s in ("l", "r"):
             fv = [V[i] for i in in_body if dominant[i] in (f"foot_{s}", f"ball_{s}")]
