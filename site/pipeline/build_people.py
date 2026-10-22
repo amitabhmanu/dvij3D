@@ -107,7 +107,7 @@ PEOPLE = {
         skin=dict(texture="middleage_caucasian_male", tone=[0.62, 0.43, 0.28]), eyebrows="eyebrow003", brow_color=[0.08, 0.06, 0.05],
         teeth=[0.58, 0.16, 0.12],  # red with paan (¶298, breakdown ch9)
         garments=[dict(kind="top", name="wrap", color=[0.9, 0.89, 0.85], neckline=0.035, loose=0.05, **{"from": 0.95}),
-                  dict(kind="skirt", name="dhoti", color=WHITE, to=0.12, flare=0.05, pleats=0.01),
+                  dict(kind="skirt", name="dhoti", color=WHITE, to=0.12, flare=0.05, pleats=0.01),  # (worn long, as a veshti: comic b1-p014-5)
                   dict(kind="band", name="shawl", color=[0.98, 0.97, 0.95], print="border", ink=[0.78, 0.62, 0.3], over="l", width=0.2, offset=0.034),
                   dict(kind="band", name="janeyu", color=[0.95, 0.88, 0.7], over="l", width=0.022, offset=0.032),
                   dict(kind="beads", name="beads", color=[0.36, 0.2, 0.12], drop=0.16),
@@ -142,7 +142,7 @@ PEOPLE = {
         height=1.68, macro=dict(gender=1.0, age=age(35), muscle=0.45, weight=0.28, height=0.45, race=south_asian(0.4, 0.15)),
         skin=dict(texture="young_african_male", tone=[0.5, 0.34, 0.24]), hair="short01", hair_color=BLACK_HAIR, eyebrows="eyebrow002",
         garments=[dict(kind="top", name="kurta", color=WHITE, sleeve=0.4, loose=0.06, **{"from": 0.85}),
-                  dict(kind="skirt", name="dhoti", color=WHITE, to=0.2, flare=0.04, pleats=0.01),
+                  dict(kind="dhoti", name="dhoti", color=WHITE, to=0.2, flare=0.045),
                   dict(kind="waistband", name="sash", color=[0.74, 0.14, 0.1], width=0.06),
                   dict(kind="moustache", name="moustache", color=[0.04, 0.035, 0.03])]),
     # The henchman who brings the summons to the lodge (¶288, ¶293): not the attendant (the author, 21 Oct)
@@ -151,7 +151,7 @@ PEOPLE = {
         skin=dict(texture="young_african_male", tone=[0.48, 0.32, 0.22]), hair="short03", hair_color=BLACK_HAIR,
         garments=[dict(kind="top", name="kurta", color=[0.84, 0.5, 0.2], sleeve=0.6, loose=0.08, **{"from": 0.85}),
                   dict(kind="skirt", name="kurta-skirt", color=[0.84, 0.5, 0.2], to=0.72, flare=0.03),
-                  dict(kind="skirt", name="dhoti", color=WHITE, to=0.16, flare=0.03, pleats=0.01, offset=0.008),
+                  dict(kind="dhoti", name="dhoti", color=WHITE, to=0.16, flare=0.045),
                   dict(kind="sole", name="chappals", color=[0.36, 0.21, 0.11]),
                   dict(kind="moustache", name="moustache", color=[0.04, 0.035, 0.03])]),
     # Dvij himself, seen only in the study window's glass (¶101; the author, 21 Oct): mid-20s, a full beard grown in the coma,
@@ -171,20 +171,20 @@ PEOPLE = {
         lod=0.18, height=1.64, macro=dict(gender=1.0, age=age(45), muscle=0.5, weight=0.2, height=0.4, race=south_asian(0.45, 0.1)),
         skin=dict(texture="middleage_african_male", tone=[0.46, 0.31, 0.21]),
         garments=[dict(kind="top", name="banian", color=WHITE, sleeve=0.0, **{"from": 0.9}),
-                  dict(kind="skirt", name="dhoti", color=WHITE, to=0.25, flare=0.03),
+                  dict(kind="dhoti", name="dhoti", color=WHITE, to=0.25, flare=0.045),
                   dict(kind="cap", name="cap", color=WHITE),
                   dict(kind="moustache", name="moustache", color=[0.05, 0.04, 0.035])]),
     "villager-b": dict(
         lod=0.18, height=1.69, macro=dict(gender=1.0, age=age(60), muscle=0.4, weight=0.3, height=0.48, race=south_asian(0.4, 0.15)),
         skin=dict(texture="old_african_male", tone=[0.5, 0.34, 0.23]),
         garments=[dict(kind="top", name="kurta", color=[0.9, 0.88, 0.82], sleeve=0.6, **{"from": 0.85}),
-                  dict(kind="skirt", name="dhoti", color=WHITE, to=0.2, flare=0.03),
+                  dict(kind="dhoti", name="dhoti", color=WHITE, to=0.2, flare=0.045),
                   dict(kind="turban", name="turban", color=[0.93, 0.92, 0.88]),
                   dict(kind="moustache", name="moustache", color=[0.75, 0.74, 0.7])]),
     "villager-c": dict(
         lod=0.18, height=1.62, macro=dict(gender=1.0, age=age(30), muscle=0.55, weight=0.22, height=0.36, race=south_asian(0.5, 0.1)),
         skin=dict(texture="young_african_male", tone=[0.44, 0.29, 0.2]), hair="short01", hair_color=BLACK_HAIR,
-        garments=[dict(kind="skirt", name="dhoti", color=WHITE, to=0.3, flare=0.03),
+        garments=[dict(kind="dhoti", name="dhoti", color=WHITE, to=0.3, flare=0.045),
                   dict(kind="band", name="gamchha", color=[0.9, 0.86, 0.78], print="checks", ink=[0.7, 0.14, 0.12], over="r", width=0.1)]),
 }
 

@@ -368,7 +368,7 @@ def wrap_uv(obj, around=8.0, tall=9.0):
 cut = set()  # body faces a garment covers: they go
 
 
-def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0, keys=False):
+def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0, keys=False, drape=None):
     """A garment from the body's own faces whose corners all pass `keep`, pushed out `offset` along the normals.
     Its edge is straightened along itself (not a staircase of faces); its inside smoothed `smooth` times (cloth
     doesn't cling to every hollow); near its edge, where the skin goes on, it keeps clear of it. Under it the
@@ -376,6 +376,9 @@ def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0, keys
     bm = bmesh.new()
     bm.from_mesh(body.data)
     bm.verts.ensure_lookup_table()
+    src_layer = bm.verts.layers.int.new("src")  # (which body vertex each came from, for hang)
+    for v in bm.verts:
+        v[src_layer] = v.index
     faces = [f for f in bm.faces if all(keep(v.index) for v in f.verts)]
     chosen = set(faces)
     if remove_under:
@@ -401,6 +404,9 @@ def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0, keys
         for _ in range(smooth):
             bmesh.ops.smooth_vert(bm, verts=inside, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
     bm.normal_update()
+    if drape:
+        hang(bm, *drape, src_layer)
+        bm.normal_update()
     # near the edge (three rings in), clear of the skin left there
     near, front = set(edge), set(edge)
     for _ in range(3):
@@ -425,6 +431,44 @@ def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0, keys
         obj.shape_key_clear()
     finish(obj, mat)
     return obj
+
+
+def hang(bm, zlo, zhi, folds=0.004, src_layer=None):
+    """Cloth hangs: between zlo and zhi it falls from what juts out above it (a chest, a belly, the shoulder blades)
+    instead of tucking in under it, and fills the hollows across (no cleavage in a kurta); where it hangs free of
+    the body it folds. Worked round the trunk's upright axis, face by face of the angle."""
+    cy = bone_head("spine_02").y
+    trunk = TORSO_BONES | {"thigh_l", "thigh_r"}  # (not the sleeves: the cloth falls from the chest, not from the arms)
+    vs = [v for v in bm.verts if zlo <= v.co.z <= zhi and (src_layer is None or dominant.get(v[src_layer]) in trunk)]
+    if len(vs) < 10:
+        return
+    P = np.array([(v.co.x, v.co.y - cy, v.co.z) for v in vs])
+    th = np.arctan2(P[:, 0], P[:, 1])
+    r = np.hypot(P[:, 0], P[:, 1])
+    z = P[:, 2]
+    new = r.copy()
+    for i in range(len(vs)):
+        dth = np.abs(np.angle(np.exp(1j * (th - th[i]))))
+        near = dth < 0.22
+        above = near & (z > z[i]) & (z < z[i] + 0.35)
+        if above.any():  # falling from the widest point above, a little in as it goes down
+            new[i] = max(new[i], min(np.max(r[above] - 0.25 * (z[above] - z[i]) - dth[above] * r[above] * 0.35), r[i] + 0.05))
+        across = near & (np.abs(z - z[i]) < 0.03)
+        if across.any():  # spanning the hollows between neighbours
+            new[i] = max(new[i], np.max(r[across] * np.cos(dth[across])) - 0.004)
+    if spec["macro"].get("gender", 0.5) > 0.5:
+        # a man's shirt or kurta stands off the chest: the radii smoothed over a hand's breadth (the skin under it is gone,
+        # so nothing shows through)
+        sm = new.copy()
+        for i in range(len(vs)):
+            dth = np.abs(np.angle(np.exp(1j * (th - th[i]))))
+            nb = (dth < 0.35) & (np.abs(z - z[i]) < 0.07)
+            sm[i] = max(new[nb].mean(), new[i] - 0.012)
+        new = np.maximum(sm, np.minimum(new, sm + 0.004))
+    free = np.clip((new - r) / 0.03, 0, 1)
+    new += folds * free * np.sin(th * 16 + z * 6)
+    for v, t, rr in zip(vs, th, new):
+        v.co.x, v.co.y = math.sin(t) * rr, cy + math.cos(t) * rr
 
 
 def finish(obj, mat, weights_from_body=False):
@@ -529,6 +573,11 @@ def sphere_mesh(name, centre, r, mat, bone, scale=(1, 1, 1), seg=12):
 
 
 # the regions a garment can be made of
+def in_group_set(name):
+    gi = next(g.index for g in body.vertex_groups if g.name == name)
+    return {v.index for v in body.data.vertices if any(g.group == gi and g.weight > 0.5 for g in v.groups)}
+
+
 def torso(zlo, zhi, sleeve=0.0):
     """The trunk between two heights, and the arms down to `sleeve` (1: the elbow, 2: the wrist)."""
     def keep(i):
@@ -580,10 +629,19 @@ for g in spec.get("garments", []):
     nm = g.get("name", k)
     if k == "top":  # a shirt, a kurta's body, a vest, a wrap: from the waist (or lower) to the neck
         shell(nm, torso(g.get("from", WAIST - 0.1), NECK - g.get("neckline", 0.02), g.get("sleeve", 0.0)), g.get("offset", 0.014), mat,
-              swell=lambda co: g.get("loose", 0.0) * max(0.0, (SHOULDER - co.z)) * 0.3, smooth=g.get("smooth", 14))
+              swell=lambda co: g.get("loose", 0.0) * max(0.0, (SHOULDER - co.z)) * 0.3, smooth=g.get("smooth", 14),
+              drape=(g.get("from", WAIST - 0.1), SHOULDER - 0.02, 0.005))
     elif k == "skirt":  # a dhoti, a lungi, a kurta's skirts, a gown's: MakeHuman's skirt, cut at a height
         helper(nm, "helper-skirt", g.get("to", ANKLE + 0.06), g.get("top", WAIST + 0.04), g.get("offset", 0.012), mat,
                pleats=g.get("pleats", 0.006), flare=g.get("flare", 0.03))
+    elif k == "dhoti":  # a dhoti as it is worn: both legs wrapped loose, the pleats gathered and tucked in front at the waist
+        helper(nm, "helper-tights", g.get("to", ANKLE + 0.04), g.get("top", WAIST + 0.04), g.get("offset", 0.018), mat,
+               pleats=0.008, flare=g.get("flare", 0.05))
+        sk = in_group_set("helper-skirt")
+        o = shell(nm + "-pleats", lambda i: i in sk and V[i].y < -0.02 and abs(V[i].x) < 0.06 and max(g.get("to", ANKLE + 0.04) + 0.1, KNEE - 0.05) <= V[i].z <= WAIST + 0.04,
+                  0.0, mat, remove_under=False)
+        for v in o.data.vertices:  # (the gathered pleats in front, close over the legs, ridged)
+            v.co.y -= 0.012 + 0.006 * abs(math.sin(v.co.x * 260))
     elif k == "trousers":  # pyjamas, a salwar, shorts: MakeHuman's tights, cut at a height
         helper(nm, "helper-tights", g.get("to", ANKLE + 0.02), g.get("top", WAIST + 0.03), g.get("offset", 0.012), mat,
                pleats=g.get("pleats", 0.003), flare=g.get("flare", 0.0))
@@ -605,11 +663,18 @@ for g in spec.get("garments", []):
                                               or (dominant[i] in TORSO_BONES and V[i].y < 0 and 0.07 < abs(V[i].x) < 0.15 and V[i].z > WAIST))
               , g.get("offset", 0.022), mat, remove_under=False)
     elif k == "turban":  # a white wrap round the head (Maharaj, b1-p012-4)
-        o = shell(nm, scalp(BROW + 0.012), 0.03, mat, remove_under=True,
-                  swell=lambda co: 0.012 * math.sin((co.z - co.x * 0.5) * 120) + max(0.0, co.z - (HEAD_TOP - 0.06)) * 0.4)
+        hc = Vector((0, (EYE_L.y + EYE_R.y) / 2 + 0.07, 0))
+        # wound round and round, each turn on the slant, the cloth standing proud of the one under it
+        o = shell(nm, scalp(BROW + 0.012), 0.032, mat, remove_under=True, smooth=3,
+                  swell=lambda co: (0.011 * abs(math.sin((co.z - HEAD_TOP) * 70 + math.atan2(co.x, co.y - hc.y) * 1.0))
+                                    + max(0.0, co.z - (HEAD_TOP - 0.06)) * 0.45))
     elif k == "bandage":  # "a heavily bandaged head" (¶101): gauze wound round and round it, over the brow
-        shell(nm, scalp(BROW - 0.004), 0.026, mat, remove_under=True,
-              swell=lambda co: 0.006 * abs(math.sin((co.z + co.x * 0.8) * 160)) + max(0.0, co.z - (HEAD_TOP - 0.08)) * 0.25)
+        hc = Vector((0, (EYE_L.y + EYE_R.y) / 2 + 0.07, 0))
+        # gauze crossed over and over: two windings on opposite slants
+        shell(nm, scalp(BROW - 0.004), 0.024, mat, remove_under=True, smooth=2,
+              swell=lambda co: (0.006 * max(abs(math.sin(co.z * 110 + math.atan2(co.x, co.y - hc.y) * 2.0)),
+                                            abs(math.sin(co.z * 110 - math.atan2(co.x, co.y - hc.y) * 2.0)))
+                                + max(0.0, co.z - (HEAD_TOP - 0.08)) * 0.25))
     elif k == "cast":  # "a plaster from beyond the elbow" on the right arm (¶96; right: the author, 21 Oct)
         shell(nm, lambda i: i in in_body and (dominant[i] == "lowerarm_r" or (dominant[i] == "upperarm_r" and arm_t(i, "r") > 0.7)),
               0.02, mat, remove_under=True, smooth=4)
