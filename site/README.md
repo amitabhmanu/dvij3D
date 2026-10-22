@@ -301,8 +301,9 @@ are gitignored). The built files they make *are* committed, so you only need the
 They need Blender 4.5 LTS (or `BLENDER` set to its `blender.exe`). `build_people.py` also decodes the voice mp3s with
 `imageio-ffmpeg` (`pip install imageio-ffmpeg`). Each model's credit is in `docs/model-credits.md`.
 
-The terrain's three files live in `site-assets/terrain/` and ship inside every build (not via R2), because WebGL
-must read them from the site's own origin.
+The 3D valley's files (`site-assets/terrain/`, `walk/` and `story/`: the terrain, the lodge, the people, their
+textures, the voices) are served in production from their own R2 bucket, `dvij3d-assets`, at `PUBLIC_3D_BASE`
+(see below). Local dev serves them from `site-assets` as before.
 
 ## Build, test, deploy
 
@@ -319,6 +320,7 @@ Environment variables:
 | Variable | Purpose |
 |---|---|
 | `PUBLIC_ASSET_BASE` | Where page images, art and PDFs are served from. Set to the R2 bucket in `netlify.toml`; unset locally, where the dev server serves `../site-assets` at `/_assets`. |
+| `PUBLIC_3D_BASE` | Where the 3D valley's files (terrain, walk, story) are served from: the `dvij3d-assets` bucket, set in `netlify.toml`; unset locally. |
 | `SITE_URL` | Canonical site URL (once the domain is chosen). |
 | `BUNDLE_ASSETS=1` | Copy `site-assets` into the build (option B). `build:local` sets it. |
 
@@ -382,3 +384,21 @@ images forever. It skips anything already in the bucket at the same size, so a
 re-run after an interrupted upload picks up where it stopped, and re-running
 after a partial re-encode only sends what changed. `--force` re-uploads
 everything.
+
+### The 3D valley's bucket
+
+The terrain, the lodge, the people and their textures, and story mode's voices (about 25 MB, all content-hashed)
+live in a second bucket, `dvij3d-assets`, public at the URL in `netlify.toml` as `PUBLIC_3D_BASE`. WebGL may load a
+model or texture from another origin only if that origin allows it, so the bucket carries a CORS rule letting any
+page GET from it (set once with wrangler):
+
+```bash
+npx wrangler login                                                  # once, in a browser
+npx wrangler r2 bucket cors set dvij3d-assets --file cors.json      # {"rules":[{"allowed":{"origins":["*"],"methods":["GET","HEAD"],"headers":["*"]},"maxAgeSeconds":86400}]}
+node pipeline/upload_3d.mjs --dry-run                               # what it would send
+node pipeline/upload_3d.mjs                                         # sends only what is new or changed
+```
+
+`upload_3d.mjs` uses wrangler's login, not keys, and asks the bucket's public URL whether each file is already
+there at the same size before sending it. Run it before pushing anything that rebuilt a model, texture or voice,
+or the site will link a file the bucket hasn't got.

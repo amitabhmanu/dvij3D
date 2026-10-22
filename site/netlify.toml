@@ -17,6 +17,10 @@
   # page. Astro inlines it at build time, so changing it needs a redeploy.
   # Swap this for assets.<domain> once the domain exists.
   PUBLIC_ASSET_BASE = "https://pub-3add0a95b23d49908f176d380a696b98.r2.dev"
+  # The 3D valley's files (the terrain, the lodge and the people, the voices) come from their own
+  # bucket, dvij3d-assets, whose CORS rule lets the pages' WebGL read them across origins.
+  # Upload with `node pipeline/upload_3d.mjs` before pushing anything that rebuilt them.
+  PUBLIC_3D_BASE = "https://pub-88564d59e14b4252ba9c491fa8a8558f.r2.dev"
 
 # Content-hashed page images and bundled JS/CSS never change: cache forever.
 [[headers]]

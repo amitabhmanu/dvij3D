@@ -28,7 +28,7 @@ import type { Director, Scene } from "../lib/story/director";
 import type { StoryStage } from "../lib/story/stage";
 import { loadSaved } from "../lib/story/saved";
 // (as storyFile in lib/manifest.ts, which this page can't import: it carries every book's manifest)
-const storyFile = (name: string) => `/_assets/story/${name}`;
+const storyFile = (name: string) => `${(import.meta.env.PUBLIC_3D_BASE || "/_assets").replace(/\/$/, "")}/story/${name}`;
 
 /** "b1-p004" -> Book 1, page 4. */
 const pageRef = (id: string) => ({ book: Number(id.slice(1, id.indexOf("-"))), page: Number(id.slice(id.indexOf("-p") + 2)) });
