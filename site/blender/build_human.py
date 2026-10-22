@@ -664,13 +664,21 @@ def beard_region(i):
     return cheek and not (abs(p.x) < 0.026 and abs(p.z - MOUTH.z) < 0.012)
 
 
+def at_height(v, default):
+    """A garment's edge: metres, or "waist" (+/- metres, as "waist-0.02"): the body's own waist."""
+    if v is None:
+        return default
+    return WAIST + float(v[5:] or 0) if isinstance(v, str) and v.startswith("waist") else v
+
+
 for g in spec.get("garments", []):
     k = g["kind"]
+    g = {**g, **{key: at_height(g.get(key), None) for key in ("from", "top", "to") if key in g}}
     mat = cloth(g.get("name", k), g["color"], g.get("print", "hair" if k in ("beard", "moustache", "fringe") else "plain"), g.get("ink", (0.6, 0.1, 0.08)))
     nm = g.get("name", k)
     if k == "top":  # a shirt, a kurta's body, a vest, a wrap: from the waist (or lower) to the neck
         shell(nm, torso(g.get("from", WAIST - 0.1), NECK - g.get("neckline", 0.02), g.get("sleeve", 0.0)), g.get("offset", 0.014), mat,
-              swell=lambda co: g.get("loose", 0.0) * max(0.0, (SHOULDER - co.z)) * 0.3 + (0.012 if co.z < WAIST + 0.06 else 0.0),  # (over what's tied at the waist)
+              swell=lambda co: g.get("loose", 0.0) * max(0.0, (SHOULDER - co.z)) * 0.3 + (0.012 if co.z < WAIST + 0.06 and not g.get("tucked") else 0.0),  # (over what's tied at the waist, unless tucked into it)
               smooth=g.get("smooth", 14),
               drape=(g.get("from", WAIST - 0.1), SHOULDER - 0.02, 0.005))
     elif k == "skirt":  # a dhoti, a lungi, a kurta's skirts, a gown's: MakeHuman's skirt, cut at a height

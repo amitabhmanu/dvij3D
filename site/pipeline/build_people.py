@@ -121,9 +121,10 @@ PEOPLE = {
         targets={"head/head-square": 0.6, "chin/chin-width-incr": 0.6, "chin/chin-prominent-incr": 0.3, "nose/nose-flaring-incr": 0.5, "nose/nose-scale-horiz-incr": 0.3, "eyebrows/eyebrows-trans-down": 0.4, "mouth/mouth-lowerlip-volume-incr": 0.4, "neck/measure-neck-circ-incr": 0.6}, face=dict(frown=0.35),
         skin=dict(texture="young_african_male", tone=[0.46, 0.31, 0.21]), hair="short04", hair_color=BLACK_HAIR, eyebrows="eyebrow002",
         brow_color=[0.04, 0.035, 0.03],
-        garments=[dict(kind="top", name="shirt", color=[0.88, 0.82, 0.68], sleeve=0.6, loose=0.1, **{"from": 0.85}),
-                  dict(kind="skirt", name="lungi", color=[0.5, 0.1, 0.1], to=0.28, flare=0.035),
-                  dict(kind="waistband", name="sash", color=[0.72, 0.13, 0.1], width=0.07),
+        # (the shirt worn into the lungi, the sash over the join: b1-p014-5)
+        garments=[dict(kind="top", name="shirt", color=[0.88, 0.82, 0.68], sleeve=0.6, loose=0.1, tucked=True, **{"from": "waist-0.02"}),
+                  dict(kind="skirt", name="lungi", color=[0.5, 0.1, 0.1], to=0.28, flare=0.035, top="waist+0.07", offset=0.032),
+                  dict(kind="waistband", name="sash", color=[0.72, 0.13, 0.1], width=0.09, offset=0.03),
                   dict(kind="sole", name="chappals", color=[0.36, 0.21, 0.11]),
                   dict(kind="moustache", name="moustache", size=1.6, color=[0.04, 0.035, 0.03])]),
     # Vaid Shwet: unusually pale, ruddy, overblown, almost bald from the front, a striped shawl (¶127, ¶296; b1-p006-7, b1-p014-5)
