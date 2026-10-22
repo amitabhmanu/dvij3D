@@ -10,8 +10,13 @@ import {
   PMREMGenerator, Quaternion,
   Scene, ShaderMaterial, Shape, ShapeGeometry, SphereGeometry, SRGBColorSpace, Texture, TextureLoader,
   NoColorSpace, RepeatWrapping, Vector2, Vector3, WebGLRenderer, type Material,
+  AdditiveBlending, PlaneGeometry, Raycaster, type Object3D,
 } from "three";
+
+/** The layer Dvij's own body is drawn on: seen only in a reflection, never by his eyes (the author, 21 Oct). */
+export const SELF_LAYER = 1;
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { Reflector } from "three/addons/objects/Reflector.js";
 import { decodeHeights, fieldFor, heightAt, setFlat, type Field } from "./heights";
 import { loadLodge, type Look, type Lodge, type Marker } from "./lodge";
 import lodgeInfo from "../../content/generated/lodge.json";
@@ -105,6 +110,9 @@ export type Body = {
   /** The lodge's frame -> the world's. */
   fromLodge: (x: number, y: number, z: number) => [number, number, number];
   lodgeRoot: () => import("three").Object3D | null;
+  /** A reflection in the window pane he is looking at, of his own body only (on SELF_LAYER), laid over the
+   * glass as daylight lets one show (novel ¶101); false: none. Returns whether there was a pane to look in. */
+  mirror: (on: boolean) => boolean;
   /** Dvij's own arms (arms.ts), if they loaded. */
   arms: () => Arms | null;
   /** Another built place's frame -> the world's, and its model: "temple-site" (Chapter 9). */
@@ -219,6 +227,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // The ground you stand on: the land, or the lodge's floors and steps under you.
   let feet = Infinity; // where your feet were at the last step; Infinity when you've just arrived
   let lodge: Lodge | null = null;
+  let mirror: Reflector | null = null;
+  const mirrorLight = new DirectionalLight(0xfff0dc, 2.4);
+  mirrorLight.layers.set(SELF_LAYER);
   const sites = new Map<string, Lodge>(); // the other built places (the temple site), loaded like the lodge
   const models = () => (lodge ? [lodge, ...sites.values()] : [...sites.values()]);
   const floorAt = (x: number, z: number) => {
@@ -733,6 +744,39 @@ export async function createGame(o: GameOptions): Promise<Game> {
     rate: (r) => { rate = r; sight.speed = r; },
     fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
     lodgeRoot: () => lodge?.root ?? null,
+    mirror: (on) => {
+      if (mirror) { scene.remove(mirror, mirrorLight, mirrorLight.target); mirror.dispose(); mirror = null; }
+      if (!on || !lodge) return false;
+      const glass: Object3D[] = [];
+      lodge.root.traverse((o) => { if (/^window-glass/.test(o.name)) glass.push(o); });
+      const dir = camera.getWorldDirection(new Vector3());
+      const hit = new Raycaster(camera.position.clone(), dir, 0.05, 6).intersectObjects(glass, true)[0];
+      if (!hit?.face) return false;
+      const n = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
+      if (n.dot(dir) > 0) n.negate();
+      const m = new Reflector(new PlaneGeometry(1.4, 2.2), { textureWidth: 512, textureHeight: 800, color: 0xd8d8d8 });
+      m.position.copy(hit.point).addScaledVector(n, 0.006);
+      m.lookAt(m.position.clone().add(n));
+      // only his body in it, on black, added to the glass: the lawn still shows through, his face over it
+      const getCam = m.getReflectionCamera.bind(m);
+      m.getReflectionCamera = (c: import("three").Camera) => { const rc = getCam(c); rc.layers.set(SELF_LAYER); return rc; };
+      const draw = m.onBeforeRender.bind(m);
+      m.onBeforeRender = (r, sc, c, ...rest) => {
+        const bg = scene.background, fog = scene.fog, clear = r.getClearColor(new Color()), alpha = r.getClearAlpha();
+        scene.background = null; scene.fog = null; r.setClearColor(0x000000, 1);
+        draw(r, sc, c, ...rest);
+        scene.background = bg; scene.fog = fog; r.setClearColor(clear, alpha);
+      };
+      const mat = m.material as ShaderMaterial;
+      mat.transparent = true; mat.blending = AdditiveBlending; mat.depthWrite = false;
+      scene.traverse((o) => { if ((o as { isLight?: boolean }).isLight) o.layers.enable(SELF_LAYER); });
+      // the daylight through the window falls on his face: a light only the reflection sees
+      mirrorLight.position.copy(hit.point).addScaledVector(n, -3).add(new Vector3(0, 1, 0));
+      mirrorLight.target.position.copy(hit.point).addScaledVector(n, 1.5);
+      scene.add(m, mirrorLight, mirrorLight.target);
+      mirror = m;
+      return true;
+    },
     arms: () => arms,
     fromSite: (id, x, y, z) => {
       const st = (walk.sites ?? []).find((k) => k.id === id);

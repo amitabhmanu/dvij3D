@@ -7,6 +7,7 @@
 //   tulsi-pedestal  a tall pedestal with the young tulsi growing on it (¶213, b1-p010-10)
 //   steel-tumbler   a steel tumbler of frothy panchamrita (¶258, b1-p012-7)
 //   pitcher      the pitcher Maharaj brings it in (¶257)
+//   pipe         the Professor's pipe (comic b1-p012-2)
 // Shapes in metres; the materials are props.ts's, which take on the lodge's own.
 import {
   AdditiveBlending, BoxGeometry, BufferGeometry, CanvasTexture, Color, CylinderGeometry, DoubleSide, Float32BufferAttribute,
@@ -283,7 +284,20 @@ export function makeThing(kind: string, x: number, z: number, floor: number, sta
         drink.visible = froth.visible = st !== "empty";
       };
       set(state);
-      return { obj: at(g, x, 0, z), set, point: () => [x, floor + h, z], handle: big ? undefined : t };
+      return { obj: at(g, x, 0, z), set, point: () => [x, floor + h, z], handle: t }; // (the pitcher too: Maharaj carries it, ¶257)
+    }
+    case "pipe": {
+      // the Professor's pipe, unlit in his hand on the lawn (comic b1-p012-2; the author, 21 Oct)
+      const BRIAR = std("#4a2c1a", { roughness: 0.45 });
+      const t = new Group();
+      const bowl = at(new Mesh(new CylinderGeometry(0.014, 0.011, 0.034, 10), BRIAR), 0, 0.017, 0);
+      const stem = new Mesh(new CylinderGeometry(0.0045, 0.0055, 0.12, 6), BRIAR);
+      stem.rotation.z = Math.PI / 2 - 0.15;
+      stem.position.set(0.062, 0.012, 0);
+      t.add(bowl, stem);
+      const g = new Group();
+      g.add(t);
+      return { obj: at(g, x, floor, z), set: () => {}, point: () => [x, floor, z], handle: t };
     }
     case "medical-kit": {
       // what Bhavi works with (novel ¶282-283): an enamel tray, a roll of medical tape, gauze, cotton

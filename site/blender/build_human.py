@@ -165,7 +165,7 @@ def replace_material(obj, mat):
 
 
 skin = spec["skin"]
-skin_img = toned(f"{MH}/skins/{skin['texture']}/{mhmat_texture('skins', skin['texture']).split('/')[-1]}", skin["tone"], "skin")
+skin_img = toned(f"{MH}/skins/{skin['texture']}/{mhmat_texture('skins', skin['texture']).split('/')[-1]}", [c * 0.84 for c in skin["tone"]], "skin")  # (under the sun the tones read lighter than written)
 replace_material(body, material("skin", image=skin_img, rough=0.62))
 
 eyes = mhclo("eyes", "low-poly")
@@ -269,6 +269,15 @@ def pattern(kind, base, ink, size=256):
     elif kind == "stripes":  # a shawl's stripes (Vaidji's, b1-p014-5)
         s = ((xx * 6) % 1 < 0.12) | (((xx * 6) % 1 > 0.2) & ((xx * 6) % 1 < 0.26))
         px[s, :3] = ink
+    elif kind == "hair":  # short strands on nothing: a beard, a moustache, the skin showing between (cut out by the game)
+        px[..., 3] = 0
+        for _ in range(900):
+            x0, y0 = r.random() * size, r.random() * size
+            a = math.pi / 2 + (r.random() - 0.5) * 0.9
+            for t in range(int(4 + r.random() * 6)):
+                xi, yi = int(x0 + math.cos(a) * t) % size, int(y0 + math.sin(a) * t) % size
+                px[yi, xi] = (*ink, 1.0)
+                px[yi, (xi + 1) % size] = (*ink, 1.0)
     elif kind == "border":  # a plain cloth with a coloured border at one edge
         px[yy > 0.9, :3] = ink
     # a weave: a little light and shade, row by row
@@ -277,11 +286,13 @@ def pattern(kind, base, ink, size=256):
 
 
 def cloth(name, color, kind="plain", ink=(0.6, 0.1, 0.08), rough=0.92):
+    if kind == "hair":
+        return material(name, image=image(f"{name}-hair", pattern("hair", color, color)), alpha=True, rough=0.8)
     img = image(f"{name}-print", pattern(kind, color, ink)) if kind != "plain" else image(f"{name}-print", pattern("plain", color, ink, 64))
     return material(name, image=img, rough=rough)
 
 
-def wrap_uv(obj, around=8.0, tall=4.0):
+def wrap_uv(obj, around=8.0, tall=9.0):
     """UVs that go round the body (u: the angle about its upright axis) and up it: a print stays the same size everywhere."""
     me = obj.data
     if not me.uv_layers:
@@ -511,7 +522,7 @@ def beard_region(i):
 
 for g in spec.get("garments", []):
     k = g["kind"]
-    mat = cloth(g.get("name", k), g["color"], g.get("print", "plain"), g.get("ink", (0.6, 0.1, 0.08)))
+    mat = cloth(g.get("name", k), g["color"], g.get("print", "hair" if k in ("beard", "moustache", "fringe") else "plain"), g.get("ink", (0.6, 0.1, 0.08)))
     nm = g.get("name", k)
     if k == "top":  # a shirt, a kurta's body, a vest, a wrap: from the waist (or lower) to the neck
         shell(nm, torso(g.get("from", WAIST - 0.1), NECK - g.get("neckline", 0.02), g.get("sleeve", 0.0)), g.get("offset", 0.014), mat,
@@ -542,6 +553,12 @@ for g in spec.get("garments", []):
     elif k == "turban":  # a white wrap round the head (Maharaj, b1-p012-4)
         o = shell(nm, scalp(BROW + 0.012), 0.03, mat, remove_under=True,
                   swell=lambda co: 0.012 * math.sin((co.z - co.x * 0.5) * 120) + max(0.0, co.z - (HEAD_TOP - 0.06)) * 0.4)
+    elif k == "bandage":  # "a heavily bandaged head" (¶101): gauze wound round and round it, over the brow
+        shell(nm, scalp(BROW - 0.004), 0.026, mat, remove_under=True,
+              swell=lambda co: 0.006 * abs(math.sin((co.z + co.x * 0.8) * 160)) + max(0.0, co.z - (HEAD_TOP - 0.08)) * 0.25)
+    elif k == "cast":  # "a plaster from beyond the elbow" on the right arm (¶96; right: the author, 21 Oct)
+        shell(nm, lambda i: i in in_body and (dominant[i] == "lowerarm_r" or (dominant[i] == "upperarm_r" and arm_t(i, "r") > 0.7)),
+              0.02, mat, remove_under=True, smooth=4)
     elif k == "cap":  # a boat-shaped cotton cap (the villagers', b1-p015-1)
         top = HEAD_TOP - 0.035
         o = shell(nm, scalp(top - 0.035), 0.012, mat, remove_under=True)
@@ -577,9 +594,9 @@ for g in spec.get("garments", []):
         for e, nmx in ((EYE_L, "l"), (EYE_R, "r")):
             c = e + Vector((0, -0.024, 0))
             ring = [c + Vector((math.cos(t) * 0.021, 0, math.sin(t) * 0.018)) for t in np.linspace(0, 2 * math.pi, 20, endpoint=False)]
-            tube_mesh(f"{nm}-{nmx}", ring, 0.0016, mat, "head", seg=6, closed=True)
+            tube_mesh(f"{nm}-{nmx}", ring, 0.0026, mat, "head", seg=6, closed=True)
             s = 1 if e.x > 0 else -1
-            tube_mesh(f"{nm}-arm-{nmx}", [c + Vector((s * 0.021, 0, 0.004)), c + Vector((s * 0.03, 0.02, 0.006)), c + Vector((s * 0.034, 0.09, 0.0))], 0.0013, mat, "head", seg=5)
+            tube_mesh(f"{nm}-arm-{nmx}", [c + Vector((s * 0.021, 0, 0.004)), c + Vector((s * 0.03, 0.02, 0.006)), c + Vector((s * 0.034, 0.09, 0.0))], 0.002, mat, "head", seg=5)
         mid = (EYE_L + EYE_R) / 2 + Vector((0, -0.026, 0.004))
         tube_mesh(f"{nm}-bridge", [mid + Vector((-0.012, 0, 0)), mid + Vector((0, -0.003, 0.004)), mid + Vector((0.012, 0, 0))], 0.0015, mat, "head", seg=5)
     elif k == "beads":  # a rudraksha mala at the throat, hanging to the chest (b1-p014-2, b1-p015-6)
@@ -651,10 +668,16 @@ def world_rot(arm, pb):
     return arm.matrix_world.to_quaternion() @ pb.matrix.to_quaternion()
 
 
-# stand this body in the library's rest pose (a T-pose): each bone turned to point as the library's does
+# stand this body as the library's stands at rest: its arms raised from MakeHuman's A-pose to the library's T-pose.
+# (only the arms: the other bones are drawn differently in the two skeletons, but the bodies stand alike, and their
+# difference is kept in each bone's offset below; turning them too would bend the body at the hips)
 bpy.context.view_layer.objects.active = rig
 bpy.ops.object.mode_set(mode="POSE")
 for n in order:
+    rig.pose.bones[n].rotation_mode = "QUATERNION"
+for n in order:
+    if not n.startswith(("upperarm_", "lowerarm_", "hand_")):
+        continue
     pb = rig.pose.bones[n]
     sb = ual.data.bones[src_of[n]]
     want = (ual.matrix_world.to_3x3() @ (sb.tail_local - sb.head_local)).normalized()

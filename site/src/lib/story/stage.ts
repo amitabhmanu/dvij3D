@@ -131,7 +131,7 @@ export class StoryStage implements Stage {
     // the people: in the frame's root as the props are, standing on whatever is under them
     this.cast?.dispose();
     this.cast = null;
-    if (root && sc.cast?.length) {
+    if (root) { // (every scene has one: even with no cast, Dvij's own body may show in a window)
       const cast = new Cast(people as PeopleInfo, {
         root,
         ground: (x, z, y = 3) => body.surface(x + origin[0], y + origin[1], z + origin[2]) - origin[1],
@@ -139,9 +139,10 @@ export class StoryStage implements Stage {
         prop: (id) => props.handle(id),
         url: walkAsset,
         seen: (p) => body.lookingAt([p.x, p.y, p.z], 50),
+        heading: () => this.game.player().heading,
       });
       this.cast = cast;
-      await cast.setUp(sc.cast as CastSpec[], sc.start.at);
+      await cast.setUp((sc.cast ?? []) as CastSpec[], sc.start.at);
     }
     const cast = this.cast;
     this.unstep = body.every((dt) => { props.update(dt); cast?.update(dt); });
@@ -252,9 +253,17 @@ export class StoryStage implements Stage {
       case "panel":
         this.screen.panel(arg.id ?? null);
         return;
-      case "reflection":
-        if (!hurried) await this.screen.reflection(arg.panel);
+      case "reflection": {
+        if (hurried) return;
+        // his own face in the glass first (the bearded stranger, ¶101), then the comic's drawing of it
+        const me = await this.cast?.self();
+        if (me && body.mirror(true)) {
+          await this.sleep(4);
+          body.mirror(false);
+        }
+        await this.screen.reflection(arg.panel);
         return;
+      }
       case "progress":
         reachPage(`b${arg.book}`, arg.page);
         return;

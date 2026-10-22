@@ -62,17 +62,17 @@ WHITE, CREAM, BLACK_HAIR = [0.94, 0.93, 0.89], [0.9, 0.86, 0.76], [0.045, 0.038,
 PEOPLE = {
     # Dr Vidyasagar Parthasarathi, 60s-70s (¶133, ¶136; breakdowns ch2, ch3; comic b1-p006-7, b1-p007-2, b1-p012-4)
     "professor": dict(
-        height=1.68, macro=dict(gender=1.0, age=age(68), muscle=0.35, weight=0.42, height=0.45, race=south_asian(0.25, 0.15)),
+        height=1.68, macro=dict(gender=1.0, age=age(68), muscle=0.45, weight=0.3, height=0.45, race=south_asian(0.25, 0.15)),
         targets={"nose/nose-scale-horiz-incr": 0.35, "nose/nose-scale-vert-incr": 0.35, "ears/l-ear-scale-incr": 0.5, "ears/r-ear-scale-incr": 0.5,
                  "eyebrows/eyebrows-trans-down": 0.4, "eyes/l-eye-scale-incr": 0.25, "eyes/r-eye-scale-incr": 0.25},
         skin=dict(texture="old_caucasian_male", tone=[0.66, 0.48, 0.36]), hair="short02", hair_color=[0.87, 0.86, 0.83],
         brow_color=[0.84, 0.82, 0.78], eyebrows="eyebrow010",
-        garments=[dict(kind="top", name="shirt", color=[0.8, 0.74, 0.58], sleeve=0.55, loose=0.12),
+        garments=[dict(kind="top", name="shirt", color=[0.8, 0.74, 0.58], sleeve=0.55, loose=0.16, smooth=24),
                   dict(kind="legs", name="shorts", color=[0.68, 0.6, 0.43]),
                   dict(kind="socks", name="socks", color=[0.9, 0.89, 0.85]),
                   dict(kind="sole", name="shoes", color=[0.32, 0.19, 0.1]),
                   dict(kind="moustache", name="moustache", color=[0.88, 0.87, 0.84]),
-                  dict(kind="spectacles", name="spectacles", color=[0.58, 0.47, 0.3])]),
+                  dict(kind="spectacles", name="spectacles", color=[0.22, 0.17, 0.12])]),
     # Bhavi in her rustling morning gown, Ch7-8 (¶249; comic b1-p012-2, b1-p013-1): long, mostly straight hair (the author, 21 Oct)
     "bhavi": dict(
         height=1.62, macro=dict(gender=0.0, age=age(25), muscle=0.45, weight=0.42, height=0.42, proportions=0.65, race=south_asian(0.2, 0.15)),
@@ -154,6 +154,18 @@ PEOPLE = {
                   dict(kind="skirt", name="dhoti", color=WHITE, to=0.16, flare=0.03, pleats=0.01, offset=0.008),
                   dict(kind="sole", name="chappals", color=[0.36, 0.21, 0.11]),
                   dict(kind="moustache", name="moustache", color=[0.04, 0.035, 0.03])]),
+    # Dvij himself, seen only in the study window's glass (¶101; the author, 21 Oct): mid-20s, a full beard grown in the coma,
+    # a heavily bandaged head, an oversize borrowed gown, a pyjama too tight on the calves, the right arm in plaster (¶96, ¶98)
+    "dvij": dict(
+        height=1.76, macro=dict(gender=1.0, age=age(26), muscle=0.55, weight=0.42, height=0.58, race=south_asian(0.3, 0.1)),
+        skin=dict(texture="young_caucasian_male", tone=[0.62, 0.44, 0.31]), eyebrows="eyebrow002", brow_color=[0.04, 0.035, 0.03],
+        garments=[dict(kind="top", name="gown", color=[0.66, 0.63, 0.55], sleeve=1.25, loose=0.18, **{"from": 0.75}),
+                  dict(kind="skirt", name="gown-skirt", color=[0.66, 0.63, 0.55], to=0.55, flare=0.05),
+                  dict(kind="trousers", name="pyjama", color=[0.78, 0.8, 0.84], pleats=0.003),
+                  dict(kind="cast", name="plaster", color=[0.8, 0.77, 0.7]),
+                  dict(kind="bandage", name="bandage", color=[0.95, 0.94, 0.9]),
+                  dict(kind="beard", name="beard", color=[0.05, 0.04, 0.035]),
+                  dict(kind="moustache", name="moustache", color=[0.05, 0.04, 0.035])]),
     # The villagers at the altar: thin men in white, caps and turbans (b1-p015-1; no women: the author, 21 Oct); seen from afar
     "villager-a": dict(
         lod=0.3, height=1.64, macro=dict(gender=1.0, age=age(45), muscle=0.5, weight=0.2, height=0.4, race=south_asian(0.45, 0.1)),

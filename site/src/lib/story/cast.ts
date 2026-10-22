@@ -12,6 +12,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import { aim, bindLook, look, reach } from "./ik";
+import { SELF_LAYER } from "../walk/game";
 
 export type V2 = [number, number];
 export type CastSpec = {
@@ -35,6 +36,8 @@ export type CastEnv = {
   url: (file: string) => string;
   /** Can Dvij see this point (world)? Off stage, people hurry. */
   seen: (p: Vector3) => boolean;
+  /** Which way Dvij faces (radians, the game's heading). */
+  heading: () => number;
 };
 export type PeopleInfo = { people: Record<string, { file: string; height: number }>; mouths?: string };
 
@@ -563,6 +566,19 @@ export class Cast {
 
   get(who: string) { return this.actors.get(who); }
 
+  private me: Actor | null = null;
+  /** Dvij's own body, on the layer only a reflection sees (the author, 21 Oct): it stands where he stands. */
+  async self(model = "dvij"): Promise<Actor | null> {
+    if (this.me) return this.me;
+    const made = await this.load(model)?.catch(() => null);
+    if (!made) return null;
+    const a = new Actor("dvij", made, this.env);
+    a.obj.traverse((o) => o.layers.set(SELF_LAYER));
+    this.group.add(a.obj);
+    this.me = a;
+    return a;
+  }
+
   /** A scene's `actor` beat (the story yaml): come on, walk, look, take, gesture, give, go. */
   async beat(a: Record<string, any>, hurried: boolean): Promise<void> { // eslint-disable-line @typescript-eslint/no-explicit-any
     const many = this.crowds.get(a.who);
@@ -647,6 +663,12 @@ export class Cast {
 
   update(dt: number) {
     this.frame++;
+    if (this.me) {
+      const at = this.env.root.worldToLocal(this.env.eyes().clone());
+      this.me.obj.position.set(at.x, this.env.ground(at.x, at.z, at.y), at.z);
+      this.me.obj.rotation.y = Math.PI - this.env.heading();
+      this.me.update(dt);
+    }
     const eyes = this.env.eyes();
     let k = 0;
     for (const a of this.actors.values()) {
@@ -662,6 +684,7 @@ export class Cast {
   }
 
   dispose() {
+    this.me?.dispose();
     for (const a of this.actors.values()) a.dispose();
     this.actors.clear();
     this.group.removeFromParent();

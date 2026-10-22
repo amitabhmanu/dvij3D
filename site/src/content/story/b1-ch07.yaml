@@ -15,7 +15,7 @@ start:
   at: [-15.0, 7.5]
   look: [-13.4, 3.5, 5.3]                        # up past the iron beam to the fan hanging from it (novel ¶93, breakdown ch1 p2)
 cast:
-  - {who: professor, at: [8.5, 32.6], pose: sit, on: deck-chair, face: [10.5, 30.4], sources: [novel ¶249, breakdown ch7 p3]}
+  - {who: professor, at: [8.5, 32.6], pose: sit, on: deck-chair, face: [10.5, 30.4], holding: pipe, sources: [novel ¶249, breakdown ch7 p3, comic b1-p012-2]}
   - {who: bhavi, at: [10.5, 32.6], pose: sit, on: deck-chair, face: [10.5, 30.4], sources: [novel ¶249, breakdown ch7 p3]}
   - {who: maharaj, at: [0, 20.4], pose: stand, enters: true, sources: [novel ¶257, breakdown ch7 p6]}      # comes up the path later
 props:
@@ -24,6 +24,7 @@ props:
   - {id: chair-dvij, floor: 0, kind: deck-chair, at: [10.5, 30.4], facing: [10.5, 32.6], sources: [novel ¶249]}   # "sat opposite the girl"
   - {id: tumbler, floor: 0, kind: steel-tumbler, at: [9.6, 31.5], on: table, state: gone, sources: [novel ¶258, comic b1-p012-7]}   # "a steel tumbler full to the brim with a frothy liquid"
   - {id: pitcher, floor: 0, kind: pitcher, at: [9.68, 31.62], on: table, state: gone, sources: [novel ¶257, comic b1-p012-6]}
+  - {id: pipe, floor: 0, kind: pipe, held-by: professor, at: [8.5, 32.6], sources: [comic b1-p012-2]}   # his pipe, unlit (the author, 21 Oct)
   - {id: table, floor: 0, kind: stool, at: [9.6, 31.5], sources: [ours]}   # somewhere to put the tumblers down
 
 beats:
