@@ -576,7 +576,7 @@ export class Cast {
     await Promise.all(list.map(async (c) => {
       if (c.crowd && c.rect) return this.crowd(c);
       const made = await this.load(c.model ?? c.who)?.catch((e) => { console.warn(`no ${c.who}:`, e); return null; });
-      if (!made) return;
+      if (!made || this.gone) return; // (gone: the scene moved on while they loaded)
       const a = new Actor(c.who, made, this.env);
       this.group.add(a.obj);
       this.actors.set(c.who, a);
@@ -596,7 +596,7 @@ export class Cast {
   private async crowd(c: CastSpec) {
     const looks = await Promise.all((c.models ?? [c.model ?? c.who]).map((m) => this.load(m)?.catch(() => null) ?? null));
     const made = looks.filter((x): x is { scene: Object3D; clips: AnimationClip[] } => !!x);
-    if (!made.length) return;
+    if (!made.length || this.gone) return;
     const [x0, z0, x1, z1] = c.rect!;
     const n = c.crowd!;
     const across = Math.max(1, Math.round(Math.sqrt((n * (x1 - x0)) / (z1 - z0))));
@@ -756,7 +756,11 @@ export class Cast {
     }
   }
 
+  /** Disposed: anyone still loading is not to be added. */
+  private gone = false;
+
   dispose() {
+    this.gone = true;
     this.me?.dispose();
     for (const a of this.actors.values()) a.dispose();
     this.actors.clear();

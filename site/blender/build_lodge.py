@@ -1014,7 +1014,8 @@ def from_the_comic(g, col):
         g.cylinder(x, z, 0.1, FLOOR + 0.12, FLOOR + hh * 0.8, mat, seg=8)
         g.sphere(x, FLOOR + hh * 0.88, z, 0.1, mat, seg=8)
         col.box(x - 0.18, x + 0.18, FLOOR, FLOOR + hh, z - 0.18, z + 0.18, "wood")
-    for x, z, n in ((-10.3, -14.2, 7), (-6.2, -13.6, 5), (-9.6, -12.6, 4), (-14.0, -12.0, 6), (-12.0, -15.2, 8), (-7.4, -11.3, 3)):
+    # (none in the way of the back door to the mound path, at x -10.5: novel ¶1450)
+    for x, z, n in ((-8.6, -13.9, 7), (-6.2, -13.6, 5), (-9.6, -12.6, 4), (-14.0, -12.0, 6), (-12.0, -15.2, 8), (-7.4, -11.3, 3)):
         for k in range(n):  # more stacks of books, askew
             dx, dz = rnd.uniform(-0.03, 0.03), rnd.uniform(-0.03, 0.03)
             g.box(x - 0.17 + dx, x + 0.15 + dx, FLOOR + k * 0.065, FLOOR + (k + 1) * 0.065, z - 0.12 + dz, z + 0.12 + dz,
@@ -1038,7 +1039,7 @@ def from_the_comic(g, col):
     # papers heaped on the desk, books stacked on the floor (b1-p004-8: "books everywhere")
     for k in range(4):
         g.box(-13.6 + k * 0.05, -13.1 + k * 0.03, FLOOR + 0.83 + k * 0.03, FLOOR + 0.86 + k * 0.03, -12.95, -12.55, "paper")
-    for x, z, n in ((-8.8, -15.0, 6), (-7.6, -14.8, 4), (-11.0, -14.9, 5)):
+    for x, z, n in ((-8.8, -15.0, 6), (-7.6, -14.8, 4), (-12.7, -14.9, 5)):
         for k in range(n):
             g.box(x - 0.18 + 0.02 * (k % 2), x + 0.16, FLOOR + k * 0.07, FLOOR + (k + 1) * 0.07, z - 0.13, z + 0.13,
                   "cloth" if k % 3 == 0 else "wood" if k % 3 == 1 else "paper")

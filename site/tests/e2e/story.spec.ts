@@ -159,10 +159,10 @@ test.describe("story mode", () => {
     await page.addInitScript(() => localStorage.setItem("twice-born:story:v1", JSON.stringify({ scene: "b1-ch08" })));
     await page.goto("/valley/walk/?story&test");
     await begin(page, "Continue the story");
-    // on the stool in the study, facing Bhavi
+    // sat on the edge of his bed in his own room, Bhavi at work on his forehead (the author, 21 Oct)
     const sat = await page.evaluate(() => (window as unknown as G).walkGame.player());
-    const stool = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(-8.8, 0, -13.2));
-    expect(Math.hypot(sat.x - stool[0], sat.z - stool[2])).toBeLessThan(0.3);
+    const bed = await page.evaluate(() => (window as unknown as G).walkGame.body.fromLodge(-14.4, 0, 6.75));
+    expect(Math.hypot(sat.x - bed[0], sat.z - bed[2])).toBeLessThan(0.3);
     const seen: string[] = [];
     await drive(page, (s) => s.beat === "the-henchman" && s.words, seen);
     for (const b of ["the-wound", "the-arm", "the-gong", "the-summons", "the-cowherd", "the-henchman"]) expect(seen).toContain(`b1-ch08/${b}`);

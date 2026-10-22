@@ -83,8 +83,9 @@ export default function localAssets() {
       },
       "astro:build:done": async ({ dir, logger }) => {
         const out = path.join(fileURLToPath(dir), "_assets");
-        // The 3D valley's files ship with every build, served by the site itself
-        // (see terrainFile in src/lib/manifest.ts): WebGL needs them same-origin.
+        // The 3D valley's files ship with every build too, served by the site itself: production reads them
+        // from their bucket (PUBLIC_3D_BASE, see terrainFile in src/lib/manifest.ts), but a build without it
+        // still works.
         for (const sub of SAME_ORIGIN) {
           if (existsSync(path.join(ASSETS, sub))) {
             await cp(path.join(ASSETS, sub), path.join(out, sub), { recursive: true });
@@ -100,6 +101,7 @@ export default function localAssets() {
         for (const sub of PUBLISHED) {
           await cp(path.join(ASSETS, sub), path.join(out, sub), {
             recursive: true,
+            dereference: true, // (a linked folder, as pages/ in a git worktree, is copied, not linked)
             filter: (src) => !src.endsWith("variants.json") && !src.endsWith("art.json"),
           });
         }

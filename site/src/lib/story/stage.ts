@@ -55,6 +55,9 @@ const POSES = new Set(["lie", "sit", "sit-low", "stand", "floor"]);
 export class StoryStage implements Stage {
   private props: Props | null = null;
   private cast: Cast | null = null;
+  /** The cast's people loading: the scene starts without waiting for them (Dvij is placed at once); a beat that
+   * needs them waits for this. */
+  private castReady: Promise<void> = Promise.resolve();
   private unstep: (() => void) | null = null;
   private frame = "lodge";
   private pressed = false;
@@ -143,7 +146,7 @@ export class StoryStage implements Stage {
         stir: () => body.stir(),
       });
       this.cast = cast;
-      await cast.setUp((sc.cast ?? []) as CastSpec[], sc.start.at);
+      this.castReady = cast.setUp((sc.cast ?? []) as CastSpec[], sc.start.at).catch((e) => console.warn("the cast:", e));
     }
     const cast = this.cast;
     this.unstep = body.every((dt) => { props.update(dt); cast?.update(dt); });
@@ -169,6 +172,7 @@ export class StoryStage implements Stage {
         return this.screen.caption(arg);
       case "say": {
         this.advance = false;
+        await this.castReady;
         const cast = this.cast;
         cast?.speaking(arg.who, null);
         // watching: Dvij turns to whoever speaks, if he can see them from where he is
@@ -257,6 +261,7 @@ export class StoryStage implements Stage {
       case "reflection": {
         if (hurried) return;
         // his own face in the glass first (the bearded stranger, ¶101), then the comic's drawing of it
+        await this.castReady;
         const me = await this.cast?.self();
         if (me && body.mirror(true)) {
           await this.sleep(4);
@@ -275,6 +280,7 @@ export class StoryStage implements Stage {
         if (!hurried) await this.screen.panels(arg.pages);
         return;
       case "actor":
+        await this.castReady;
         return this.cast?.beat(arg, hurried);
       default:
         return;
