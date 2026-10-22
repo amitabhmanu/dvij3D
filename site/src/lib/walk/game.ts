@@ -49,6 +49,9 @@ export type GameOptions = {
   volume: number;
   /** Story mode (design §10.4): the director drives the body and the eyes. */
   story?: boolean;
+  /** Render a little smaller when frames run slow, and back up when they're quick (default on; off for tests, so
+   * shots and timings are at a known size). */
+  adaptive?: boolean;
   onProgress: (fraction: number, what: string) => void;
   /** About five times a second while walking: where you are, for the HUD and tests. */
   onStats?: (s: { x: number; z: number; heading: number; ground: number; indoors: boolean; door: { name: string; open: boolean } | null; look: Look | null }) => void;
@@ -62,6 +65,12 @@ export type Game = {
   input: Input;
   settings: Settings;
   teleport: (x: number, z: number, heading?: number) => void;
+  /** What the last frame drew: draw calls and triangles over all its passes (for measuring). */
+  renderInfo: () => { calls: number; triangles: number; textures: number; programs: number };
+  /** For measuring, from tests only: the renderer, the scene, and the picture's passes off or on. */
+  internals: () => { renderer: WebGLRenderer; scene: Scene; composerOn: (on: boolean) => void };
+  /** Triangles per top-level thing in the scene (for measuring). */
+  sceneStats: () => Record<string, number>;
   /** The nearest spot to (x, z) you could stand on: not in the lake, a building or a tree. */
   standable: (x: number, z: number) => [number, number];
   player: () => Player;
@@ -150,6 +159,15 @@ const SUN = 2.0;
 // where you look, in a map this many texels across.
 const SHADOW_REACH = 32;
 const SHADOW_MAP: Record<Quality, number> = { low: 0, medium: 1024, high: 2048 };
+/** How far off the boulders are drawn (m): further, they are specks on the painted ground, and 7,000 of them valley-wide
+ * were half a million triangles a frame. */
+/** The picture's buffers: multisampling (the antialias) and half-float colour, by quality: the most a frame spends
+ * on this GPU after the scene itself. */
+/** The comic's ink lines (a full-screen pass over the picture and its depth): on high only, where there is the
+ * margin for them on this GPU. */
+const INK: Record<Quality, boolean> = { low: false, medium: false, high: true };
+const COMPOSER: Record<Quality, { samples: number; half: boolean }> = { low: { samples: 0, half: false }, medium: { samples: 2, half: false }, high: { samples: 2, half: false } };
+const STONES_NEAR: Record<Quality, number> = { low: 150, medium: 300, high: 500 };
 const AO = 0.7; // how much the lodge's baked occlusion darkens the sky's light and reflections (1 makes its tightest corners black)
 
 async function fetchWithProgress(url: string, onBytes: (f: number) => void): Promise<ArrayBuffer> {
@@ -353,6 +371,21 @@ export async function createGame(o: GameOptions): Promise<Game> {
   casters.frustumCulled = false;
   scene.add(casters);
   const stoneAt = worldJson.boulders.map((_, i) => { stones.getMatrixAt(i, m4); return m4.clone(); });
+  // only the boulders near him are drawn, the set refreshed as he moves on (a few times across its reach)
+  let stoneRange = STONES_NEAR[o.quality];
+  const stoneCentre = new Vector3(1e9, 0, 1e9);
+  const showNear = (x: number, z: number, force = false) => {
+    if (!force && Math.hypot(x - stoneCentre.x, z - stoneCentre.z) < stoneRange * 0.15) return;
+    stoneCentre.set(x, 0, z);
+    let n = 0;
+    const r2 = stoneRange * stoneRange;
+    worldJson.boulders.forEach(([bx, , bz], i) => {
+      if ((bx - x) ** 2 + (bz - z) ** 2 < r2) stones.setMatrixAt(n++, stoneAt[i]);
+    });
+    stones.count = n;
+    stones.instanceMatrix.needsUpdate = true;
+    stones.computeBoundingSphere();
+  };
   const castNear = (x: number, z: number) => {
     let n = 0;
     worldJson.boulders.forEach(([bx, , bz], i) => {
@@ -580,25 +613,52 @@ export async function createGame(o: GameOptions): Promise<Game> {
     camera.aspect = w / hh;
     camera.updateProjectionMatrix();
   };
-  renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[o.quality]));
+  // the picture's size: the quality's pixel ratio, scaled down (to 60% at most) while frames run slower than about
+  // 31 fps, and back up while they're quicker than 42; checked every 45 frames, a step at a time
+  let quality = o.quality, scale = 1;
+  const frameMs: number[] = [];
+  const pixelRatio = () => Math.min(devicePixelRatio, PIXELS[quality]) * scale;
+  const adapt = (ms: number) => {
+    if (o.adaptive === false) return;
+    frameMs.push(ms);
+    if (frameMs.length < 45) return;
+    frameMs.sort((a, b) => a - b);
+    const typical = frameMs[Math.floor(frameMs.length * 0.6)];
+    frameMs.length = 0;
+    const next = typical > 32 ? Math.max(0.6, scale - 0.1) : typical < 24 ? Math.min(1, scale + 0.05) : scale;
+    if (Math.abs(next - scale) > 1e-3) {
+      scale = next;
+      renderer.setPixelRatio(pixelRatio());
+      resize();
+    }
+  };
+  renderer.setPixelRatio(pixelRatio());
   let composer: EffectComposer | null = null;
   const sight = new SightEffect();
   const setInk = (q: Quality) => {
     composer?.dispose();
     // story mode always runs the sight pass; the ink comes with medium and high quality
-    composer = q === "low" && !o.story ? null : inkComposer(renderer, scene, camera, o.story ? [sight] : [], q !== "low");
+    composer = !INK[q] && !o.story ? null : inkComposer(renderer, scene, camera, o.story ? [sight] : [], INK[q], COMPOSER[q]);
   };
   setInk(o.quality);
+  const lastInfo = { calls: 0, triangles: 0 };
+  renderer.info.autoReset = false; // (counted over all of a frame's passes, the shadows' and the composer's too)
   const draw = () => {
+    renderer.info.reset();
     if (shadowDirty) { renderer.shadowMap.needsUpdate = true; shadowDirty = false; }
-    if (composer) composer.render();
+    // through the composer only for the ink, or while a story effect is showing: otherwise straight to the screen,
+    // with the canvas's own antialias (a whole extra picture saved)
+    if (composer && (INK[quality] || sight.active())) composer.render();
     else renderer.render(scene, camera);
+    lastInfo.calls = renderer.info.render.calls;
+    lastInfo.triangles = renderer.info.render.triangles;
   };
   const ro = new ResizeObserver(resize);
   ro.observe(o.canvas);
   resize();
 
   const place = () => {
+    showNear(player.x, player.z);
     camera.position.set(player.x, player.y, player.z);
     camera.rotation.set(player.pitch, -player.heading, roll + sway * Math.sin(swayT) * 0.045);
     sky.position.copy(camera.position);
@@ -627,6 +687,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     raf = 0;
     if (!running) return;
     acc += Math.min(0.25, (now - last) / 1000);
+    if (now - last < 250) adapt(now - last); // (not the first frame after a pause or a hidden tab)
     last = now;
     while (acc >= STEP) {
       const move = input.sample();
@@ -822,6 +883,28 @@ export async function createGame(o: GameOptions): Promise<Game> {
     },
     input,
     settings: input.settings,
+    internals: () => ({ renderer, scene, composerOn: (on: boolean) => { if (on) setInk(quality); else { composer?.dispose(); composer = null; } } }),
+    sceneStats: () => {
+      // triangles per top-level thing in the scene (instances counted), for measuring
+      const out: Record<string, number> = {};
+      for (const c of scene.children) {
+        let n = 0;
+        c.traverseVisible((o) => {
+          const m = o as Mesh;
+          if (!m.isMesh || !m.geometry) return;
+          const g = m.geometry, tri = (g.index ? g.index.count : g.attributes.position?.count ?? 0) / 3;
+          n += tri * ((m as unknown as { count?: number }).count ?? 1);
+        });
+        let k = c.name || c.type;
+        if (!c.name && (c as Mesh).isMesh) {
+          const m = c as Mesh;
+          k = `mesh:${(m.material as Material)?.type ?? "?"}:${m.geometry.attributes.position?.count ?? 0}:${(m as unknown as { count?: number }).count ?? 1}`;
+        }
+        out[k] = (out[k] ?? 0) + Math.round(n);
+      }
+      return out;
+    },
+    renderInfo: () => ({ calls: lastInfo.calls, triangles: lastInfo.triangles, textures: renderer.info.memory.textures, programs: renderer.info.programs?.length ?? 0 }),
     teleport: (x, z, heading) => {
       player = { ...player, x, z, y: 0, heading: heading ?? player.heading };
       feet = Infinity; // find the floor from above: you may have arrived indoors
@@ -871,7 +954,11 @@ export async function createGame(o: GameOptions): Promise<Game> {
       sounds?.setVolume(v);
     },
     setQuality: (qq) => {
-      renderer.setPixelRatio(Math.min(devicePixelRatio, PIXELS[qq]));
+      quality = qq;
+      scale = 1;
+      renderer.setPixelRatio(pixelRatio());
+      stoneRange = STONES_NEAR[qq];
+      showNear(player.x, player.z, true);
       buildGround(qq);
       buildCutouts(qq);
       setInk(qq);

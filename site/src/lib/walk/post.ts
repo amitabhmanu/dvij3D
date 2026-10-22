@@ -2,7 +2,7 @@
 // the depth jumps (a ridge against what lies behind it, a rock against the
 // ground), and a little paper grain. Medium and high quality only.
 import { BlendFunction, Effect, EffectAttribute, EffectComposer, EffectPass, RenderPass } from "postprocessing";
-import { HalfFloatType, Uniform, type Camera, type Scene, type WebGLRenderer } from "three";
+import { HalfFloatType, Uniform, UnsignedByteType, type Camera, type Scene, type WebGLRenderer } from "three";
 
 const ink = /* glsl */ `
   uniform float strength;
@@ -34,9 +34,14 @@ export class InkEffect extends Effect {
 }
 
 /** The ink, and any other passes over the picture (story mode's sight effects). */
-export function inkComposer(renderer: WebGLRenderer, scene: Scene, camera: Camera, extra: Effect[] = [], ink = true): EffectComposer {
-  // the renderer's own antialias is lost drawing into the composer's buffers: multisample them instead
-  const composer = new EffectComposer(renderer, { frameBufferType: HalfFloatType, multisampling: Math.min(4, renderer.capabilities.maxSamples) });
+export function inkComposer(renderer: WebGLRenderer, scene: Scene, camera: Camera, extra: Effect[] = [], ink = true,
+                            buffers: { samples: number; half: boolean } = { samples: 4, half: true }): EffectComposer {
+  // the renderer's own antialias is lost drawing into the composer's buffers: multisample them instead (as many
+  // samples as the quality affords; half floats only where the banding they save is worth their weight)
+  const composer = new EffectComposer(renderer, {
+    frameBufferType: buffers.half ? HalfFloatType : UnsignedByteType,
+    multisampling: Math.min(buffers.samples, renderer.capabilities.maxSamples),
+  });
   composer.addPass(new RenderPass(scene, camera));
   const effects = [...(ink ? [new InkEffect()] : []), ...extra];
   if (effects.length) composer.addPass(new EffectPass(camera, ...effects));

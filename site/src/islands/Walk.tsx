@@ -192,6 +192,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
         onProgress: (f, what) => setProgress({ f, what }),
         onStats, onFrame,
         story: asStory,
+        adaptive: !new URLSearchParams(location.search).has("test") || new URLSearchParams(location.search).has("adaptive"),
       });
       if (asStory) await setUpStory(game.current);
       // ?test hands the game to the e2e tests, which can't move a locked mouse

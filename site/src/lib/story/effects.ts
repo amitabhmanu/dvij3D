@@ -72,6 +72,11 @@ export class SightEffect extends Effect {
     }
   }
 
+  /** Is anything showing, or on its way? (if not, the picture needn't pass through it at all) */
+  active(): boolean {
+    return (Object.keys(this.now) as (keyof Sight)[]).some((k) => this.now[k] > 0.002 || this.target[k] > 0.002);
+  }
+
   get current(): Sight {
     return { ...this.now };
   }
