@@ -281,7 +281,7 @@ Review `pipeline/reports/lodge-compare.png` (renders beside the comic panels) af
 Dvij's arms and the story's people (design §10.4) are built in Blender too, from free CC0 sources:
 
 ```bash
-python pipeline/build_arms.py     # Dvij's first-person arms: site-assets/walk/arms.*.glb
+python pipeline/build_arms.py     # Dvij's first-person arms, cut from his own body: site-assets/walk/arms.*.glb
 python pipeline/build_people.py   # everyone else, and the mouths' loudness for each voiced line
 ```
 
@@ -293,7 +293,6 @@ are gitignored). The built files they make *are* committed, so you only need the
 | What | Where it goes | From | Licence |
 |---|---|---|---|
 | Poly Haven photo-scanned materials | `site-assets/textures/` | fetched by `python pipeline/lodge_photos.py fetch` | CC0 |
-| Quaternius Universal Base Characters (Standard) | `site-assets/characters/universal-base-characters-standard.zip` | https://quaternius.itch.io/universal-base-characters (free download) | CC0 |
 | Quaternius Universal Animation Library (Standard) | unzipped into `site-assets/characters/ual/`, so that `Universal Animation Library[Standard]/Unreal-Godot/UAL1_Standard.glb` is there | https://quaternius.itch.io/universal-animation-library (free download) | CC0 |
 | MakeHuman system assets | `site-assets/characters/mh-system/makehuman_system_assets_cc0.zip` (the build unpacks it) | https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html | CC0 |
 | MPFB 2.0.18, MakeHuman's Blender add-on | `site-assets/characters/mpfb/add-on-mpfb-v2.0.18.zip` (the build unpacks it into a Blender user folder of its own, `pipeline/.build/blender-user`, leaving your Blender as it is) | https://extensions.blender.org/add-ons/mpfb/ | the add-on is GPL and is not shipped; what it makes is CC0 |
