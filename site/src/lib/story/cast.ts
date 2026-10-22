@@ -5,7 +5,7 @@
 // and brightness (pipeline/build_people.py) and their hands move with the talk. The cast list is in each scene's
 // yaml; everyone in it is placed at the scene's start, and hidden until they come on if they enter.
 import {
-  AnimationMixer, Box3, Group, LoopOnce, LoopRepeat, Quaternion, Vector3,
+  AnimationMixer, Box3, Group, LoopOnce, LoopRepeat, Quaternion, Sphere, Vector3,
   type AnimationAction, type AnimationClip, type Bone, type Material, type Mesh, type Object3D, type SkinnedMesh,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -165,6 +165,8 @@ export class Actor {
   talking = false;
   /** Time not yet played (a far one is moved every few frames). */
   pending = 0;
+  /** Doing something (walking, turning, a gesture coming or going): moved every frame. */
+  get busy() { return !!(this.path.length || this.loopRim || this.turning || this.gesture); }
 
   constructor(readonly who: string, made: { scene: Object3D; clips: AnimationClip[] }, private env: CastEnv) {
     this.model = cloneSkinned(made.scene);
@@ -177,7 +179,11 @@ export class Actor {
       if (m.isMesh) {
         m.castShadow = true;
         m.receiveShadow = true;
-        m.frustumCulled = false; // (a skinned body's bounds are its bind pose's)
+        // (a skinned body's own bounds would follow its pose: a sphere round the whole of it, generous, is cheaper and safe)
+        m.geometry.computeBoundingBox();
+        const box = m.geometry.boundingBox!;
+        m.boundingSphere = new Sphere(box.getCenter(new Vector3()), box.getSize(new Vector3()).length() * 0.9);
+        m.frustumCulled = true;
         const d = m.morphTargetDictionary;
         if (d && Object.keys(d).length) {
           this.morphs.push({ mesh: m, blink: [d.eyeBlinkLeft, d.eyeBlinkRight].filter((x) => x != null), jaw: d.jawOpen, smile: d.mouthSmileLeft,
@@ -608,7 +614,7 @@ export class Cast {
       const face = c.face === "player" ? this.playerAt() : c.face;
       a.place(at, c.pose ?? "stand", c.on, face ? [face[0] + (rnd() - 0.5) * 2, face[1] + (rnd() - 0.5) * 2] : undefined);
       a.obj.scale.setScalar(0.94 + rnd() * 0.1);
-      a.obj.traverse((o) => { o.castShadow = false; }); // (sat still in the midday sun: their shadows are pools under them, and cost a pass)
+      a.obj.traverse((o) => { o.castShadow = false; o.receiveShadow = false; }); // (sat still in the midday sun: shadows under them and on them cost more than they show)
       a.skip(rnd() * 4);
       if (c.enters) a.show(false);
     }
@@ -729,13 +735,22 @@ export class Cast {
     }
     const eyes = this.env.eyes();
     let k = 0;
-    for (const a of this.actors.values()) {
+    for (const [name, a] of this.actors) {
       k++;
+      if (name.includes("#") && a.visible && !a.busy) { // a crowd sat still: a breath every sixth frame is enough
+        a.pending += dt;
+        if ((this.frame + k) % 6) continue;
+        a.update(a.pending);
+        a.pending = 0;
+        continue;
+      }
       if (!a.visible) continue;
-      // the far ones move less often: a crowd's back rows every third frame
-      const far = a.obj.getWorldPosition(new Vector3()).distanceTo(eyes) > 7;
+      // the far ones, and those he isn't looking at, move less often: every third frame
+      const at = a.obj.getWorldPosition(new Vector3());
+      const d = at.distanceTo(eyes);
+      const slow = d > 7 || (d > 2.5 && !this.env.seen(at.add(new Vector3(0, 1.2, 0))));
       a.pending += dt;
-      if (far && (this.frame + k) % 3) continue;
+      if (slow && (this.frame + k) % 3) continue;
       a.update(a.pending);
       a.pending = 0;
     }

@@ -341,8 +341,11 @@ def pattern(kind, base, ink, size=256):
 def cloth(name, color, kind="plain", ink=(0.6, 0.1, 0.08), rough=0.92):
     if kind == "hair":
         return material(name, image=image(f"{name}-hair", pattern("hair", color, color)), alpha=True, rough=0.8)
-    img = image(f"{name}-print", pattern(kind, color, ink)) if kind != "plain" else image(f"{name}-print", pattern("plain", color, ink, 64))
-    return material(name, image=img, rough=rough)
+    if kind == "plain":  # one colour: carried in the mesh (merged with the person's other plain things, below)
+        m = material(name, color=color, rough=rough)
+        m["plain"] = True
+        return m
+    return material(name, image=image(f"{name}-print", pattern(kind, color, ink)), rough=rough)
 
 
 def wrap_uv(obj, around=8.0, tall=9.0):
@@ -905,9 +908,54 @@ for act in [a for a in bpy.data.actions if a.name in wanted]:
     tr.name = act.name
     tr.strips.new(act.name, int(act.frame_range[0]), act)
 
+# fewer things to draw: everything plain-coloured and without face shapes (clothes, soles, beads, spectacles, the
+# mouth's hollow) merged into one mesh, each part's colour kept in its vertices, one material for them all
+def plain_colour(o):
+    mats = [m for m in o.data.materials if m]
+    if len(mats) != 1 or o.data.shape_keys:
+        return None
+    m = mats[0]
+    if not (m.get("plain") or m.name.split(".")[0] in ("mouth-hollow",) or not any(n.type == "TEX_IMAGE" for n in m.node_tree.nodes)):
+        return None
+    if any(n.type == "TEX_IMAGE" for n in m.node_tree.nodes):
+        return None
+    return tuple(m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value)
+
+
+merge = [(o, plain_colour(o)) for o in rig.children if o.type == "MESH" and o is not body]
+merge = [(o, c) for o, c in merge if c is not None]
+if len(merge) > 1:
+    for o, c in merge:
+        ca = o.data.color_attributes.new("Col", "FLOAT_COLOR", "POINT")
+        for d in ca.data:
+            d.color = c
+    clothes_mat = bpy.data.materials.new("clothes")
+    clothes_mat.use_nodes = True
+    nt = clothes_mat.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
+    bsdf.inputs["Roughness"].default_value = 0.88
+    attr = nt.nodes.new("ShaderNodeVertexColor")
+    attr.layer_name = "Col"
+    nt.links.new(attr.outputs["Color"], bsdf.inputs["Base Color"])
+    for o, _ in merge:
+        o.data.materials.clear()
+        o.data.materials.append(clothes_mat)
+        for mod in list(o.modifiers):
+            o.modifiers.remove(mod)
+    bpy.ops.object.select_all(action="DESELECT")
+    for o, _ in merge:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = merge[0][0]
+    bpy.ops.object.join()
+    joined = bpy.context.view_layer.objects.active
+    joined.name = "clothes"
+    mod = joined.modifiers.new("Armature", "ARMATURE")
+    mod.object = rig
+    print(f"PEOPLE merged {len(merge)} plain things into one")
+
 # a crowd's people are seen from further off: fewer faces, no face shapes
 if spec.get("lod"):
-    for o in [c for c in rig.children if c.type == "MESH" and c.name.split(".")[0] in ("eyebrows", "eyelashes")]:
+    for o in [c for c in rig.children if c.type == "MESH" and c.name.split(".")[0] in ("eyebrows", "eyelashes", "upper-teeth", "lower-teeth", "tongue")]:
         bpy.data.objects.remove(o, do_unlink=True)  # (too small to see from where they sit)
     for o in [c for c in rig.children if c.type == "MESH"]:
         if o.data.shape_keys:
