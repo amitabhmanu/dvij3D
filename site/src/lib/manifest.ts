@@ -53,12 +53,14 @@ export const ASSET_BASE: string = (import.meta.env.PUBLIC_ASSET_BASE || "/_asset
 
 export const pageFile = (name: string) => `${ASSET_BASE}/pages/${name}`;
 export const artFile = (name: string) => `${ASSET_BASE}/art/${name}`;
-// The 3D valley's files are always served by the site itself, never the R2
-// bucket: WebGL reads them with fetch() and as textures, which cross-origin would
-// need CORS on the bucket. They are small (about 650 KB) and content-hashed.
-export const terrainFile = (name: string) => `/_assets/terrain/${name}`;
-export const walkFile = (name: string) => `/_assets/walk/${name}`; // same reason as terrainFile
-export const storyFile = (name: string) => `/_assets/story/${name}`; // story mode's voices: small, and shipped with the walk
+// The 3D valley's files (the terrain, the lodge and the people, their textures, the voices) come from
+// their own R2 bucket in production, PUBLIC_3D_BASE, which allows the site's pages to read them across
+// origins (WebGL reads them with fetch() and as textures: the bucket's CORS rule, pipeline/upload_3d.mjs).
+// Unset (local dev), the site serves them itself from ../site-assets at /_assets. They are content-hashed.
+export const THREE_D_BASE: string = (import.meta.env.PUBLIC_3D_BASE || "/_assets").replace(/\/$/, "");
+export const terrainFile = (name: string) => `${THREE_D_BASE}/terrain/${name}`;
+export const walkFile = (name: string) => `${THREE_D_BASE}/walk/${name}`;
+export const storyFile = (name: string) => `${THREE_D_BASE}/story/${name}`; // story mode's voices
 export const pdfUrl = (book: Book) => `${ASSET_BASE}/${book.pdf.file}`;
 
 export function srcset(set: Srcset): string {

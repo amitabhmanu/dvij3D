@@ -29,8 +29,8 @@ export type WalkData = {
 export const walk = data as unknown as WalkData;
 export const atlas = cut as unknown as Atlas;
 
-/** The walk's files are served by the site itself, like the terrain's (see manifest.ts). */
-export const walkAsset = (name: string) => `/_assets/walk/${name}`;
+/** The walk's files: from PUBLIC_3D_BASE in production, the site itself in dev (see manifest.ts). */
+export const walkAsset = (name: string) => `${(import.meta.env.PUBLIC_3D_BASE || "/_assets").replace(/\/$/, "")}/walk/${name}`;
 
 export type Building = {
   id: string; kind: string; sprite: string; x: number; y: number; z: number;
