@@ -1816,9 +1816,11 @@
       10.5,
       30.4
      ],
+     "holding": "pipe",
      "sources": [
       "novel ¶249",
-      "breakdown ch7 p3"
+      "breakdown ch7 p3",
+      "comic b1-p012-2"
      ]
     },
     {
@@ -1921,6 +1923,19 @@
      "sources": [
       "novel ¶257",
       "comic b1-p012-6"
+     ]
+    },
+    {
+     "id": "pipe",
+     "floor": 0,
+     "kind": "pipe",
+     "held-by": "professor",
+     "at": [
+      8.5,
+      32.6
+     ],
+     "sources": [
+      "comic b1-p012-2"
      ]
     },
     {

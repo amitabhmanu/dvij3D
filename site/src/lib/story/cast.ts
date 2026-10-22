@@ -5,7 +5,7 @@
 // and brightness (pipeline/build_people.py) and their hands move with the talk. The cast list is in each scene's
 // yaml; everyone in it is placed at the scene's start, and hidden until they come on if they enter.
 import {
-  AnimationMixer, Group, LoopOnce, LoopRepeat, Quaternion, Vector3,
+  AnimationMixer, Box3, Group, LoopOnce, LoopRepeat, Quaternion, Vector3,
   type AnimationAction, type AnimationClip, type Bone, type Material, type Mesh, type Object3D, type SkinnedMesh,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -65,6 +65,8 @@ type Layer = {
   handL?: Vector3 | null; handR?: Vector3 | null;
   /** Where the feet go (world): crossed under the knees, for sitting on the ground. */
   footL?: Vector3 | null; footR?: Vector3 | null;
+  /** How far what the right hand holds is tipped forward (radians): a pitcher pouring. */
+  tilt?: number;
 };
 type Gesture = { seconds: number; hold?: boolean; clip?: string; at: (a: Actor, t: number) => Layer };
 
@@ -88,9 +90,16 @@ const GESTURES: Record<string, Gesture> = {
   "wipe-eyes": { seconds: 1.8, at: (a, t) => ({ head: 0.2, handR: up(a, 1.56, 0.1, Math.sin(t * Math.PI * 4) * 0.04) }) },
   offer: { seconds: 1.5, hold: true, at: (a) => ({ spine: 0.15, handL: a.toward(a.eyesOf(), 0.5, -0.45, -0.12), handR: a.toward(a.eyesOf(), 0.5, -0.45, 0.12) }) },
   give: { seconds: 1.4, at: (a) => ({ spine: 0.12, handR: a.toward(a.eyesOf(), 0.55, -0.35) }) },
-  pour: { seconds: 2.2, at: (a) => ({ spine: 0.2, head: 0.3, handL: up(a, 0.98, 0.4, -0.08), handR: up(a, 1.14, 0.4, 0.06) }) },
-  tilak: { seconds: 2.6, at: (a) => ({ handR: a.eyesOf().add(new Vector3(0, 0.07, 0)).addScaledVector(a.facing(), 0.05) }) },
-  bless: { seconds: 2.6, at: (a) => ({ handR: a.eyesOf().add(new Vector3(0, 0.16, 0)) }) },
+  // the pitcher raised over the tumbler and tipped, then righted (comic b1-p012-5)
+  pour: { seconds: 2.6, at: (a, t) => ({ spine: 0.2, head: 0.3, handL: up(a, 0.98, 0.4, -0.08), handR: up(a, 1.18, 0.42, 0.04),
+                                          tilt: 1.2 * Math.sin(Math.min(1, Math.max(0, (t - 0.2) / 0.6)) * Math.PI) }) },
+  // the thumb to Dvij's forehead, drawn up it, and away (¶314)
+  tilak: { seconds: 2.8, at: (a, t) => {
+    const k = Math.min(1, t / 0.35), stroke = Math.min(1, Math.max(0, (t - 0.4) / 0.35));
+    return { spine: 0.1 * k, handR: a.eyesOf().add(new Vector3(0, 0.03 + 0.07 * stroke, 0)).addScaledVector(a.facing(), 0.05 + 0.1 * (1 - k)) };
+  } },
+  // a palm raised over his head, laid on it (comic b1-p014-5, b1-p015-8)
+  bless: { seconds: 2.8, at: (a, t) => ({ spine: 0.08, head: 0.1, handR: a.eyesOf().add(new Vector3(0, 0.24 - 0.1 * Math.min(1, t / 0.45), 0)) }) },
   proclaim: { seconds: 2.4, at: (a) => ({ spine: -0.08, head: -0.1, handR: up(a, 1.95, 0.35, 0.25) }) },
   circle: { seconds: 2.4, at: (a, t) => ({ handR: up(a, 1.75 + Math.sin(t * Math.PI * 2) * 0.12, 0.45, Math.cos(t * Math.PI * 2) * 0.35) }) },
   beckon: { seconds: 1.6, at: (a, t) => ({ handR: up(a, 1.1, 0.4 - Math.sin(t * Math.PI * 4) * 0.1, 0.2) }) },
@@ -340,17 +349,41 @@ export class Actor {
 
   /** Hold a prop in the right hand (its handle), or let it go (null). */
   hold(obj: Object3D | null) {
-    const hand = this.bone("hand_r");
     if (this.carried && !obj) { this.carried.visible = false; this.carried.removeFromParent(); }
     this.carried = obj;
-    if (obj && hand) {
+    if (obj) {
       obj.visible = true;
       if (obj.parent) obj.parent.visible = true;
-      hand.add(obj);
-      obj.position.set(0, 0.08, 0.04);
+      // it rides with the body, its middle in the palm, kept upright (update): where its middle is, in its own frame
+      obj.removeFromParent();
+      obj.position.set(0, 0, 0);
       obj.quaternion.identity();
-      obj.scale.setScalar(1 / hand.getWorldScale(new Vector3()).x);
+      obj.scale.setScalar(1);
+      obj.updateMatrixWorld(true); // (on its own, its world is its own frame)
+      this.grip = new Box3().setFromObject(obj).getCenter(new Vector3());
+      this.obj.add(obj);
     }
+  }
+  private grip = new Vector3();
+
+  /** What the right hand holds, in the palm, upright but for a tip forward; the fingers closed round it. */
+  private carry(tilt: number) {
+    const o = this.carried, hand = this.bone("hand_r"), mid = this.bone("middle_01_r");
+    if (o && o.parent !== this.obj) { this.carried = null; return; } // (taken from him: Dvij has the tumbler now, hands.ts)
+    if (!o || !hand || !mid) return;
+    for (const f of ["index", "middle", "ring", "pinky"]) {
+      for (const k of [1, 2, 3]) this.bone(`${f}_0${k}_r`)?.rotateX(k === 1 ? 0.55 : 0.7);
+    }
+    this.bone("thumb_02_r")?.rotateX(0.35);
+    hand.updateMatrixWorld(true);
+    const palm = hand.getWorldPosition(new Vector3()).lerp(mid.getWorldPosition(new Vector3()), 0.55);
+    const body = this.obj.getWorldQuaternion(new Quaternion());
+    const right = new Vector3(-1, 0, 0).applyQuaternion(body);
+    const q = new Quaternion().setFromAxisAngle(right, -tilt).multiply(body);
+    const at = palm.sub(this.grip.clone().applyQuaternion(q));
+    o.quaternion.copy(body.clone().invert().multiply(q));
+    o.position.copy(this.obj.worldToLocal(at));
+    o.updateMatrixWorld(true);
   }
 
   /** Speak: the mouth follows the voice's loudness (0..1, by the clip's time), and the hands the talk. */
@@ -418,17 +451,20 @@ export class Actor {
       const k = g.seconds ? Math.min(1, this.gesture.t / g.seconds) : 0;
       layer = g.at(this, k);
       if (g.hold) this.held = layer;
-      const rise = Math.min(1, this.gesture.t / 0.35), fall = g.hold ? 1 : Math.min(1, (g.seconds - this.gesture.t) / 0.35);
-      this.layerW = Math.max(0, Math.min(rise, fall));
+      const ease = (x: number) => { const c = Math.max(0, Math.min(1, x)); return c * c * (3 - 2 * c); };
+      const rise = ease(this.gesture.t / 0.45), fall = g.hold ? 1 : ease((g.seconds - this.gesture.t) / 0.45);
+      this.layerW = Math.min(rise, fall);
       if (k >= 1) { const d = this.gesture.done; d(); }
     } else this.layerW = Object.keys(this.held).length ? Math.min(1, this.layerW + dt * 3) : Math.max(0, this.layerW - dt * 3);
     this.layer = layer;
     if (this.lean) this.pose_({ spine: this.lean }, 1);
+    const tilt = (this.layer.tilt ?? 0) * this.layerW;
     if (this.pose === "crosslegged") {
       // the legs folded, each foot under the other knee, the knees out and down; the back straight
       this.pose_({ spine: -0.25, footL: this.onFloor(0.14, 0.24), footR: this.onFloor(-0.14, 0.16) }, 1);
     }
     this.pose_(this.layer, this.layerW);
+    this.carry(tilt);
     // the eyes and head: towards what they look at (eased), within a neck's reach
     const target = typeof this.gaze === "function" ? this.gaze() : this.gaze;
     this.gazeW += ((target ? 1 : 0) - this.gazeW) * Math.min(1, dt * 3);

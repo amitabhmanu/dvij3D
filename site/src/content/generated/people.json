@@ -1,7 +1,7 @@
 {
  "people": {
   "professor": {
-   "file": "people-professor.98cb304622.glb",
+   "file": "people-professor.2ef37842b9.glb",
    "height": 1.68,
    "face": {
     "smile": 0.25
@@ -15,39 +15,39 @@
    }
   },
   "maharaj": {
-   "file": "people-maharaj.f3de58bba4.glb",
+   "file": "people-maharaj.45c55e82c1.glb",
    "height": 1.65,
    "face": {
     "smile": 0.15
    }
   },
   "mahant": {
-   "file": "people-mahant.dc4aacf3e5.glb",
+   "file": "people-mahant.0cad456125.glb",
    "height": 1.8,
    "face": {
     "smile": 0.12
    }
   },
   "baldev": {
-   "file": "people-baldev.8055b5c03b.glb",
+   "file": "people-baldev.5ead6f7a00.glb",
    "height": 1.86,
    "face": {
     "frown": 0.35
    }
   },
   "vaidji": {
-   "file": "people-vaidji.78cf179a10.glb",
+   "file": "people-vaidji.ddac9cccb7.glb",
    "height": 1.63,
    "face": {
     "brows": 0.35
    }
   },
   "attendant": {
-   "file": "people-attendant.e1bfbf73e8.glb",
+   "file": "people-attendant.1d29a31c26.glb",
    "height": 1.68
   },
   "henchman": {
-   "file": "people-henchman.44ff42cd53.glb",
+   "file": "people-henchman.4bf1d6161c.glb",
    "height": 1.72
   },
   "bhavi-kurta": {
@@ -58,11 +58,11 @@
    }
   },
   "villager-a": {
-   "file": "people-villager-a.0203d07594.glb",
+   "file": "people-villager-a.0f30e2dbe3.glb",
    "height": 1.64
   },
   "villager-b": {
-   "file": "people-villager-b.bf28b8c042.glb",
+   "file": "people-villager-b.8e291e7ae2.glb",
    "height": 1.69
   },
   "villager-c": {
@@ -70,7 +70,7 @@
    "height": 1.62
   },
   "dvij": {
-   "file": "people-dvij.907f9c471c.glb",
+   "file": "people-dvij.ea33dda1f1.glb",
    "height": 1.76
   }
  },

@@ -463,7 +463,7 @@ def hang(bm, zlo, zhi, folds=0.004, src_layer=None):
         for i in range(len(vs)):
             dth = np.abs(np.angle(np.exp(1j * (th - th[i]))))
             nb = (dth < 0.35) & (np.abs(z - z[i]) < 0.07)
-            sm[i] = max(new[nb].mean(), new[i] - 0.012)
+            sm[i] = new[nb].mean()
         new = np.maximum(sm, np.minimum(new, sm + 0.004))
     free = np.clip((new - r) / 0.03, 0, 1)
     new += folds * free * np.sin(th * 16 + z * 6)
