@@ -982,6 +982,7 @@
    "cast": [
     {
      "who": "bhavi",
+     "model": "bhavi-kurta",
      "at": [
       -18,
       39.45
@@ -3009,6 +3010,11 @@
     },
     {
      "who": "villager",
+     "models": [
+      "villager-a",
+      "villager-b",
+      "villager-c"
+     ],
      "at": [
       -6.5,
       14

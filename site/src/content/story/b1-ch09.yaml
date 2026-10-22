@@ -20,7 +20,7 @@ cast:
   - {who: baldev, at: [-2.6, -0.9], pose: sit, on: chair, face: [0.2, -0.9], sources: [novel ¶296, comic b1-p014-1]}
   - {who: vaidji, at: [2.9, 0.6], pose: sit, on: chair, face: [0.2, 0.6], sources: [novel ¶296, novel ¶299, comic b1-p014-1]}
   - {who: attendant, at: [-0.9, 1.6], pose: stand, face: [1.4, -2.3], sources: [novel ¶295, novel ¶296]}   # "the obsequious attendant", until he is sent out
-  - {who: villager, at: [-6.5, 14], crowd: 18, rect: [-9, 10, -4, 18], pose: crosslegged, face: [0, 14], enters: true, sources: [novel ¶320, comic b1-p015-1]}   # back from lunch by the time of the rite: men in white on the west durrie (no women: the author, 21 Oct)
+  - {who: villager, models: [villager-a, villager-b, villager-c], at: [-6.5, 14], crowd: 18, rect: [-9, 10, -4, 18], pose: crosslegged, face: [0, 14], enters: true, sources: [novel ¶320, comic b1-p015-1]}   # back from lunch by the time of the rite: men in white on the west durrie (no women: the author, 21 Oct)
 
 beats:
   - id: the-tent

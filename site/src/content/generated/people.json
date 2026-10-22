@@ -1,54 +1,52 @@
 {
  "people": {
   "professor": {
-   "file": "people-professor.06c4d1ba36.glb",
-   "height": 1.68,
-   "body": "standin-male"
+   "file": "people-professor.b72a6216df.glb",
+   "height": 1.68
   },
   "bhavi": {
-   "file": "people-bhavi.a9a7c0da0e.glb",
-   "height": 1.62,
-   "body": "standin-female"
+   "file": "people-bhavi.ffec16c991.glb",
+   "height": 1.62
   },
   "maharaj": {
-   "file": "people-maharaj.fd31926336.glb",
-   "height": 1.65,
-   "body": "standin-male"
+   "file": "people-maharaj.afcd6d57c7.glb",
+   "height": 1.65
   },
   "mahant": {
-   "file": "people-mahant.c061341336.glb",
-   "height": 1.8,
-   "body": "standin-male"
+   "file": "people-mahant.2e51ff9c37.glb",
+   "height": 1.8
   },
   "baldev": {
-   "file": "people-baldev.06a71eb12c.glb",
-   "height": 1.86,
-   "body": "standin-male"
+   "file": "people-baldev.365a11f034.glb",
+   "height": 1.86
   },
   "vaidji": {
-   "file": "people-vaidji.978129c681.glb",
-   "height": 1.63,
-   "body": "standin-male"
+   "file": "people-vaidji.ae391947fe.glb",
+   "height": 1.63
   },
   "attendant": {
-   "file": "people-attendant.06c4d1ba36.glb",
-   "height": 1.68,
-   "body": "standin-male"
+   "file": "people-attendant.336487414c.glb",
+   "height": 1.68
   },
   "henchman": {
-   "file": "people-henchman.f331d4284b.glb",
-   "height": 1.72,
-   "body": "standin-male"
+   "file": "people-henchman.3db39aad96.glb",
+   "height": 1.72
   },
-  "villager": {
-   "file": "people-villager.1e3ed33677.glb",
-   "height": 1.66,
-   "body": "standin-male"
+  "bhavi-kurta": {
+   "file": "people-bhavi-kurta.276b7c614e.glb",
+   "height": 1.62
   },
-  "default": {
-   "file": "people-villager.1e3ed33677.glb",
-   "height": 1.66,
-   "body": "standin-male"
+  "villager-a": {
+   "file": "people-villager-a.295e69b58e.glb",
+   "height": 1.64
+  },
+  "villager-b": {
+   "file": "people-villager-b.12533da679.glb",
+   "height": 1.69
+  },
+  "villager-c": {
+   "file": "people-villager-c.2d495cc6b6.glb",
+   "height": 1.62
   }
  },
  "mouths": "voice-mouths.53d5a72096.json"

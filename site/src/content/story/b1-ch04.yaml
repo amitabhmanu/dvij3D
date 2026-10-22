@@ -13,7 +13,7 @@ start:
   at: [0, 13.0]                                  # in the entrance hall, facing the front door
   look: [0, 1.6, 25]
 cast:
-  - {who: bhavi, at: [-18, 39.45], pose: sit, on: well-rim, face: [-18, 30], sources: [novel ¶165, breakdown ch4 p5, comic b1-p008-4]}   # on the far side of the parapet, her feet over the edge
+  - {who: bhavi, model: bhavi-kurta, at: [-18, 39.45], pose: sit, on: well-rim, face: [-18, 30], sources: [novel ¶165, breakdown ch4 p5, comic b1-p008-4]}   # on the far side of the parapet, her feet over the edge
 
 beats:
   - id: doorsteps

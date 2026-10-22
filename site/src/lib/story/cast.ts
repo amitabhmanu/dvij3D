@@ -6,7 +6,7 @@
 // yaml; everyone in it is placed at the scene's start, and hidden until they come on if they enter.
 import {
   AnimationMixer, Group, LoopOnce, LoopRepeat, Quaternion, Vector3,
-  type AnimationAction, type AnimationClip, type Bone, type Mesh, type Object3D, type SkinnedMesh,
+  type AnimationAction, type AnimationClip, type Bone, type Material, type Mesh, type Object3D, type SkinnedMesh,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
@@ -16,6 +16,8 @@ import { aim, bindLook, look, reach } from "./ik";
 export type V2 = [number, number];
 export type CastSpec = {
   who: string; at: V2; pose?: string; on?: string; face?: V2 | "player"; holding?: string; enters?: boolean;
+  /** Which of the built people plays them (people.json), if not the one named `who`: Bhavi in her kurta, the villagers' faces. */
+  model?: string; models?: string[];
   /** A crowd of this many, in rows over `rect` [x0, z0, x1, z1] (frame metres), all facing `face`. */
   crowd?: number; rect?: [number, number, number, number];
 };
@@ -116,7 +118,10 @@ export class Actor {
   private bones: Record<string, Bone> = {};
   /** Each bone's rest turn: put back before the clips play each frame (a clip leaves alone the bones it doesn't move, and the gestures' turns would add up). */
   private rest: [Bone, Quaternion][] = [];
-  private morphs: { mesh: Mesh; blink?: number; jaw?: number; smile?: number }[] = [];
+  /** The face's shape keys on each mesh that has them (MakeHuman's expression units, named as ARKit's: blender/build_human.py). */
+  private morphs: { mesh: Mesh; blink: number[]; jaw?: number; smile?: number; brows: number[]; frown?: number }[] = [];
+  /** A held expression: a smile, a frown, the brows up (0..1 each). */
+  private face = { smile: 0, frown: 0, brows: 0 };
   private pose = "stand";
   /** The seat's height (frame metres), if sat: the hips go there. */
   private seat = 0;
@@ -155,7 +160,14 @@ export class Actor {
         m.receiveShadow = true;
         m.frustumCulled = false; // (a skinned body's bounds are its bind pose's)
         const d = m.morphTargetDictionary;
-        if (d) this.morphs.push({ mesh: m, blink: d.blink, jaw: d.jaw ?? d.mouth_open, smile: d.smile });
+        if (d && Object.keys(d).length) {
+          this.morphs.push({ mesh: m, blink: [d.eyeBlinkLeft, d.eyeBlinkRight].filter((x) => x != null), jaw: d.jawOpen, smile: d.mouthSmileLeft,
+                             brows: [d.browInnerUp, d.browOuterUpRight].filter((x) => x != null), frown: d.mouthFrownLeft });
+        }
+        // hair, brows, lashes, the tilak: cut out where their textures are clear, not blended (no sorting troubles)
+        for (const mat of ([] as Material[]).concat(m.material)) {
+          if (mat.transparent) { mat.transparent = false; mat.alphaTest = 0.5; mat.depthWrite = true; }
+        }
       }
     });
     this.mixer = new AnimationMixer(this.model);
@@ -309,6 +321,9 @@ export class Actor {
   /** Move the clips on by `seconds` (a crowd's people aren't all at the same moment). */
   skip(seconds: number) { this.mixer.update(seconds); }
 
+  /** Hold an expression (each 0..1): a smile, a frown, the brows up. */
+  express(face: Partial<{ smile: number; frown: number; brows: number }>) { Object.assign(this.face, face); }
+
   /** Look at something: a point, someone's head, or nothing (null: straight ahead). */
   lookAt(target: Vector3 | (() => Vector3) | null) { this.gaze = target; }
 
@@ -416,8 +431,11 @@ export class Actor {
     for (const m of this.morphs) {
       const inf = m.mesh.morphTargetInfluences;
       if (!inf) continue;
-      if (m.blink != null) inf[m.blink] = blink;
-      if (m.jaw != null) inf[m.jaw] = this.jaw;
+      for (const b of m.blink) inf[b] = blink;
+      if (m.jaw != null) inf[m.jaw] = this.jaw * 0.85;
+      if (m.smile != null) inf[m.smile] = this.face.smile;
+      if (m.frown != null) inf[m.frown] = this.face.frown;
+      for (const b of m.brows) inf[b] = this.face.brows + this.jaw * 0.12; // (the brows lift a little with the words)
     }
     // no face shapes (the stand-in bodies): the head at least nods a little with the words
     if (!this.morphs.some((m) => m.jaw != null) && head && this.jaw > 0.05) {
@@ -482,7 +500,7 @@ export class Cast {
   }
 
   private load(who: string) {
-    const p = this.info.people[who] ?? this.info.people.default;
+    const p = this.info.people[who] ?? this.info.people[`${who}-a`] ?? this.info.people.default;
     if (!p) return null;
     if (!cache.has(p.file)) cache.set(p.file, loader.loadAsync(this.env.url(p.file)).then((g) => ({ scene: g.scene, clips: g.animations })));
     return cache.get(p.file)!;
@@ -493,9 +511,9 @@ export class Cast {
   async setUp(list: CastSpec[], start?: V2) {
     this.start = start ?? null;
     await Promise.all(list.map(async (c) => {
-      const made = await this.load(c.who)?.catch((e) => { console.warn(`no ${c.who}:`, e); return null; });
+      if (c.crowd && c.rect) return this.crowd(c);
+      const made = await this.load(c.model ?? c.who)?.catch((e) => { console.warn(`no ${c.who}:`, e); return null; });
       if (!made) return;
-      if (c.crowd && c.rect) return this.crowd(c, made);
       const a = new Actor(c.who, made, this.env);
       this.group.add(a.obj);
       this.actors.set(c.who, a);
@@ -511,7 +529,10 @@ export class Cast {
   private start: V2 | null = null;
 
   /** A crowd: sat in rows over its rect, a little out of line, each at their own moment in the clip. */
-  private crowd(c: CastSpec, made: { scene: Object3D; clips: AnimationClip[] }) {
+  private async crowd(c: CastSpec) {
+    const looks = await Promise.all((c.models ?? [c.model ?? c.who]).map((m) => this.load(m)?.catch(() => null) ?? null));
+    const made = looks.filter((x): x is { scene: Object3D; clips: AnimationClip[] } => !!x);
+    if (!made.length) return;
     const [x0, z0, x1, z1] = c.rect!;
     const n = c.crowd!;
     const across = Math.max(1, Math.round(Math.sqrt((n * (x1 - x0)) / (z1 - z0))));
@@ -522,7 +543,7 @@ export class Cast {
     for (let k = 0; k < n; k++) {
       const i = k % across, j = Math.floor(k / across);
       const at: V2 = [x0 + ((i + 0.5) / across) * (x1 - x0) + (rnd() - 0.5) * 0.3, z0 + ((j + 0.5) / rows) * (z1 - z0) + (rnd() - 0.5) * 0.3];
-      const a = new Actor(c.who, made, this.env);
+      const a = new Actor(c.who, made[k % made.length], this.env);
       this.group.add(a.obj);
       this.actors.set(`${c.who}#${k}`, a);
       people.push(a);
