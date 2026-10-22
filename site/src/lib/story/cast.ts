@@ -41,7 +41,7 @@ export type CastEnv = {
   /** Someone moved: their shadow is to be drawn again. */
   stir?: () => void;
 };
-export type PeopleInfo = { people: Record<string, { file: string; height: number }>; mouths?: string };
+export type PeopleInfo = { people: Record<string, { file: string; height: number; face?: { smile?: number; frown?: number; brows?: number } }>; mouths?: string };
 
 /** How high each kind of seat is above the floor (m): the hips go there (build_lodge.py, build_site.py, props.ts). */
 const SEATS: Record<string, number> = { ground: 0.08, "deck-chair": 0.36, armchair: 0.44, chair: 0.47, divan: 0.46, stool: 0.42, "well-rim": 0.8 };
@@ -523,6 +523,7 @@ export class Cast {
       const a = new Actor(c.who, made, this.env);
       this.group.add(a.obj);
       this.actors.set(c.who, a);
+      a.express(this.info.people[c.model ?? c.who]?.face ?? {}); // their face at rest: the Professor's upturned lips, Baldev's scowl (characters.md)
       const face = c.face === "player" ? this.playerAt() : c.face;
       a.place(c.at, c.pose ?? "stand", c.on, face);
       if (c.holding) a.hold(this.env.prop(c.holding));

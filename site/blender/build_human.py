@@ -231,6 +231,41 @@ TORSO_BONES = {"pelvis", "spine_01", "spine_02", "spine_03", "clavicle_l", "clav
 print("PEOPLE MEASURES", dict(top=HEAD_TOP, neck=NECK, waist=WAIST, knee=KNEE, ankle=ANKLE, brow=BROW, lip=LIP_TOP))
 
 
+def blush(where, color, strength):
+    """Paint a flush into the skin's texture where body vertices pass `where` (Vaidji's ruddy cheeks and feet, ¶104, ¶127)."""
+    w, h = skin_img.size
+    px = np.empty(w * h * 4, dtype=np.float32)
+    skin_img.pixels.foreach_get(px)
+    px = px.reshape(h, w, 4)
+    uvl = body.data.uv_layers.active.data
+    mask = np.zeros((h, w), dtype=np.float32)
+    rad = max(2, int(w * 0.012))
+    yy, xx = np.mgrid[-rad:rad + 1, -rad:rad + 1]
+    disk = np.clip(1 - np.sqrt(xx ** 2 + yy ** 2) / rad, 0, 1)
+    for poly in body.data.polygons:
+        for li in poly.loop_indices:
+            vi = body.data.loops[li].vertex_index
+            k = where(vi)
+            if k <= 0:
+                continue
+            u, v = uvl[li].uv
+            cx, cy = int(u * w) % w, int(v * h) % h
+            y0, y1, x0, x1 = max(cy - rad, 0), min(cy + rad + 1, h), max(cx - rad, 0), min(cx + rad + 1, w)
+            mask[y0:y1, x0:x1] = np.maximum(mask[y0:y1, x0:x1], disk[y0 - cy + rad:y1 - cy + rad, x0 - cx + rad:x1 - cx + rad] * k)
+    m = (mask * strength)[..., None]
+    px[..., :3] = px[..., :3] * (1 - m) + px[..., :3] * np.array(srgb(color)) * 1.6 * m
+    skin_img.pixels.foreach_set(px.ravel())
+    skin_img.pack()
+
+
+if spec.get("blush"):
+    bl = spec["blush"]
+    cheek_c = [(EYE_L + MOUTH) / 2 + Vector((0.012, 0, 0)), (EYE_R + MOUTH) / 2 - Vector((0.012, 0, 0))]
+    blush(lambda i: max(max(0.0, 1 - (V[i] - c).length / 0.035) for c in cheek_c) if dominant[i] == "head" else 0.0, bl["color"], bl["cheeks"])
+    if bl.get("feet"):
+        blush(lambda i: 1.0 if dominant[i] in ("foot_l", "foot_r", "ball_l", "ball_r") else 0.0, bl["color"], bl["feet"])
+
+
 def arm_t(i, side):
     """How far down the arm a vertex is: 0 at the shoulder, 1 at the elbow, 2 at the wrist."""
     sh, el, wr = bone_head(f"upperarm_{side}"), bone_head(f"lowerarm_{side}"), bone_head(f"hand_{side}")
@@ -507,9 +542,10 @@ def scalp(zlo, back_only=False):
     return keep
 
 
-def moustache_region(i):
+def moustache_region(i, size=1.0):
     p = V[i]
-    return i in in_body and dominant[i] == "head" and LIP_TOP - 0.002 < p.z < LIP_TOP + 0.016 and abs(p.x) < 0.03 + (p.z - LIP_TOP) * 0.5 and p.y < FRONT + 0.02
+    return (i in in_body and dominant[i] == "head" and LIP_TOP - 0.004 * size < p.z < LIP_TOP + 0.016 * size
+            and abs(p.x) < (0.03 + (p.z - LIP_TOP) * 0.5) * (0.85 + 0.15 * size) and p.y < FRONT + 0.02)
 
 
 def beard_region(i):
@@ -569,7 +605,8 @@ for g in spec.get("garments", []):
     elif k == "stubble":  # a shaved head's shadow
         shell(nm, scalp(BROW + 0.02), 0.0015, mat, remove_under=False)
     elif k == "moustache":
-        shell(nm, moustache_region, 0.004, mat, remove_under=False, swell=lambda co: 0.002)
+        sz = g.get("size", 1.0)
+        shell(nm, lambda i: moustache_region(i, sz), 0.004, mat, remove_under=False, swell=lambda co: 0.002 * sz)
     elif k == "beard":
         shell(nm, beard_region, 0.004, mat, remove_under=False)
     elif k == "tilak":  # three lines of ash and a red mark (Mahant, ¶106; b1-p014-2)

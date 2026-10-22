@@ -63,8 +63,7 @@ PEOPLE = {
     # Dr Vidyasagar Parthasarathi, 60s-70s (¶133, ¶136; breakdowns ch2, ch3; comic b1-p006-7, b1-p007-2, b1-p012-4)
     "professor": dict(
         height=1.68, macro=dict(gender=1.0, age=age(68), muscle=0.45, weight=0.3, height=0.45, race=south_asian(0.25, 0.15)),
-        targets={"nose/nose-scale-horiz-incr": 0.35, "nose/nose-scale-vert-incr": 0.35, "ears/l-ear-scale-incr": 0.5, "ears/r-ear-scale-incr": 0.5,
-                 "eyebrows/eyebrows-trans-down": 0.4, "eyes/l-eye-scale-incr": 0.25, "eyes/r-eye-scale-incr": 0.25},
+        targets={"nose/nose-scale-horiz-incr": 0.5, "nose/nose-scale-vert-incr": 0.5, "nose/nose-point-width-incr": 0.3, "ears/l-ear-scale-incr": 0.8, "ears/r-ear-scale-incr": 0.8, "eyebrows/eyebrows-trans-down": 0.5, "eyes/l-eye-scale-incr": 0.55, "eyes/r-eye-scale-incr": 0.55, "mouth/mouth-angles-up": 0.6, "forehead/forehead-scale-vert-incr": 0.3}, face=dict(smile=0.25),
         skin=dict(texture="old_caucasian_male", tone=[0.66, 0.48, 0.36]), hair="short02", hair_color=[0.87, 0.86, 0.83],
         brow_color=[0.84, 0.82, 0.78], eyebrows="eyebrow010",
         garments=[dict(kind="top", name="shirt", color=[0.8, 0.74, 0.58], sleeve=0.55, loose=0.16, smooth=24),
@@ -76,8 +75,7 @@ PEOPLE = {
     # Bhavi in her rustling morning gown, Ch7-8 (¶249; comic b1-p012-2, b1-p013-1): long, mostly straight hair (the author, 21 Oct)
     "bhavi": dict(
         height=1.62, macro=dict(gender=0.0, age=age(25), muscle=0.45, weight=0.42, height=0.42, proportions=0.65, race=south_asian(0.2, 0.15)),
-        targets={"eyes/l-eye-scale-incr": 0.35, "eyes/r-eye-scale-incr": 0.35, "chin/chin-width-decr": 0.4, "head/head-oval": 0.4,
-                 "nose/nose-scale-horiz-decr": 0.2},
+        targets={"eyes/l-eye-scale-incr": 0.45, "eyes/r-eye-scale-incr": 0.45, "chin/chin-width-decr": 0.5, "head/head-oval": 0.5, "nose/nose-scale-horiz-decr": 0.25, "mouth/mouth-lowerlip-volume-incr": 0.3, "mouth/mouth-upperlip-volume-incr": 0.2, "eyebrows/eyebrows-angle-up": 0.2}, face=dict(smile=0.12),
         skin=dict(texture="young_caucasian_female", tone=[0.76, 0.56, 0.43]), hair="long01", hair_color=BLACK_HAIR,
         eyebrows="eyebrow006", eyelashes="eyelashes02",
         garments=[dict(kind="top", name="gown", color=[0.95, 0.86, 0.86], print="floral", ink=[0.86, 0.38, 0.46], sleeve=2.0, loose=0.1, **{"from": 0.9}),
@@ -92,20 +90,19 @@ PEOPLE = {
     # Maharaj, the stout cook (¶196, ¶203, ¶223; comic b1-p010-2, b1-p012-4): a white turban throughout (the author, 21 Oct)
     "maharaj": dict(
         height=1.65, macro=dict(gender=1.0, age=age(45), muscle=0.4, weight=0.86, height=0.38, race=south_asian(0.35, 0.15)),
-        targets={"head/head-round": 0.5, "neck/neck-double-incr": 0.3},
+        targets={"head/head-round": 0.7, "cheek/l-cheek-volume-incr": 0.5, "cheek/r-cheek-volume-incr": 0.5, "neck/neck-double-incr": 0.4, "eyes/l-eye-scale-decr": 0.2, "eyes/r-eye-scale-decr": 0.2, "mouth/mouth-angles-up": 0.3, "nose/nose-scale-horiz-incr": 0.3}, face=dict(smile=0.15),
         skin=dict(texture="middleage_caucasian_male", tone=[0.56, 0.39, 0.27]), eyebrows="eyebrow001", brow_color=[0.06, 0.05, 0.04],
         garments=[dict(kind="top", name="kurta", color=CREAM, sleeve=0.45, loose=0.1, **{"from": 0.8}),
                   dict(kind="skirt", name="kurta-skirt", color=CREAM, to=0.66, flare=0.03),
                   dict(kind="trousers", name="pyjama", color=WHITE, pleats=0.004),
                   dict(kind="waistband", name="gamchha", color=[0.86, 0.83, 0.78], print="checks", ink=[0.74, 0.12, 0.1], width=0.07),
                   dict(kind="turban", name="turban", color=WHITE),
-                  dict(kind="moustache", name="moustache", color=[0.05, 0.04, 0.035])]),
+                  dict(kind="moustache", name="moustache", size=1.6, color=[0.05, 0.04, 0.035])]),
     # Mahapandit Sampoornand Swami: lean, sinewy, long fingers, shaved but for a tied tuft, an ash tilak, the janeyu, white
     # cloth over the torso with a shawl and rudraksha beads (¶104, ¶106, ¶298; b1-p014-2; the author, 21 Oct)
     "mahant": dict(
         height=1.80, macro=dict(gender=1.0, age=age(55), muscle=0.55, weight=0.25, height=0.62, proportions=0.4, race=south_asian(0.3, 0.1)),
-        targets={"nose/nose-hump-incr": 0.5, "nose/nose-scale-vert-incr": 0.3, "cheek/l-cheek-inner-decr": 0.4, "cheek/r-cheek-inner-decr": 0.4,
-                 "hands/l-hand-fingers-length-incr": 0.8, "hands/r-hand-fingers-length-incr": 0.8, "eyebrows/eyebrows-angle-up": 0.4},
+        targets={"head/head-scale-horiz-decr": 0.35, "cheek/l-cheek-inner-decr": 0.6, "cheek/r-cheek-inner-decr": 0.6, "cheek/l-cheek-bones-incr": 0.5, "cheek/r-cheek-bones-incr": 0.5, "nose/nose-hump-incr": 0.7, "nose/nose-point-down": 0.4, "nose/nose-scale-vert-incr": 0.3, "eyebrows/eyebrows-angle-up": 0.5, "eyes/l-eye-height2-decr": 0.35, "eyes/r-eye-height2-decr": 0.35, "mouth/mouth-scale-horiz-decr": 0.2, "chin/chin-prominent-incr": 0.3, "hands/l-hand-fingers-length-incr": 0.8, "hands/r-hand-fingers-length-incr": 0.8}, face=dict(smile=0.12),
         skin=dict(texture="middleage_caucasian_male", tone=[0.62, 0.43, 0.28]), eyebrows="eyebrow003", brow_color=[0.08, 0.06, 0.05],
         garments=[dict(kind="top", name="wrap", color=[0.9, 0.89, 0.85], neckline=0.035, loose=0.05, **{"from": 0.95}),
                   dict(kind="skirt", name="dhoti", color=WHITE, to=0.12, flare=0.05, pleats=0.01),
@@ -118,20 +115,20 @@ PEOPLE = {
     # chewing tobacco (¶104, ¶108, ¶296; b1-p005-4, b1-p014-5)
     "baldev": dict(
         height=1.86, macro=dict(gender=1.0, age=age(35), muscle=0.75, weight=0.8, height=0.75, race=south_asian(0.45, 0.1)),
-        targets={"chin/chin-width-incr": 0.5, "head/head-square": 0.5, "nose/nose-flaring-incr": 0.4, "neck/measure-neck-circ-incr": 0.5},
+        targets={"head/head-square": 0.6, "chin/chin-width-incr": 0.6, "chin/chin-prominent-incr": 0.3, "nose/nose-flaring-incr": 0.5, "nose/nose-scale-horiz-incr": 0.3, "eyebrows/eyebrows-trans-down": 0.4, "mouth/mouth-lowerlip-volume-incr": 0.4, "neck/measure-neck-circ-incr": 0.6}, face=dict(frown=0.35),
         skin=dict(texture="young_african_male", tone=[0.46, 0.31, 0.21]), hair="short04", hair_color=BLACK_HAIR, eyebrows="eyebrow002",
         brow_color=[0.04, 0.035, 0.03],
         garments=[dict(kind="top", name="shirt", color=[0.88, 0.82, 0.68], sleeve=0.6, loose=0.1, **{"from": 0.85}),
                   dict(kind="skirt", name="lungi", color=[0.5, 0.1, 0.1], to=0.28, flare=0.035),
                   dict(kind="waistband", name="sash", color=[0.72, 0.13, 0.1], width=0.07),
                   dict(kind="sole", name="chappals", color=[0.36, 0.21, 0.11]),
-                  dict(kind="moustache", name="moustache", color=[0.04, 0.035, 0.03])]),
+                  dict(kind="moustache", name="moustache", size=1.6, color=[0.04, 0.035, 0.03])]),
     # Vaid Shwet: unusually pale, ruddy, overblown, almost bald from the front, a striped shawl (¶127, ¶296; b1-p006-7, b1-p014-5)
     "vaidji": dict(
         height=1.63, macro=dict(gender=1.0, age=age(55), muscle=0.15, weight=1.0, height=0.35, race=south_asian(0.05, 0.1)),
-        targets={"head/head-round": 0.6, "neck/neck-double-incr": 0.8, "cheek/l-cheek-volume-incr": 0.5, "cheek/r-cheek-volume-incr": 0.5,
-                 "ears/l-ear-scale-incr": 0.4, "ears/r-ear-scale-incr": 0.4},
+        targets={"head/head-round": 0.7, "neck/neck-double-incr": 1.0, "cheek/l-cheek-volume-incr": 0.7, "cheek/r-cheek-volume-incr": 0.7, "ears/l-ear-scale-incr": 0.4, "ears/r-ear-scale-incr": 0.4, "eyes/l-eye-scale-decr": 0.1, "eyes/r-eye-scale-decr": 0.1, "mouth/mouth-scale-horiz-decr": 0.2}, face=dict(brows=0.35),
         skin=dict(texture="middleage_caucasian_male", tone=[0.86, 0.64, 0.56]), eyebrows="eyebrow004", brow_color=[0.6, 0.58, 0.55],
+        blush=dict(color=[0.85, 0.35, 0.32], cheeks=0.55, feet=0.4),
         garments=[dict(kind="top", name="kurta", color=[0.92, 0.89, 0.8], sleeve=1.7, loose=0.12, **{"from": 0.75}),
                   dict(kind="skirt", name="kurta-skirt", color=[0.92, 0.89, 0.8], to=0.6, flare=0.03),
                   dict(kind="trousers", name="pyjama", color=WHITE, pleats=0.004),
@@ -300,7 +297,7 @@ def main() -> None:
             if args.who and model not in args.who.split(","):
                 continue
             name = build(model, env)
-            info["people"][model] = {"file": name, "height": spec_of(model)["height"]}
+            info["people"][model] = {"file": name, "height": spec_of(model)["height"], **({"face": spec_of(model)["face"]} if spec_of(model).get("face") else {})}
             print(f"{model}: {name} ({(OUT / name).stat().st_size // 1024} KB)")
         # (the old stand-ins, and anyone no longer in PEOPLE)
         info["people"] = {k: v for k, v in info["people"].items() if k in PEOPLE}
