@@ -436,6 +436,26 @@ def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0, keys
     return obj
 
 
+def convex_hull(pts):
+    """A 2D convex hull, counter-clockwise (Andrew's monotone chain)."""
+    p = sorted(map(tuple, pts))
+    if len(p) < 3:
+        return np.array(p)
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lo, hi = [], []
+    for q in p:
+        while len(lo) >= 2 and cross(lo[-2], lo[-1], q) <= 0:
+            lo.pop()
+        lo.append(q)
+    for q in reversed(p):
+        while len(hi) >= 2 and cross(hi[-2], hi[-1], q) <= 0:
+            hi.pop()
+        hi.append(q)
+    return np.array(lo[:-1] + hi[:-1])
+
+
 def hang(bm, zlo, zhi, folds=0.004, src_layer=None):
     """Cloth hangs: between zlo and zhi it falls from what juts out above it (a chest, a belly, the shoulder blades)
     instead of tucking in under it, and fills the hollows across (no cleavage in a kurta); where it hangs free of
@@ -459,6 +479,23 @@ def hang(bm, zlo, zhi, folds=0.004, src_layer=None):
         across = near & (np.abs(z - z[i]) < 0.03)
         if across.any():  # spanning the hollows between neighbours
             new[i] = max(new[i], np.max(r[across] * np.cos(dth[across])) - 0.004)
+    # cloth spans the hollows: each level of it out to its convex hull (between the breasts, the spine's groove)
+    for zc in np.arange(z.min(), z.max() + 0.01, 0.012):
+        band = np.abs(z - zc) < 0.012
+        if band.sum() < 6:
+            continue
+        xy = np.stack([np.sin(th[band]) * new[band], np.cos(th[band]) * new[band]], axis=1)
+        hull = convex_hull(xy)
+        ring = []
+        for a_, b_ in zip(hull, np.roll(hull, -1, axis=0)):
+            for t in np.linspace(0, 1, 12, endpoint=False):
+                ring.append(a_ + (b_ - a_) * t)
+        ring = np.array(ring)
+        hth, hr = np.arctan2(ring[:, 0], ring[:, 1]), np.hypot(ring[:, 0], ring[:, 1])
+        for i in np.nonzero(np.abs(z - zc) < 0.006)[0]:
+            near = np.abs(np.angle(np.exp(1j * (hth - th[i])))) < 0.04
+            if near.any():
+                new[i] = max(new[i], hr[near].max() - 0.002)
     if spec["macro"].get("gender", 0.5) > 0.5:
         # a man's shirt or kurta stands off the chest: the radii smoothed over a hand's breadth (the skin under it is gone,
         # so nothing shows through)
@@ -468,6 +505,7 @@ def hang(bm, zlo, zhi, folds=0.004, src_layer=None):
             nb = (dth < 0.35) & (np.abs(z - z[i]) < 0.07)
             sm[i] = new[nb].mean()
         new = np.maximum(sm, np.minimum(new, sm + 0.004))
+        new = np.where(z < WAIST + 0.15, np.maximum(new, r), new)  # (never in at the hem, where it lies over a lungi or a dhoti)
     free = np.clip((new - r) / 0.03, 0, 1)
     new += folds * free * np.sin(th * 16 + z * 6)
     for v, t, rr in zip(vs, th, new):
@@ -632,7 +670,8 @@ for g in spec.get("garments", []):
     nm = g.get("name", k)
     if k == "top":  # a shirt, a kurta's body, a vest, a wrap: from the waist (or lower) to the neck
         shell(nm, torso(g.get("from", WAIST - 0.1), NECK - g.get("neckline", 0.02), g.get("sleeve", 0.0)), g.get("offset", 0.014), mat,
-              swell=lambda co: g.get("loose", 0.0) * max(0.0, (SHOULDER - co.z)) * 0.3, smooth=g.get("smooth", 14),
+              swell=lambda co: g.get("loose", 0.0) * max(0.0, (SHOULDER - co.z)) * 0.3 + (0.012 if co.z < WAIST + 0.06 else 0.0),  # (over what's tied at the waist)
+              smooth=g.get("smooth", 14),
               drape=(g.get("from", WAIST - 0.1), SHOULDER - 0.02, 0.005))
     elif k == "skirt":  # a dhoti, a lungi, a kurta's skirts, a gown's: MakeHuman's skirt, cut at a height
         helper(nm, "helper-skirt", g.get("to", ANKLE + 0.06), g.get("top", WAIST + 0.04), g.get("offset", 0.012), mat,
@@ -644,7 +683,7 @@ for g in spec.get("garments", []):
         o = shell(nm + "-pleats", lambda i: i in sk and V[i].y < -0.02 and abs(V[i].x) < 0.06 and max(g.get("to", ANKLE + 0.04) + 0.1, KNEE - 0.05) <= V[i].z <= WAIST + 0.04,
                   0.0, mat, remove_under=False)
         for v in o.data.vertices:  # (the gathered pleats in front, close over the legs, ridged)
-            v.co.y -= 0.012 + 0.006 * abs(math.sin(v.co.x * 260))
+            v.co.y -= 0.004 + 0.004 * abs(math.sin(v.co.x * 260))
     elif k == "trousers":  # pyjamas, a salwar, shorts: MakeHuman's tights, cut at a height
         helper(nm, "helper-tights", g.get("to", ANKLE + 0.02), g.get("top", WAIST + 0.03), g.get("offset", 0.012), mat,
                pleats=g.get("pleats", 0.003), flare=g.get("flare", 0.0))
@@ -924,7 +963,7 @@ def plain_colour(o):
 
 merge = [(o, plain_colour(o)) for o in rig.children if o.type == "MESH" and o is not body]
 merge = [(o, c) for o, c in merge if c is not None]
-if len(merge) > 1:
+if len(merge) > 1 and not spec.get("no_merge"):
     for o, c in merge:
         ca = o.data.color_attributes.new("Col", "FLOAT_COLOR", "POINT")
         for d in ca.data:

@@ -150,7 +150,7 @@ PEOPLE = {
         height=1.72, macro=dict(gender=1.0, age=age(35), muscle=0.65, weight=0.55, height=0.55, race=south_asian(0.4, 0.1)),
         skin=dict(texture="young_african_male", tone=[0.48, 0.32, 0.22]), hair="short03", hair_color=BLACK_HAIR,
         garments=[dict(kind="top", name="kurta", color=[0.84, 0.5, 0.2], sleeve=0.6, loose=0.08, **{"from": 0.85}),
-                  dict(kind="skirt", name="kurta-skirt", color=[0.84, 0.5, 0.2], to=0.72, flare=0.03),
+                  dict(kind="skirt", name="kurta-skirt", color=[0.84, 0.5, 0.2], to=0.72, flare=0.04, offset=0.03),
                   dict(kind="dhoti", name="dhoti", color=WHITE, to=0.16, flare=0.045),
                   dict(kind="sole", name="chappals", color=[0.36, 0.21, 0.11]),
                   dict(kind="moustache", name="moustache", color=[0.04, 0.035, 0.03])]),
