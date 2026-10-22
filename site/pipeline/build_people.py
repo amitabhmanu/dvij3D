@@ -168,21 +168,21 @@ PEOPLE = {
                   dict(kind="moustache", name="moustache", color=[0.05, 0.04, 0.035])]),
     # The villagers at the altar: thin men in white, caps and turbans (b1-p015-1; no women: the author, 21 Oct); seen from afar
     "villager-a": dict(
-        lod=0.3, height=1.64, macro=dict(gender=1.0, age=age(45), muscle=0.5, weight=0.2, height=0.4, race=south_asian(0.45, 0.1)),
+        lod=0.18, height=1.64, macro=dict(gender=1.0, age=age(45), muscle=0.5, weight=0.2, height=0.4, race=south_asian(0.45, 0.1)),
         skin=dict(texture="middleage_african_male", tone=[0.46, 0.31, 0.21]),
         garments=[dict(kind="top", name="banian", color=WHITE, sleeve=0.0, **{"from": 0.9}),
                   dict(kind="skirt", name="dhoti", color=WHITE, to=0.25, flare=0.03),
                   dict(kind="cap", name="cap", color=WHITE),
                   dict(kind="moustache", name="moustache", color=[0.05, 0.04, 0.035])]),
     "villager-b": dict(
-        lod=0.3, height=1.69, macro=dict(gender=1.0, age=age(60), muscle=0.4, weight=0.3, height=0.48, race=south_asian(0.4, 0.15)),
+        lod=0.18, height=1.69, macro=dict(gender=1.0, age=age(60), muscle=0.4, weight=0.3, height=0.48, race=south_asian(0.4, 0.15)),
         skin=dict(texture="old_african_male", tone=[0.5, 0.34, 0.23]),
         garments=[dict(kind="top", name="kurta", color=[0.9, 0.88, 0.82], sleeve=0.6, **{"from": 0.85}),
                   dict(kind="skirt", name="dhoti", color=WHITE, to=0.2, flare=0.03),
                   dict(kind="turban", name="turban", color=[0.93, 0.92, 0.88]),
                   dict(kind="moustache", name="moustache", color=[0.75, 0.74, 0.7])]),
     "villager-c": dict(
-        lod=0.3, height=1.62, macro=dict(gender=1.0, age=age(30), muscle=0.55, weight=0.22, height=0.36, race=south_asian(0.5, 0.1)),
+        lod=0.18, height=1.62, macro=dict(gender=1.0, age=age(30), muscle=0.55, weight=0.22, height=0.36, race=south_asian(0.5, 0.1)),
         skin=dict(texture="young_african_male", tone=[0.44, 0.29, 0.2]), hair="short01", hair_color=BLACK_HAIR,
         garments=[dict(kind="skirt", name="dhoti", color=WHITE, to=0.3, flare=0.03),
                   dict(kind="band", name="gamchha", color=[0.9, 0.86, 0.78], print="checks", ink=[0.7, 0.14, 0.12], over="r", width=0.1)]),

@@ -113,6 +113,8 @@ export type Body = {
   /** A reflection in the window pane he is looking at, of his own body only (on SELF_LAYER), laid over the
    * glass as daylight lets one show (novel ¶101); false: none. Returns whether there was a pane to look in. */
   mirror: (on: boolean) => boolean;
+  /** Something that casts a shadow moved (one of the story's people walking): the shadows are drawn again. */
+  stir: () => void;
   /** Dvij's own arms (arms.ts), if they loaded. */
   arms: () => Arms | null;
   /** Another built place's frame -> the world's, and its model: "temple-site" (Chapter 9). */
@@ -744,6 +746,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     rate: (r) => { rate = r; sight.speed = r; },
     fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
     lodgeRoot: () => lodge?.root ?? null,
+    stir: () => { shadowDirty = true; },
     mirror: (on) => {
       if (mirror) { scene.remove(mirror, mirrorLight, mirrorLight.target); mirror.dispose(); mirror = null; }
       if (!on || !lodge) return false;

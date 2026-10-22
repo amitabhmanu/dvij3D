@@ -38,6 +38,8 @@ export type CastEnv = {
   seen: (p: Vector3) => boolean;
   /** Which way Dvij faces (radians, the game's heading). */
   heading: () => number;
+  /** Someone moved: their shadow is to be drawn again. */
+  stir?: () => void;
 };
 export type PeopleInfo = { people: Record<string, { file: string; height: number }>; mouths?: string };
 
@@ -390,6 +392,7 @@ export class Actor {
       this.obj.rotation.y = r.a + Math.PI / 2;
       if (this.base) this.base.timeScale = 0.55;
     }
+    if (this.path.length || this.loopRim || this.turning) this.env.stir?.();
     if (this.turning) {
       const tr = this.turning;
       tr.t += dt;
@@ -553,6 +556,7 @@ export class Cast {
       const face = c.face === "player" ? this.playerAt() : c.face;
       a.place(at, c.pose ?? "stand", c.on, face ? [face[0] + (rnd() - 0.5) * 2, face[1] + (rnd() - 0.5) * 2] : undefined);
       a.obj.scale.setScalar(0.94 + rnd() * 0.1);
+      a.obj.traverse((o) => { o.castShadow = false; }); // (sat still in the midday sun: their shadows are pools under them, and cost a pass)
       a.skip(rnd() * 4);
       if (c.enters) a.show(false);
     }

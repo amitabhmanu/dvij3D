@@ -140,6 +140,7 @@ export class StoryStage implements Stage {
         url: walkAsset,
         seen: (p) => body.lookingAt([p.x, p.y, p.z], 50),
         heading: () => this.game.player().heading,
+        stir: () => body.stir(),
       });
       this.cast = cast;
       await cast.setUp((sc.cast ?? []) as CastSpec[], sc.start.at);

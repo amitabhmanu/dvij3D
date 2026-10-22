@@ -747,6 +747,8 @@ for act in [a for a in bpy.data.actions if a.name in wanted]:
 
 # a crowd's people are seen from further off: fewer faces, no face shapes
 if spec.get("lod"):
+    for o in [c for c in rig.children if c.type == "MESH" and c.name.split(".")[0] in ("eyebrows", "eyelashes")]:
+        bpy.data.objects.remove(o, do_unlink=True)  # (too small to see from where they sit)
     for o in [c for c in rig.children if c.type == "MESH"]:
         if o.data.shape_keys:
             o.shape_key_clear()
