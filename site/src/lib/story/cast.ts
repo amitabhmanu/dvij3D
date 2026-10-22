@@ -2,7 +2,7 @@
 // Mahant, Baldev, Vaidji and the rest, each a rigged body with its clips (pipeline/build_people.py).
 // They stand, sit, walk and gesture as the scenes' `actor` beats say; between beats they breathe,
 // blink and look at whoever is talking; as they speak their mouths move with their voices' loudness
-// (pipeline/voice_mouths.py) and their hands move with the talk. The cast list is in each scene's
+// and brightness (pipeline/build_people.py) and their hands move with the talk. The cast list is in each scene's
 // yaml; everyone in it is placed at the scene's start, and hidden until they come on if they enter.
 import {
   AnimationMixer, Group, LoopOnce, LoopRepeat, Quaternion, Vector3,
@@ -124,7 +124,8 @@ export class Actor {
   /** Each bone's rest turn: put back before the clips play each frame (a clip leaves alone the bones it doesn't move, and the gestures' turns would add up). */
   private rest: [Bone, Quaternion][] = [];
   /** The face's shape keys on each mesh that has them (MakeHuman's expression units, named as ARKit's: blender/build_human.py). */
-  private morphs: { mesh: Mesh; blink: number[]; jaw?: number; smile?: number; brows: number[]; frown?: number }[] = [];
+  private morphs: { mesh: Mesh; blink: number[]; jaw?: number; smile?: number; brows: number[]; frown?: number;
+                     pucker?: number; wide?: number; close?: number }[] = [];
   /** A held expression: a smile, a frown, the brows up (0..1 each). */
   private face = { smile: 0, frown: 0, brows: 0 };
   private pose = "stand";
@@ -144,7 +145,11 @@ export class Actor {
   private blinkIn = 2 + Math.random() * 3;
   private blinkT = -1;
   private mouth: (() => number) | null = null;
+  private tone: (() => number) | null = null;
   private jaw = 0;
+  private bright = 0.5;
+  /** Shut between words: the lips pressed for a moment after a syllable (m, b, p), eased. */
+  private shut = 0;
   private t = Math.random() * 10;
   private carried: Object3D | null = null;
   private hidden = false;
@@ -167,7 +172,8 @@ export class Actor {
         const d = m.morphTargetDictionary;
         if (d && Object.keys(d).length) {
           this.morphs.push({ mesh: m, blink: [d.eyeBlinkLeft, d.eyeBlinkRight].filter((x) => x != null), jaw: d.jawOpen, smile: d.mouthSmileLeft,
-                             brows: [d.browInnerUp, d.browOuterUpRight].filter((x) => x != null), frown: d.mouthFrownLeft });
+                             brows: [d.browInnerUp, d.browOuterUpRight].filter((x) => x != null), frown: d.mouthFrownLeft,
+                             pucker: d.mouthPucker, wide: d.mouthStretchLeft, close: d.mouthClose });
         }
         // hair, brows, lashes, the tilak: cut out where their textures are clear, not blended (no sorting troubles)
         for (const mat of ([] as Material[]).concat(m.material)) {
@@ -348,8 +354,9 @@ export class Actor {
   }
 
   /** Speak: the mouth follows the voice's loudness (0..1, by the clip's time), and the hands the talk. */
-  speak(level: (() => number) | null) {
+  speak(level: (() => number) | null, bright: (() => number) | null = null) {
     this.mouth = level;
+    this.tone = bright;
     this.talking = !!level;
     if (!this.path.length && !this.loopRim) this.loop(POSE_CLIP[this.pose]?.[level ? 1 : 0] ?? "Idle_Loop", 0.5);
   }
@@ -433,12 +440,20 @@ export class Actor {
     let blink = 0;
     if (this.blinkT >= 0) { this.blinkT += dt; blink = Math.max(0, 1 - Math.abs(this.blinkT - 0.08) / 0.08); if (this.blinkT > 0.16) this.blinkT = -1; }
     const want = this.mouth ? this.mouth() : 0;
+    const wasOpen = this.jaw;
     this.jaw += (want - this.jaw) * Math.min(1, dt * 18);
+    this.bright += ((this.tone ? this.tone() : 0.5) - this.bright) * Math.min(1, dt * 10);
+    this.shut = this.mouth && want < 0.05 && wasOpen > 0.15 ? 1 : Math.max(0, this.shut - dt * 6);
     for (const m of this.morphs) {
       const inf = m.mesh.morphTargetInfluences;
       if (!inf) continue;
       for (const b of m.blink) inf[b] = blink;
       if (m.jaw != null) inf[m.jaw] = this.jaw * 0.85;
+      // the lips' shape: wide for bright sounds, rounded for dark ones, pressed shut between words
+      const talking = Math.min(1, this.jaw * 2.5);
+      if (m.wide != null) inf[m.wide] = talking * Math.max(0, this.bright - 0.45) * 1.4;
+      if (m.pucker != null) inf[m.pucker] = talking * Math.max(0, 0.45 - this.bright) * 1.6;
+      if (m.close != null) inf[m.close] = this.shut * 0.7;
       if (m.smile != null) inf[m.smile] = this.face.smile;
       if (m.frown != null) inf[m.frown] = this.face.frown;
       for (const b of m.brows) inf[b] = this.face.brows + this.jaw * 0.12; // (the brows lift a little with the words)
@@ -653,17 +668,19 @@ export class Cast {
     }
   }
 
-  /** The loudness of a voice file over its time (0..1), for a mouth: from pipeline/voice_mouths.py. */
-  async level(file: string, time: () => number): Promise<() => number> {
+  /** A voice file's loudness and brightness over its time (0..1 each, 25 a second), for a mouth: from
+   * pipeline/build_people.py's mouths(). Loud opens the jaw; bright (ee, ay) draws the lips wide, dark (oo, oh) rounds them. */
+  async level(file: string, time: () => number): Promise<{ open: () => number; bright: () => number }> {
     if (!this.mouths && this.info.mouths) {
       this.mouths = await fetch(this.env.url(this.info.mouths)).then((r) => r.json()).catch(() => ({}));
     }
-    const env = this.mouths?.[file];
-    if (!env) return () => 0.35 + Math.sin(time() * 17) * 0.3; // (no envelope: a plain flap)
-    return () => {
+    const [loud, tone] = (this.mouths?.[file] ?? "").split("|");
+    const at = (s: string | undefined, fallback: number) => () => {
       const i = Math.floor(time() * 25);
-      return i < env.length ? (env.charCodeAt(i) - 48) / 9 : 0;
+      return s && i < s.length ? (s.charCodeAt(i) - 48) / 9 : s ? 0 : fallback;
     };
+    if (!loud) return { open: () => 0.35 + Math.sin(time() * 17) * 0.3, bright: () => 0.5 + Math.sin(time() * 5) * 0.3 }; // (no envelope: a plain flap)
+    return { open: at(loud, 0), bright: at(tone, 0.5) };
   }
 
   update(dt: number) {

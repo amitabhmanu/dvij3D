@@ -104,6 +104,7 @@ PEOPLE = {
         height=1.80, macro=dict(gender=1.0, age=age(55), muscle=0.55, weight=0.25, height=0.62, proportions=0.4, race=south_asian(0.3, 0.1)),
         targets={"head/head-scale-horiz-decr": 0.35, "cheek/l-cheek-inner-decr": 0.6, "cheek/r-cheek-inner-decr": 0.6, "cheek/l-cheek-bones-incr": 0.5, "cheek/r-cheek-bones-incr": 0.5, "nose/nose-hump-incr": 0.7, "nose/nose-point-down": 0.4, "nose/nose-scale-vert-incr": 0.3, "eyebrows/eyebrows-angle-up": 0.5, "eyes/l-eye-height2-decr": 0.35, "eyes/r-eye-height2-decr": 0.35, "mouth/mouth-scale-horiz-decr": 0.2, "chin/chin-prominent-incr": 0.3, "hands/l-hand-fingers-length-incr": 0.8, "hands/r-hand-fingers-length-incr": 0.8}, face=dict(smile=0.12),
         skin=dict(texture="middleage_caucasian_male", tone=[0.62, 0.43, 0.28]), eyebrows="eyebrow003", brow_color=[0.08, 0.06, 0.05],
+        teeth=[0.58, 0.16, 0.12],  # red with paan (¶298, breakdown ch9)
         garments=[dict(kind="top", name="wrap", color=[0.9, 0.89, 0.85], neckline=0.035, loose=0.05, **{"from": 0.95}),
                   dict(kind="skirt", name="dhoti", color=WHITE, to=0.12, flare=0.05, pleats=0.01),
                   dict(kind="band", name="shawl", color=[0.98, 0.97, 0.95], print="border", ink=[0.78, 0.62, 0.3], over="l", width=0.2, offset=0.034),
@@ -263,7 +264,14 @@ def mouths() -> str:
         top = np.percentile(db, 95)
         level = np.clip((db - (top - 30)) / 30, 0, 1)  # the loudest syllables wide, 30 dB down shut
         level[level < 0.15] = 0
-        out[mp3.name] = "".join(str(int(round(v * 9))) for v in level)
+        # how bright each moment sounds: its spectrum's centre (ee and ay bright, oo and oh dark), for the lips' shape
+        frames = x[: n * hop].reshape(n, hop) * np.hanning(hop)
+        spec = np.abs(np.fft.rfft(frames, axis=1))
+        freqs = np.fft.rfftfreq(hop, 1 / 8000)
+        centre = (spec * freqs).sum(axis=1) / (spec.sum(axis=1) + 1e-9)
+        bright = np.clip((centre - 700) / 1300, 0, 1)
+        bright = np.convolve(bright, np.ones(3) / 3, mode="same")  # (a mouth moves slower than a spectrum)
+        out[mp3.name] = "".join(str(int(round(v * 9))) for v in level) + "|" + "".join(str(int(round(v * 9))) for v in bright)
     return publish("voice-mouths", ".json", json.dumps(out, separators=(",", ":")).encode())
 
 

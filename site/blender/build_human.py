@@ -74,7 +74,10 @@ UNITS = f"{MPFB_DATA}/targets/expression/units/caucasian"
 body.shape_key_add(name="Basis", from_mix=False)
 for unit, name, w in [("eye-left-closure", "eyeBlinkLeft", 1.0), ("eye-right-closure", "eyeBlinkRight", 1.0), ("mouth-open", "jawOpen", 0.8),
                       ("mouth-corner-puller", "mouthSmileLeft", 0.8), ("eyebrows-left-up", "browInnerUp", 0.5),
-                      ("mouth-depression", "mouthFrownLeft", 0.7)]:
+                      ("mouth-depression", "mouthFrownLeft", 0.7),
+                      # the lips' shapes for speech: rounded (oo, oh), drawn wide (ee, ay), pressed shut (m, b, p)
+                      ("mouth-pursing", "mouthPucker", 0.8), ("mouth-retraction", "mouthStretchLeft", 0.7),
+                      ("mouth-compression", "mouthClose", 0.6)]:
     TargetService.load_target(body, f"{UNITS}/{unit}.target.gz", weight=0.0, name=name)
 if spec.get("brows_both", True) and "browInnerUp" in body.data.shape_keys.key_blocks:
     # (a brow raised on one side looks like doubt: both go up together)
@@ -350,7 +353,7 @@ def wrap_uv(obj, around=8.0, tall=9.0):
 cut = set()  # body faces a garment covers: they go
 
 
-def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0):
+def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0, keys=False):
     """A garment from the body's own faces whose corners all pass `keep`, pushed out `offset` along the normals.
     Its edge is straightened along itself (not a staircase of faces); its inside smoothed `smooth` times (cloth
     doesn't cling to every hollow); near its edge, where the skin goes on, it keeps clear of it. Under it the
@@ -403,7 +406,7 @@ def shell(name, keep, offset, mat, remove_under=True, swell=None, smooth=0):
     bpy.context.scene.collection.objects.link(obj)
     for g in body.vertex_groups:  # (the weights came over with the faces; their groups' names must too, in order)
         obj.vertex_groups.new(name=g.name)
-    if me.shape_keys:  # (the face's keys don't belong to clothes)
+    if me.shape_keys and not keys:  # (the face's keys don't belong to clothes; the teeth keep them, to open with the jaw)
         obj.shape_key_clear()
     finish(obj, mat)
     return obj
@@ -653,8 +656,27 @@ for g in spec.get("garments", []):
             fs = [(0, 1, 2, 3), (4, 7, 6, 5), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)]
             rigid(f"{nm}-{s}", vs, fs, mat, f"foot_{s}")
 
-# the teeth, if they show (Mahant's are red with paan, breakdown ch9)
-# (the base mesh's own teeth are helpers and go with them; a mouth this small at this distance needs none)
+# the mouth's inside, seen when it opens to speak: MakeHuman's teeth and tongue (Mahant's teeth red with paan, breakdown
+# ch9), and a dark hollow behind them, all moving with the head (the lower teeth drop with the jaw's shape key)
+def in_group(name):
+    gi = next(g.index for g in body.vertex_groups if g.name == name)
+    return {v.index for v in body.data.vertices if any(g.group == gi and g.weight > 0.5 for g in v.groups)}
+
+
+def with_head(obj):
+    for gr in list(obj.vertex_groups):
+        obj.vertex_groups.remove(gr)
+    obj.vertex_groups.new(name="head").add(list(range(len(obj.data.vertices))), 1.0, "REPLACE")
+
+
+teeth_mat = material("teeth", color=spec.get("teeth", [0.86, 0.82, 0.72]), rough=0.35)
+for part, mat in (("helper-upper-teeth", teeth_mat), ("helper-lower-teeth", teeth_mat),
+                  ("helper-tongue", material("tongue", color=[0.62, 0.28, 0.26], rough=0.5))):
+    keep_set = in_group(part)
+    o = shell(part.replace("helper-", ""), lambda i, k=keep_set: i in k, 0.0, mat, remove_under=False, keys=True)
+    with_head(o)
+hollow = sphere_mesh("mouth-hollow", MOUTH + Vector((0, 0.03, -0.004)), 0.024, material("mouth-hollow", color=[0.12, 0.05, 0.05], rough=0.9),
+                     "head", scale=(1.2, 1.0, 0.8))
 
 # the body: the skin under fitted clothes goes, and all MakeHuman's helpers
 bm = bmesh.new()

@@ -181,7 +181,7 @@ export class StoryStage implements Stage {
         await this.screen.say(arg.who, arg.line, (file, time) => {
           if (!cast || !cast.get(arg.who)) return;
           if (!file) { cast.get(arg.who)!.speak(() => 0.35 + Math.sin(time() * 17) * 0.3); return; }
-          void cast.level(file, time).then((level) => cast.get(arg.who)?.speak(level));
+          void cast.level(file, time).then((v) => cast.get(arg.who)?.speak(v.open, v.bright));
         });
         cast?.get(arg.who)?.speak(null);
         return;

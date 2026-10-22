@@ -1,78 +1,78 @@
 {
  "people": {
   "professor": {
-   "file": "people-professor.563f367243.glb",
+   "file": "people-professor.85dc1a6d6c.glb",
    "height": 1.68,
    "face": {
     "smile": 0.25
    }
   },
   "bhavi": {
-   "file": "people-bhavi.dc344ad8b9.glb",
+   "file": "people-bhavi.b68cb1fd62.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
    }
   },
   "maharaj": {
-   "file": "people-maharaj.4502a3f978.glb",
+   "file": "people-maharaj.52f353dcdc.glb",
    "height": 1.65,
    "face": {
     "smile": 0.15
    }
   },
   "mahant": {
-   "file": "people-mahant.6b30a948c0.glb",
+   "file": "people-mahant.761d3682c6.glb",
    "height": 1.8,
    "face": {
     "smile": 0.12
    }
   },
   "baldev": {
-   "file": "people-baldev.eb1fcdc77c.glb",
+   "file": "people-baldev.5dfa50dc32.glb",
    "height": 1.86,
    "face": {
     "frown": 0.35
    }
   },
   "vaidji": {
-   "file": "people-vaidji.572a8f38a8.glb",
+   "file": "people-vaidji.2e7d9bfbd3.glb",
    "height": 1.63,
    "face": {
     "brows": 0.35
    }
   },
   "attendant": {
-   "file": "people-attendant.9a8ec63aec.glb",
+   "file": "people-attendant.d87e8ec1ea.glb",
    "height": 1.68
   },
   "henchman": {
-   "file": "people-henchman.b155a2c93c.glb",
+   "file": "people-henchman.d9cea8c8b7.glb",
    "height": 1.72
   },
   "bhavi-kurta": {
-   "file": "people-bhavi-kurta.6cdcc66aa1.glb",
+   "file": "people-bhavi-kurta.fc6fd7037d.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
    }
   },
   "villager-a": {
-   "file": "people-villager-a.35ad10ab74.glb",
+   "file": "people-villager-a.10626a4810.glb",
    "height": 1.64
   },
   "villager-b": {
-   "file": "people-villager-b.b957aabeec.glb",
+   "file": "people-villager-b.be57329cca.glb",
    "height": 1.69
   },
   "villager-c": {
-   "file": "people-villager-c.ae5783121a.glb",
+   "file": "people-villager-c.af2d65c27c.glb",
    "height": 1.62
   },
   "dvij": {
-   "file": "people-dvij.3df9ffa37e.glb",
+   "file": "people-dvij.a9965071d7.glb",
    "height": 1.76
   }
  },
- "mouths": "voice-mouths.53d5a72096.json"
+ "mouths": "voice-mouths.3861e97333.json"
 }
