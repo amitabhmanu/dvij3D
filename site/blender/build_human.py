@@ -849,6 +849,38 @@ for g in list(body.vertex_groups):
         body.vertex_groups.remove(g)
 body.name = "skin"
 
+# ---------------------------------------------------------------- Dvij's own arms, for first person (pipeline/build_arms.py)
+if spec.get("arms_only"):
+    # only what the arms' bones move: the skin, the gown's sleeves, the plaster, from part way down the upper arm to the
+    # fingertips (walk/arms.ts carries them on the camera and bends them by IK)
+    ARM = {f"{b}_{s}" for s in "lr" for b in ("upperarm", "lowerarm", "hand")} | {
+        f"{f}_0{k}_{s}" for s in "lr" for f in ("index", "middle", "pinky", "ring", "thumb") for k in (1, 2, 3)}
+    for o in list(rig.children):
+        if o.type != "MESH":
+            continue
+        if o.name.split(".")[0] in ("eyes", "eyebrows", "eyelashes", "hair", "upper-teeth", "lower-teeth", "tongue", "mouth-hollow",
+                                    "bandage", "beard", "moustache", "pyjama", "gown-skirt") or not o.vertex_groups:
+            bpy.data.objects.remove(o, do_unlink=True)
+            continue
+        if o.data.shape_keys:
+            o.shape_key_clear()
+        names = {g.index: g.name for g in o.vertex_groups}
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        dl = bm.verts.layers.deform.active
+        gone = []
+        for v in bm.verts:
+            w = v[dl] if dl else {}
+            total = sum(w.values()) or 1
+            if sum(x for gi, x in w.items() if names.get(gi) in ARM) / total < 0.75:
+                gone.append(v)
+        bmesh.ops.delete(bm, geom=gone, context="VERTS")
+        bm.to_mesh(o.data)
+        bm.free()
+        if not o.data.vertices:
+            bpy.data.objects.remove(o, do_unlink=True)
+    spec["clips"] = []
+
 # ---------------------------------------------------------------- the clips, onto this skeleton
 bpy.ops.import_scene.gltf(filepath=spec["ual"])
 ual = next(o for o in bpy.data.objects if o.type == "ARMATURE" and o is not rig)
@@ -1016,7 +1048,7 @@ if spec.get("lod"):
 
 # to the person's height (the clips' hips scale with the node)
 tallest = max((o.matrix_world @ Vector(c)).z for o in rig.children if o.type == "MESH" for c in o.bound_box)
-k = spec["height"] / tallest
+k = 1.0 if spec.get("arms_only") else spec["height"] / tallest  # (arms.ts sizes the arms by their shoulders)
 rig.scale = (k, k, k)
 
 for o in list(bpy.data.objects):

@@ -209,12 +209,14 @@ def spec_of(model: str) -> dict:
     return p
 
 
-def build(model: str, env: dict) -> str:
-    raw = BUILD / f"{model}.glb"
-    spec = BUILD / f"{model}.json"
+def build(model: str, env: dict, extra: dict | None = None, stem: str | None = None) -> str:
+    """Build one person (or, with extra={"arms_only": True}, Dvij's arms) and publish it as <stem>.<hash>.glb."""
+    stem = stem or f"people-{model}"
+    raw = BUILD / f"{stem}.glb"
+    spec = BUILD / f"{stem}.json"
     BUILD.mkdir(parents=True, exist_ok=True)
     spec.write_text(json.dumps({**spec_of(model), "who": model, "out": str(raw), "ual": str(UAL), "clips": CLIPS,
-                                "mpfb_data": str(MPFB_DIR / "data"), "mh": str(MH)}), encoding="utf-8")
+                                "mpfb_data": str(MPFB_DIR / "data"), "mh": str(MH), **(extra or {})}), encoding="utf-8")
     run = subprocess.run([str(BLENDER), "--background", "--factory-startup", "--python", str(SITE / "blender" / "build_human.py"), "--", str(spec)],
                          capture_output=True, text=True, env=env)
     for line in run.stdout.splitlines():
@@ -224,13 +226,13 @@ def build(model: str, env: dict) -> str:
         print(run.stdout[-4000:], run.stderr[-4000:])
         raise SystemExit(f"Blender did not build {model}")
     print(next(l for l in run.stdout.splitlines() if l.startswith("PEOPLE OK")))
-    small = BUILD / f"{model}.small.glb"
+    small = BUILD / f"{stem}.small.glb"
     npx = "npx.cmd" if os.name == "nt" else "npx"
     subprocess.run([npx, "gltf-transform", "optimize", str(raw), str(small), "--compress", "meshopt",
                     "--texture-compress", "webp", "--texture-size", "1024", "--simplify", "false",
                     "--join", "false", "--flatten", "false", "--instance", "false", "--palette", "false", "--prune", "false"],
                    check=True, cwd=SITE, capture_output=True)
-    return publish(f"people-{model}", ".glb", small.read_bytes())
+    return publish(stem, ".glb", small.read_bytes())
 
 
 def publish(stem: str, ext: str, data: bytes) -> str:
@@ -279,8 +281,7 @@ def mouths() -> str:
 
 
 CREDITS = [
-    "| Universal Base Characters (Standard): Superhero Male | Quaternius | https://quaternius.com/packs/universalbasecharacters.html (https://quaternius.itch.io/universal-base-characters) | CC0 1.0 | Dvij's first-person arms (arms.*.glb), cut down and dressed by pipeline/build_arms.py |",
-    "| MakeHuman base mesh, targets and rig, through MPFB 2.0.18 | The MakeHuman team (Joel Palmius et al.) | https://static.makehumancommunity.org/mpfb.html (https://extensions.blender.org/add-ons/mpfb/) | CC0 1.0 (what MPFB makes; the add-on itself is GPL and is not shipped) | The story's people's bodies, faces and skeletons (people-*.glb, pipeline/build_people.py) |",
+    "| MakeHuman base mesh, targets and rig, through MPFB 2.0.18 | The MakeHuman team (Joel Palmius et al.) | https://static.makehumancommunity.org/mpfb.html (https://extensions.blender.org/add-ons/mpfb/) | CC0 1.0 (what MPFB makes; the add-on itself is GPL and is not shipped) | The story's people's bodies, faces and skeletons (people-*.glb, pipeline/build_people.py), and Dvij's first-person arms, cut from his (arms.*.glb, pipeline/build_arms.py) |",
     "| MakeHuman system assets: skins, eyes, eyebrows, eyelashes, hair | The MakeHuman team | https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html | CC0 1.0 | The story's people's skin textures (re-toned), eyes, brows, lashes and hair (people-*.glb) |",
     "| Universal Animation Library (Standard) | Quaternius | https://quaternius.com/packs/universalanimationlibrary.html (https://quaternius.itch.io/universal-animation-library) | CC0 1.0 | The story's people's walks, idles, sitting, kneeling, crouching, reaching and picking up, retargeted onto MakeHuman's skeleton (people-*.glb) |",
 ]
