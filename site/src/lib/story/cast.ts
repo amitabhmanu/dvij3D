@@ -72,7 +72,7 @@ const up = (a: Actor, h: number, fwd = 0.3, side = 0) => a.point(side, h, fwd);
 /** The story's gestures that the clip library hasn't got: poses laid over the pose's own loop. */
 const GESTURES: Record<string, Gesture> = {
   namaste: { seconds: 2.4, at: (a) => ({ spine: 0.35, head: 0.3, handL: up(a, 1.18, 0.28, -0.02), handR: up(a, 1.18, 0.28, 0.02) }) },
-  supplicate: { seconds: 2.8, at: (a) => ({ spine: 0.75, head: 0.35, handL: up(a, 0.95, 0.42, -0.02), handR: up(a, 0.95, 0.42, 0.02) }) },
+  supplicate: { seconds: 3.2, at: (a, t) => { const k = Math.sin(Math.min(1, t * 1.6) * Math.PI / 2); return { spine: 1.1 * k, head: 0.4 * k, handL: up(a, 1.2 - 0.3 * k, 0.3 + 0.15 * k, -0.02), handR: up(a, 1.2 - 0.3 * k, 0.3 + 0.15 * k, 0.02) }; } },
   pray: { seconds: 1.2, hold: true, at: (a) => ({ head: 0.15, handL: up(a, 1.16, 0.26, -0.015), handR: up(a, 1.16, 0.26, 0.015) }) },
   bow: { seconds: 1.8, at: () => ({ spine: 0.45, head: 0.35 }) },
   nod: { seconds: 1.0, at: (_a, t) => ({ head: Math.sin(t * Math.PI * 2) * 0.22 }) },
