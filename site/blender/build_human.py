@@ -284,6 +284,189 @@ if spec.get("blush"):
         blush(lambda i: 1.0 if dominant[i] in ("foot_l", "foot_r", "ball_l", "ball_r") else 0.0, bl["color"], bl["feet"])
 
 
+def sculpt_face(d):
+    """The face's fine shape, sculpted on a finer copy of the head and baked into the skin: a normal map (the wrinkles of
+    age, the folds from the nose to the mouth, crow's feet, bags under the eyes, a lined neck, pores) and the shade
+    in its creases multiplied into the skin's colour. d: {"age": 0..1, "pores": 0..1, "bake": pixels}."""
+    from mathutils import noise
+    age_k, pore_k = d.get("age", 0.5), d.get("pores", 0.5)
+    head = {i for i in in_body if dominant[i] in ("head", "neck_01")}
+    # the face's landmarks, from the body's own points
+    nose_tip = min((V[i] for i in head if MOUTH.z < V[i].z < (EYE_L.z + EYE_R.z) / 2 and abs(V[i].x) < 0.01), key=lambda p: p.y)
+    nose_base = Vector((0, nose_tip.y, nose_tip.z - 0.012))
+    corner_l = max(lips, key=lambda p: p.x)
+    corner_r = min(lips, key=lambda p: p.x)
+    eye_y = (EYE_L.y + EYE_R.y) / 2
+
+    def smooth(a, b, x):
+        t = min(max((x - a) / (b - a), 0.0), 1.0)
+        return t * t * (3 - 2 * t)
+
+    def seg_dist(p, a, b):
+        ab = b - a
+        t = min(max((p - a).dot(ab) / ab.length_squared, 0.0), 1.0)
+        return (p - (a + ab * t)).length, t
+
+    def shape(p):
+        """How far out (+) or in (-) the skin lies at p, in metres."""
+        h = 0.0
+        wob = noise.noise(p * 40) * 0.5
+        # pores: little pits all over
+        h -= pore_k * 0.00009 * max(0.0, noise.noise(p * 1400)) ** 0.7
+        h += pore_k * 0.00004 * noise.noise(p * 300)
+        front = p.y < eye_y + 0.004
+        # the forehead's lines: across, a little wavy, deeper at the middle
+        if front and BROW + 0.006 < p.z < BROW + 0.07 and abs(p.x) < 0.06:
+            w = smooth(BROW + 0.006, BROW + 0.018, p.z) * (1 - smooth(BROW + 0.05, BROW + 0.07, p.z)) * (1 - smooth(0.035, 0.06, abs(p.x)))
+            zz = (p.z - BROW) / 0.0095 + wob * 0.6 + (p.x * 6) ** 2
+            h -= age_k * 0.00075 * w * max(0.0, math.cos(2 * math.pi * zz)) ** 8
+        # between the brows: two short upright lines
+        for sx in (-0.0065, 0.0065):
+            if front and abs(p.x - sx) < 0.004 and BROW - 0.012 < p.z < BROW + 0.016:
+                w = (1 - smooth(BROW + 0.004, BROW + 0.016, p.z)) * smooth(BROW - 0.012, BROW - 0.004, p.z)
+                h -= age_k * 0.0006 * w * math.exp(-((p.x - sx) / 0.0011) ** 2)
+        for eye, s in ((EYE_L, 1), (EYE_R, -1)):
+            # crow's feet: fanned out from the eye's outer corner
+            c = eye + Vector((s * 0.022, 0.012, -0.002))
+            v = p - c
+            r = v.length
+            if 0.003 < r < 0.026 and v.x * s > -0.004:
+                ang = math.atan2(v.z, abs(v.x) + abs(v.y))
+                w = smooth(0.003, 0.008, r) * (1 - smooth(0.016, 0.026, r))
+                h -= age_k * 0.00055 * w * max(0.0, math.cos(ang * 9 + wob * 2)) ** 10
+            # under the eye: a bag, and the groove that bounds it
+            dx = abs(p.x - eye.x)
+            if p.y < eye.y and dx < 0.02:
+                fall = 1 - smooth(0.012, 0.02, dx)
+                h += age_k * 0.0011 * fall * math.exp(-((p.z - (eye.z - 0.012)) / 0.0045) ** 2)
+                h -= age_k * 0.0008 * fall * math.exp(-((p.z - (eye.z - 0.0195)) / 0.0018) ** 2)
+            # the fold from the nose's wing past the mouth's corner, the cheek standing over it
+            wing = Vector((s * 0.019, 0, nose_base.z + 0.004))
+            corner = (corner_l if s > 0 else corner_r) + Vector((s * 0.009, 0, -0.016))
+            mid = (wing + corner) / 2 + Vector((s * 0.006, 0, 0))
+            if p.x * s > 0 and p.y < eye_y:
+                q = Vector((p.x, 0, p.z))
+                corner.y = mid.y = 0
+                da, ta = seg_dist(q, wing, mid)
+                db, tb = seg_dist(q, mid, corner)
+                dd = min(da, db)
+                along = ta * 0.5 if da < db else 0.5 + tb * 0.5
+                fade = smooth(0.0, 0.15, along) * (1 - smooth(0.8, 1.0, along))
+                h -= age_k * 0.0016 * fade * math.exp(-(dd / 0.0022) ** 2)
+                side = (q.x - (wing.x + (corner.x - wing.x) * along)) * s  # (outwards of the fold: the cheek)
+                if side > 0:
+                    h += age_k * 0.0012 * fade * math.exp(-((side - 0.006) / 0.0045) ** 2)
+        # the upper lip's fine upright lines
+        if front and abs(p.x) < 0.02 and LIP_TOP < p.z < LIP_TOP + 0.01:
+            h -= age_k * 0.00025 * max(0.0, math.cos(p.x * 900 + wob)) ** 12 * (1 - smooth(0.012, 0.02, abs(p.x)))
+        # the neck's rings
+        if NECK - 0.07 < p.z < MOUTH.z - 0.05 and p.y < bone_head("neck_01").y:
+            zz = p.z / 0.014 + wob * 0.4
+            h -= age_k * 0.0007 * max(0.0, math.cos(2 * math.pi * zz)) ** 10 * smooth(NECK - 0.07, NECK - 0.04, p.z)
+        return h
+
+    # the low head (the body's head faces, with their UVs) and a finer copy of it, shaped
+    bpy.ops.object.select_all(action="DESELECT")
+    low = body.copy()
+    low.data = body.data.copy()
+    low.parent = None
+    low.matrix_world = body.matrix_world.copy()
+    bpy.context.scene.collection.objects.link(low)
+    if low.data.shape_keys:
+        low.shape_key_clear()
+    low.modifiers.clear()
+    bm = bmesh.new()
+    bm.from_mesh(low.data)
+    bm.verts.ensure_lookup_table()
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if not all(v.index in head for v in f.verts)], context="FACES")
+    bm.to_mesh(low.data)
+    bm.free()
+    hi = low.copy()
+    hi.data = low.data.copy()
+    bpy.context.scene.collection.objects.link(hi)
+    sub = hi.modifiers.new("sub", "SUBSURF")
+    sub.levels = sub.render_levels = d.get("levels", 3)
+    bpy.context.view_layer.objects.active = hi
+    bpy.ops.object.modifier_apply(modifier=sub.name)
+    me = hi.data
+    co = np.empty(len(me.vertices) * 3, dtype=np.float32)
+    me.vertices.foreach_get("co", co)
+    nrm = np.empty_like(co)
+    me.vertices.foreach_get("normal", nrm)
+    co, nrm = co.reshape(-1, 3), nrm.reshape(-1, 3)
+    mw = hi.matrix_world
+    out = co.copy()
+    for j in range(len(co)):
+        out[j] = co[j] + nrm[j] * shape(mw @ Vector(co[j]))
+    me.vertices.foreach_set("co", out.ravel())
+    me.update()
+
+    # bake the fine head's normals and its creases' shade onto the skin's UVs
+    sc = bpy.context.scene
+    sc.render.engine = "CYCLES"
+    sc.cycles.device = "CPU"
+    sc.cycles.samples = d.get("samples", 24)
+    w, hgt = skin_img.size
+    size = d.get("bake", w)
+    results = {}
+    hidden = [o for o in sc.objects if o not in (low, hi) and not o.hide_render]
+    for o in hidden:  # (the body itself, where the head is, would shade every ray)
+        o.hide_render = True
+    for kind, fill in (("NORMAL", (0.5, 0.5, 1.0, 1.0)), ("AO", (1.0, 1.0, 1.0, 1.0))):
+        img = bpy.data.images.new(f"skin-{kind.lower()}", size, size, alpha=False)
+        img.generated_color = fill
+        if kind == "NORMAL":
+            img.colorspace_settings.name = "Non-Color"
+        m = bpy.data.materials.new(f"bake-{kind}")
+        m.use_nodes = True
+        tn = m.node_tree.nodes.new("ShaderNodeTexImage")
+        tn.image = img
+        m.node_tree.nodes.active = tn
+        low.data.materials.clear()
+        low.data.materials.append(m)
+        bpy.ops.object.select_all(action="DESELECT")
+        hi.select_set(True)
+        low.select_set(True)
+        bpy.context.view_layer.objects.active = low
+        bpy.ops.object.bake(type=kind, use_selected_to_active=True, cage_extrusion=0.006, max_ray_distance=0.02, margin=6,
+                            normal_space="TANGENT", use_clear=False)
+        results[kind] = img
+    for o in hidden:
+        o.hide_render = False
+    # the creases' shade into the skin's colour (soft: the game's light does the rest)
+    ao = np.empty(size * size * 4, dtype=np.float32)
+    results["AO"].pixels.foreach_get(ao)
+    ao = ao.reshape(size, size, 4)[..., 0]
+    if size != w:
+        ao = ao[(np.arange(hgt) * size // hgt)][:, (np.arange(w) * size // w)]
+    px = np.empty(w * hgt * 4, dtype=np.float32)
+    skin_img.pixels.foreach_get(px)
+    px = px.reshape(hgt, w, 4)
+    px[..., :3] *= (1 - d.get("cavity", 0.55) * (1 - ao))[..., None]
+    skin_img.pixels.foreach_set(px.ravel())
+    skin_img.pack()
+    nimg = results["NORMAL"]
+    for kind, img in results.items():  # (to look at: pipeline/.build/people/<who>-<kind>.png)
+        img.filepath_raw = spec["out"].replace(".glb", f"-{kind.lower()}.png")
+        img.file_format = "PNG"
+        img.save()
+    nimg.pack()
+    for o in (low, hi):
+        bpy.data.meshes.remove(o.data, do_unlink=True)
+    sm = body.data.materials[0]
+    nt = sm.node_tree
+    tn = nt.nodes.new("ShaderNodeTexImage")
+    tn.image = nimg
+    nmap = nt.nodes.new("ShaderNodeNormalMap")
+    nt.links.new(tn.outputs["Color"], nmap.inputs["Color"])
+    nt.links.new(nmap.outputs["Normal"], nt.nodes["Principled BSDF"].inputs["Normal"])
+    print(f"PEOPLE face sculpted: {len(co)} points, baked at {size}px")
+
+
+if spec.get("detail"):
+    sculpt_face(spec["detail"])
+
+
 def arm_t(i, side):
     """How far down the arm a vertex is: 0 at the shoulder, 1 at the elbow, 2 at the wrist."""
     sh, el, wr = bone_head(f"upperarm_{side}"), bone_head(f"lowerarm_{side}"), bone_head(f"hand_{side}")
@@ -735,11 +918,89 @@ for g in spec.get("garments", []):
             v.co.z = min(v.co.z, top + 0.035 - abs(v.co.x) * 0.25)
     elif k == "fringe":  # what's left of the hair: a band round the back of the head (Vaidji, ¶127; b1-p006-7)
         shell(nm, scalp(EYE_L.z - 0.01, back_only=True), 0.007, mat, remove_under=False)
+    elif k == "curls":  # a cloud of tight curls standing out from the head (the Professor's white mane, b1-p007-2)
+        from mathutils import noise
+        r_ = random.Random(nm)
+        hc = Vector((0, (EYE_L.y + EYE_R.y) / 2 + 0.075, (EYE_L.z + HEAD_TOP) / 2))
+        line = BROW + g.get("hairline", 0.03)
+        keep = scalp(EYE_L.z - 0.02)
+        roots = [i for i in in_body if keep(i) and (V[i].y > EYE_L.y + 0.03 or V[i].z > line)
+                 and min((V[i] - EYE_L).length, (V[i] - EYE_R).length) > 0.04]  # (not in the eyes' sockets)
+        depth = g.get("depth", 0.028)
+
+        def puff(co):
+            """How far the mass stands out: fullest over the ears and behind, less on top, thin at the hairline."""
+            side = min(1.0, abs(co.x) / 0.07)
+            low_ = max(0.0, min(1.0, (HEAD_TOP - co.z) / 0.1))
+            edge = min(1.0, max(0.0, (co.z - line) / 0.02)) if co.y < EYE_L.y + 0.012 else 1.0
+            edge *= min(1.0, max(0.0, (co.z - (EYE_L.z - 0.02)) / 0.03))  # (and down to the skin at its lower edge)
+            k_ = (0.45 + 0.55 * max(side, low_ * 0.8)) * (0.15 + 0.85 * edge)
+            return depth * k_ * (1 + 0.35 * noise.noise(co * 55)) + 0.006 * noise.noise(co * 160)
+        o = shell(nm, lambda i: i in roots_set, 0.004, cloth(nm, [c * 0.9 for c in g["color"]], "plain", rough=0.8),
+                  remove_under=False, smooth=3, swell=puff) if (roots_set := set(roots)) else None
+        # knots of curl over the mass, so its edge is broken, not smooth
+        tones = [[c * f for c in g["color"]] for f in (0.88, 0.96, 1.02)]
+        parts = [([], []) for _ in tones]
+        seg = 6
+        r_.shuffle(roots)
+        placed, gap = {}, g.get("gap", 0.0105)  # (evenly spread, however fine the mesh is where they grow)
+        spaced = []
+        for i in roots:
+            key = tuple(int(c // gap) for c in V[i])
+            if any((V[i] - V[j]).length < gap for dx in (-1, 0, 1) for dy in (-1, 0, 1) for dz in (-1, 0, 1)
+                   for j in placed.get((key[0] + dx, key[1] + dy, key[2] + dz), ())):
+                continue
+            placed.setdefault(key, []).append(i)
+            spaced.append(i)
+        for i in spaced:
+            out = (V[i] - hc).normalized()
+            p = V[i] + N[i] * (0.004 + puff(V[i]) * r_.uniform(0.8, 1.0))  # (on the mass, overlapping: all of it curls)
+            rad = r_.uniform(0.0085, 0.0115) * g.get("size", 1.0)
+            verts, faces = parts[r_.randrange(len(tones))]
+            base = len(verts)
+            rings = 4
+            for a_ in range(rings + 1):
+                th = math.pi * a_ / rings
+                for b_ in range(seg):
+                    ph = 2 * math.pi * b_ / seg
+                    d_ = Vector((math.sin(th) * math.cos(ph), math.sin(th) * math.sin(ph), math.cos(th)))
+                    verts.append(p + d_ * rad * (1 + 0.3 * noise.noise(p * 400 + d_ * 1.7)) + out * 0.0)
+            for a_ in range(rings):
+                for b_ in range(seg):
+                    faces.append((base + a_ * seg + b_, base + a_ * seg + (b_ + 1) % seg, base + (a_ + 1) * seg + (b_ + 1) % seg, base + (a_ + 1) * seg + b_))
+        for j, (verts, faces) in enumerate(parts):
+            if verts:
+                o = rigid(f"{nm}-{j}", verts, faces, cloth(f"{nm}-{j}", tones[j], "plain", rough=0.8), "head")
+                for poly in o.data.polygons:
+                    poly.use_smooth = True
     elif k == "stubble":  # a shaved head's shadow
         shell(nm, scalp(BROW + 0.02), 0.0015, mat, remove_under=False)
     elif k == "moustache":
         sz = g.get("size", 1.0)
-        shell(nm, lambda i: moustache_region(i, sz), 0.004, mat, remove_under=False, swell=lambda co: 0.002 * sz)
+        if g.get("bushy"):  # a thick brush of a moustache, full in the middle, over the lip's corners (the Professor's, b1-p007-2)
+            from mathutils import noise
+            mat = cloth(nm, [c * 0.82 for c in g["color"]], "plain", rough=0.85)
+            def brush(i):  # (broad and low: wider at the lip than under the nose, its ends drooping past the mouth's corners)
+                p = V[i]
+                if i not in in_body or dominant[i] != "head" or p.y > FRONT + 0.02 or "lips" in member[i]:
+                    return False
+                top = LIP_TOP + 0.011 * sz
+                width = 0.024 * sz + max(0.0, top - p.z) * 0.5
+                droop = 0.018 * sz < abs(p.x) < 0.03 * sz and LIP_TOP - 0.012 < p.z <= LIP_TOP
+                return (LIP_TOP - 0.002 < p.z < top and abs(p.x) < width) or droop
+            o = shell(nm, brush, 0.0025, mat, remove_under=False, smooth=2,
+                  swell=lambda co: 0.0032 * sz * max(0.0, 1 - (abs(co.x) / (0.034 * sz)) ** 2))
+            # combed: fine ridges down it, and its lower edge hanging over the lip in a ragged fringe
+            if o is not None:
+                for v in o.data.vertices:
+                    x = v.co.x
+                    v.co += v.normal * 0.0007 * abs(math.sin(x * 900 + 3 * noise.noise(v.co * 200)))
+                    if v.co.z < LIP_TOP + 0.003 * sz:
+                        hang_ = (LIP_TOP + 0.003 * sz - v.co.z) / (0.007 * sz)
+                        v.co.z -= 0.005 * sz * (0.55 + 0.45 * abs(math.sin(x * 420))) * min(1.0, hang_ + 0.4)
+                        v.co.y -= 0.0015
+        else:
+            shell(nm, lambda i: moustache_region(i, sz), 0.004, mat, remove_under=False, swell=lambda co: 0.002 * sz)
     elif k == "beard":
         shell(nm, beard_region, 0.004, mat, remove_under=False)
     elif k == "tilak":  # three lines of ash and a red mark (Mahant, ¶106; b1-p014-2)

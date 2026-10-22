@@ -64,13 +64,15 @@ PEOPLE = {
     "professor": dict(
         height=1.68, macro=dict(gender=1.0, age=age(68), muscle=0.45, weight=0.3, height=0.45, race=south_asian(0.25, 0.15)),
         targets={"nose/nose-scale-horiz-incr": 0.5, "nose/nose-scale-vert-incr": 0.5, "nose/nose-point-width-incr": 0.3, "ears/l-ear-scale-incr": 0.8, "ears/r-ear-scale-incr": 0.8, "eyebrows/eyebrows-trans-down": 0.5, "eyes/l-eye-scale-incr": 0.55, "eyes/r-eye-scale-incr": 0.55, "mouth/mouth-angles-up": 0.6, "forehead/forehead-scale-vert-incr": 0.3}, face=dict(smile=0.25),
-        skin=dict(texture="old_caucasian_male", tone=[0.66, 0.48, 0.36]), hair="short02", hair_color=[0.87, 0.86, 0.83],
-        brow_color=[0.84, 0.82, 0.78], eyebrows="eyebrow010",
+        skin=dict(texture="old_caucasian_male", tone=[0.66, 0.48, 0.36]), hair_color=[0.87, 0.86, 0.83],
+        brow_color=[0.84, 0.82, 0.78], eyebrows="eyebrow010", detail=dict(age=1.5, pores=0.7),
         garments=[dict(kind="top", name="shirt", color=[0.8, 0.74, 0.58], sleeve=0.55, loose=0.16, smooth=24),
                   dict(kind="legs", name="shorts", color=[0.68, 0.6, 0.43]),
                   dict(kind="socks", name="socks", color=[0.9, 0.89, 0.85]),
                   dict(kind="sole", name="shoes", color=[0.32, 0.19, 0.1]),
-                  dict(kind="moustache", name="moustache", color=[0.88, 0.87, 0.84]),
+                  dict(kind="stubble", name="scalp", color=[0.7, 0.68, 0.64]),
+                  dict(kind="curls", name="curls", color=[0.9, 0.89, 0.86]),
+                  dict(kind="moustache", name="moustache", size=1.45, bushy=True, color=[0.88, 0.87, 0.84]),
                   dict(kind="spectacles", name="spectacles", color=[0.22, 0.17, 0.12]),
                   dict(kind="ear-hair", name="ear-hair", color=[0.9, 0.89, 0.86])]),
     # Bhavi in her rustling morning gown, Ch7-8 (¶249; comic b1-p012-2, b1-p013-1): long, mostly straight hair (the author, 21 Oct)

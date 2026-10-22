@@ -5,8 +5,8 @@
 // and brightness (pipeline/build_people.py) and their hands move with the talk. The cast list is in each scene's
 // yaml; everyone in it is placed at the scene's start, and hidden until they come on if they enter.
 import {
-  AnimationMixer, Box3, Group, LoopOnce, LoopRepeat, Quaternion, Sphere, Vector3,
-  type AnimationAction, type AnimationClip, type Bone, type Material, type Mesh, type Object3D, type SkinnedMesh,
+  AnimationMixer, Box3, Color, Group, LoopOnce, LoopRepeat, MeshPhysicalMaterial, Quaternion, Sphere, Vector3,
+  type AnimationAction, type MeshStandardMaterial, type AnimationClip, type Bone, type Material, type Mesh, type Object3D, type SkinnedMesh,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
@@ -121,6 +121,22 @@ const GESTURES: Record<string, Gesture> = {
 
 const loader = new GLTFLoader();
 loader.setMeshoptDecoder(MeshoptDecoder);
+// Skin: light under it comes back out warm and soft, most at the edges turned from the light (a sheen of red
+// stands in for that, cheaply); one for every copy of a person.
+const skins = new WeakMap<Material, Material>();
+function skinOf(mat: Material): Material {
+  let s = skins.get(mat);
+  if (!s) {
+    const m = mat as MeshStandardMaterial;
+    s = new MeshPhysicalMaterial({
+      name: m.name, map: m.map, normalMap: m.normalMap, normalScale: m.normalScale, roughness: 0.58, metalness: 0,
+      sheen: 0.5, sheenColor: new Color(0.9, 0.38, 0.28), sheenRoughness: 0.55, specularIntensity: 0.6,
+    });
+    skins.set(mat, s);
+  }
+  return s;
+}
+
 const cache = new Map<string, Promise<{ scene: Object3D; clips: AnimationClip[] }>>();
 
 export class Actor {
@@ -194,6 +210,7 @@ export class Actor {
         for (const mat of ([] as Material[]).concat(m.material)) {
           if (mat.transparent) { mat.transparent = false; mat.alphaTest = 0.5; mat.depthWrite = true; }
         }
+        if (!Array.isArray(m.material) && m.material.name.startsWith("skin")) m.material = skinOf(m.material);
       }
     });
     this.mixer = new AnimationMixer(this.model);
