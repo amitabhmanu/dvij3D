@@ -15,7 +15,8 @@ export type Act = {
   radius?: number;
   hint?: Vec2;
 };
-export type Beat = { id: string; sources: string[]; do?: Action[]; act?: Act; then?: Action[] };
+/** `offstage`: a beat the film's person isn't there for (lib/story/pov.ts): played hurried, unseen. */
+export type Beat = { id: string; sources: string[]; do?: Action[]; act?: Act; then?: Action[]; offstage?: boolean };
 export type Scene = {
   scene: string; book: number; pages: number[]; title: string;
   /** Whose frame its places are in: the lodge's (the default) or another built place's ("temple-site"). */
@@ -79,7 +80,7 @@ export class Director {
     for (let i = 0; i < sc.beats.length; i++) {
       if (over()) return;
       const beat = sc.beats[i];
-      this.skipping = this.skipAll || i < resumeAt;
+      this.skipping = this.skipAll || i < resumeAt || !!beat.offstage;
       this.current = { scene: sc.scene, beat: beat.id };
       for (const a of beat.do ?? []) {
         if (over()) return;

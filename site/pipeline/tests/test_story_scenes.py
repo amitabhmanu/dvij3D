@@ -34,3 +34,18 @@ def test_bad_scripts_are_caught():
     assert "past the end of the novel" in got
     assert "'mahant' speaks but is not in the scene's cast" in got
     assert "unknown action" in got
+
+
+def test_the_points_of_view_name_real_scenes_beats_and_people():
+    scs = [sc for _, sc in ss.scenes()]
+    assert ss.pov_problems(ss.pov(), scs) == []
+    bad = copy.deepcopy(ss.pov())
+    bad["scenes"]["b1-ch03"]["when"]["time"] = "teatime"
+    bad["beats"]["b1-ch07#nowhere"] = {"for": ["professor"]}
+    bad["films"]["professor"]["scenes"].append("b1-ch99")
+    del bad["scenes"]["b1-ch05"]
+    got = " | ".join(ss.pov_problems(bad, scs))
+    assert "b1-ch03 needs when:" in got
+    assert "'b1-ch07#nowhere' is not a scene#beat" in got
+    assert "'b1-ch99', which is not a scene" in got
+    assert "b1-ch05 has no entry" in got
