@@ -57,6 +57,8 @@ export type Lodge = {
   update: (dt: number) => boolean;
   /** The ceiling fans: where each hangs (world metres) and how fast it turns (turns a second). */
   fans: () => { room: string; at: Vector3; speed: number }[];
+  /** The fans themselves (their shadows, under Ultra). */
+  fanBodies?: () => Object3D[];
   /** Switch a room's fan on (turns a second) or off (0). */
   setFan: (room: string, speed: number) => void;
   dispose: () => void;
@@ -229,6 +231,7 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
     },
     fans: () => fans.map((f) => ({ room: f.room, at: f.blades.getWorldPosition(new Vector3()), speed: f.turn })),
     setFan: (room, speed) => { for (const f of fans) if (f.room === room) f.speed = speed; },
+    fanBodies: () => fans.map((f) => f.body),
     dispose: () => {
       scene.remove(root);
       geo.dispose();

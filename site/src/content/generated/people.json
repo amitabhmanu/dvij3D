@@ -1,76 +1,76 @@
 {
  "people": {
   "professor": {
-   "file": "people-professor.3943a3758d.glb",
+   "file": "people-professor.04a2ff2722.glb",
    "height": 1.68,
    "face": {
     "smile": 0.25
    }
   },
   "bhavi": {
-   "file": "people-bhavi.c7f4e9fb89.glb",
+   "file": "people-bhavi.2fb94bd09a.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
    }
   },
   "maharaj": {
-   "file": "people-maharaj.76c0efda6b.glb",
+   "file": "people-maharaj.dd852a736b.glb",
    "height": 1.65,
    "face": {
     "smile": 0.15
    }
   },
   "mahant": {
-   "file": "people-mahant.054de26e07.glb",
+   "file": "people-mahant.0934cdb4b6.glb",
    "height": 1.8,
    "face": {
     "smile": 0.12
    }
   },
   "baldev": {
-   "file": "people-baldev.545e6a9858.glb",
+   "file": "people-baldev.143f006dfc.glb",
    "height": 1.86,
    "face": {
     "frown": 0.35
    }
   },
   "vaidji": {
-   "file": "people-vaidji.c1485afdaa.glb",
+   "file": "people-vaidji.4421292364.glb",
    "height": 1.63,
    "face": {
     "brows": 0.35
    }
   },
   "attendant": {
-   "file": "people-attendant.a34a7eccef.glb",
+   "file": "people-attendant.87d7bdb494.glb",
    "height": 1.68
   },
   "henchman": {
-   "file": "people-henchman.fd0c21d269.glb",
+   "file": "people-henchman.182cb2a073.glb",
    "height": 1.72
   },
   "bhavi-kurta": {
-   "file": "people-bhavi-kurta.891a562179.glb",
+   "file": "people-bhavi-kurta.cc335515ff.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
    }
   },
   "villager-a": {
-   "file": "people-villager-a.2576a6ee79.glb",
+   "file": "people-villager-a.9a1c145c66.glb",
    "height": 1.64
   },
   "villager-b": {
-   "file": "people-villager-b.3b6294128e.glb",
+   "file": "people-villager-b.c52373900c.glb",
    "height": 1.69
   },
   "villager-c": {
-   "file": "people-villager-c.74942c45e3.glb",
+   "file": "people-villager-c.79af1a0f5b.glb",
    "height": 1.62
   },
   "dvij": {
-   "file": "people-dvij.f4ab8d6799.glb",
+   "file": "people-dvij.461b8395e7.glb",
    "height": 1.76
   }
  },

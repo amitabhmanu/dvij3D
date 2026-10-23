@@ -6,7 +6,7 @@
 // runs while paused.
 import {
   BackSide, Color, DirectionalLight, DoubleSide, Euler, Fog, HemisphereLight, IcosahedronGeometry,
-  InstancedMesh, LinearFilter, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshStandardMaterial, PCFShadowMap, PerspectiveCamera,
+  InstancedMesh, LinearFilter, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshStandardMaterial, PCFShadowMap, VSMShadowMap, PerspectiveCamera,
   PMREMGenerator, Quaternion,
   Scene, ShaderMaterial, Shape, ShapeGeometry, SphereGeometry, SRGBColorSpace, Texture, TextureLoader,
   NoColorSpace, RepeatWrapping, Vector2, Vector3, WebGLRenderer, type Material,
@@ -30,6 +30,7 @@ import { Arms } from "./arms";
 import { lawnGrass } from "./grass";
 import armsInfo from "../../content/generated/arms.json";
 import { inkComposer } from "./post";
+import { ultra, ultraHas, ultraLook, ULTRA_SCENES, WAKE_WINDOW, type UltraLook } from "./ultra";
 import { SightEffect } from "../story/effects";
 import { findRoute } from "../story/route";
 import { cutoutMesh, decodeTrees, type Stand } from "./cutouts";
@@ -39,7 +40,7 @@ import { Blockers, inside, step, type Player } from "./player";
 import { atlas, walk, walkAsset, type Building } from "./walk-data";
 import { Sounds, type Surface } from "./audio";
 
-export type Quality = "low" | "medium" | "high";
+export type Quality = "low" | "medium" | "high" | "ultra";
 export type GameOptions = {
   canvas: HTMLCanvasElement;
   heightUrl: string;
@@ -119,6 +120,8 @@ export type Body = {
   /** The lodge's frame -> the world's. */
   fromLodge: (x: number, y: number, z: number) => [number, number, number];
   lodgeRoot: () => import("three").Object3D | null;
+  /** The chapter now playing (its scene's id): Ultra dresses Chapter 1 only (ultra.ts). */
+  chapter: (id: string) => void;
   /** A reflection in the window pane he is looking at, of his own body only (on SELF_LAYER), laid over the
    * glass as daylight lets one show (novel ¶101); false: none. Returns whether there was a pane to look in. */
   mirror: (on: boolean) => boolean;
@@ -148,9 +151,9 @@ const SKY_TOP = lin("#7f9fb4");
 export const HAZE = lin("#e2d3b4"); // the sky at the horizon and the far haze are one colour
 export const PAPER = lin("#c9a878");
 const SUN_DIR = new Vector3(0.85, 0.42, -0.2).normalize();
-const GRID: Record<Quality, number> = { low: 192, medium: 288, high: 384 };
-const PIXELS: Record<Quality, number> = { low: 1, medium: 1.5, high: 2 };
-const DRAW: Record<Quality, [number, number]> = { low: [450, 700], medium: [1100, 1600], high: [2000, 2800] };
+const GRID: Record<Quality, number> = { low: 192, medium: 288, high: 384, ultra: 384 };
+const PIXELS: Record<Quality, number> = { low: 1, medium: 1.5, high: 2, ultra: 2 };
+const DRAW: Record<Quality, [number, number]> = { low: [450, 700], medium: [1100, 1600], high: [2000, 2800], ultra: [2000, 2800] };
 const STEP = 1 / 60;
 const HEMI = 1.3; // the sky's light all round (dimmed indoors)
 const ENV = 0.12; // how much the lodge's materials reflect their surroundings (dimmed indoors)
@@ -158,16 +161,16 @@ const SUN = 2.0;
 // The sun's shadows (medium and high): a square this many metres each way of
 // where you look, in a map this many texels across.
 const SHADOW_REACH = 32;
-const SHADOW_MAP: Record<Quality, number> = { low: 0, medium: 1024, high: 2048 };
+const SHADOW_MAP: Record<Quality, number> = { low: 0, medium: 1024, high: 2048, ultra: 2048 };
 /** How far off the boulders are drawn (m): further, they are specks on the painted ground, and 7,000 of them valley-wide
  * were half a million triangles a frame. */
 /** The picture's buffers: multisampling (the antialias) and half-float colour, by quality: the most a frame spends
  * on this GPU after the scene itself. */
 /** The comic's ink lines (a full-screen pass over the picture and its depth): on high only, where there is the
  * margin for them on this GPU. */
-const INK: Record<Quality, boolean> = { low: false, medium: false, high: true };
-const COMPOSER: Record<Quality, { samples: number; half: boolean }> = { low: { samples: 0, half: false }, medium: { samples: 2, half: false }, high: { samples: 2, half: false } };
-const STONES_NEAR: Record<Quality, number> = { low: 150, medium: 300, high: 500 };
+const INK: Record<Quality, boolean> = { low: false, medium: false, high: true, ultra: true };
+const COMPOSER: Record<Quality, { samples: number; half: boolean }> = { low: { samples: 0, half: false }, medium: { samples: 2, half: false }, high: { samples: 2, half: false }, ultra: { samples: 2, half: false } };
+const STONES_NEAR: Record<Quality, number> = { low: 150, medium: 300, high: 500, ultra: 500 };
 const AO = 0.7; // how much the lodge's baked occlusion darkens the sky's light and reflections (1 makes its tightest corners black)
 
 async function fetchWithProgress(url: string, onBytes: (f: number) => void): Promise<ArrayBuffer> {
@@ -480,8 +483,19 @@ export async function createGame(o: GameOptions): Promise<Game> {
   sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.03;
   sun.shadow.radius = 1.5;
+  /** The chapter playing (story mode), for Ultra: its look is Chapter 1's only (ultra.ts). */
+  let chapter = "";
+  let quality = o.quality;
+  const ultraNow = () => quality === "ultra" && ULTRA_SCENES.has(chapter);
   const setShadows = (q: Quality) => {
     const size = SHADOW_MAP[q];
+    // soft shadows under Ultra: variance maps, blurred (their edges widen with distance, as a real sun's do); the
+    // ceiling fans cast theirs too, the map drawn again each frame while one turns
+    const soft = ultraNow() && ultraHas("soft");
+    if ((renderer.shadowMap.type === VSMShadowMap) !== soft) { renderer.shadowMap.type = soft ? VSMShadowMap : PCFShadowMap; sun.shadow.map?.dispose(); sun.shadow.map = null; }
+    sun.shadow.radius = soft ? 7 : 1;
+    sun.shadow.blurSamples = soft ? 16 : 8;
+    for (const m of models()) for (const f of m.fanBodies?.() ?? []) f.traverse((o) => { if ((o as Mesh).isMesh) o.castShadow = soft && ultraHas("fan"); });
     sun.castShadow = size > 0;
     renderer.shadowMap.enabled = size > 0;
     if (!size || sun.shadow.mapSize.x !== size) {
@@ -615,7 +629,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   };
   // the picture's size: the quality's pixel ratio, scaled down (to 60% at most) while frames run slower than about
   // 31 fps, and back up while they're quicker than 42; checked every 45 frames, a step at a time
-  let quality = o.quality, scale = 1;
+  let scale = 1;
   const frameMs: number[] = [];
   const pixelRatio = () => Math.min(devicePixelRatio, PIXELS[quality]) * scale;
   const adapt = (ms: number) => {
@@ -635,7 +649,19 @@ export async function createGame(o: GameOptions): Promise<Game> {
   renderer.setPixelRatio(pixelRatio());
   let composer: EffectComposer | null = null;
   const sight = new SightEffect();
+  let look: UltraLook | null = null;
   const setInk = (q: Quality) => {
+    look?.dispose();
+    look = null;
+    ultra.on = ultraNow();
+    if (ultra.on) { // (the composer the Ultra look's own: it disposes it)
+      composer = null;
+      const w = WAKE_WINDOW.at;
+      look = ultraLook(renderer, scene, camera, o.story ? [sight] : [],
+                       { at: new Vector3(w[0] + walk.lodge.x, w[1] + walk.lodge.y, w[2] + walk.lodge.z), size: WAKE_WINDOW.size });
+      composer = look.composer;
+      return;
+    }
     composer?.dispose();
     // story mode always runs the sight pass; the ink comes with medium and high quality
     composer = !INK[q] && !o.story ? null : inkComposer(renderer, scene, camera, o.story ? [sight] : [], INK[q], COMPOSER[q]);
@@ -648,7 +674,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     if (shadowDirty) { renderer.shadowMap.needsUpdate = true; shadowDirty = false; }
     // through the composer only for the ink, or while a story effect is showing: otherwise straight to the screen,
     // with the canvas's own antialias (a whole extra picture saved)
-    if (composer && (INK[quality] || sight.active())) composer.render();
+    if (composer && (INK[quality] || sight.active() || look)) composer.render();
     else renderer.render(scene, camera);
     lastInfo.calls = renderer.info.render.calls;
     lastInfo.triangles = renderer.info.render.triangles;
@@ -708,6 +734,10 @@ export async function createGame(o: GameOptions): Promise<Game> {
     for (const m of models()) moved = m.update(1 / 60) || moved;
     if (moved || ++shadowAge > 30) { shadowDirty = true; shadowAge = 0; }
     lightFor(1 / 60); // (the sight pass eases itself, each time the composer renders)
+    if (look) {
+      look.update(1 / 60, sunDir, lodge ? [lodge.root] : []);
+      if (ultraHas("fan") && models().some((m) => m.fans().some((f) => f.speed > 0.02))) shadowDirty = true; // (the fan's shadow turning)
+    }
     moving.update(1 / 60, camera);
     grass.update(1 / 60);
     for (const f of fires) f.update(1 / 60, camera);
@@ -807,6 +837,11 @@ export async function createGame(o: GameOptions): Promise<Game> {
     rate: (r) => { rate = r; sight.speed = r; },
     fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
     lodgeRoot: () => lodge?.root ?? null,
+    chapter: (id) => {
+      const was = ultraNow();
+      chapter = id;
+      if (ultraNow() !== was) { setInk(quality); setShadows(quality); draw(); }
+    },
     stir: () => { shadowDirty = true; },
     mirror: (on) => {
       if (mirror) { scene.remove(mirror, mirrorLight, mirrorLight.target); mirror.dispose(); mirror = null; }

@@ -92,9 +92,10 @@ PEOPLE = {
     # Bhavi on the well, Ch4: the comic's white kurta with red flowers and a rust salwar, barefoot (the author, 21 Oct; ¶187; b1-p008-4)
     "bhavi-kurta": dict(
         base="bhavi",
-        garments=[dict(kind="top", name="kurta", color=[0.96, 0.94, 0.9], print="floral", ink=[0.8, 0.16, 0.12], sleeve=0.5, loose=0.06, **{"from": 0.9}),
-                  dict(kind="skirt", name="kurta-skirt", color=[0.96, 0.94, 0.9], print="floral", ink=[0.8, 0.16, 0.12], to=0.62, flare=0.04),
-                  dict(kind="trousers", name="salwar", color=[0.74, 0.36, 0.16], offset=0.016, pleats=0.006, flare=0.02)]),
+        # (the kurta's body hangs over its skirts, and they over the salwar's top: one long kurta, no seam to see through)
+        garments=[dict(kind="top", name="kurta", color=[0.96, 0.94, 0.9], print="floral", ink=[0.8, 0.16, 0.12], sleeve=0.5, loose=0.06, **{"from": "waist-0.07"}),
+                  dict(kind="skirt", name="kurta-skirt", color=[0.96, 0.94, 0.9], print="floral", ink=[0.8, 0.16, 0.12], top="waist-0.01", to=0.62, flare=0.04, offset=0.022),
+                  dict(kind="trousers", name="salwar", color=[0.74, 0.36, 0.16], top="waist-0.05", offset=0.014, pleats=0.006, flare=0.02)]),
     # Maharaj, the stout cook (¶196, ¶203, ¶223; comic b1-p010-2, b1-p012-4): a white turban throughout (the author, 21 Oct)
     "maharaj": dict(
         height=1.65, macro=dict(gender=1.0, age=age(45), muscle=0.4, weight=0.86, height=0.38, race=south_asian(0.35, 0.15)),
@@ -115,8 +116,9 @@ PEOPLE = {
         skin=dict(texture="middleage_caucasian_male", tone=[0.62, 0.43, 0.28]), eyebrows="eyebrow003", brow_color=[0.08, 0.06, 0.05],
         teeth=[0.58, 0.16, 0.12],  # red with paan (¶298, breakdown ch9)
         detail=dict(age=0.95, pores=0.6),  # (lean and lined)
-        garments=[dict(kind="top", name="wrap", color=[0.9, 0.89, 0.85], neckline=0.035, loose=0.05, **{"from": 0.95}),
-                  dict(kind="skirt", name="dhoti", color=WHITE, to=0.12, flare=0.05, pleats=0.01),  # (worn long, as a veshti: comic b1-p014-5)
+        # (the wrap tucked into the dhoti's top, the dhoti over it: no hem to see)
+        garments=[dict(kind="top", name="wrap", color=[0.9, 0.89, 0.85], neckline=0.035, loose=0.05, tucked=True, **{"from": "waist-0.12"}),
+                  dict(kind="skirt", name="dhoti", color=WHITE, top="waist+0.05", to=0.12, flare=0.05, pleats=0.01, offset=0.03),  # (worn long, as a veshti: comic b1-p014-5)
                   dict(kind="band", name="shawl", color=[0.98, 0.97, 0.95], print="border", ink=[0.78, 0.62, 0.3], over="l", width=0.2, offset=0.034),
                   dict(kind="band", name="janeyu", color=[0.95, 0.88, 0.7], over="l", width=0.022, offset=0.032),
                   dict(kind="beads", name="beads", color=[0.36, 0.2, 0.12], drop=0.16),
@@ -134,7 +136,7 @@ PEOPLE = {
         # (the shirt worn into the lungi, the sash over the join: b1-p014-5)
         garments=[dict(kind="top", name="shirt", color=[0.88, 0.82, 0.68], sleeve=0.6, loose=0.1, tucked=True, **{"from": "waist-0.02"}),
                   dict(kind="skirt", name="lungi", color=[0.5, 0.1, 0.1], to=0.28, flare=0.035, top="waist+0.07", offset=0.032),
-                  dict(kind="waistband", name="sash", color=[0.72, 0.13, 0.1], width=0.09, offset=0.03),
+                  dict(kind="waistband", name="sash", color=[0.72, 0.13, 0.1], width=0.09, offset=0.042),  # (over the lungi's top)
                   dict(kind="sole", name="chappals", color=[0.36, 0.21, 0.11]),
                   dict(kind="moustache", name="moustache", size=1.6, color=[0.04, 0.035, 0.03])]),
     # Vaid Shwet: unusually pale, ruddy, overblown, almost bald from the front, a striped shawl (¶127, ¶296; b1-p006-7, b1-p014-5)

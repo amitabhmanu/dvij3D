@@ -172,7 +172,27 @@ skin_img = toned(f"{MH}/skins/{skin['texture']}/{mhmat_texture('skins', skin['te
 replace_material(body, material("skin", image=skin_img, rough=0.62))
 
 eyes = mhclo("eyes", "low-poly")
-replace_material(eyes, material("eyes", image=bpy.data.images.load(f"{MH}/eyes/materials/{spec.get('iris', 'brown')}_eye.png"), rough=0.12))
+
+
+def iris(path):
+    """MakeHuman's eye texture with its brown iris turned from red-brown to the dark warm brown of South Asian eyes
+    (under the sun it read as red); the whites left alone."""
+    src = bpy.data.images.load(path)
+    w, h = src.size
+    px = np.empty(w * h * 4, dtype=np.float32)
+    src.pixels.foreach_get(px)
+    px = px.reshape(h, w, 4)
+    r, g, b = px[..., 0], px[..., 1], px[..., 2]
+    red = (r > g * 1.25) & (r > b * 1.4)
+    lum = r * 0.5 + g * 0.35 + b * 0.15
+    px[..., 0] = np.where(red, lum * 0.95, r)
+    px[..., 1] = np.where(red, lum * 0.66, g)
+    px[..., 2] = np.where(red, lum * 0.42, b)
+    bpy.data.images.remove(src)
+    return image("iris", np.flipud(px))
+
+
+replace_material(eyes, material("eyes", image=iris(f"{MH}/eyes/materials/{spec.get('iris', 'brown')}_eye.png"), rough=0.12))
 # each eye on its own bone, under the head's, so it can glance about while the head stays (lib/story/cast.ts)
 ew = eyes.matrix_world
 eye_pts = [ew @ v.co for v in eyes.data.vertices]
@@ -524,15 +544,16 @@ def pattern(kind, base, ink, size=256):
         px[s, :3] = ink
     elif kind == "hair":  # short strands on nothing: a beard, a moustache, the skin showing between (cut out by the game)
         px[..., 3] = 0
-        for _ in range(900):
+        for _ in range(2600):  # (dense enough to read as hair, not stubble, at arm's length)
             x0, y0 = r.random() * size, r.random() * size
             a = math.pi / 2 + (r.random() - 0.5) * 0.9
             for t in range(int(4 + r.random() * 6)):
                 xi, yi = int(x0 + math.cos(a) * t) % size, int(y0 + math.sin(a) * t) % size
                 px[yi, xi] = (*ink, 1.0)
                 px[yi, (xi + 1) % size] = (*ink, 1.0)
-    elif kind == "border":  # a plain cloth with a coloured border at one edge
-        px[yy > 0.9, :3] = ink
+    elif kind == "border":  # a plain cloth with a coloured border along its edges (laid across v, as ribbon() does)
+        px[(yy > 0.86) & (yy < 0.94), :3] = ink
+        px[(yy < 0.14) & (yy > 0.06), :3] = ink
     # a weave: a little light and shade, row by row
     px[..., :3] *= (0.94 + 0.06 * ((np.sin(xx * size * 1.6) * np.sin(yy * size * 1.6)) > 0))[..., None]
     return px
@@ -712,14 +733,15 @@ def hang(bm, zlo, zhi, folds=0.004, src_layer=None):
         v.co.x, v.co.y = math.sin(t) * rr, cy + math.cos(t) * rr
 
 
-def finish(obj, mat, weights_from_body=False):
+def finish(obj, mat, weights_from_body=False, keep_uv=False):
     """Skin a garment to the rig (its own copied weights, or the body's nearest) and dress it."""
     me = obj.data
     me.materials.clear()
     me.materials.append(mat)
     for p in me.polygons:
         p.use_smooth = True
-    wrap_uv(obj)
+    if not keep_uv:
+        wrap_uv(obj)
     obj.parent = rig
     obj.matrix_parent_inverse = rig.matrix_world.inverted()
     if weights_from_body:
@@ -764,6 +786,57 @@ def band(name, start, end, width, offset, mat, keep=None):
     n = axis.cross(Vector((0, 1, 0))).normalized()  # (its plane holds the slant and the front-to-back line)
     ok = keep or (lambda i: dominant[i] in TORSO_BONES and i in in_body and V[i].z < NECK - 0.03)
     return shell(name, lambda i: ok(i) and abs((V[i] - start).dot(n)) < width / 2, offset, mat, remove_under=False, smooth=6)
+
+
+def ribbon(name, start, end, width, offset, mat, rows=5, n_around=72):
+    """A band of cloth round the trunk on the slant from `start` to `end` (a shawl worn across, a sash): a smooth
+    ribbon laid over the trunk's outline in that slanted plane, and in planes beside it for its width (its edges hug the
+    body as its middle does); its UVs along it and across it, so a border print runs along its edges."""
+    axis = (end - start).normalized()
+    n = axis.cross(Vector((0, 1, 0))).normalized()
+    across = n.cross(axis).normalized()
+    trunk = [V[i] for i in in_body if (dominant[i] in TORSO_BONES and V[i].z < NECK - 0.01)
+             or (dominant[i] in ("upperarm_l", "upperarm_r") and V[i].z > SHOULDER - 0.04)]  # (over the shoulder's top, not down the arm)
+    c = (start + end) / 2  # (in the plane through start and end)
+    verts, faces, uvs = [], [], []
+    for k in range(rows):
+        off = (k / (rows - 1) - 0.5) * width
+        slab = [p for p in trunk if abs((p - c).dot(n) - off) < 0.012]
+        ang = [(math.atan2((p - c).dot(across), (p - c).dot(axis)), ((p - c) - n * (p - c).dot(n)).length) for p in slab]
+        radii = []
+        for j in range(n_around):
+            a = -math.pi + 2 * math.pi * j / n_around
+            near = [r for b, r in ang if abs(math.atan2(math.sin(b - a), math.cos(b - a))) < 0.12]
+            radii.append(max(near) if near else None)
+        if not any(r is not None for r in radii):
+            radii = [0.15] * n_around
+        while any(r is None for r in radii):  # (gaps in the outline filled from their neighbours, round and round)
+            radii = [r if r is not None else next((x for x in (radii[j - 1], radii[(j + 1) % n_around]) if x is not None), None)
+                     for j, r in enumerate(radii)]
+        for _ in range(4):  # (cloth spans the hollows: the outline smoothed, never in)
+            radii = [max(radii[j], (radii[j - 1] + radii[(j + 1) % n_around]) / 2) for j in range(n_around)]
+        for j in range(n_around + 1):  # (the last the first again: its own UV across the seam)
+            a = -math.pi + 2 * math.pi * j / n_around
+            verts.append(c + n * off + (axis * math.cos(a) + across * math.sin(a)) * (radii[j % n_around] + offset))
+            uvs.append((j / n_around * 8, k / (rows - 1)))
+    w = n_around + 1
+    for k in range(rows - 1):
+        for j in range(n_around):
+            faces.append((k * w + j, k * w + j + 1, (k + 1) * w + j + 1, (k + 1) * w + j))
+    me = bpy.data.meshes.new(name)
+    me.from_pydata([tuple(v) for v in verts], [], faces)
+    uv = me.uv_layers.new(name="UVMap")
+    for poly in me.polygons:
+        for li in poly.loop_indices:
+            uv.data[li].uv = uvs[me.loops[li].vertex_index]
+    obj = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(obj)
+    sol = obj.modifiers.new("thick", "SOLIDIFY")
+    sol.thickness, sol.offset = 0.003, 1
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.modifier_apply(modifier=sol.name)
+    finish(obj, mat, weights_from_body=True, keep_uv=True)
+    return obj
 
 
 def tube_mesh(name, pts, r, mat, bone, seg=8, closed=False):
@@ -974,6 +1047,42 @@ def collar(src, mat, name, stand=0.012, fall=0.03, gap=0.32):
     return o
 
 
+def wound(name, mat, turns, r_tube, front, back, slant, flare, flat=1.0, lift=0.0):
+    """Cloth wound round the head turn on turn (a turban, a bandage): each turn a tube round the skull's outline at
+    its height, from front[0] in front and back[0] behind (rising by front[1], back[1] a turn), crossing the last on the
+    other slant, standing `flare` further out than the one below; `flat` squashes the tubes into bands; `lift` stands
+    them all off the skull (over a layer of the same cloth)."""
+    skull = [V[i] for i in in_body if dominant[i] in ("head", "neck_01") and "ears" not in member[i] and V[i].z > EYE_L.z]
+    hc = Vector((sum(p.x for p in skull) / len(skull), sum(p.y for p in skull) / len(skull), 0))
+
+    def bearing(p):
+        return math.atan2(p.x - hc.x, -(p.y - hc.y))
+
+    def reach_at(a, z):
+        """The head's outline (from hc) at angle a (0 in front, the face toward -y) and height z."""
+        near = [p for p in skull if abs(p.z - z) < 0.012 and abs(math.atan2(math.sin(bearing(p) - a), math.cos(bearing(p) - a))) < 0.3]
+        return max((math.hypot(p.x - hc.x, p.y - hc.y) for p in near), default=0.075)
+    for j in range(turns):
+        zf, zb = front[0] + j * front[1], back[0] + j * back[1]
+        sl = slant * (1 if j % 2 else -1)
+        pts = []
+        for a in np.linspace(-math.pi, math.pi, 36, endpoint=False):
+            z = zf + (zb - zf) * (1 - math.cos(a)) / 2 + sl * math.sin(a) * (1 + math.cos(a)) / 2
+            r = reach_at(a, min(z, HEAD_TOP - 0.02)) + r_tube * 0.9 + flare * j + lift
+            if z > HEAD_TOP - 0.03:  # (over the top of the skull the head narrows: the cloth keeps its round)
+                r = max(r, reach_at(a, HEAD_TOP - 0.04) * 0.92 + r_tube)
+            pts.append(Vector((hc.x + math.sin(a) * r, hc.y - math.cos(a) * r, z)))
+        o = tube_mesh(f"{name}-{j}", pts, r_tube, mat, "head", seg=8, closed=True)
+        if flat != 1.0:  # (each turn's section squashed toward the skull: a band of gauze, not a cord)
+            for k, v in enumerate(o.data.vertices):
+                p = pts[k // 8]
+                out = Vector((p.x - hc.x, p.y - hc.y, 0)).normalized()
+                d = v.co - p
+                v.co = p + d - out * d.dot(out) * (1 - flat)
+        for poly in o.data.polygons:
+            poly.use_smooth = True
+
+
 last_top = None
 for g in spec.get("garments", []):
     k = g["kind"]
@@ -1009,31 +1118,36 @@ for g in spec.get("garments", []):
         side = 1 if g.get("over", "l") == "l" else -1
         sh = bone_head(f"clavicle_{'l' if side > 0 else 'r'}") + Vector((side * 0.06, 0, 0.05))
         hip = bone_head(f"thigh_{'r' if side > 0 else 'l'}") + Vector((0, 0, 0.05))
-        band(nm, sh, hip, g.get("width", 0.12), g.get("offset", 0.02), mat)
+        if g.get("print") == "border" or g.get("ribbon"):  # (cloth with a border: a ribbon, its border along it)
+            ribbon(nm, sh, hip, g.get("width", 0.12), g.get("offset", 0.02), mat)
+        else:
+            band(nm, sh, hip, g.get("width", 0.12), g.get("offset", 0.02), mat)
     elif k == "waistband":  # a sash, a gamchha tied round the waist; a belt, with its buckle
         if g.get("buckle"):
             front_y = min(V[i].y for i in in_body if abs(V[i].z - g.get("at", WAIST)) < 0.01 and abs(V[i].x) < 0.02)
             sphere_mesh(nm + "-buckle", Vector((0, front_y - g.get("offset", 0.024) - 0.004, g.get("at", WAIST))), 0.016,
                         cloth(nm + "-buckle", g["buckle"], "plain", rough=0.35), "pelvis", scale=(1.2, 0.3, 0.9), seg=8)
         shell(nm, lambda i: i in in_body and dominant[i] in TORSO_BONES | {"thigh_l", "thigh_r"} and abs(V[i].z - g.get("at", WAIST)) < g.get("width", 0.08) / 2,
-              g.get("offset", 0.024), mat, remove_under=False)
+              g.get("offset", 0.024), mat, remove_under=False, smooth=6)  # (smooth: its edges straight, not stepped)
     elif k == "stole":  # a shawl over both shoulders, its ends hanging in front (Vaidji's)
         shell(nm, lambda i: i in in_body and (dominant[i] in ("clavicle_l", "clavicle_r", "spine_03") and V[i].z > SHOULDER - 0.06
                                               or (dominant[i] in TORSO_BONES and V[i].y < 0 and 0.07 < abs(V[i].x) < 0.15 and V[i].z > WAIST))
               , g.get("offset", 0.022), mat, remove_under=False)
     elif k == "turban":  # a white wrap round the head (Maharaj, b1-p012-4)
-        hc = Vector((0, (EYE_L.y + EYE_R.y) / 2 + 0.07, 0))
-        # wound round and round, each turn on the slant, the cloth standing proud of the one under it
-        o = shell(nm, scalp(BROW + 0.012), 0.032, mat, remove_under=True, smooth=3,
-                  swell=lambda co: (0.011 * abs(math.sin((co.z - HEAD_TOP) * 70 + math.atan2(co.x, co.y - hc.y) * 1.0))
-                                    + max(0.0, co.z - (HEAD_TOP - 0.06)) * 0.45))
+        # wound as a turban is: turn on turn of cloth round the head, each set back and higher behind than in front, each
+        # crossing the last at the front on the other slant (the V over the brow), the turns flaring a little as they
+        # rise (r_tube: the turns overlap, each lying half over the one below: one mass of cloth, its folds showing)
+        wound(nm, mat, turns=g.get("turns", 6), r_tube=0.0155, front=(BROW + 0.008, 0.0135), back=(BROW + 0.035, 0.0115), slant=0.008, flare=0.0028)
+        shell(nm + "-crown", scalp(BROW + 0.004), 0.016, mat, remove_under=True, smooth=4,  # (the cloth over the skull inside the turns)
+              swell=lambda co: max(0.0, co.z - (HEAD_TOP - 0.05)) * 0.3)
     elif k == "bandage":  # "a heavily bandaged head" (¶101): gauze wound round and round it, over the brow
+        # gauze crossed over and over: a thick layer of it over the skull, and the last turns on alternating slants
+        # standing proud of it, flattened into bands
         hc = Vector((0, (EYE_L.y + EYE_R.y) / 2 + 0.07, 0))
-        # gauze crossed over and over: two windings on opposite slants
-        shell(nm, scalp(BROW - 0.004), 0.024, mat, remove_under=True, smooth=2,
-              swell=lambda co: (0.006 * max(abs(math.sin(co.z * 110 + math.atan2(co.x, co.y - hc.y) * 2.0)),
-                                            abs(math.sin(co.z * 110 - math.atan2(co.x, co.y - hc.y) * 2.0)))
-                                + max(0.0, co.z - (HEAD_TOP - 0.08)) * 0.25))
+        shell(nm, scalp(BROW - 0.004), 0.022, mat, remove_under=True, smooth=3,
+              swell=lambda co: max(0.0, co.z - (HEAD_TOP - 0.08)) * 0.25)
+        wound(nm + "-turn", mat, turns=g.get("turns", 6), r_tube=0.006, front=(BROW + 0.004, 0.011), back=(BROW + 0.012, 0.013),
+              slant=0.016, flare=0.0004, flat=0.4, lift=0.018)
     elif k == "cast":  # "a plaster from beyond the elbow" on the right arm (¶96; right: the author, 21 Oct)
         shell(nm, lambda i: i in in_body and (dominant[i] == "lowerarm_r" or (dominant[i] == "upperarm_r" and arm_t(i, "r") > 0.7)),
               0.02, mat, remove_under=True, smooth=4)

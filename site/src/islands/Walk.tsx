@@ -19,6 +19,7 @@
 // reader has read that far. Fast travel goes only to places already reached.
 import { useEffect, useRef, useState } from "preact/hooks";
 import type { Game, Quality } from "../lib/walk/game";
+import { discreteGpu, gpuName } from "../lib/walk/gpu";
 import { isVeiled, revealAll, type FirstSeen } from "../lib/spoilers";
 import { walk } from "../lib/walk/walk-data";
 import type { Look } from "../lib/walk/lodge";
@@ -58,7 +59,17 @@ const hasWebGL2 = () => {
   try { return !!document.createElement("canvas").getContext("webgl2"); } catch { return false; }
 };
 const touchFirst = () => matchMedia("(pointer: coarse)").matches;
-const defaultQuality = (): Quality => (touchFirst() ? "low" : innerWidth * devicePixelRatio > 2600 ? "high" : "medium");
+/** The graphics chip, as WebGL names it ("" if it won't say). */
+const gpu = (): string => {
+  try {
+    const gl = document.createElement("canvas").getContext("webgl2");
+    const name = gl ? gpuName(gl) : "";
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return name;
+  } catch { return ""; }
+};
+// a graphics card of its own: Ultra (Chapter 1's film look; ultra.ts); else by the screen, as before
+const defaultQuality = (): Quality => (touchFirst() ? "low" : discreteGpu(gpu()) ? "ultra" : innerWidth * devicePixelRatio > 2600 ? "high" : "medium");
 
 /** World x, z to 0-1 across the book's map. */
 const onMap = (x: number, z: number): [number, number] => [x / walk.worldWidth + 0.5, z / walk.worldDepth + 0.5];
@@ -683,6 +694,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
               <option value="low">Low (phones, older laptops)</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
+              <option value="ultra">Ultra (a graphics card; Chapter 1's film look)</option>
             </select>
           </label>
           <Controls />

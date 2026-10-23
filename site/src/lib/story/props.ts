@@ -7,6 +7,7 @@ import {
   Object3D, SphereGeometry, TorusGeometry, Vector3, type Material,
 } from "three";
 import { makeGlass, type World } from "./glass";
+import { ultra } from "../walk/ultra";
 import { makeThing } from "./things";
 
 export type PropSpec = {
@@ -106,7 +107,7 @@ function make(p: PropSpec): Made {
           g.visible = s !== "gone";
           if (s === "full") glass.level(1);
           if (s === "half") glass.level(0.5);
-          if (s === "spilled") glass.level(0.08); // "spilled most of the water over the stack of pillows" (¶95)
+          if (s === "spilled") { glass.level(0.08); if (ultra.on) glass.splash(g); } // "spilled most of the water over the stack of pillows" (¶95)
           if (s === "empty" || s === "rolled-off" || s === "shattered") glass.level(0);
           if (s === "rolled-off") drop(false); // "a clatter onto the floor" (¶95): it doesn't say it broke
           if (s === "shattered") drop(true);

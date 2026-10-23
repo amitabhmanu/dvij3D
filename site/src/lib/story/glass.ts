@@ -4,8 +4,8 @@
 // clatter onto the floor". It falls with physics.ts; if a script lets it break, it
 // shatters into shards and its water spreads across the floor.
 import {
-  CircleGeometry, Color, DoubleSide, Group, LatheGeometry, Mesh, MeshPhysicalMaterial, Shape, ShapeGeometry,
-  Vector2, Vector3, type Object3D,
+  CircleGeometry, Color, DoubleSide, DynamicDrawUsage, Group, IcosahedronGeometry, InstancedMesh, LatheGeometry, Matrix4, Mesh, MeshBasicMaterial,
+  MeshPhysicalMaterial, Quaternion, Shape, ShapeGeometry, Vector2, Vector3, type Object3D,
 } from "three";
 import { body, step, type Body, type Surface } from "./physics";
 
@@ -33,6 +33,9 @@ export type Glass = {
   obj: Group;
   /** The water's level: 0 empty to 1 full. */
   level: (f: number) => void;
+  /** The water thrown out of it as it tips (Ultra's Chapter 1): drops flying from the rim, falling, wetting what they
+   * land on; `into` is the lodge's frame, where they fly. */
+  splash: (into: Object3D) => void;
   /** Let it go, from wherever it is now (lodge frame), with this push and spin. */
   drop: (v: Vector3, w: Vector3, breaks: boolean) => void;
   update: (dt: number) => void;
@@ -54,6 +57,57 @@ export function makeGlass(world: World | null): Glass {
   let breaks = false;
   const shards: Body[] = [];
   let puddle: Mesh | null = null, spread = 0;
+  // the splash: drops (one instanced mesh), each flying until it lands, then a wet mark spreading where most fell
+  type Drop = { p: Vector3; v: Vector3; r: number; landed: number };
+  let drops: Drop[] = [], dropMesh: InstancedMesh | null = null, wet: Mesh | null = null, wetGrow = 0;
+  const m4 = new Matrix4(), q0 = new Quaternion(), sc = new Vector3();
+  const splash = (into: Object3D) => {
+    if (!world || dropMesh) return;
+    const rim = obj.localToWorld(new Vector3(0, H, 0));
+    const out = obj.localToWorld(new Vector3(0, H + 1, 0)).sub(rim).normalize(); // (the way the glass's mouth faces)
+    into.worldToLocal(rim);
+    const toLocal = into.getWorldQuaternion(new Quaternion()).invert();
+    out.applyQuaternion(toLocal);
+    const n = 70;
+    for (let k = 0; k < n; k++) {
+      const a = Math.random() * Math.PI * 2, rr = Math.random() * R;
+      const p = rim.clone().add(new Vector3(Math.cos(a) * rr, 0, Math.sin(a) * rr));
+      const v = out.clone().multiplyScalar(0.6 + Math.random() * 1.1)
+        .add(new Vector3((Math.random() - 0.5) * 0.7, Math.random() * 0.5, (Math.random() - 0.5) * 0.7));
+      drops.push({ p, v, r: 0.0025 + Math.random() * 0.004, landed: 0 });
+    }
+    dropMesh = new InstancedMesh(new IcosahedronGeometry(1, 1), WATER, n);
+    dropMesh.instanceMatrix.setUsage(DynamicDrawUsage);
+    dropMesh.frustumCulled = false;
+    into.add(dropMesh);
+    world.sound("splash");
+  };
+  const flyDrops = (dt: number, into: Object3D | null) => {
+    if (!dropMesh || !world) return;
+    let landedAt: Vector3 | null = null;
+    drops.forEach((d, k) => {
+      if (!d.landed) {
+        d.v.y -= 9.8 * dt;
+        d.p.addScaledVector(d.v, dt);
+        const ground = world.surface(d.p.x, d.p.y + 0.05, d.p.z);
+        if (ground != null && d.p.y <= ground) { d.p.y = ground + 0.001; d.landed = 1e-6; landedAt ??= d.p.clone(); }
+      } else d.landed += dt;
+      const s = d.landed ? Math.max(0, 1 - d.landed / 0.6) * d.r : d.r; // (soaked in, or run off, in a moment)
+      sc.set(s * (d.landed ? 2.2 : 1), s * (d.landed ? 0.3 : 1.4), s * (d.landed ? 2.2 : 1)); // (a drop drawn out as it flies, flat where it lands)
+      dropMesh!.setMatrixAt(k, m4.compose(d.p, q0, sc));
+    });
+    dropMesh.instanceMatrix.needsUpdate = true;
+    if (landedAt && !wet && into) { // the cloth darkening where it soaked in
+      wet = new Mesh(new CircleGeometry(1, 20), new MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.22, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }));
+      wet.rotation.x = -Math.PI / 2;
+      wet.position.copy(landedAt).y += 0.002;
+      wet.scale.setScalar(0.001);
+      into.add(wet);
+    }
+    if (wet && wetGrow < 1) { wetGrow = Math.min(1, wetGrow + dt / 1.2); wet.scale.setScalar(0.02 + 0.09 * (1 - (1 - wetGrow) ** 2)); }
+    if (drops.every((d) => d.landed > 0.6)) { dropMesh.removeFromParent(); dropMesh.geometry.dispose(); drops = []; dropMesh = null; }
+  };
+  let splashInto: Object3D | null = null;
   const rims = (y: number, n = 8) => Array.from({ length: n }, (_, k) => new Vector3(Math.cos((k / n) * Math.PI * 2) * R, y, Math.sin((k / n) * Math.PI * 2) * R));
 
   const shatter = (speed: number) => {
@@ -92,6 +146,7 @@ export function makeGlass(world: World | null): Glass {
   return {
     obj,
     level,
+    splash: (into) => { splashInto = into; splash(into); },
     drop: (v, w, b) => {
       breaks = b;
       falling = body(obj, [...rims(0.002), ...rims(H - 0.002)], {
@@ -106,6 +161,7 @@ export function makeGlass(world: World | null): Glass {
       if (!world) return;
       if (falling) step(falling, dt, world.surface);
       for (const s of shards) step(s, dt, world.surface);
+      flyDrops(dt, splashInto);
       if (puddle && spread < 1) {
         spread = Math.min(1, spread + dt / 1.6);
         puddle.scale.setScalar(0.03 + 0.2 * (1 - (1 - spread) ** 3)); // fast, then slowing, to about 23 cm across
@@ -117,6 +173,8 @@ export function makeGlass(world: World | null): Glass {
       water.geometry.dispose();
       for (const s of shards) { (s.obj as Mesh).geometry.dispose(); s.obj.removeFromParent(); }
       if (puddle) { puddle.geometry.dispose(); puddle.removeFromParent(); }
+      if (dropMesh) { dropMesh.geometry.dispose(); dropMesh.removeFromParent(); }
+      if (wet) { wet.geometry.dispose(); (wet.material as MeshBasicMaterial).dispose(); wet.removeFromParent(); }
     },
   };
 }

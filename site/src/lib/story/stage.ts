@@ -121,6 +121,7 @@ export class StoryStage implements Stage {
     this.frame = sc.frame ?? "lodge";
     const body = this.game.body;
     body.setting({ sun: sc.setting?.sun, court: sc.setting?.court });
+    body.chapter(sc.scene);
     for (const [room, speed] of Object.entries(sc.setting?.fans ?? {})) body.fan(room, speed);
     const origin = this.world([0, 0, 0]); // (the props stand in the scene's frame: translated only)
     this.unstep?.();
