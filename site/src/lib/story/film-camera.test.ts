@@ -45,4 +45,12 @@ describe("the film's camera", () => {
     expect(Math.abs(camera.position.x)).toBeGreaterThan(2);   // off to one side of them
     expect(camera.position.z).toBeCloseTo(0.4, 1);            // level with the middle of the pair
   });
+
+  it("keeps someone close in the frame even when the other has turned their back on them", () => {
+    const a = person(0, 0, [0, 1]), b = person(0.3, -0.8, [0, 1]); // b just behind a
+    const c = new FilmCamera({ who: () => a, speaker: () => null, others: () => [a, b], walls: () => null });
+    c.cut();
+    c.rig(camera);
+    expect(Math.abs(camera.position.x - 0.15)).toBeGreaterThan(1.5); // the two-shot, from the side
+  });
 });

@@ -45,7 +45,7 @@ export class FilmCamera {
     for (const a of this.shot.others()) {
       if (a === me || !a.visible) continue;
       const h = a.headAt(), d = h.distanceTo(head);
-      if (d < near && h.clone().sub(head).setY(0).dot(ahead) > -0.2 * d) { best = a; near = d; }
+      if (d < near && (d < 2 || h.clone().sub(head).setY(0).dot(ahead) > -0.2 * d)) { best = a; near = d; } // (someone close counts, even behind)
     }
     return best ? best.headAt() : head.clone().addScaledVector(ahead, 3).add(new Vector3(0, -0.25, 0));
   }
@@ -127,7 +127,7 @@ export class FilmCamera {
     for (const a of this.shot.others()) {
       if (a === me || !a.visible) continue;
       const h = a.headAt(), d = h.distanceTo(head);
-      if (d < near && h.clone().sub(head).setY(0).dot(ahead) > -0.2 * d) { best = a; near = d; }
+      if (d < near && (d < 2 || h.clone().sub(head).setY(0).dot(ahead) > -0.2 * d)) { best = a; near = d; } // (someone close counts, even behind)
     }
     return best;
   }
