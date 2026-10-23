@@ -149,4 +149,21 @@ test.describe("watch mode", () => {
     const out = await page.evaluate(() => (window as unknown as S).walkGame.body.fromSite("temple-site", -34, 0, 40));
     expect(Math.hypot(p.x - out[0], p.z - out[2])).toBeLessThan(4.5);
   });
+
+  test("the Professor's film: Chapters 2 and 3, with Dvij seen in full", async ({ page }) => {
+    test.setTimeout(120_000);
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto("/valley/walk/?test&pov=professor");
+    await page.getByRole("button", { name: "Watch it play, like a film" }).click();
+    await page.locator('.walk[data-screen="ready"]').waitFor({ timeout: 60_000 });
+    await page.locator(".begin").click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch02");
+    await bar(page).getByRole("button", { name: "Next chapter" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch03");
+    await expect(bar(page).getByRole("button", { name: "Next chapter" })).toBeDisabled(); // the pilot ends here
+    type S = { walkStory: { stage: { inner: { people: { get: (w: string) => { visible: boolean } | undefined } } } } };
+    await expect.poll(() => page.evaluate(() => (window as unknown as S).walkStory.stage.inner.people.get("dvij")?.visible ?? false), { timeout: 30_000 }).toBe(true);
+    expect(errors).toEqual([]);
+  });
 });

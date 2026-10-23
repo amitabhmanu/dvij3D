@@ -701,6 +701,17 @@ people's films Dvij is seen in full; in his own he shows only in reflections and
 his arms. Chapter 2 runs while Dvij wanders in Chapter 1 and ends mid-morning, and
 Chapter 3 starts from there.
 
+At run time `src/lib/story/pov-stage.ts` wraps the stage for the chosen film
+(`/valley/walk/?pov=professor` until the picker is built). The game still moves
+Dvij's body as in his own film, so walks, seats and the people who look at him are
+unchanged; in someone else's film he is also added to the cast and his figure follows
+that body (standing, walking, seated, lying), the camera is `film-camera.ts`'s
+(over the shoulder of the film's person, swung round walls), and what belongs to his
+eyes and hands alone (his sight effects, the drink at his lips, the glance at his
+arm, the reflection) isn't played. An `effect` with `for:` plays only in that
+person's film. Scenes Dvij is away from start with `pose: away`. Films other than
+Dvij's don't save a place yet.
+
 ## 11. The Bestiary (Layer 5) — built: `/bestiary/`
 
 The valley is full of creatures. Most are spoken of rather than met: the cook warns of yakshas hiding in the trees, Viraat reels off banmanus, pichhal peris, pishachas, kimpurushas and kinnars as the van climbs into the dark, Bhavi explains the boulder field with a rakshasa riding a mountain, and vyalas are carved on the temple steps. The Bestiary is where a reader can browse them, see them, and read what tradition says about them.

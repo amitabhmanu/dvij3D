@@ -70,6 +70,10 @@ export class StoryStage implements Stage {
     this.hands = new Hands(() => game.body.arms(), (s) => this.sleep(s));
   }
 
+  /** The scene's people, and how Dvij is placed: for someone else's film (pov-stage.ts). */
+  get people(): Cast | null { return this.cast; }
+  get stance(): string { return this.pose; }
+
   /** E, Space or a click: does the thing asked, or moves the words on. */
   press(): void {
     this.pressed = true;
