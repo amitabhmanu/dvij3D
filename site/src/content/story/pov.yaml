@@ -8,7 +8,8 @@
 #             Transitions read it: a short gap on the same day is walked, a longer one faded.
 #   absent    someone the cast list can't rule out (Dvij, lying in the study through Ch 2)
 #   present   someone a comic-only scene has no cast for yet
-#   beats     per beat, `for:` (only these films play it) or `not-for:` (these don't)
+#   beats     per beat, `for:` (only these films play it) or `not-for:` (these don't);
+#             `captions-for:` whose films show its captions (the narration of Dvij's thoughts)
 #
 # It sits beside the scripts, not in them, until the face and Ultra work
 # (characters-realism) is merged, so the two don't collide; then it moves into them.
@@ -42,3 +43,5 @@ beats:
   # Ch 7 opens on Dvij in bed; the Professor is out on the lawn and is met at the doorsteps
   b1-ch07#days: {not-for: [professor, bhavi]}
   b1-ch07#healed: {not-for: [professor, bhavi]}
+  # "He awoke the second time": his waking, told from inside him; hidden in other films (the author, 23 Oct)
+  b1-ch03#water-face: {captions-for: [dvij]}

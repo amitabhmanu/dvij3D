@@ -28,6 +28,10 @@ describe("points of view", () => {
     expect(f.joins[0]).toEqual({ kind: "walk", from: "b1-ch02", to: "b1-ch03" });
     // he has gone indoors by the time Mahant stands thinking
     expect(f.scenes[0].beats.find((b) => b.id === "the-thought")!.offstage).toBe(true);
+    // his waking is told from inside Dvij: its caption is his film's alone
+    const waking = (g: typeof f) => g.scenes.find((s) => s.scene === "b1-ch03")!.beats[0].do!.some((a) => "caption" in a);
+    expect(waking(f)).toBe(false);
+    expect(waking(film("dvij", all, pov))).toBe(true);
   });
 
   it("works out who is in each beat from the script", () => {

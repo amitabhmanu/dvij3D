@@ -83,7 +83,7 @@ def pov_problems(pv: dict, scs: list[dict]) -> list[str]:
         s, _, bid = key.partition("#")
         if s not in by_id or bid not in {b["id"] for b in by_id[s]["beats"]}:
             out.append(f"{where}: {key!r} is not a scene#beat")
-        for who in info.get("for", []) + info.get("not-for", []):
+        for who in info.get("for", []) + info.get("not-for", []) + info.get("captions-for", []):
             if who not in SPEAKERS:
                 out.append(f"{where}: {key}: {who!r} is not one of the story's people")
     return out

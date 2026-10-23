@@ -4593,20 +4593,19 @@
        }
       },
       {
-       "effect": {
+       "camera": {
         "for": "professor",
-        "swirl": 0.6,
-        "over": 2
+        "shot": "eyes",
+        "of": "mahant"
        }
       },
       {
        "wait": 2
       },
       {
-       "effect": {
+       "camera": {
         "for": "professor",
-        "swirl": 0,
-        "over": 1
+        "shot": "follow"
        }
       },
       {
@@ -5156,6 +5155,11 @@
     "not-for": [
      "professor",
      "bhavi"
+    ]
+   },
+   "b1-ch03#water-face": {
+    "captions-for": [
+     "dvij"
     ]
    }
   }
