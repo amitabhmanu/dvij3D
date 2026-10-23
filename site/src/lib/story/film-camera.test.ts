@@ -36,4 +36,13 @@ describe("the film's camera", () => {
     cam.rig(camera);
     expect(camera.position.distanceTo(prof.headAt())).toBeLessThan(2.5);
   });
+
+  it("takes two people standing close side on, both in the frame", () => {
+    const a = person(0, 0, [0, 1]), b = person(0, 0.8, [0, -1]);
+    const c = new FilmCamera({ who: () => a, speaker: () => b, others: () => [a, b], walls: () => null });
+    c.cut();
+    c.rig(camera);
+    expect(Math.abs(camera.position.x)).toBeGreaterThan(2);   // off to one side of them
+    expect(camera.position.z).toBeCloseTo(0.4, 1);            // level with the middle of the pair
+  });
 });

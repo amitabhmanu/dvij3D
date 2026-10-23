@@ -83,6 +83,11 @@ export class FilmCamera {
     this.was = head.clone();
     this.moving = speed > 0.45 ? Math.min(1, this.moving + dt * 2) : Math.max(0, this.moving - dt * 1.5);
     const s = this.shot.speaker();
+    // two people too close for one to be seen over the other's shoulder: both, from the side
+    const partner = s && s !== me && s.visible ? s : this.listener(me);
+    if (partner && Math.hypot(partner.headAt().x - head.x, partner.headAt().z - head.z) < 1.2) {
+      return { from: partner, on: head, side: 0, back: 0, up: 0, kind: "two" };
+    }
     if (s === me) {
       const to = this.listener(me);
       if (to) return { from: to, on: head, side: -SIDE, back: BACK, up: UP, kind: "speak" };
@@ -91,6 +96,28 @@ export class FilmCamera {
       return { from: me, on: head.clone().addScaledVector(me.facing(), 2.5).add(new Vector3(0, -0.3, 0)), side: 0.2, back: 2.4, up: 0.7, kind: "walk" };
     }
     return { from: me, on: this.focus(me), side: SIDE, back: BACK, up: UP, kind: "listen" };
+  }
+
+  private side = 1;
+  /** The two-shot: side on to the pair, on the side of the line the other shots keep to, unless a wall is there. */
+  private two(camera: PerspectiveCamera, me: Actor, other: Actor, dt: number, cut: boolean) {
+    const a = me.headAt(), b = other.headAt();
+    const mid = a.clone().add(b).multiplyScalar(0.5).add(new Vector3(0, -0.2, 0));
+    const line = b.clone().sub(a).setY(0).normalize();
+    const across = new Vector3(-line.z, 0, line.x);
+    if (this.frame++ % 6 === 0) {
+      const room = (k: number) => this.clear(mid, across.clone().multiplyScalar(k).add(new Vector3(0, 0.15, 0)), 2.3);
+      const here = room(this.side), there = room(-this.side);
+      if (there > here + 0.3) this.side = -this.side;
+      this.reach = Math.max(0.6, Math.max(here, there)) / 2.3;
+    }
+    const want = mid.clone().addScaledVector(across, this.side * 2.3 * this.reach).add(new Vector3(0, 0.35, 0));
+    const ease = 1 - Math.exp(-dt * 3);
+    if (dt >= 1 || cut) { this.at.copy(want); this.aim.copy(mid); }
+    else { this.at.lerp(want, ease); this.aim.lerp(mid, ease); }
+    camera.position.copy(this.at);
+    camera.lookAt(this.aim);
+    camera.updateMatrixWorld();
   }
 
   /** Whom they are speaking to: the nearest one in front of them. */
@@ -123,9 +150,10 @@ export class FilmCamera {
       return;
     }
     const f = this.frameFor(me, dt);
-    const cut = f.kind !== this.kind && (f.kind === "speak" || this.kind === "speak");
+    const cut = f.kind !== this.kind && [f.kind, this.kind].some((k) => k === "speak" || k === "two");
     if (cut) { this.kind = f.kind; this.frame = 0; this.swing = 0; }
     this.kind = f.kind;
+    if (f.kind === "two") return this.two(camera, me, f.from, dt, cut);
     const head = f.from.headAt();
     const look = f.on;
     // behind the shoulder away from what they look at, and a little above
@@ -136,7 +164,7 @@ export class FilmCamera {
     if (this.frame++ % 6 === 0) {
       const room = (a: number) => { const o = this.out(back, a, f); return this.clear(head, o, o.length()) / o.length(); };
       let best = this.swing, most = room(this.swing);
-      if (most < 0.7) {
+      if (most < 0.85) {
         for (const a of SWINGS) {
           const r = room(a);
           if (r > most + 0.05) { best = a; most = r; }
