@@ -34,6 +34,7 @@ import { ultra, ultraHas, ultraLook, ULTRA_SCENES, WAKE_WINDOW, type UltraLook }
 import { SightEffect } from "../story/effects";
 import { findRoute } from "../story/route";
 import { cutoutMesh, decodeTrees, type Stand } from "./cutouts";
+import { trees3d } from "./trees3d";
 import type { EffectComposer } from "postprocessing";
 import { Input, type Settings } from "./input";
 import { Blockers, inside, step, type Player } from "./player";
@@ -170,6 +171,8 @@ const SHADOW_MAP: Record<Quality, number> = { low: 0, medium: 1024, high: 2048, 
  * margin for them on this GPU. */
 const INK: Record<Quality, boolean> = { low: false, medium: false, high: true, ultra: true };
 const COMPOSER: Record<Quality, { samples: number; half: boolean }> = { low: { samples: 0, half: false }, medium: { samples: 2, half: false }, high: { samples: 2, half: false }, ultra: { samples: 2, half: false } };
+/** How far round you the trees stand in the round (m; trees3d.ts), past it the painting's cut-outs: none on low. */
+const TREES_NEAR: Record<Quality, number> = { low: 0, medium: 70, high: 110, ultra: 110 };
 const STONES_NEAR: Record<Quality, number> = { low: 150, medium: 300, high: 500, ultra: 500 };
 const AO = 0.7; // how much the lodge's baked occlusion darkens the sky's light and reflections (1 makes its tightest corners black)
 
@@ -406,7 +409,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   for (const b of painted) blockers.add(b.x, b.z, b.r);
   const woods = new Blockers(24); // the trees alone, for how wooded it sounds
   for (const t of await decodeTrees(treeBuf)) {
-    stands.push({ x: t.x, y: ground(t.x, t.z), z: t.z, height: t.height, sprite: t.sprite });
+    stands.push({ x: t.x, y: ground(t.x, t.z), z: t.z, height: t.height, sprite: t.sprite, tree: true });
     blockers.add(t.x, t.z, 0.35);
     woods.add(t.x, t.z, 0.35);
   }
@@ -414,8 +417,12 @@ export async function createGame(o: GameOptions): Promise<Game> {
   const buildCutouts = (q: Quality) => {
     if (cutouts) { scene.remove(cutouts); cutouts.geometry.dispose(); (cutouts.material as ShaderMaterial).dispose(); }
     cutouts = cutoutMesh(stands, atlas, cutTex, HAZE, [900, 7000], DRAW[q]);
+    (cutouts.material as ShaderMaterial).uniforms.near.value = TREES_NEAR[q];
     scene.add(cutouts);
+    round?.setReach(TREES_NEAR[q]);
   };
+  // the trees near you in the round (trees3d.ts): the painting's own trees, where it has them
+  const round = trees3d(scene, stands.filter((s) => s.tree));
   buildCutouts(o.quality);
   // The lodge (design §10.3): small enough (about 400 KB) to load with the valley.
   o.onProgress(0.92, "Opening the lodge");
@@ -740,6 +747,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     }
     moving.update(1 / 60, camera);
     grass.update(1 / 60);
+    round.update(player.x, player.z);
     for (const f of fires) f.update(1 / 60, camera);
     arms?.update(1 / 60, walking);
     place();
@@ -1014,6 +1022,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       for (const m of [rockMat, castMat, waterMat, sky.material as ShaderMaterial]) m.dispose();
       casters.dispose();
       sky.geometry.dispose();
+      round.dispose();
       stones.dispose();
       colours.dispose();
       if (detail) for (const d of Object.values(detail)) { d.color.dispose(); d.normal.dispose(); }
