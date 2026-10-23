@@ -1115,6 +1115,7 @@ def wound(name, mat, turns, r_tube, front, back, slant, flare, flat=1.0, lift=0.
 
 
 last_top = None
+swinging = []  # (the skirts, dhotis, lungis: their hems swing on spring bones, below)
 for g in spec.get("garments", []):
     k = g["kind"]
     g = {**g, **{key: at_height(g.get(key), None) for key in ("from", "top", "to", "at") if key in g}}
@@ -1131,12 +1132,14 @@ for g in spec.get("garments", []):
                    pleats=g.get("pleats", 0.006), flare=g.get("flare", 0.03))
         if g.get("sits"):  # (a kurta's skirts, worn sitting: bent with the thighs)
             follow_legs(o)
+        swinging.append((o, 0.3 if g.get("sits") else 0.65))
     elif k == "dhoti":  # a dhoti as it is worn: both legs wrapped loose, the pleats gathered and tucked in front at the waist
         helper(nm, "helper-tights", g.get("to", ANKLE + 0.04), g.get("top", WAIST + 0.04), g.get("offset", 0.018), mat,
                pleats=0.008, flare=g.get("flare", 0.05))
         sk = in_group_set("helper-skirt")
         o = shell(nm + "-pleats", lambda i: i in sk and V[i].y < -0.02 and abs(V[i].x) < 0.06 and max(g.get("to", ANKLE + 0.04) + 0.1, KNEE - 0.05) <= V[i].z <= WAIST + 0.04,
                   0.0, mat, remove_under=False)
+        swinging.append((o, 0.5))  # (its legs follow the legs: only the pleats in front swing)
         for v in o.data.vertices:  # (the gathered pleats in front, close over the legs, ridged)
             v.co.y -= 0.004 + 0.004 * abs(math.sin(v.co.x * 260))
     elif k == "trousers":  # pyjamas, a salwar, shorts: MakeHuman's tights, cut at a height
@@ -1393,6 +1396,40 @@ for part, mat in (("helper-upper-teeth", teeth_mat), ("helper-lower-teeth", teet
     with_head(o)
 hollow = sphere_mesh("mouth-hollow", MOUTH + Vector((0, 0.03, -0.004)), 0.024, material("mouth-hollow", color=[0.12, 0.05, 0.05], rough=0.9),
                      "head", scale=(1.2, 1.0, 0.8))
+
+# the cloth that hangs free of the legs (skirts, a lungi, a dhoti's pleats) on four spring bones under the hips: front,
+# back, left and right, pointing down. The game swings them (lib/story/cast.ts): they lag behind the hips as the body
+# moves and turns, and swing back. Each point leans on them more the further below the hips it hangs (to `most`).
+SPRINGS = {"skirt_f": (0, -1), "skirt_b": (0, 1), "skirt_l": (1, 0), "skirt_r": (-1, 0)}
+if swinging:
+    hips = bone_head("pelvis")
+    top_z = WAIST - 0.04
+    bpy.context.view_layer.objects.active = rig
+    bpy.ops.object.mode_set(mode="EDIT")
+    inv = rig.matrix_world.inverted()
+    for n, (dx, dy) in SPRINGS.items():
+        eb = rig.data.edit_bones.new(n)
+        head = Vector((hips.x + dx * 0.06, hips.y + dy * 0.06, top_z))
+        eb.head, eb.tail = inv @ head, inv @ (head - Vector((0, 0, 0.3)))
+        eb.parent = rig.data.edit_bones["pelvis"]
+    bpy.ops.object.mode_set(mode="OBJECT")
+    BONES.update(SPRINGS)
+    for o, most in swinging:
+        groups = {n: (o.vertex_groups.get(n) or o.vertex_groups.new(name=n)) for n in SPRINGS}
+        for v in o.data.vertices:
+            co = o.matrix_world @ v.co
+            k = most * min(1.0, max(0.0, (top_z - co.z) / max(top_z - KNEE, 0.1))) ** 1.3
+            if k < 0.01:
+                continue
+            for g in v.groups:  # (what moved it before, less)
+                o.vertex_groups[g.group].add([v.index], g.weight * (1 - k), "REPLACE")
+            d = Vector((co.x - hips.x, co.y - hips.y))
+            d = d.normalized() if d.length > 1e-4 else Vector((0, -1))
+            parts = {n: max(0.0, d.x * dx + d.y * dy) for n, (dx, dy) in SPRINGS.items()}
+            total = sum(parts.values()) or 1.0
+            for n, w_ in parts.items():
+                if w_ > 0:
+                    groups[n].add([v.index], k * w_ / total, "REPLACE")
 
 # the body: the skin under fitted clothes goes, and all MakeHuman's helpers
 bm = bmesh.new()

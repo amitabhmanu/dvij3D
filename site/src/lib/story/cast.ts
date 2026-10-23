@@ -93,9 +93,59 @@ type Layer = {
 };
 type Gesture = { seconds: number; hold?: boolean; clip?: string; at: (a: Actor, t: number) => Layer };
 
+/** Each main character's own gestures while they talk (keyed() below; their manner in the novel and the comic). */
+const TALK: Record<string, string[]> = {
+  professor: ["lecture", "explain", "spectacles", "lecture"], // (b1-p007-2: all hands, mid-digression)
+  mahant: ["raised-palm", "hand-on-chest"],
+  baldev: ["jab", "wave-off"],
+  maharaj: ["palms-up", "hand-on-chest"],
+  bhavi: ["tuck-hair", "open-hand", "hand-to-chin"],
+};
+
 const up = (a: Actor, h: number, fwd = 0.3, side = 0) => a.point(side, h, fwd);
+/** A hand's place in a keyframe: [height (m, as if stood), forward of the chest, to the right], or none (the clip's). */
+type Hand = [number, number, number] | null;
+type Key = { t: number; spine?: number; head?: number; l?: Hand; r?: Hand };
+/** A gesture keyed by hand, as an animator keys one: poses at moments through it (t: 0..1), eased from each to the next. */
+function keyed(seconds: number, keys: Key[]): Gesture {
+  const ease = (x: number) => x * x * (3 - 2 * x);
+  return {
+    seconds,
+    at: (a, t) => {
+      let k = 0;
+      while (k < keys.length - 2 && t > keys[k + 1].t) k++;
+      const A = keys[k], B = keys[Math.min(k + 1, keys.length - 1)];
+      const f = B.t > A.t ? ease(Math.min(1, Math.max(0, (t - A.t) / (B.t - A.t)))) : 0;
+      const mix = (x = 0, y = 0) => x + (y - x) * f;
+      const hand = (x?: Hand, y?: Hand) => (x && y ? up(a, mix(x[0], y[0]), mix(x[1], y[1]), mix(x[2], y[2])) : null);
+      return { spine: mix(A.spine, B.spine), head: mix(A.head, B.head), handL: hand(A.l, B.l), handR: hand(A.r, B.r) };
+    },
+  };
+}
+
 /** The story's gestures that the clip library hasn't got: poses laid over the pose's own loop. */
 const GESTURES: Record<string, Gesture> = {
+  // keyed by hand, for talk: each person's own way of speaking with their hands (talk(), below)
+  // the Professor lecturing: the right palm raised, swept across as he makes his point, beat twice on it
+  lecture: keyed(2.6, [{ t: 0, r: [1.15, 0.3, 0.12] }, { t: 0.25, r: [1.42, 0.38, 0.22], head: -0.05 }, { t: 0.5, r: [1.38, 0.4, -0.05] },
+                       { t: 0.62, r: [1.3, 0.42, -0.02], head: 0.06 }, { t: 0.74, r: [1.38, 0.4, -0.05] }, { t: 0.86, r: [1.3, 0.42, -0.02], head: 0.06 }, { t: 1, r: [1.15, 0.3, 0.12] }]),
+  // both hands holding up an idea between them, opened out
+  explain: keyed(2.4, [{ t: 0, l: [1.1, 0.28, -0.14], r: [1.1, 0.28, 0.14] }, { t: 0.3, l: [1.3, 0.38, -0.09], r: [1.3, 0.38, 0.09] },
+                       { t: 0.65, l: [1.32, 0.4, -0.26], r: [1.32, 0.4, 0.26], spine: 0.06 }, { t: 1, l: [1.1, 0.28, -0.14], r: [1.1, 0.28, 0.14] }]),
+  // the spectacles pushed up the nose with a finger
+  spectacles: keyed(1.6, [{ t: 0, r: [1.15, 0.3, 0.1] }, { t: 0.4, r: [1.62, 0.13, 0.0], head: 0.05 }, { t: 0.6, r: [1.64, 0.12, 0.0], head: 0.05 }, { t: 1, r: [1.15, 0.3, 0.1] }]),
+  // a palm raised slowly before the chest and held, as one who expects to be heard (Mahant)
+  "raised-palm": keyed(3.0, [{ t: 0, l: [1.05, 0.25, -0.12] }, { t: 0.35, l: [1.38, 0.32, -0.1], head: -0.06 }, { t: 0.75, l: [1.4, 0.32, -0.1], head: -0.06 }, { t: 1, l: [1.05, 0.25, -0.12] }]),
+  // a jab of the hand at whoever he's telling (Baldev)
+  jab: keyed(1.6, [{ t: 0, r: [1.1, 0.3, 0.15] }, { t: 0.3, r: [1.3, 0.55, 0.05], spine: 0.1 }, { t: 0.45, r: [1.26, 0.4, 0.08] },
+                   { t: 0.6, r: [1.3, 0.56, 0.05], spine: 0.12 }, { t: 1, r: [1.1, 0.3, 0.15] }]),
+  // both palms up and out: what can one do (Maharaj)
+  "palms-up": keyed(2.0, [{ t: 0, l: [1.0, 0.25, -0.15], r: [1.0, 0.25, 0.15] }, { t: 0.4, l: [1.12, 0.36, -0.32], r: [1.12, 0.36, 0.32], head: -0.08 },
+                          { t: 0.65, l: [1.12, 0.36, -0.32], r: [1.12, 0.36, 0.32], head: -0.08 }, { t: 1, l: [1.0, 0.25, -0.15], r: [1.0, 0.25, 0.15] }]),
+  // a lock of hair tucked behind her ear (Bhavi)
+  "tuck-hair": keyed(1.8, [{ t: 0, r: [1.1, 0.28, 0.1] }, { t: 0.4, r: [1.58, 0.06, 0.1], head: -0.1 }, { t: 0.6, r: [1.56, 0.02, 0.11], head: -0.1 }, { t: 1, r: [1.1, 0.28, 0.1] }]),
+  // an open hand turned out as she says it
+  "open-hand": keyed(1.8, [{ t: 0, l: [1.05, 0.26, -0.12] }, { t: 0.4, l: [1.25, 0.4, -0.25], head: 0.05 }, { t: 0.7, l: [1.25, 0.4, -0.25], head: 0.05 }, { t: 1, l: [1.05, 0.26, -0.12] }]),
   namaste: { seconds: 2.4, at: (a) => ({ spine: 0.35, head: 0.3, handL: up(a, 1.18, 0.28, -0.02), handR: up(a, 1.18, 0.28, 0.02) }) },
   supplicate: { seconds: 3.2, at: (a, t) => { const k = Math.sin(Math.min(1, t * 1.6) * Math.PI / 2); return { spine: 1.1 * k, head: 0.4 * k, handL: up(a, 1.2 - 0.3 * k, 0.3 + 0.15 * k, -0.02), handR: up(a, 1.2 - 0.3 * k, 0.3 + 0.15 * k, 0.02) }; } },
   pray: { seconds: 1.2, hold: true, at: (a) => ({ head: 0.15, handL: up(a, 1.16, 0.26, -0.015), handR: up(a, 1.16, 0.26, 0.015) }) },
@@ -198,6 +248,10 @@ export class Actor {
   private viseme: (() => string) | null = null;
   /** The lips' and jaw's shape keys, eased towards the viseme's. */
   private lips = { jaw: 0, wide: 0, pucker: 0, close: 0 };
+  /** Talking: a moment before the next gesture of the hands (talk(), TALK). */
+  private nextTalkGesture = 1.5 + Math.random() * 2;
+  /** The hanging cloth's swing (radians; forward of the hips, and to their left), its speed, and where the hips were. */
+  private swing = { f: 0, s: 0, vf: 0, vs: 0, at: null as Vector3 | null, yaw: 0 };
   /** The eyes: a glance off where they look, held a moment, then back (or on to another). */
   private glance = { yaw: 0, pitch: 0, toYaw: 0, toPitch: 0, next: 1 + Math.random() * 2 };
   private jaw = 0;
@@ -359,6 +413,17 @@ export class Actor {
     this.onArrive?.();
     this.onArrive = null;
     this.loop(POSE_CLIP[this.pose]?.[0] ?? "Idle_Loop");
+  }
+
+  /** While they talk, now and then one of their own gestures (TALK), unless the story has them doing something else. */
+  private talkHands(dt: number) {
+    const own = TALK[this.who.split("#")[0]];
+    if (!own || !this.talking || this.gesture || this.carried || Object.keys(this.held).length || this.path.length || this.turning) return;
+    if (this.pose !== "stand" && this.pose !== "sit") return;
+    this.nextTalkGesture -= dt;
+    if (this.nextTalkGesture > 0) return;
+    this.nextTalkGesture = 2.5 + Math.random() * 3.5;
+    void this.act(own[Math.floor(Math.random() * own.length)]);
   }
 
   /** Play a gesture or a clip once; resolves as it ends (a held gesture stays until the next). */
@@ -528,6 +593,28 @@ export class Actor {
       const k = this.talking ? 1 : 0.4;
       bendAbout(head, new Vector3(-1, 0, 0).applyQuaternion(this.obj.getWorldQuaternion(q0)), (Math.sin(this.t * 0.7) * 0.02 + Math.sin(this.t * 1.9 + 1) * 0.012) * k - this.jaw * 0.04);
       bendAbout(head, new Vector3(0, 1, 0), (Math.sin(this.t * 0.43 + 2) * 0.03 + Math.sin(this.t * 1.3) * 0.01) * k);
+    }
+    this.talkHands(dt);
+    // the skirts, the lungi, the dhoti's pleats swing on their spring bones (blender/build_human.py SPRINGS): lagging
+    // behind the hips as they move and turn, overshooting, settling; swaying a little with each step
+    const pelvis = this.bone("pelvis"), springs = ["skirt_f", "skirt_b", "skirt_l", "skirt_r"].map((n) => this.bone(n)).filter((b) => b) as Bone[];
+    if (pelvis && springs.length) {
+      const sw = this.swing, at = pelvis.getWorldPosition(new Vector3()), yaw = this.obj.rotation.y;
+      if (sw.at && dt > 0 && dt < 0.2) {
+        const v = at.clone().sub(sw.at).divideScalar(dt).applyQuaternion(this.obj.getWorldQuaternion(new Quaternion()).invert());
+        const turn = Math.atan2(Math.sin(yaw - sw.yaw), Math.cos(yaw - sw.yaw)) / dt;
+        const step = Math.min(1, Math.hypot(v.x, v.z) / 1.2) * Math.sin(this.t * 5.6) * 0.05;
+        const goalF = Math.max(-0.3, Math.min(0.3, -0.14 * v.z)), goalS = Math.max(-0.3, Math.min(0.3, -0.14 * v.x + 0.05 * turn + step));
+        sw.vf += (40 * (goalF - sw.f) - 6 * sw.vf) * dt;
+        sw.vs += (40 * (goalS - sw.s) - 6 * sw.vs) * dt;
+        sw.f = Math.max(-0.4, Math.min(0.4, sw.f + sw.vf * dt));
+        sw.s = Math.max(-0.4, Math.min(0.4, sw.s + sw.vs * dt));
+      }
+      sw.at = at;
+      sw.yaw = yaw;
+      const body = this.obj.getWorldQuaternion(new Quaternion());
+      const right = new Vector3(-1, 0, 0).applyQuaternion(body), ahead = new Vector3(0, 0, 1).applyQuaternion(body);
+      for (const b of springs) { bendAbout(b, right.clone(), sw.f); bendAbout(b, ahead.clone(), sw.s); }
     }
     // the eyes dart: a quick glance aside and back every second or few, as eyes do (on their own bones: blender/build_human.py)
     const eyeL = this.bone("eye_l"), eyeR = this.bone("eye_r");

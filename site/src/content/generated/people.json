@@ -8,28 +8,28 @@
    }
   },
   "bhavi": {
-   "file": "people-bhavi.2fb94bd09a.glb",
+   "file": "people-bhavi.382b6ee157.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
    }
   },
   "maharaj": {
-   "file": "people-maharaj.dd852a736b.glb",
+   "file": "people-maharaj.58537295ba.glb",
    "height": 1.65,
    "face": {
     "smile": 0.15
    }
   },
   "mahant": {
-   "file": "people-mahant.741a5d316f.glb",
+   "file": "people-mahant.cbe71fc889.glb",
    "height": 1.8,
    "face": {
     "smile": 0.12
    }
   },
   "baldev": {
-   "file": "people-baldev.143f006dfc.glb",
+   "file": "people-baldev.7cd6b672fc.glb",
    "height": 1.86,
    "face": {
     "frown": 0.35
@@ -51,7 +51,7 @@
    "height": 1.72
   },
   "bhavi-kurta": {
-   "file": "people-bhavi-kurta.2eef7d9942.glb",
+   "file": "people-bhavi-kurta.5431a57e6e.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
