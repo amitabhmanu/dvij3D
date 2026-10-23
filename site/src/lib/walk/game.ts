@@ -152,6 +152,9 @@ export type Body = {
   /** A scene's time of day and the state of the lodge: where the sun stands ("morning", "midday",
    * "afternoon", "evening"), the courtyard's fibreglass curtain drawn over its bars or torn open. */
   setting: (s: { sun?: string; court?: "covered" | "open" }) => void;
+  /** Someone else's film (story/pov-stage.ts): `rig` places the camera each frame, away from his eyes,
+   * and his arms are hidden; null gives the camera back to him. */
+  film: (rig: ((camera: PerspectiveCamera) => void) | null) => void;
 };
 
 // Colours are written as the eye sees them (sRGB); Color() turns them into the
@@ -746,16 +749,18 @@ export async function createGame(o: GameOptions): Promise<Game> {
   ro.observe(o.canvas);
   resize();
 
+  let rig: ((camera: PerspectiveCamera) => void) | null = null;
   const place = () => {
     showNear(player.x, player.z);
     camera.position.set(player.x, player.y, player.z);
     camera.rotation.set(player.pitch, -player.heading, roll + sway * Math.sin(swayT) * 0.045);
+    if (rig) { rig(camera); if (arms) arms.root.visible = false; }
     sky.position.copy(camera.position);
     camera.updateMatrixWorld();
     followSun();
     const mat = groundMesh!.material as ShaderMaterial;
     // snap the grid's centre to its own spacing near you, so the land doesn't swim
-    (mat.uniforms.center.value as Vector2).set(Math.round(player.x / 2) * 2, Math.round(player.z / 2) * 2);
+    (mat.uniforms.center.value as Vector2).set(Math.round(camera.position.x / 2) * 2, Math.round(camera.position.z / 2) * 2);
   };
 
   // Sound starts with the click that starts walking (browsers insist).
@@ -965,6 +970,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     },
     every: (f) => { steppers.add(f); return () => steppers.delete(f); },
     fan: (room, speed) => { for (const m of models()) m.setFan(room, speed); },
+    film: (r) => { rig = r; },
     setting: (s) => {
       setSun(s.sun ?? "morning");
       moving.court(s.court === "covered");

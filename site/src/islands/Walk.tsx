@@ -26,7 +26,9 @@ import type { Look } from "../lib/walk/lodge";
 import lodgeInfo from "../content/generated/lodge.json";
 import siteInfo from "../content/generated/temple-site.json";
 import type { Director, Scene } from "../lib/story/director";
-import type { StoryStage } from "../lib/story/stage";
+import type { StoryScreen } from "../lib/story/stage";
+import type { PovStage } from "../lib/story/pov-stage";
+import type { Pov } from "../lib/story/pov";
 import { beatAt, mmss, positionAt, type Timeline } from "../lib/story/timeline";
 import storyTimeline from "../content/generated/story-timeline.json";
 
@@ -118,7 +120,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const [panel, setPanel] = useState<string | null>(null); // a comic panel held full screen (Chapter 6)
   const [where, setWhere] = useState<{ scene: string; beat: string } | null>(null);
   const director = useRef<Director | null>(null);
-  const stage = useRef<StoryStage | null>(null);
+  const stage = useRef<PovStage | null>(null);
   const begun = useRef(false);
   const fromWhere = useRef<{ scene: string; beat?: string } | null>(null);
   /** What a press finishes first: the words or card on screen, if any. */
@@ -283,12 +285,12 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   prefsRef.current = prefs;
 
   const setUpStory = async (g: Game) => {
-    const [{ Director }, { StoryStage }, data, spoken] = await Promise.all([
-      import("../lib/story/director"), import("../lib/story/stage"), import("../content/generated/story.json"),
-      import("../content/generated/story-voices.json"),
+    const [{ Director }, { StoryStage }, { PovStage }, { film }, data, spoken] = await Promise.all([
+      import("../lib/story/director"), import("../lib/story/stage"), import("../lib/story/pov-stage"), import("../lib/story/pov"),
+      import("../content/generated/story.json"), import("../content/generated/story-voices.json"),
     ]);
     voices.current = (spoken.default ?? spoken).lines as Record<string, { file: string; seconds: number }>;
-    const st = new StoryStage(g, {
+    const screen: StoryScreen = {
       caption: (text) => until(() => setCaption(text), () => setCaption(null), readTime(text)),
       say: (who, line, voice) => {
         const v = voices.current[`${who}|${line}`];
@@ -317,10 +319,17 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
       },
       paused,
       rate: () => rateRef.current,
-    });
+    };
+    // whose film (design §10.4.1): Dvij's, or ?pov= someone else's, cut from the same scenes
+    const story = (data.default ?? data) as unknown as { scenes: Scene[]; offstage: Scene[]; pov: Pov };
+    const who = new URLSearchParams(location.search).get("pov") ?? "dvij";
+    const own = who === "dvij" || !story.pov.films[who];
+    const scenes = own ? story.scenes : film(who, [...story.scenes, ...story.offstage], story.pov).scenes;
+    if (!own && !scenes.some((sc) => sc.scene === fromWhere.current?.scene)) fromWhere.current = { scene: scenes[0].scene };
+    const st = new PovStage(g, new StoryStage(g, screen), screen, own ? "dvij" : who);
     stage.current = st;
     st.setAuto(watchingRef.current);
-    director.current = new Director(st, (data.default ?? data).scenes as unknown as Scene[]);
+    director.current = new Director(st, scenes);
     setChapters(director.current.order);
     // the screen shows which scene and beat play, for the tests and for anyone curious
     setInterval(() => {
