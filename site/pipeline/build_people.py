@@ -119,8 +119,8 @@ PEOPLE = {
         # (the wrap tucked into the dhoti's top, the dhoti over it: no hem to see)
         garments=[dict(kind="top", name="wrap", color=[0.9, 0.89, 0.85], neckline=0.035, loose=0.05, tucked=True, **{"from": "waist-0.12"}),
                   dict(kind="skirt", name="dhoti", color=WHITE, top="waist+0.05", to=0.12, flare=0.05, pleats=0.01, offset=0.03),  # (worn long, as a veshti: comic b1-p014-5)
-                  dict(kind="band", name="shawl", color=[0.98, 0.97, 0.95], print="border", ink=[0.78, 0.62, 0.3], over="l", width=0.2, offset=0.034),
-                  dict(kind="band", name="janeyu", color=[0.95, 0.88, 0.7], over="l", width=0.022, offset=0.032),
+                  dict(kind="band", name="shawl", color=[0.98, 0.97, 0.95], print="border", ink=[0.78, 0.62, 0.3], over="l", width=0.2, offset=0.048),
+                  dict(kind="band", name="janeyu", color=[0.95, 0.88, 0.7], over="l", width=0.012, offset=0.044, ribbon=True),  # (a thread: a ribbon, not cut from the body)
                   dict(kind="beads", name="beads", color=[0.36, 0.2, 0.12], drop=0.16),
                   dict(kind="choti", name="choti", color=[0.05, 0.04, 0.035]),
                   dict(kind="tilak", name="tilak", color=WHITE),
