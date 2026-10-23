@@ -94,7 +94,7 @@ PEOPLE = {
         base="bhavi",
         # (the kurta's body hangs over its skirts, and they over the salwar's top: one long kurta, no seam to see through)
         garments=[dict(kind="top", name="kurta", color=[0.96, 0.94, 0.9], print="floral", ink=[0.8, 0.16, 0.12], sleeve=0.5, loose=0.06, **{"from": "waist-0.07"}),
-                  dict(kind="skirt", name="kurta-skirt", color=[0.96, 0.94, 0.9], print="floral", ink=[0.8, 0.16, 0.12], top="waist-0.01", to=0.62, flare=0.04, offset=0.022),
+                  dict(kind="skirt", name="kurta-skirt", color=[0.96, 0.94, 0.9], print="floral", ink=[0.8, 0.16, 0.12], top="waist-0.01", to=0.62, flare=0.04, offset=0.022, sits=True),  # (she sits on the well's rim)
                   dict(kind="trousers", name="salwar", color=[0.74, 0.36, 0.16], top="waist-0.05", offset=0.014, pleats=0.006, flare=0.02)]),
     # Maharaj, the stout cook (¶196, ¶203, ¶223; comic b1-p010-2, b1-p012-4): a white turban throughout (the author, 21 Oct)
     "maharaj": dict(

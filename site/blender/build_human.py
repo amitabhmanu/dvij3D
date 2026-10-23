@@ -780,6 +780,37 @@ def helper(name, group, zmin, zmax, offset, mat, pleats=0.0, flare=0.0, bottom=N
     return obj
 
 
+def follow_legs(obj):
+    """A skirt that bends with sitting: each of its points moved by the bones of the skin nearest it (the six nearest,
+    by inverse distance: blended across the middle, front and back), not by the helper's own softer weights, which
+    leave the cloth behind as the thighs come up and let them through it."""
+    from mathutils.kdtree import KDTree
+    skin = [i for i in in_body if dominant[i] in ("pelvis", "spine_01", "thigh_l", "thigh_r", "calf_l", "calf_r")]
+    kd = KDTree(len(skin))
+    for k, i in enumerate(skin):
+        kd.insert(V[i], k)
+    kd.balance()
+    groups = {g.name: g for g in obj.vertex_groups}
+    for v in obj.data.vertices:
+        mix = {}
+        near = kd.find_n(obj.matrix_world @ v.co, 6)
+        total = 0.0
+        for co, k, d in near:
+            w_ = 1.0 / max(d, 0.004)
+            total += w_
+            for g in body.data.vertices[skin[k]].groups:
+                n = vg[g.group]
+                if n in BONES:
+                    mix[n] = mix.get(n, 0.0) + g.weight * w_
+        for g in list(v.groups):
+            if obj.vertex_groups[g.group].name in BONES:
+                obj.vertex_groups[g.group].remove([v.index])
+        s_ = sum(mix.values()) or 1.0
+        for n, w_ in mix.items():
+            if n in groups and w_ / s_ > 0.01:
+                groups[n].add([v.index], w_ / s_, "REPLACE")
+
+
 def band(name, start, end, width, offset, mat, keep=None):
     """A band round the torso on the slant from `start` to `end` (a shawl, the janeyu, a sash), over what's there."""
     axis = (end - start).normalized()
@@ -1096,8 +1127,10 @@ for g in spec.get("garments", []):
               smooth=g.get("smooth", 14),
               drape=(WAIST + 0.1 if g.get("tucked") else g.get("from", WAIST - 0.1), SHOULDER - 0.02, 0.005))
     elif k == "skirt":  # a dhoti, a lungi, a kurta's skirts, a gown's: MakeHuman's skirt, cut at a height
-        helper(nm, "helper-skirt", g.get("to", ANKLE + 0.06), g.get("top", WAIST + 0.04), g.get("offset", 0.012), mat,
-               pleats=g.get("pleats", 0.006), flare=g.get("flare", 0.03))
+        o = helper(nm, "helper-skirt", g.get("to", ANKLE + 0.06), g.get("top", WAIST + 0.04), g.get("offset", 0.012), mat,
+                   pleats=g.get("pleats", 0.006), flare=g.get("flare", 0.03))
+        if g.get("sits"):  # (a kurta's skirts, worn sitting: bent with the thighs)
+            follow_legs(o)
     elif k == "dhoti":  # a dhoti as it is worn: both legs wrapped loose, the pleats gathered and tucked in front at the waist
         helper(nm, "helper-tights", g.get("to", ANKLE + 0.04), g.get("top", WAIST + 0.04), g.get("offset", 0.018), mat,
                pleats=0.008, flare=g.get("flare", 0.05))
@@ -1147,7 +1180,7 @@ for g in spec.get("garments", []):
         shell(nm, scalp(BROW - 0.004), 0.022, mat, remove_under=True, smooth=3,
               swell=lambda co: max(0.0, co.z - (HEAD_TOP - 0.08)) * 0.25)
         wound(nm + "-turn", mat, turns=g.get("turns", 6), r_tube=0.006, front=(BROW + 0.004, 0.011), back=(BROW + 0.012, 0.013),
-              slant=0.016, flare=0.0004, flat=0.4, lift=0.018)
+              slant=0.016, flare=0.0004, flat=0.4, lift=0.011)  # (pressed into the layer under them, not standing off it)
     elif k == "cast":  # "a plaster from beyond the elbow" on the right arm (¶96; right: the author, 21 Oct)
         shell(nm, lambda i: i in in_body and (dominant[i] == "lowerarm_r" or (dominant[i] == "upperarm_r" and arm_t(i, "r") > 0.7)),
               0.02, mat, remove_under=True, smooth=4)
