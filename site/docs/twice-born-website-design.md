@@ -682,6 +682,25 @@ without a loading screen.
   the drive, stops at a wall, leaves by the study's back door unless it is shut, checks indoors, the look cards'
   veils, the back-wall puzzle, map travel and the model's budget.
 
+### 10.4.1 Story mode: points of view (pilot, in progress on `pov-film`)
+
+The film can be watched through someone other than Dvij. Each chapter keeps one
+script; a person's film is those scripts cut to the scenes and beats they are in
+(`src/lib/story/pov.ts`). Who is in a beat comes from the script itself: the cast,
+Dvij unless the scene leaves him out, and the actors' `enters` and `exit`.
+`src/content/story/pov.yaml` adds only what a script can't say: each scene's story
+day and time (`when`, with `with:` for scenes that happen at the same time),
+`absent` and `present`, and per-beat `for` / `not-for`. The director plays a film's
+scenes unchanged; a beat its person isn't there for is marked `offstage` and played
+hurried. Between scenes a film walks a short same-day gap and fades a longer one
+with a card. Scenes marked `skip` (not in Dvij's film) go to `story.json`'s
+`offstage` list for the other films.
+
+The pilot is the Professor in Chapters 2 and 3 (the author, 23 Oct 2026). In other
+people's films Dvij is seen in full; in his own he shows only in reflections and as
+his arms. Chapter 2 runs while Dvij wanders in Chapter 1 and ends mid-morning, and
+Chapter 3 starts from there.
+
 ## 11. The Bestiary (Layer 5) — built: `/bestiary/`
 
 The valley is full of creatures. Most are spoken of rather than met: the cook warns of yakshas hiding in the trees, Viraat reels off banmanus, pichhal peris, pishachas, kimpurushas and kinnars as the van climbs into the dark, Bhavi explains the boulder field with a rakshasa riding a mountain, and vyalas are carved on the temple steps. The Bestiary is where a reader can browse them, see them, and read what tradition says about them.

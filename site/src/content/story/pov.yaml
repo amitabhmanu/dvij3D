@@ -1,0 +1,45 @@
+# Story mode's points of view (design §10.4, multi-POV film mode): whose eyes the
+# film can be watched through, and what the scene scripts can't say for themselves.
+#
+# Who is in each beat is worked out from the scripts (lib/story/pov.ts): the cast,
+# Dvij unless the scene leaves him out, `enters` and `exit` on the actors. This file
+# only adds what they can't tell:
+#   when      the story day and the time of day, and `with:` the scene it happens alongside.
+#             Transitions read it: a short gap on the same day is walked, a longer one faded.
+#   absent    someone the cast list can't rule out (Dvij, lying in the study through Ch 2)
+#   present   someone a comic-only scene has no cast for yet
+#   beats     per beat, `for:` (only these films play it) or `not-for:` (these don't)
+#
+# It sits beside the scripts, not in them, until the face and Ultra work
+# (characters-realism) is merged, so the two don't collide; then it moves into them.
+
+films:
+  dvij: {name: Dvij}                              # the whole story, first person (design §10.4)
+  professor:
+    name: The Professor
+    pilot: true
+    scenes: [b1-ch02, b1-ch03]                    # the pilot (the author, 23 Oct): ends with a card after Ch 3
+
+times: [dawn, morning, mid-morning, midday, afternoon, evening, night]
+
+scenes:
+  b1-ch01: {when: {day: 1, time: morning}}
+  b1-ch02:                                         # the Professor in the garden while Dvij wanders, ending mid-morning (the author, 23 Oct)
+    when: {day: 1, time: mid-morning, with: b1-ch01}
+    absent: [dvij]                                 # fainted on the study floor (novel ¶103-134)
+    present: [professor]                           # the comic's pages until Ch 2 is staged in 3D
+  b1-ch03: {when: {day: 1, time: mid-morning}}     # starts where Ch 2 ends (the author, 23 Oct)
+  b1-ch04: {when: {day: 1, time: afternoon}}       # "having woken up yet again" (novel ¶163)
+  b1-ch05: {when: {day: 1, time: afternoon}}
+  b1-ch06:
+    when: {day: 1, time: midday}                   # "Out in the midday sun" (novel ¶224); the day is ours
+    absent: [dvij]
+    present: [mahant, baldev]
+  b1-ch07: {when: {day: 5, time: morning}}         # "the next few days" (novel ¶247): how many is ours
+  b1-ch08: {when: {day: 6, time: morning}}         # ours: the novel doesn't say
+  b1-ch09: {when: {day: 6, time: midday}}          # "It was mid-day" (novel ¶296)
+
+beats:
+  # Ch 7 opens on Dvij in bed; the Professor is out on the lawn and is met at the doorsteps
+  b1-ch07#days: {not-for: [professor, bhavi]}
+  b1-ch07#healed: {not-for: [professor, bhavi]}

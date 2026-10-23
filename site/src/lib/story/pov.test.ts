@@ -1,0 +1,74 @@
+import { describe, expect, it } from "vitest";
+import story from "../../content/generated/story.json";
+import { Director, type Scene, type Stage } from "./director";
+import { film, inBeat, presence, switchTo, type Pov } from "./pov";
+
+const all = [...story.scenes, ...story.offstage] as unknown as Scene[];
+const pov = story.pov as unknown as Pov;
+const scene = (id: string) => all.find((s) => s.scene === id)!;
+const ends = (sc: Scene) => sc.beats.flatMap((b) => [...(b.do ?? []), ...(b.then ?? [])]).filter((a) => "end" in a).map((a) => (a.end as { next: string | null }).next);
+
+describe("points of view", () => {
+  it("Dvij's film is the story as it plays today", () => {
+    const f = film("dvij", all, pov);
+    expect(f.scenes.map((s) => s.scene)).toEqual(story.scenes.map((s) => s.scene));
+    expect(f.scenes.every((s) => s.beats.every((b) => !b.offstage))).toBe(true);
+    expect(f.missed["b1-ch03"]).toEqual(["b1-ch02"]);
+    expect(f.missed["b1-ch07"]).toEqual(["b1-ch06"]);
+    for (const [i, sc] of f.scenes.entries()) expect(ends(sc)).toEqual([f.scenes[i + 1]?.scene ?? null]);
+  });
+
+  it("the Professor's pilot film is Chapters 2 and 3, then a card", () => {
+    const f = film("professor", all, pov);
+    expect(f.scenes.map((s) => s.scene)).toEqual(["b1-ch02", "b1-ch03"]);
+    expect(ends(f.scenes[0])).toEqual(["b1-ch03"]);
+    expect(ends(f.scenes[1])).toEqual([null]);
+    expect(f.joins.at(-1)).toEqual({ kind: "end", from: "b1-ch03", card: "The Professor's story continues in Chapter 7." });
+    // Ch 2 is still the comic's pages, so it fades into the study until it is staged in 3D
+    expect(f.joins[0]).toMatchObject({ kind: "fade", from: "b1-ch02", to: "b1-ch03" });
+  });
+
+  it("works out who is in each beat from the script", () => {
+    const ch7 = presence(scene("b1-ch07"), pov);
+    expect([...ch7.get("days")!].sort()).toEqual(["bhavi", "dvij", "professor"]);
+    expect(ch7.get("the-doctor")!.has("maharaj")).toBe(false);          // he comes up the path later
+    expect(ch7.get("the-bow")!.has("maharaj")).toBe(true);
+    expect(ch7.get("the-huff")!.has("bhavi")).toBe(true);               // still there as she leaves
+    expect(ch7.get("what-you-know")!.has("bhavi")).toBe(false);
+    const ch8 = presence(scene("b1-ch08"), pov);
+    expect(ch8.get("the-gong")!.has("bhavi")).toBe(true);
+    expect(ch8.get("the-summons")!.has("bhavi")).toBe(true);            // back through the door
+    expect(presence(scene("b1-ch02"), pov).get("panels")).toEqual(new Set(["professor"]));
+  });
+
+  it("pov.yaml's tags keep the Professor out of Dvij's waking in Chapter 7", () => {
+    expect(inBeat(scene("b1-ch07"), "days", pov)).toEqual(["dvij"]);
+    expect(inBeat(scene("b1-ch07"), "the-clearing", pov)).toEqual(["dvij", "professor"]);
+  });
+
+  it("switches to the same beat, the scene alongside, or the next scene", () => {
+    expect(switchTo("professor", { scene: "b1-ch03", beat: "veena" }, all, pov)).toEqual({ scene: "b1-ch03", beat: "veena" });
+    expect(switchTo("professor", { scene: "b1-ch01", beat: "study" }, all, pov)).toEqual({ scene: "b1-ch02" });
+    expect(switchTo("dvij", { scene: "b1-ch02", beat: "panels" }, all, pov)).toEqual({ scene: "b1-ch01" });
+    expect(switchTo("professor", { scene: "b1-ch04", beat: "talk" }, all, pov)).toEqual({ scene: "b1-ch03" });
+    expect(switchTo("dvij", { scene: "b1-ch03", beat: "veena" }, all, pov, true)).toEqual({ scene: "b1-ch03", beat: "veena" });
+  });
+
+  it("the director plays a beat its person isn't there for unseen", async () => {
+    const log: string[] = [];
+    const stage: Stage = {
+      perform: async (verb, _arg, _sc, hurried) => { log.push(`${verb}${hurried ? "*" : ""}`); },
+      await: async () => { log.push("act"); },
+      setUp: async () => {},
+      finished: (_sc, next) => { log.push(`end:${next}`); },
+      save: () => {},
+    };
+    const ch7 = film("professor", [scene("b1-ch07")], { ...pov, films: { ...pov.films, professor: { name: "The Professor" } } }).scenes[0];
+    await new Director(stage, [ch7]).play("b1-ch07");
+    const first = log.indexOf("act");
+    // the waking plays hurried and silent: no captions, no waiting for Dvij
+    expect(log.slice(0, first).every((l) => l.endsWith("*"))).toBe(true);
+    expect(log.slice(0, first).some((l) => l.startsWith("caption"))).toBe(false);
+    expect(log.at(-1)).toBe("end:null");
+  });
+});
