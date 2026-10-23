@@ -27,7 +27,6 @@ scenes:
   b1-ch02:                                         # the Professor in the garden while Dvij wanders, ending mid-morning (the author, 23 Oct)
     when: {day: 1, time: mid-morning, with: b1-ch01}
     absent: [dvij]                                 # fainted on the study floor (novel ¶103-134)
-    present: [professor]                           # the comic's pages until Ch 2 is staged in 3D
   b1-ch03: {when: {day: 1, time: mid-morning}}     # starts where Ch 2 ends (the author, 23 Oct)
   b1-ch04: {when: {day: 1, time: afternoon}}       # "having woken up yet again" (novel ¶163)
   b1-ch05: {when: {day: 1, time: afternoon}}

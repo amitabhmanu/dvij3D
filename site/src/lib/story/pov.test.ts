@@ -24,8 +24,10 @@ describe("points of view", () => {
     expect(ends(f.scenes[0])).toEqual(["b1-ch03"]);
     expect(ends(f.scenes[1])).toEqual([null]);
     expect(f.joins.at(-1)).toEqual({ kind: "end", from: "b1-ch03", card: "The Professor's story continues in Chapter 7." });
-    // Ch 2 is still the comic's pages, so it fades into the study until it is staged in 3D
-    expect(f.joins[0]).toMatchObject({ kind: "fade", from: "b1-ch02", to: "b1-ch03" });
+    // the garden to the study, the same mid-morning: he walks it
+    expect(f.joins[0]).toEqual({ kind: "walk", from: "b1-ch02", to: "b1-ch03" });
+    // he has gone indoors by the time Mahant stands thinking
+    expect(f.scenes[0].beats.find((b) => b.id === "the-thought")!.offstage).toBe(true);
   });
 
   it("works out who is in each beat from the script", () => {
@@ -38,7 +40,11 @@ describe("points of view", () => {
     const ch8 = presence(scene("b1-ch08"), pov);
     expect(ch8.get("the-gong")!.has("bhavi")).toBe(true);
     expect(ch8.get("the-summons")!.has("bhavi")).toBe(true);            // back through the door
-    expect(presence(scene("b1-ch02"), pov).get("panels")).toEqual(new Set(["professor"]));
+    const ch2 = presence(scene("b1-ch02"), pov);
+    expect([...ch2.get("the-sapling")!].sort()).toEqual(["mahant", "professor", "vaidji"]);   // Baldev's foot comes next
+    expect(ch2.get("the-crush")!.has("baldev")).toBe(true);
+    expect(ch2.get("the-thought")!.has("professor")).toBe(false);
+    expect(ch2.get("the-thought")!.has("dvij")).toBe(false);
   });
 
   it("pov.yaml's tags keep the Professor out of Dvij's waking in Chapter 7", () => {
@@ -49,7 +55,7 @@ describe("points of view", () => {
   it("switches to the same beat, the scene alongside, or the next scene", () => {
     expect(switchTo("professor", { scene: "b1-ch03", beat: "veena" }, all, pov)).toEqual({ scene: "b1-ch03", beat: "veena" });
     expect(switchTo("professor", { scene: "b1-ch01", beat: "study" }, all, pov)).toEqual({ scene: "b1-ch02" });
-    expect(switchTo("dvij", { scene: "b1-ch02", beat: "panels" }, all, pov)).toEqual({ scene: "b1-ch01" });
+    expect(switchTo("dvij", { scene: "b1-ch02", beat: "the-scroll" }, all, pov)).toEqual({ scene: "b1-ch01" });
     expect(switchTo("professor", { scene: "b1-ch04", beat: "talk" }, all, pov)).toEqual({ scene: "b1-ch03" });
     expect(switchTo("dvij", { scene: "b1-ch03", beat: "veena" }, all, pov, true)).toEqual({ scene: "b1-ch03", beat: "veena" });
   });
