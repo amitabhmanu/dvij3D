@@ -35,6 +35,7 @@ describe("someone else's film", () => {
     await stage.perform("effect", { blur: 0.6 }, sc, false);
     await stage.perform("effect", { swirl: 1, for: "professor" }, sc, false);
     await stage.perform("effect", { swirl: 1, for: "dvij" }, sc, false);
+    await stage.perform("camera", { for: "professor", shot: "eyes", of: "mahant" }, sc, false); // the film's own camera
     await stage.perform("look", { at: "arm" }, sc, false);
     await stage.perform("reflection", { panel: "x" }, sc, false);
     await stage.perform("say", { who: "dvij", line: "Hello" }, sc, false);
@@ -50,6 +51,7 @@ describe("someone else's film", () => {
     expect(scene()!.cast!.map((c) => c.who)).toEqual(["professor"]);
     expect(filmed).toEqual([null]);
     await stage.perform("effect", { swirl: 1, for: "professor" }, sc, false);
+    await stage.perform("camera", { for: "professor", shot: "eyes", of: "mahant" }, sc, false);
     await stage.perform("look", { at: "arm" }, sc, false);
     expect(log).toEqual(['look {"at":"arm"}']);
   });

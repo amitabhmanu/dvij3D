@@ -131,9 +131,9 @@ beats:
     do:
       - actor: {who: mahant, walk: [-40.0, 30.0], face: professor, anim: stare}   # he steps between the two (novel ¶131)
       - say: {who: mahant, line: "Look here. Look into my eyes. Two weeks from now. The Wounded One must be present at the ceremony.", sources: [novel ¶131]}
-      - effect: {for: professor, swirl: 0.6, over: 2}                 # the mesmerizing, dizzying glare, in the Professor's eyes only (breakdown ch2 p14)
+      - camera: {for: professor, shot: eyes, of: mahant}              # the mesmerizing glare: a close-up of his eyes, played straight (the author, 23 Oct; breakdown ch2 p14)
       - wait: 2
-      - effect: {for: professor, swirl: 0, over: 1}
+      - camera: {for: professor, shot: follow}
       - say: {who: professor, line: "Yes, he must.", sources: [novel ¶132]}
 
   - id: the-hat

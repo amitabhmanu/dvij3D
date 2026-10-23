@@ -60,6 +60,7 @@ export class PovStage implements Stage {
     const start = sc.start.pose === "away" ? { pose: "interlude" } : sc.start;
     await this.inner.setUp({ ...sc, start, cast });
     this.camera.cut();
+    this.camera.shoot(null);
     this.game.body.film(this.own ? null : this.camera.rig);
     if (!this.own) this.game.body.sight.set({ blur: 0, double: 0, dark: 0, flash: 0, glare: 0 });
     const me = there ? this.inner.people?.get("dvij") : undefined;
@@ -108,9 +109,11 @@ export class PovStage implements Stage {
   }
 
   async perform(verb: string, arg: any, sc: Scene, hurried: boolean): Promise<void> { // eslint-disable-line @typescript-eslint/no-explicit-any
-    if (verb === "effect" && arg?.for) {
+    if ((verb === "effect" || verb === "camera") && arg?.for) {
       if (arg.for !== this.who) return;
       const { for: _f, ...rest } = arg;
+      // a shot of the film's camera: a close-up of someone's eyes, or back to following
+      if (verb === "camera" && rest.shot) { this.camera.shoot(rest.shot === "eyes" ? this.inner.people?.get(rest.of) ?? null : null); return; }
       return this.inner.perform(verb, rest, sc, hurried);
     }
     if (this.own) return this.inner.perform(verb, arg, sc, hurried);

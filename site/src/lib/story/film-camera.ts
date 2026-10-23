@@ -45,6 +45,10 @@ export class FilmCamera {
     return best ? best.headAt() : head.clone().addScaledVector(ahead, 3).add(new Vector3(0, -0.25, 0));
   }
 
+  private close: Actor | null = null;
+  /** A close-up of someone's eyes, held until the next shot (null: back to over the shoulder). A cut, not a move. */
+  shoot(eyes: Actor | null) { this.close = eyes; this.last = 0; }
+
   /** Cut: the next frame is placed at once, not eased there (a new scene). */
   cut() { this.last = 0; this.frame = 0; this.swing = 0; }
 
@@ -71,6 +75,16 @@ export class FilmCamera {
     const now = performance.now();
     const dt = this.last ? Math.min(0.1, (now - this.last) / 1000) : 1;
     this.last = now;
+    if (this.close) {
+      // straight on, a hand's breadth wider than the eyes: the face fills the frame
+      const eyes = this.close.headAt().add(new Vector3(0, -0.07, 0)); // (headAt is a little above the eyes)
+      camera.position.copy(eyes).addScaledVector(this.close.facing(), 0.3);
+      camera.lookAt(eyes);
+      camera.updateMatrixWorld();
+      this.at.copy(camera.position);
+      this.aim.copy(eyes);
+      return;
+    }
     const head = me.headAt();
     const look = this.focus(me);
     // behind the shoulder away from what they look at, and a little above

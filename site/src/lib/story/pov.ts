@@ -18,7 +18,7 @@ export type Pov = {
   films: Record<string, { name: string; pilot?: boolean; scenes?: string[] }>;
   times: string[];
   scenes: Record<string, { when: When; absent?: string[]; present?: string[] }>;
-  beats?: Record<string, { for?: string[]; "not-for"?: string[] }>;
+  beats?: Record<string, { for?: string[]; "not-for"?: string[]; "captions-for"?: string[] }>;
 };
 export type FilmBeat = Beat & { offstage?: boolean };
 export type FilmScene = Scene & { beats: FilmBeat[] };
@@ -86,6 +86,14 @@ export function join(a: Scene, b: Scene, pov: Pov): Join {
   return { kind: "fade", from: a.scene, to: b.scene, card };
 }
 
+/** A beat whose captions are only for some films, without them in the others. */
+function captioned(sc: Scene, b: Beat, who: string, pov: Pov): FilmBeat {
+  const only = pov.beats?.[`${sc.scene}#${b.id}`]?.["captions-for"];
+  if (!only || only.includes(who)) return { ...b };
+  const drop = (list?: Action[]) => list?.filter((a) => !("caption" in a));
+  return { ...b, do: drop(b.do), then: drop(b.then) };
+}
+
 /** Rewrite where a scene's `end` leads. */
 function endsAt(beats: FilmBeat[], next: string | null): FilmBeat[] {
   const fix = (list?: Action[]) => list?.map((a) => ("end" in a ? { end: { ...(a.end as object), next } } : a));
@@ -101,7 +109,7 @@ export function film(who: string, all: Scene[], pov: Pov): Film {
   let skipped: string[] = [];
   for (const sc of order) {
     const there = presence(sc, pov);
-    const beats = sc.beats.map((b) => (plays(sc, b, who, pov, there) ? { ...b } : { ...b, offstage: true }));
+    const beats = sc.beats.map((b) => (plays(sc, b, who, pov, there) ? captioned(sc, b, who, pov) : { ...b, offstage: true }));
     if ((only && !only.includes(sc.scene)) || beats.every((b) => b.offstage)) { skipped.push(sc.scene); continue; }
     if (picked.length) missed[sc.scene] = skipped;
     skipped = [];
