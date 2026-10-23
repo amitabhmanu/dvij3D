@@ -112,6 +112,9 @@ export type Body = {
   face: (p: [number, number, number]) => void;
   /** Turn to look at this point over `seconds` (watch mode). */
   turnTo: (p: [number, number, number], seconds: number) => Promise<void>;
+  /** Keep his eyes on this point while nothing else moves them, following it as it goes (watch mode: whoever speaks,
+   * walking round the well, walking off); null, or a null from it, lets go. */
+  follow: (p: (() => [number, number, number] | null) | null) => void;
   /** Walk there by himself, round the walls (watch mode). */
   walkTo: (at: [number, number]) => Promise<void>;
   /** Stop whatever he was moving through: a new scene is starting. */
@@ -585,6 +588,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   let eye = rules.eye, speed = 1, sway = 0, roll = 0, swayT = 0;
   let route: { pts: [number, number][]; done: () => void } | null = null;
   let rate = 1;
+  let follow: (() => [number, number, number] | null) | null = null;
   const release = () => {
     for (let k = 0; tween && k < 3; k++) { const d = tween.done; tween = null; d(); } // a glance has two halves
     if (route) { const d = route.done; route = null; d(); }
@@ -618,6 +622,17 @@ export async function createGame(o: GameOptions): Promise<Game> {
         if (!route.pts.length) { const r = route; route = null; r.done(); }
       } else player = { ...player, x: player.x + (dx / d) * go, z: player.z + (dz / d) * go, heading, pitch };
       if (speed < 1) swayT += go * 3.2;
+    } else if (follow && hold === "none") {
+      // eyes on a speaker who moves: eased after them, a little behind, as a head turns
+      const p = follow();
+      if (p) {
+        const c = camera.position;
+        const want = Math.atan2(p[0] - c.x, -(p[2] - c.z));
+        const dh = Math.atan2(Math.sin(want - player.heading), Math.cos(want - player.heading));
+        const pitch = Math.atan2(p[1] - c.y, Math.max(Math.hypot(p[0] - c.x, p[2] - c.z), 0.01));
+        const k = 1 - Math.exp(-2.5 * STEP * rate);
+        player = { ...player, heading: player.heading + dh * k, pitch: player.pitch + (pitch - player.pitch) * k };
+      }
     }
     player = step(player, m, STEP, { ...r, eye }, world);
     if (speed < 1) {
@@ -841,7 +856,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
       release();
       route = { pts: findRoute([player.x, player.z], at, (x, z) => blocked(x, z, 0.32)), done };
     }),
-    halt: release,
+    follow: (p) => { follow = p; },
+    halt: () => { follow = null; release(); },
     rate: (r) => { rate = r; sight.speed = r; },
     fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
     lodgeRoot: () => lodge?.root ?? null,

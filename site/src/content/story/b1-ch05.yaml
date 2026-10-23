@@ -86,8 +86,9 @@ beats:
   - id: tulsi
     sources: [breakdown ch5 p10, novel ¶213-216]
     do:
-      - actor: {who: maharaj, walk: [0, 0.9], face: [0, 0], anim: tend}   # at the pedestal's south face (lodge.yaml planter)
+      # (said in the kitchen, to his face, before he goes: from there the walls would hide him as he says it)
       - say: {who: maharaj, line: "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.", sources: [novel ¶214]}
+      - actor: {who: maharaj, walk: [0, 0.9], face: [0, 0], anim: tend}   # at the pedestal's south face (lodge.yaml planter)
 
   - id: way-out
     sources: [breakdown ch5 p11-p15, novel ¶217-223]

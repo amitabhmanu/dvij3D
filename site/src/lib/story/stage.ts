@@ -68,6 +68,8 @@ export class StoryStage implements Stage {
   private auto = false;
   /** Who spoke to him last (in this scene): whom he answers. */
   private heard = "";
+  /** A line is being spoken (his eyes may follow the speaker till it ends). */
+  private saying = false;
 
   private hands: Hands;
 
@@ -185,14 +187,27 @@ export class StoryStage implements Stage {
         if (this.auto && !hurried && speaker?.visible && this.pose !== "lie" && this.pose !== "floor") {
           const h = speaker.headAt();
           const me = this.game.player();
-          if (Math.hypot(h.x - me.x, h.z - me.z) < 12) void body.turnTo([h.x, h.y - 0.1, h.z], 0.7);
+          if (Math.hypot(h.x - me.x, h.z - me.z) < 12) {
+            // and keeps them in sight as they move (Bhavi round the well, Maharaj walking off), while they're near and to be seen
+            void body.turnTo([h.x, h.y - 0.1, h.z], 0.7).then(() => {
+              if (!this.saying) return;
+              body.follow(() => {
+                if (!speaker.visible) return null;
+                const at = speaker.headAt(), now = this.game.player();
+                return Math.hypot(at.x - now.x, at.z - now.z) < 12 ? [at.x, at.y - 0.1, at.z] : null;
+              });
+            });
+          }
         }
+        this.saying = true;
         await this.screen.say(arg.who, arg.line, (file, time) => {
           if (!cast || !cast.get(arg.who)) return;
           if (!file) { cast.get(arg.who)!.speak(() => 0.35 + Math.sin(time() * 17) * 0.3); return; }
           void cast.level(file, time).then((v) => cast.get(arg.who)?.speak(v.open, v.bright, v.shape));
         });
         cast?.get(arg.who)?.speak(null);
+        this.saying = false;
+        body.follow(null);
         return;
       }
       case "wait":

@@ -90,6 +90,8 @@ type Layer = {
   footL?: Vector3 | null; footR?: Vector3 | null;
   /** How far what the right hand holds is tipped forward (radians): a pitcher pouring. */
   tilt?: number;
+  /** The hands turned in, each towards the other arm's elbow: tucked, as in arms folded. */
+  tuck?: boolean;
 };
 type Gesture = { seconds: number; hold?: boolean; clip?: string; at: (a: Actor, t: number) => Layer };
 
@@ -159,7 +161,8 @@ const GESTURES: Record<string, Gesture> = {
   "lean-in": { seconds: 1.0, hold: true, at: () => ({ spine: 0.3, head: 0.1 }) },
   "finger-raise": { seconds: 1.8, at: (a) => ({ handR: up(a, 1.5, 0.3, 0.18) }) },
   point: { seconds: 1.6, at: (a) => ({ spine: 0.1, handR: a.toward(a.eyesOf(), 0.55, -0.2) }) },
-  "fold-arms": { seconds: 1.0, hold: true, at: (a) => ({ handL: up(a, 1.12, 0.2, 0.12), handR: up(a, 1.1, 0.22, -0.12) }) },
+  // (the wrists at the middle, the fingers tucked towards the other elbow)
+  "fold-arms": { seconds: 1.0, hold: true, at: (a) => ({ handL: up(a, 1.2, 0.25, 0.06), handR: up(a, 1.12, 0.18, -0.06), tuck: true }) },
   "hand-to-chin": { seconds: 2.4, at: (a) => ({ head: 0.1, handR: up(a, 1.48, 0.14, 0.02) }) },
   "hand-to-mouth": { seconds: 2.4, at: (a) => ({ head: 0.15, handR: up(a, 1.52, 0.12, 0.0) }) },
   "hand-on-chest": { seconds: 1.8, at: (a) => ({ handR: up(a, 1.28, 0.16, -0.05) }) },
@@ -713,6 +716,15 @@ export class Actor {
       if (!goal || !u || !lo || !h) continue;
       const out = new Vector3(s === "l" ? 1 : -1, -1.2, -0.3).applyQuaternion(this.obj.getWorldQuaternion(new Quaternion()));
       reach(u, lo, h, goal, out, w);
+    }
+    if (l.tuck) {
+      for (const s of ["l", "r"] as const) {
+        const h = this.bone(`hand_${s}`), tip = this.bone(`middle_01_${s}`), elbow = this.bone(`lowerarm_${s === "l" ? "r" : "l"}`);
+        if (!h || !tip || !elbow) continue;
+        const was = h.quaternion.clone();
+        aim(h, tip.getWorldPosition(new Vector3()), elbow.getWorldPosition(new Vector3()));
+        if (w < 0.999) { h.quaternion.copy(was.slerp(h.quaternion, w)); h.updateMatrixWorld(true); }
+      }
     }
   }
 
