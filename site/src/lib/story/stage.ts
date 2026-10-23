@@ -66,6 +66,8 @@ export class StoryStage implements Stage {
   private pose = "stand";
   /** Watch mode: the story does what each beat asks by itself, and Dvij can't be steered. */
   private auto = false;
+  /** Who spoke to him last (in this scene): whom he answers. */
+  private heard = "";
 
   private hands: Hands;
 
@@ -135,6 +137,7 @@ export class StoryStage implements Stage {
     // the people: in the frame's root as the props are, standing on whatever is under them
     this.cast?.dispose();
     this.cast = null;
+    this.heard = "";
     if (root) { // (every scene has one: even with no cast, Dvij's own body may show in a window)
       const cast = new Cast(people as PeopleInfo, {
         root,
@@ -176,8 +179,9 @@ export class StoryStage implements Stage {
         await this.castReady;
         const cast = this.cast;
         cast?.speaking(arg.who, null);
-        // watching: Dvij turns to whoever speaks, if he can see them from where he is
-        const speaker = cast?.get(arg.who);
+        // watching: Dvij turns to whoever speaks, and to whom he answers, if he can see them from where he is
+        if (arg.who !== "dvij") this.heard = arg.who;
+        const speaker = cast?.get(arg.who === "dvij" ? this.heard : arg.who);
         if (this.auto && !hurried && speaker?.visible && this.pose !== "lie" && this.pose !== "floor") {
           const h = speaker.headAt();
           const me = this.game.player();

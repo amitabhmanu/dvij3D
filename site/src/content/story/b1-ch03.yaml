@@ -47,7 +47,7 @@ beats:
       - say: {who: dvij, line: "There... in the room where I was sleeping. Your glasses... they're on the stool by the bed.", sources: [novel ¶139]}
       - actor: {who: professor, pose: stand, walk: [-8.5, 3.0], via: [[-7.75, -10.0]], then: pick-up, item: spectacles}   # fetches them from Dvij's room (novel ¶140)
       - camera: {pose: sit, at: [-12.8, -11.7], over: 2.0}       # meanwhile he gets himself into the cushioned chair (novel ¶140)
-      - actor: {who: professor, walk: [-13.4, -12.0], wearing: spectacles, look: player}
+      - actor: {who: professor, walk: [-14.0, -11.9], via: [[-7.75, -10.0], [-13.0, -10.8]], wearing: spectacles, look: player}   # off the desk's end, a little way from his chair: seen, not loomed over
 
   - id: veena
     sources: [breakdown ch3 p4, novel ¶140, novel ¶141, novel ¶142]

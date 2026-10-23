@@ -101,6 +101,8 @@ const TALK: Record<string, string[]> = {
   maharaj: ["palms-up", "hand-on-chest"],
   bhavi: ["tuck-hair", "open-hand", "hand-to-chin"],
 };
+/** Those of them that keep the hands by the body: for talking face to face, close up. */
+const CLOSE_TALK = new Set(["tuck-hair", "hand-to-chin", "hand-on-chest", "spectacles"]);
 
 const up = (a: Actor, h: number, fwd = 0.3, side = 0) => a.point(side, h, fwd);
 /** A hand's place in a keyframe: [height (m, as if stood), forward of the chest, to the right], or none (the clip's). */
@@ -373,6 +375,13 @@ export class Actor {
     return new Promise((done) => { this.turning!.done = done; });
   }
   private turning: { from: number; by: number; t: number; seconds: number; done?: () => void } | null = null;
+  /** On their feet with their back half turned to `p` (frame metres): turn to it, as one does to talk to someone (the head alone can't reach). */
+  turnToFace(p: V2) {
+    if (this.pose !== "stand" || this.path.length || this.loopRim || this.turning) return;
+    const want = Math.atan2(p[0] - this.obj.position.x, p[1] - this.obj.position.z);
+    const off = Math.atan2(Math.sin(want - this.obj.rotation.y), Math.cos(want - this.obj.rotation.y));
+    if (Math.abs(off) > 1.1 && Math.hypot(p[0] - this.obj.position.x, p[1] - this.obj.position.z) < 6) void this.turnTo(p, 0.9);
+  }
   /** Where they stand now (frame metres). */
   where(): V2 { return [this.obj.position.x, this.obj.position.z]; }
 
@@ -423,7 +432,11 @@ export class Actor {
     this.nextTalkGesture -= dt;
     if (this.nextTalkGesture > 0) return;
     this.nextTalkGesture = 2.5 + Math.random() * 3.5;
-    void this.act(own[Math.floor(Math.random() * own.length)]);
+    // right up to him (at work on his forehead): only what stays by their own body, not a hand thrust into his face
+    const eyes = this.env.eyes(), at = this.obj.getWorldPosition(new Vector3());
+    const near = Math.hypot(eyes.x - at.x, eyes.z - at.z) < 1.0;
+    const can = near ? own.filter((g) => CLOSE_TALK.has(g)) : own;
+    if (can.length) void this.act(can[Math.floor(Math.random() * can.length)]);
   }
 
   /** Play a gesture or a clip once; resolves as it ends (a held gesture stays until the next). */
@@ -865,7 +878,7 @@ export class Cast {
   speaking(who: string | null, level: (() => number) | null) {
     for (const [name, a] of this.actors) {
       if (!a.visible) continue;
-      if (name === who) { a.speak(level); a.lookAt(() => this.env.eyes()); }
+      if (name === who) { a.speak(level); a.lookAt(() => this.env.eyes()); a.turnToFace(this.playerAt()); }
       else {
         a.speak(null);
         const s = who ? this.actors.get(who) : null;
