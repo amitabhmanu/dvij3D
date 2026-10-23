@@ -173,6 +173,23 @@ replace_material(body, material("skin", image=skin_img, rough=0.62))
 
 eyes = mhclo("eyes", "low-poly")
 replace_material(eyes, material("eyes", image=bpy.data.images.load(f"{MH}/eyes/materials/{spec.get('iris', 'brown')}_eye.png"), rough=0.12))
+# each eye on its own bone, under the head's, so it can glance about while the head stays (lib/story/cast.ts)
+ew = eyes.matrix_world
+eye_pts = [ew @ v.co for v in eyes.data.vertices]
+bpy.context.view_layer.objects.active = rig
+bpy.ops.object.mode_set(mode="EDIT")
+for s, sign in (("l", 1), ("r", -1)):
+    side = [p for p in eye_pts if p.x * sign > 0]
+    c = sum(side, Vector()) / len(side)
+    eb = rig.data.edit_bones.new(f"eye_{s}")
+    eb.head, eb.tail = rig.matrix_world.inverted() @ c, rig.matrix_world.inverted() @ (c + Vector((0, -0.03, 0)))  # (pointing out of the face)
+    eb.parent = rig.data.edit_bones["head"]
+bpy.ops.object.mode_set(mode="OBJECT")
+for s, sign in (("l", 1), ("r", -1)):
+    idx = [v.index for v in eyes.data.vertices if (ew @ v.co).x * sign > 0]
+    for og in eyes.vertex_groups:
+        og.remove(idx)
+    eyes.vertex_groups.new(name=f"eye_{s}").add(idx, 1.0, "REPLACE")
 for kind in ("eyebrows", "eyelashes"):
     name = spec.get(kind) or {"eyebrows": "eyebrow001", "eyelashes": "eyelashes01"}[kind]
     o = mhclo(kind, name)
@@ -685,9 +702,9 @@ def hang(bm, zlo, zhi, folds=0.004, src_layer=None):
         sm = new.copy()
         for i in range(len(vs)):
             dth = np.abs(np.angle(np.exp(1j * (th - th[i]))))
-            nb = (dth < 0.35) & (np.abs(z - z[i]) < 0.07)
+            nb = (dth < 0.5) & (np.abs(z - z[i]) < 0.1)
             sm[i] = new[nb].mean()
-        new = np.maximum(sm, np.minimum(new, sm + 0.004))
+        new = np.maximum(sm, np.minimum(new, sm + 0.001))
         new = np.where(z < WAIST + 0.15, np.maximum(new, r), new)  # (never in at the hem, where it lies over a lungi or a dhoti)
     free = np.clip((new - r) / 0.03, 0, 1)
     new += folds * free * np.sin(th * 16 + z * 6)
@@ -818,7 +835,7 @@ def torso(zlo, zhi, sleeve=0.0):
 
 
 def legs(zlo, zhi):
-    return lambda i: i in in_body and zlo <= V[i].z <= zhi and dominant[i] in ("pelvis", "thigh_l", "thigh_r", "calf_l", "calf_r")
+    return lambda i: i in in_body and zlo <= V[i].z <= zhi and dominant[i] in TORSO_BONES | {"thigh_l", "thigh_r", "calf_l", "calf_r"}
 
 
 def scalp(zlo, back_only=False):
@@ -854,16 +871,121 @@ def at_height(v, default):
     return WAIST + float(v[5:] or 0) if isinstance(v, str) and v.startswith("waist") else v
 
 
+def patch(src, keep, lift, mat, name):
+    """A piece laid over a garment, cut from its own faces where `keep(co)`, lifted off it (a pocket, a placket)."""
+    o = src.copy()
+    o.data = src.data.copy()
+    o.name = name
+    o.modifiers.clear()
+    bpy.context.scene.collection.objects.link(o)
+    bm = bmesh.new()
+    bm.from_mesh(o.data)
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if not all(keep(v.co) for v in f.verts)], context="FACES")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    bm.normal_update()
+    for v in bm.verts:
+        v.co += v.normal * lift
+    bm.to_mesh(o.data)
+    bm.free()
+    finish(o, mat)
+    return o
+
+
+def laid(src, cx, zlo, zhi, half, lift, mat, name, point=0.0, nx=6, nz=6):
+    """A flat piece (a pocket, its flap) laid on a garment's front: a grid from x cx-half..cx+half, zlo..zhi, its
+    bottom coming to a shallow point, each corner dropped onto the garment and lifted `lift` off it; closed at its
+    edges back to the cloth (no gap to see under it)."""
+    from mathutils.bvhtree import BVHTree
+    tree = BVHTree.FromObject(src, bpy.context.evaluated_depsgraph_get())
+    verts, faces = [], []
+    for j in range(nz + 1):
+        for i in range(nx + 1):
+            x = cx - half + 2 * half * i / nx
+            z = zlo + (zhi - zlo) * j / nz - point * (1 - abs(2 * i / nx - 1)) * (1 - j / nz)
+            hit = tree.ray_cast(Vector((x, -1.0, z)), Vector((0, 1, 0)))
+            p, n = (hit[0], hit[1]) if hit[0] is not None else (Vector((x, -0.1, z)), Vector((0, -1, 0)))
+            if n.y > 0:
+                n = -n
+            verts.append(p + n * lift)
+    w = nx + 1
+    for j in range(nz):
+        for i in range(nx):
+            faces.append((j * w + i, j * w + i + 1, (j + 1) * w + i + 1, (j + 1) * w + i))
+    ring = [i for i in range(w)] + [j * w + nx for j in range(1, nz + 1)] + [nz * w + i for i in range(nx - 1, -1, -1)] + [j * w for j in range(nz - 1, 0, -1)]
+    base = len(verts)
+    for k in ring:  # (its edge turned down to the cloth)
+        verts.append(verts[k] + Vector((0, 1, 0)) * lift * 0.9)
+    for a, k in enumerate(ring):
+        b = (a + 1) % len(ring)
+        faces.append((ring[a], base + a, base + b, ring[b]))
+    o = rigid(name, verts, faces, mat, "spine_03")
+    for g in list(o.vertex_groups):
+        o.vertex_groups.remove(g)
+    for mod in list(o.modifiers):
+        o.modifiers.remove(mod)
+    finish(o, mat, weights_from_body=True)
+    return o
+
+
+def collar(src, mat, name, stand=0.012, fall=0.03, gap=0.32):
+    """A shirt's collar on a garment's neck hole: a band standing up from it, folded down over it, open at the
+    front in two points."""
+    me = src.data
+    rim = {i for e in me.edges if len([p for p in me.polygons if e.key in p.edge_keys]) == 1 for i in e.vertices}
+    top = [me.vertices[i].co.copy() for i in rim if me.vertices[i].co.z > SHOULDER - 0.04]
+    if len(top) < 8:
+        return None
+    c = sum(top, Vector()) / len(top)
+    # the hole's edge as an even loop: at each of 40 angles round it, its farthest point within a few degrees (the
+    # edge's own points come in a ragged order, and a collar along them zig-zags in and out of the shirt), smoothed
+    ang = lambda p: math.atan2(p.x - c.x, p.y - c.y)
+    loop = []
+    for a in np.linspace(-math.pi, math.pi, 40, endpoint=False):
+        near = [p for p in top if abs(math.atan2(math.sin(ang(p) - a), math.cos(ang(p) - a))) < 0.2] or top
+        r = max(math.hypot(p.x - c.x, p.y - c.y) for p in near)
+        zz = sum(p.z for p in near) / len(near)
+        loop.append(Vector((c.x + math.sin(a) * r, c.y + math.cos(a) * r, zz)))
+    for _ in range(3):
+        loop = [loop[j] * 0.5 + (loop[j - 1] + loop[(j + 1) % len(loop)]) * 0.25 for j in range(len(loop))]
+    by = sorted(loop, key=ang)  # (round from the front, the body facing -y)
+    pts = [p for p in by if abs(math.pi - abs(ang(p))) > gap]
+    verts, faces = [], []
+    n = len(pts)
+    for j, p in enumerate(pts):
+        a = math.atan2(p.x - c.x, p.y - c.y)
+        out = Vector((p.x - c.x, p.y - c.y, 0)).normalized()
+        front = max(0.0, -math.cos(a))  # (1 at the front)
+        tip = fall * (1 + 1.4 * front ** 6)  # (the points)
+        verts += [p - out * 0.002, p + Vector((0, 0, stand)) + out * 0.004, p + out * (0.008 + tip * 0.8) - Vector((0, 0, tip * 0.5))]
+    for j in range(n - 1):
+        a, b = j * 3, (j + 1) * 3
+        faces += [(a, b, b + 1, a + 1), (a + 1, b + 1, b + 2, a + 2)]
+    o = rigid(name, verts, faces, mat, "neck_01")
+    for g in list(o.vertex_groups):
+        o.vertex_groups.remove(g)
+    for mod in list(o.modifiers):
+        o.modifiers.remove(mod)
+    sol = o.modifiers.new("thick", "SOLIDIFY")  # (cloth with two sides: seen from below or behind it is still there)
+    sol.thickness, sol.offset = 0.002, 0
+    bpy.context.view_layer.objects.active = o
+    bpy.ops.object.modifier_apply(modifier=sol.name)
+    finish(o, mat, weights_from_body=True)
+    o.data.update()
+    return o
+
+
+last_top = None
 for g in spec.get("garments", []):
     k = g["kind"]
-    g = {**g, **{key: at_height(g.get(key), None) for key in ("from", "top", "to") if key in g}}
+    g = {**g, **{key: at_height(g.get(key), None) for key in ("from", "top", "to", "at") if key in g}}
     mat = cloth(g.get("name", k), g["color"], g.get("print", "hair" if k in ("beard", "moustache", "fringe") else "plain"), g.get("ink", (0.6, 0.1, 0.08)))
     nm = g.get("name", k)
     if k == "top":  # a shirt, a kurta's body, a vest, a wrap: from the waist (or lower) to the neck
-        shell(nm, torso(g.get("from", WAIST - 0.1), NECK - g.get("neckline", 0.02), g.get("sleeve", 0.0)), g.get("offset", 0.014), mat,
-              swell=lambda co: g.get("loose", 0.0) * max(0.0, (SHOULDER - co.z)) * 0.3 + (0.012 if co.z < WAIST + 0.06 and not g.get("tucked") else 0.0),  # (over what's tied at the waist, unless tucked into it)
+        last_top = shell(nm, torso(g.get("from", WAIST - 0.1), NECK - g.get("neckline", 0.02), g.get("sleeve", 0.0)), g.get("offset", 0.014), mat,
+              swell=lambda co: (g.get("loose", 0.0) * max(0.0, (SHOULDER - co.z)) * 0.3 * (min(1.0, max(0.0, (co.z - WAIST - 0.03) / 0.12)) if g.get("tucked") else 1.0)
+                                + (0.012 if co.z < WAIST + 0.06 and not g.get("tucked") else 0.0)),  # (over what's tied at the waist, unless tucked into it: then gathered in to it)
               smooth=g.get("smooth", 14),
-              drape=(g.get("from", WAIST - 0.1), SHOULDER - 0.02, 0.005))
+              drape=(WAIST + 0.1 if g.get("tucked") else g.get("from", WAIST - 0.1), SHOULDER - 0.02, 0.005))
     elif k == "skirt":  # a dhoti, a lungi, a kurta's skirts, a gown's: MakeHuman's skirt, cut at a height
         helper(nm, "helper-skirt", g.get("to", ANKLE + 0.06), g.get("top", WAIST + 0.04), g.get("offset", 0.012), mat,
                pleats=g.get("pleats", 0.006), flare=g.get("flare", 0.03))
@@ -879,7 +1001,7 @@ for g in spec.get("garments", []):
         helper(nm, "helper-tights", g.get("to", ANKLE + 0.02), g.get("top", WAIST + 0.03), g.get("offset", 0.012), mat,
                pleats=g.get("pleats", 0.003), flare=g.get("flare", 0.0))
     elif k == "legs":  # shorts fitted from the body's own legs
-        shell(nm, legs(g.get("to", KNEE + 0.08), g.get("top", WAIST + 0.03)), g.get("offset", 0.016), mat, smooth=4)
+        shell(nm, legs(g.get("to", KNEE + 0.08), g.get("top", WAIST + 0.03)), g.get("offset", 0.016), mat, smooth=g.get("smooth", 4))
     elif k == "socks":
         shell(nm, lambda i: i in in_body and dominant[i] in ("calf_l", "calf_r", "foot_l", "foot_r", "ball_l", "ball_r") and V[i].z < g.get("top", ANKLE + 0.14),
               0.003, mat)
@@ -888,7 +1010,11 @@ for g in spec.get("garments", []):
         sh = bone_head(f"clavicle_{'l' if side > 0 else 'r'}") + Vector((side * 0.06, 0, 0.05))
         hip = bone_head(f"thigh_{'r' if side > 0 else 'l'}") + Vector((0, 0, 0.05))
         band(nm, sh, hip, g.get("width", 0.12), g.get("offset", 0.02), mat)
-    elif k == "waistband":  # a sash, a gamchha tied round the waist
+    elif k == "waistband":  # a sash, a gamchha tied round the waist; a belt, with its buckle
+        if g.get("buckle"):
+            front_y = min(V[i].y for i in in_body if abs(V[i].z - g.get("at", WAIST)) < 0.01 and abs(V[i].x) < 0.02)
+            sphere_mesh(nm + "-buckle", Vector((0, front_y - g.get("offset", 0.024) - 0.004, g.get("at", WAIST))), 0.016,
+                        cloth(nm + "-buckle", g["buckle"], "plain", rough=0.35), "pelvis", scale=(1.2, 0.3, 0.9), seg=8)
         shell(nm, lambda i: i in in_body and dominant[i] in TORSO_BONES | {"thigh_l", "thigh_r"} and abs(V[i].z - g.get("at", WAIST)) < g.get("width", 0.08) / 2,
               g.get("offset", 0.024), mat, remove_under=False)
     elif k == "stole":  # a shawl over both shoulders, its ends hanging in front (Vaidji's)
@@ -973,6 +1099,37 @@ for g in spec.get("garments", []):
                 o = rigid(f"{nm}-{j}", verts, faces, cloth(f"{nm}-{j}", tones[j], "plain", rough=0.8), "head")
                 for poly in o.data.polygons:
                     poly.use_smooth = True
+    elif k == "shirt-front" and last_top is not None:  # a shirt's collar, its buttoned placket, a breast pocket (the Professor's, b1-p007-2)
+        collar(last_top, mat, nm + "-collar")
+        cx = 0.0
+        patch(last_top, lambda co: abs(co.x - cx) < 0.009 and co.y < 0 and co.z < SHOULDER - 0.02, 0.0018, mat, nm + "-placket")
+        btn = cloth(nm + "-buttons", g.get("buttons", [0.92, 0.9, 0.84]), "plain", rough=0.4)
+        front_pts = [v.co for v in last_top.data.vertices if abs(v.co.x - cx) < 0.006 and v.co.y < 0]
+        if front_pts:
+            for j, z in enumerate(np.arange(SHOULDER - 0.07, WAIST + 0.0, -0.075)):
+                near = min(front_pts, key=lambda q: abs(q.z - z))
+                sphere_mesh(f"{nm}-button-{j}", Vector((cx, near.y - 0.0035, z)), 0.0042, btn, "spine_03" if z > WAIST + 0.2 else "spine_02", scale=(1, 0.35, 1), seg=8)
+        side = 1 if EYE_L.x > 0 else -1
+        px_, pz = side * 0.065, SHOULDER - 0.11
+        pm = cloth(nm + "-pocket", [c * 0.96 for c in g["color"]], "plain")  # (a shade darker: its seams' shadow)
+        laid(last_top, px_, pz - 0.075, pz + 0.01, 0.036, 0.0025, pm, nm + "-pocket", point=0.012)
+        laid(last_top, px_, pz - 0.006, pz + 0.016, 0.039, 0.004, mat, nm + "-pocket-flap", point=0.006)
+    elif k == "watch":  # a wristwatch on the left wrist (the Professor's, b1-p007-2)
+        side = g.get("side", "l")
+        hw = bone_head(f"hand_{side}")
+        el = bone_head(f"lowerarm_{side}")
+        ax = (hw - el).normalized()
+        c = hw - ax * 0.03
+        ring_v = [V[i] for i in in_body if dominant[i] == f"lowerarm_{side}" and abs((V[i] - c).dot(ax)) < 0.006]
+        r = (sum(((p - c) - ax * (p - c).dot(ax)).length for p in ring_v) / len(ring_v) if ring_v else 0.025) + 0.003
+        u = ax.cross(Vector((0, 0, 1))).normalized()
+        w_ = ax.cross(u).normalized()
+        band = [c + (u * math.cos(t) + w_ * math.sin(t)) * r for t in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
+        tube_mesh(nm + "-strap", band, 0.004, cloth(nm + "-strap", g.get("strap", [0.3, 0.18, 0.1]), "plain"), f"lowerarm_{side}", seg=4, closed=True)
+        top_dir = -w_ if (-w_).z > 0 else w_  # (the face on the back of the wrist, up when the hand hangs)
+        face = c + top_dir * (r + 0.002)
+        sphere_mesh(nm + "-face", face, 0.011, cloth(nm + "-face", g.get("color", [0.85, 0.82, 0.7]), "plain", rough=0.3), f"lowerarm_{side}",
+                    scale=(1, 1, 0.35), seg=10)
     elif k == "stubble":  # a shaved head's shadow
         shell(nm, scalp(BROW + 0.02), 0.0015, mat, remove_under=False)
     elif k == "moustache":

@@ -288,13 +288,22 @@ export function makeThing(kind: string, x: number, z: number, floor: number, sta
     }
     case "pipe": {
       // the Professor's pipe, unlit in his hand on the lawn (comic b1-p012-2; the author, 21 Oct)
-      const BRIAR = std("#4a2c1a", { roughness: 0.45 });
+      const BRIAR = std("#4a2c1a", { roughness: 0.35, metalness: 0.05, side: DoubleSide }); // (the bowl's inside wall faces in)
+      const BIT = std("#141210", { roughness: 0.25 });
       const t = new Group();
-      const bowl = at(new Mesh(new CylinderGeometry(0.014, 0.011, 0.034, 10), BRIAR), 0, 0.017, 0);
-      const stem = new Mesh(new CylinderGeometry(0.0045, 0.0055, 0.12, 6), BRIAR);
-      stem.rotation.z = Math.PI / 2 - 0.15;
-      stem.position.set(0.062, 0.012, 0);
-      t.add(bowl, stem);
+      // the bowl: rounded below, its rim lipped, hollow and charred inside (one lathe, out and back in)
+      const bowl = at(new Mesh(lathe([[0, 0], [0.009, 0.002], [0.015, 0.012], [0.0165, 0.026], [0.015, 0.04], [0.0105, 0.04], [0.0105, 0.014], [0, 0.012]], 18), BRIAR), 0, 0, 0);
+      const char = at(new Mesh(new CylinderGeometry(0.0104, 0.0104, 0.002, 14), std("#1a1210", { roughness: 0.95 })), 0, 0.03, 0);
+      // the shank out of the bowl's foot, then the black bit, bent a little up to the mouth
+      const shank = new Mesh(new CylinderGeometry(0.0055, 0.0065, 0.06, 10), BRIAR);
+      shank.rotation.z = Math.PI / 2 - 0.1;
+      shank.position.set(0.042, 0.009, 0);
+      const bit = new Mesh(new CylinderGeometry(0.0032, 0.0052, 0.06, 10), BIT);
+      bit.rotation.z = Math.PI / 2 - 0.3;
+      bit.position.set(0.1, 0.02, 0);
+      const lip = at(new Mesh(new BoxGeometry(0.008, 0.0035, 0.009), BIT), 0.129, 0.029, 0);
+      lip.rotation.z = -0.3;
+      t.add(bowl, char, shank, bit, lip);
       const g = new Group();
       g.add(t);
       return { obj: at(g, x, floor, z), set: () => {}, point: () => [x, floor, z], handle: t };

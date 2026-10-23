@@ -14,6 +14,29 @@ import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import { aim, bindLook, look, reach } from "./ik";
 import { SELF_LAYER } from "../walk/game";
 
+const q0 = new Quaternion();
+
+/** Turn a bone about a world axis by `rad`, over the pose it has. */
+function bendAbout(b: Bone, axis: Vector3, rad: number) {
+  if (!rad || !b.parent) return;
+  const world = b.getWorldQuaternion(new Quaternion()).premultiply(new Quaternion().setFromAxisAngle(axis.normalize(), rad));
+  b.quaternion.copy(b.parent.getWorldQuaternion(new Quaternion()).invert().multiply(world));
+  b.updateMatrixWorld(true);
+}
+
+/** Rhubarb Lip Sync's mouth shapes as [jaw open, lips wide, lips rounded, lips pressed] (the jaw scaled by loudness). */
+const VISEME: Record<string, [number, number, number, number]> = {
+  A: [0, 0, 0, 0.9], // m, b, p: shut
+  B: [0.15, 0.55, 0, 0], // k, s, t, ee: the teeth together, lips drawn
+  C: [0.4, 0.35, 0, 0], // eh, ae
+  D: [0.75, 0.2, 0, 0], // ah: wide open
+  E: [0.35, 0, 0.45, 0], // aw, er: rounded
+  F: [0.12, 0, 1, 0], // oo, w: puckered
+  G: [0.1, 0.25, 0, 0.45], // f, v: the lower lip under the teeth
+  H: [0.3, 0.15, 0, 0], // l: the tongue up
+  X: [0, 0, 0, 0], // at rest
+};
+
 export type V2 = [number, number];
 export type CastSpec = {
   who: string; at: V2; pose?: string; on?: string; face?: V2 | "player"; holding?: string; enters?: boolean;
@@ -171,6 +194,12 @@ export class Actor {
   private blinkT = -1;
   private mouth: (() => number) | null = null;
   private tone: (() => number) | null = null;
+  /** The lips' shape now, as Rhubarb Lip Sync's letter for it (A..H, X; pipeline/build_people.py's shapes()), if known. */
+  private viseme: (() => string) | null = null;
+  /** The lips' and jaw's shape keys, eased towards the viseme's. */
+  private lips = { jaw: 0, wide: 0, pucker: 0, close: 0 };
+  /** The eyes: a glance off where they look, held a moment, then back (or on to another). */
+  private glance = { yaw: 0, pitch: 0, toYaw: 0, toPitch: 0, next: 1 + Math.random() * 2 };
   private jaw = 0;
   private bright = 0.5;
   /** Shut between words: the lips pressed for a moment after a syllable (m, b, p), eased. */
@@ -410,9 +439,10 @@ export class Actor {
   }
 
   /** Speak: the mouth follows the voice's loudness (0..1, by the clip's time), and the hands the talk. */
-  speak(level: (() => number) | null, bright: (() => number) | null = null) {
+  speak(level: (() => number) | null, bright: (() => number) | null = null, shape: (() => string) | null = null) {
     this.mouth = level;
     this.tone = bright;
+    this.viseme = level ? shape : null;
     this.talking = !!level;
     if (!this.path.length && !this.loopRim) this.loop(POSE_CLIP[this.pose]?.[level ? 1 : 0] ?? "Idle_Loop", 0.5);
   }
@@ -493,26 +523,57 @@ export class Actor {
     this.gazeW += ((target ? 1 : 0) - this.gazeW) * Math.min(1, dt * 3);
     const neck = this.bone("neck_01"), head = this.bone("head");
     if (neck && head && target) look(neck, head, target, this.facing(), this.gazeW * 0.9);
+    // never quite still: the head drifts a little, more when talking (a nod to the words, a turn of thought)
+    if (head) {
+      const k = this.talking ? 1 : 0.4;
+      bendAbout(head, new Vector3(-1, 0, 0).applyQuaternion(this.obj.getWorldQuaternion(q0)), (Math.sin(this.t * 0.7) * 0.02 + Math.sin(this.t * 1.9 + 1) * 0.012) * k - this.jaw * 0.04);
+      bendAbout(head, new Vector3(0, 1, 0), (Math.sin(this.t * 0.43 + 2) * 0.03 + Math.sin(this.t * 1.3) * 0.01) * k);
+    }
+    // the eyes dart: a quick glance aside and back every second or few, as eyes do (on their own bones: blender/build_human.py)
+    const eyeL = this.bone("eye_l"), eyeR = this.bone("eye_r");
+    if (eyeL && eyeR) {
+      const gl = this.glance;
+      gl.next -= dt;
+      if (gl.next <= 0) {
+        const away = Math.random() < (this.talking ? 0.45 : 0.6);
+        gl.toYaw = away ? (Math.random() - 0.5) * 0.5 : 0;
+        gl.toPitch = away ? (Math.random() - 0.6) * 0.18 : 0;
+        gl.next = away ? 0.4 + Math.random() * 0.9 : 1 + Math.random() * 2.5;
+      }
+      const snap = Math.min(1, dt * 30); // (a saccade: done in a few hundredths of a second)
+      gl.yaw += (gl.toYaw - gl.yaw) * snap;
+      gl.pitch += (gl.toPitch - gl.pitch) * snap;
+      const right = new Vector3(-1, 0, 0).applyQuaternion(head!.getWorldQuaternion(q0));
+      const up = new Vector3(0, 1, 0).applyQuaternion(head!.getWorldQuaternion(q0));
+      for (const e of [eyeL, eyeR]) { bendAbout(e, up, gl.yaw); bendAbout(e, right, -gl.pitch); }
+    }
     // blinks and the mouth
     this.blinkIn -= dt;
     if (this.blinkIn <= 0) { this.blinkT = 0; this.blinkIn = 2 + Math.random() * 4.5; }
     let blink = 0;
     if (this.blinkT >= 0) { this.blinkT += dt; blink = Math.max(0, 1 - Math.abs(this.blinkT - 0.08) / 0.08); if (this.blinkT > 0.16) this.blinkT = -1; }
-    const want = this.mouth ? this.mouth() : 0;
+    // Baldev chews his tobacco between words (¶108): the jaw working slowly, a pause now and then
+    const chew = this.who.startsWith("baldev") && !this.mouth ? Math.max(0, Math.sin(this.t * 5.5)) * 0.12 * (Math.sin(this.t * 0.3) > -0.4 ? 1 : 0) : 0;
+    const want = this.mouth ? this.mouth() : chew;
     const wasOpen = this.jaw;
     this.jaw += (want - this.jaw) * Math.min(1, dt * 18);
+    const vis = this.viseme ? VISEME[this.viseme()] ?? VISEME.X : null;
     this.bright += ((this.tone ? this.tone() : 0.5) - this.bright) * Math.min(1, dt * 10);
     this.shut = this.mouth && want < 0.05 && wasOpen > 0.15 ? 1 : Math.max(0, this.shut - dt * 6);
     for (const m of this.morphs) {
       const inf = m.mesh.morphTargetInfluences;
       if (!inf) continue;
       for (const b of m.blink) inf[b] = blink;
-      if (m.jaw != null) inf[m.jaw] = this.jaw * 0.85;
-      // the lips' shape: wide for bright sounds, rounded for dark ones, pressed shut between words
+      // the lips' shape: the viseme's when there is one (its jaw opened as far as the voice is loud); else wide for
+      // bright sounds, rounded for dark ones, pressed shut between words
       const talking = Math.min(1, this.jaw * 2.5);
-      if (m.wide != null) inf[m.wide] = talking * Math.max(0, this.bright - 0.45) * 1.4;
-      if (m.pucker != null) inf[m.pucker] = talking * Math.max(0, 0.45 - this.bright) * 1.6;
-      if (m.close != null) inf[m.close] = this.shut * 0.7;
+      const goal = vis ? { jaw: vis[0] * (0.55 + 0.6 * want), wide: vis[1], pucker: vis[2], close: vis[3] }
+        : { jaw: this.jaw * 0.85, wide: talking * Math.max(0, this.bright - 0.45) * 1.4, pucker: talking * Math.max(0, 0.45 - this.bright) * 1.6, close: this.shut * 0.7 };
+      if (m === this.morphs[0]) for (const k of ["jaw", "wide", "pucker", "close"] as const) this.lips[k] += (goal[k] - this.lips[k]) * Math.min(1, dt * 22);
+      if (m.jaw != null) inf[m.jaw] = this.lips.jaw;
+      if (m.wide != null) inf[m.wide] = this.lips.wide;
+      if (m.pucker != null) inf[m.pucker] = this.lips.pucker;
+      if (m.close != null) inf[m.close] = this.lips.close;
       if (m.smile != null) inf[m.smile] = this.face.smile;
       if (m.frown != null) inf[m.frown] = this.face.frown;
       for (const b of m.brows) inf[b] = this.face.brows + this.jaw * 0.12; // (the brows lift a little with the words)
@@ -729,17 +790,18 @@ export class Cast {
 
   /** A voice file's loudness and brightness over its time (0..1 each, 25 a second), for a mouth: from
    * pipeline/build_people.py's mouths(). Loud opens the jaw; bright (ee, ay) draws the lips wide, dark (oo, oh) rounds them. */
-  async level(file: string, time: () => number): Promise<{ open: () => number; bright: () => number }> {
+  async level(file: string, time: () => number): Promise<{ open: () => number; bright: () => number; shape: (() => string) | null }> {
     if (!this.mouths && this.info.mouths) {
       this.mouths = await fetch(this.env.url(this.info.mouths)).then((r) => r.json()).catch(() => ({}));
     }
-    const [loud, tone] = (this.mouths?.[file] ?? "").split("|");
+    const [loud, tone, shapes] = (this.mouths?.[file] ?? "").split("|");
     const at = (s: string | undefined, fallback: number) => () => {
       const i = Math.floor(time() * 25);
       return s && i < s.length ? (s.charCodeAt(i) - 48) / 9 : s ? 0 : fallback;
     };
-    if (!loud) return { open: () => 0.35 + Math.sin(time() * 17) * 0.3, bright: () => 0.5 + Math.sin(time() * 5) * 0.3 }; // (no envelope: a plain flap)
-    return { open: at(loud, 0), bright: at(tone, 0.5) };
+    if (!loud) return { open: () => 0.35 + Math.sin(time() * 17) * 0.3, bright: () => 0.5 + Math.sin(time() * 5) * 0.3, shape: null }; // (no envelope: a plain flap)
+    const shape = shapes ? () => shapes[Math.floor(time() * 25)] ?? "X" : null;
+    return { open: at(loud, 0), bright: at(tone, 0.5), shape };
   }
 
   update(dt: number) {

@@ -1,7 +1,7 @@
 {
  "people": {
   "professor": {
-   "file": "people-professor.288839d3d3.glb",
+   "file": "people-professor.3943a3758d.glb",
    "height": 1.68,
    "face": {
     "smile": 0.25
@@ -74,5 +74,5 @@
    "height": 1.76
   }
  },
- "mouths": "voice-mouths.3861e97333.json"
+ "mouths": "voice-mouths.4e64ebe0fb.json"
 }
