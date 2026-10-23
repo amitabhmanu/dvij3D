@@ -1,7 +1,9 @@
-// The camera of someone else's film (design §10.4.1): over the shoulder of the
-// person whose film it is, on whoever speaks or whatever is near them. A first
-// cut for the pilot; the Professor's own shots (follow, listen, low, insert)
-// come next.
+// The camera of someone else's film (design §10.4.1). It keeps to the person
+// whose film it is: over their shoulder on whoever speaks to them, the reverse
+// angle on them as they speak (on the same side of the line, so the two keep
+// their places on screen), behind them as they walk, and a close-up when the
+// script asks for one (`camera: {for: <who>, shot: eyes, of: <who>}`). It swings
+// round walls rather than through them.
 import { Object3D, PerspectiveCamera, Raycaster, Vector3 } from "three";
 import type { Actor } from "./cast";
 
@@ -27,6 +29,9 @@ export class FilmCamera {
   private swing = 0;
   private frame = 0;
   private ray = new Raycaster();
+  private kind = "listen";
+  private was: Vector3 | null = null;
+  private moving = 0;
 
   constructor(private shot: Shot) {}
 
@@ -50,7 +55,7 @@ export class FilmCamera {
   shoot(eyes: Actor | null) { this.close = eyes; this.last = 0; }
 
   /** Cut: the next frame is placed at once, not eased there (a new scene). */
-  cut() { this.last = 0; this.frame = 0; this.swing = 0; }
+  cut() { this.last = 0; this.frame = 0; this.swing = 0; this.was = null; this.moving = 0; }
 
   /** How far the camera can stand from `head` along `dir` before a wall (metres, up to `len`). */
   private clear(head: Vector3, dir: Vector3, len: number): number {
@@ -63,9 +68,41 @@ export class FilmCamera {
   }
 
   /** The way out from the head to the camera, swung `a` radians round from straight behind. */
-  private out(back: Vector3, a: number): Vector3 {
+  private out(back: Vector3, a: number, f: { side: number; back: number; up: number }): Vector3 {
     const d = back.clone().applyAxisAngle(UPWARD, a);
-    return d.multiplyScalar(BACK).addScaledVector(new Vector3(-d.z, 0, d.x).normalize(), SIDE).add(new Vector3(0, UP, 0));
+    return d.multiplyScalar(f.back).addScaledVector(new Vector3(-d.z, 0, d.x).normalize(), f.side).add(new Vector3(0, f.up, 0));
+  }
+
+  /** The shot for this moment: over their shoulder on whoever speaks to them (listen), over the listener's
+   * shoulder on them as they speak (speak, the reverse angle, kept on the same side of the line between the
+   * two), or behind them as they walk (walk). */
+  private frameFor(me: Actor, dt: number): { from: Actor; on: Vector3; side: number; back: number; up: number; kind: string } {
+    const head = me.headAt();
+    // walking: their head moving, with no one speaking
+    const speed = this.was ? Math.hypot(head.x - this.was.x, head.z - this.was.z) / Math.max(dt, 1e-3) : 0;
+    this.was = head.clone();
+    this.moving = speed > 0.45 ? Math.min(1, this.moving + dt * 2) : Math.max(0, this.moving - dt * 1.5);
+    const s = this.shot.speaker();
+    if (s === me) {
+      const to = this.listener(me);
+      if (to) return { from: to, on: head, side: -SIDE, back: BACK, up: UP, kind: "speak" };
+    }
+    if (!s && this.moving > 0.5) {
+      return { from: me, on: head.clone().addScaledVector(me.facing(), 2.5).add(new Vector3(0, -0.3, 0)), side: 0.2, back: 2.4, up: 0.7, kind: "walk" };
+    }
+    return { from: me, on: this.focus(me), side: SIDE, back: BACK, up: UP, kind: "listen" };
+  }
+
+  /** Whom they are speaking to: the nearest one in front of them. */
+  private listener(me: Actor): Actor | null {
+    const head = me.headAt(), ahead = me.facing();
+    let best: Actor | null = null, near = 6;
+    for (const a of this.shot.others()) {
+      if (a === me || !a.visible) continue;
+      const h = a.headAt(), d = h.distanceTo(head);
+      if (d < near && h.clone().sub(head).setY(0).dot(ahead) > -0.2 * d) { best = a; near = d; }
+    }
+    return best;
   }
 
   /** Place the camera (game.ts's Body.film calls this each frame). */
@@ -85,15 +122,19 @@ export class FilmCamera {
       this.aim.copy(eyes);
       return;
     }
-    const head = me.headAt();
-    const look = this.focus(me);
+    const f = this.frameFor(me, dt);
+    const cut = f.kind !== this.kind && (f.kind === "speak" || this.kind === "speak");
+    if (cut) { this.kind = f.kind; this.frame = 0; this.swing = 0; }
+    this.kind = f.kind;
+    const head = f.from.headAt();
+    const look = f.on;
     // behind the shoulder away from what they look at, and a little above
     const back = head.clone().sub(look).setY(0);
-    if (back.lengthSq() < 1e-4) back.copy(me.facing()).negate();
+    if (back.lengthSq() < 1e-4) back.copy(f.from.facing()).negate();
     back.normalize();
     // not through a wall: if straight behind is blocked, swing round to where there's room (checked every few frames)
     if (this.frame++ % 6 === 0) {
-      const room = (a: number) => { const o = this.out(back, a); return this.clear(head, o, o.length()) / o.length(); };
+      const room = (a: number) => { const o = this.out(back, a, f); return this.clear(head, o, o.length()) / o.length(); };
       let best = this.swing, most = room(this.swing);
       if (most < 0.7) {
         for (const a of SWINGS) {
@@ -104,9 +145,9 @@ export class FilmCamera {
       this.swing = best;
       this.reach = Math.max(0.25, most);
     }
-    const want = head.clone().add(this.out(back, this.swing).multiplyScalar(this.reach));
+    const want = head.clone().add(this.out(back, this.swing, f).multiplyScalar(this.reach));
     const ease = 1 - Math.exp(-dt * 3);
-    if (dt >= 1 || this.at.distanceTo(want) > 8) { this.at.copy(want); this.aim.copy(look); }
+    if (dt >= 1 || cut || this.at.distanceTo(want) > 8) { this.at.copy(want); this.aim.copy(look); }
     else { this.at.lerp(want, ease); this.aim.lerp(look, ease); }
     camera.position.copy(this.at);
     camera.lookAt(this.aim);
