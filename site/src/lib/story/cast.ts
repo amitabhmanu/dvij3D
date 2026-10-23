@@ -100,6 +100,8 @@ const TALK: Record<string, string[]> = {
   baldev: ["jab", "wave-off"],
   maharaj: ["palms-up", "hand-on-chest"],
   bhavi: ["tuck-hair", "open-hand", "hand-to-chin"],
+  vaidji: ["palms-up", "hand-on-chest"], // (overblown: the palms spread, the hand to the heart)
+  attendant: ["hand-on-chest"], // (obsequious)
 };
 /** Those of them that keep the hands by the body: for talking face to face, close up. */
 const CLOSE_TALK = new Set(["tuck-hair", "hand-to-chin", "hand-on-chest", "spectacles"]);

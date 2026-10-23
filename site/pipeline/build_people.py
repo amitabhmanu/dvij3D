@@ -144,7 +144,7 @@ PEOPLE = {
         height=1.63, macro=dict(gender=1.0, age=age(55), muscle=0.15, weight=1.0, height=0.35, race=south_asian(0.05, 0.1)),
         targets={"head/head-round": 0.7, "neck/neck-double-incr": 1.0, "cheek/l-cheek-volume-incr": 0.7, "cheek/r-cheek-volume-incr": 0.7, "ears/l-ear-scale-incr": 0.4, "ears/r-ear-scale-incr": 0.4, "eyes/l-eye-scale-decr": 0.1, "eyes/r-eye-scale-decr": 0.1, "mouth/mouth-scale-horiz-decr": 0.2}, face=dict(brows=0.35),
         skin=dict(texture="middleage_caucasian_male", tone=[0.86, 0.64, 0.56]), eyebrows="eyebrow004", brow_color=[0.6, 0.58, 0.55],
-        blush=dict(color=[0.85, 0.35, 0.32], cheeks=0.55, feet=0.4),
+        blush=dict(color=[0.85, 0.35, 0.32], cheeks=0.55, feet=0.4), detail=dict(age=0.8, pores=0.75),  # (overblown, ruddy, open-pored)
         garments=[dict(kind="top", name="kurta", color=[0.92, 0.89, 0.8], sleeve=1.7, loose=0.12, **{"from": 0.75}),
                   dict(kind="skirt", name="kurta-skirt", color=[0.92, 0.89, 0.8], to=0.6, flare=0.03),
                   dict(kind="trousers", name="pyjama", color=WHITE, pleats=0.004),
@@ -154,6 +154,7 @@ PEOPLE = {
     "attendant": dict(
         height=1.68, macro=dict(gender=1.0, age=age(35), muscle=0.45, weight=0.28, height=0.45, race=south_asian(0.4, 0.15)),
         skin=dict(texture="young_african_male", tone=[0.5, 0.34, 0.24]), hair="short01", hair_color=BLACK_HAIR, eyebrows="eyebrow002",
+        brow_color=[0.04, 0.035, 0.03], detail=dict(age=0.45, pores=0.6),
         garments=[dict(kind="top", name="kurta", color=WHITE, sleeve=0.4, loose=0.06, **{"from": 0.85}),
                   dict(kind="dhoti", name="dhoti", color=WHITE, to=0.2, flare=0.045),
                   dict(kind="waistband", name="sash", color=[0.74, 0.14, 0.1], width=0.06),
@@ -161,7 +162,8 @@ PEOPLE = {
     # The henchman who brings the summons to the lodge (¶288, ¶293): not the attendant (the author, 21 Oct)
     "henchman": dict(
         height=1.72, macro=dict(gender=1.0, age=age(35), muscle=0.65, weight=0.55, height=0.55, race=south_asian(0.4, 0.1)),
-        skin=dict(texture="young_african_male", tone=[0.48, 0.32, 0.22]), hair="short03", hair_color=BLACK_HAIR,
+        skin=dict(texture="young_african_male", tone=[0.48, 0.32, 0.22]), hair="short03", hair_color=BLACK_HAIR, eyebrows="eyebrow002",
+        brow_color=[0.04, 0.035, 0.03], detail=dict(age=0.45, pores=0.7),
         garments=[dict(kind="top", name="kurta", color=[0.84, 0.5, 0.2], sleeve=0.6, loose=0.08, **{"from": 0.85}),
                   dict(kind="skirt", name="kurta-skirt", color=[0.84, 0.5, 0.2], to=0.72, flare=0.04, offset=0.03),
                   dict(kind="dhoti", name="dhoti", color=WHITE, to=0.16, flare=0.045),
