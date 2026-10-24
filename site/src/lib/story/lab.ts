@@ -79,6 +79,8 @@ export function startLab(canvas: HTMLCanvasElement) {
       renderer.render(scene, camera);
       return canvas.toDataURL("image/jpeg", 0.92);
     },
+    /** The person, for probes (dev). */
+    actor: () => cast?.get(who) ?? null,
     renderer,
   };
   (window as unknown as { lab: typeof lab }).lab = lab;

@@ -14,6 +14,7 @@ import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import { aim, bindLook, look, reach } from "./ik";
 import { FaceLife } from "./face-life";
 import { eyeMaterial, softCards } from "./eyes";
+import { IdleLife, type Body as IdleBody } from "./idle";
 import { pickUp, putDown, show } from "./handling";
 import { SELF_LAYER } from "../walk/game";
 
@@ -269,6 +270,10 @@ export class Actor {
   private gazeW = 0;
   /** Where the eyes go, how the head follows, the blinks (face-life.ts). */
   private life: FaceLife;
+  /** The breath, the weight from foot to foot, the chest joining big looks (idle.ts). */
+  private idle: IdleLife;
+  private idleBody: IdleBody;
+  private wasTalking = false;
   /** The layer a new gesture takes over from, and how much of it was on. */
   private from: { layer: Layer; w: number } | null = null;
   private mouth: (() => number) | null = null;
@@ -296,6 +301,8 @@ export class Actor {
 
   constructor(readonly who: string, made: { scene: Object3D; clips: AnimationClip[] }, private env: CastEnv) {
     this.life = new FaceLife(who);
+    this.idle = new IdleLife(who);
+    this.idleBody = { bone: (n) => this.bone(n), obj: this.obj, bend: bendAbout };
     this.model = cloneSkinned(made.scene);
     this.obj.add(this.model);
     this.obj.name = `cast-${who}`;
@@ -655,6 +662,7 @@ export class Actor {
       if (k >= 1) { this.turning = null; tr.done?.(); }
     }
     for (const [b, q] of this.rest) b.quaternion.copy(q);
+    this.idle.undo(this.idleBody);
     this.mixer.update(dt);
     this.obj.updateMatrixWorld(true);
     // a gesture: its layer eased in and out over its time
@@ -689,6 +697,10 @@ export class Actor {
       this.pose_({ spine: -0.2, head: -0.1, handL: this.point(-0.16, 0.95, 0.32), handR: this.carried ? this.point(0.14, 1.05, 0.34) : null }, 1);
     }
     this.pose_(this.layer, this.layerW);
+    // between beats: the breath, and stood still, the weight from foot to foot (the feet kept planted)
+    const still = this.pose === "stand" && !this.path.length && !this.loopRim && !this.turning && !this.gesture && !Object.keys(this.held).length && !this.from;
+    this.idle.apply(dt, this.idleBody, still, this.talking, this.talking && !this.wasTalking);
+    this.wasTalking = this.talking;
     this.carry(tilt);
     // the eyes and head: towards what they look at (eased), within a neck's reach
     const target = typeof this.gaze === "function" ? this.gaze() : this.gaze;
@@ -696,6 +708,7 @@ export class Actor {
     const neck = this.bone("neck_01"), head = this.bone("head");
     // the head turns to an eased aim (no snaps when the speaker changes), and a share of the way the eyes look off
     const aimAt = this.life.headTarget(dt, target, this.talking, head?.getWorldPosition(new Vector3()));
+    this.idle.chestTo(this.idleBody, aimAt, this.gazeW); // (a look further round than the neck goes takes the chest with it)
     if (neck && head && aimAt) look(neck, head, aimAt, this.facing(), this.gazeW * 0.9);
     // never quite still: the head drifts a little, more when talking (a nod to the words, a turn of thought)
     if (head) {
