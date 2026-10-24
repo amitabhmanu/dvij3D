@@ -47,7 +47,7 @@ beats:
       - say: {who: dvij, line: "There... in the room where I was sleeping. Your glasses... they're on the stool by the bed.", sources: [novel ¶139]}
       - actor: {who: professor, pose: stand, walk: [-8.5, 3.0], via: [[-7.75, -10.0]], then: pick-up, item: spectacles}   # fetches them from Dvij's room (novel ¶140)
       - camera: {pose: sit, at: [-12.8, -11.7], over: 2.0}       # meanwhile he gets himself into the cushioned chair (novel ¶140)
-      - actor: {who: professor, walk: [-14.0, -11.9], via: [[-7.75, -10.0], [-13.0, -10.8]], wearing: spectacles, look: player}   # off the desk's end, a little way from his chair: seen, not loomed over
+      - actor: {who: professor, walk: [-14.3, -11.9], via: [[-7.75, -10.0], [-13.0, -10.8]], wearing: spectacles, look: player}   # off the desk's end, a little way from his chair: seen, not loomed over
 
   - id: veena
     sources: [breakdown ch3 p4, novel ¶140, novel ¶141, novel ¶142]
@@ -66,16 +66,19 @@ beats:
       target: varahi
     then:
       - say: {who: dvij, line: "I'm sorry.", sources: [novel ¶146]}
-      - actor: {who: professor, take: varahi, anim: pick-up}
+      - actor: {who: professor, take: varahi}                       # picked up where she fell, one reach (handling.ts)
+      - actor: {who: professor, face: player, look: player, anim: show}   # held up to him, turned to him (he "holds things up to the light", comic b1-p007-4)
       - say: {who: professor, line: "She is Varahi, one of the saptamatrikas. She is pot bellied, for she holds in her womb the universe.", sources: [novel ¶147]}
       - say: {who: dvij, line: "I am really sorry.", sources: [novel ¶148]}
       - say: {who: professor, line: "Oh, don't be a fool. It's impossible to find anything intact, really speaking, including our history. All we see now are small fragments.", sources: [novel ¶149]}
+      - actor: {who: professor, put: [-13.45, -12.32]}              # and put back, on the desk's free end by the lamp (ours: the text doesn't say where)
 
   - id: questions
     sources: [breakdown ch3 p7-p10, novel ¶150-155]
     do:
       - say: {who: dvij, line: "Why is my head bandaged?", sources: [novel ¶150]}
-      - actor: {who: professor, take: manuscript, anim: talk}
+      - actor: {who: professor, take: manuscript}                   # the birch-bark leaves, off the desk
+      - actor: {who: professor, face: player, look: player, anim: show}
       - actor: {who: professor, anim: finger-raise}                # "Look here... at the edges of the birch barks" (comic b1-p007-9)
       - say: {who: professor, line: "Why indeed? Because of the accident, I should think. Careless driving, I dare say. Must you fret about those things when we are in the midst of such secret knowledge?", sources: [novel ¶151]}
       - say: {who: dvij, line: "I had a car accident?", sources: [novel ¶152]}

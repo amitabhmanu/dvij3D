@@ -75,3 +75,8 @@ export function bindLook(head: Bone, root: { getWorldQuaternion(q: Quaternion): 
   const rel = root.getWorldQuaternion(new Quaternion()).invert().multiply(head.getWorldQuaternion(new Quaternion()));
   head.userData.lookBindInv = rel.invert();
 }
+
+/** Which way a head faces now (world, unit), as `look` reads it: the body's ahead carried by the head's pose. */
+export function forwardOf(head: Bone, out = new Vector3()): Vector3 {
+  return out.set(0, 0, 1).applyQuaternion(head.getWorldQuaternion(q1).multiply(BIND_INV(head))).normalize();
+}

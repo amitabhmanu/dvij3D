@@ -53,7 +53,7 @@ beats:
       kind: look-press
       target: [-18, 0.8, 38]
     then:
-      - camera: {recoil: true}                   # "suddenly he recoiled with a shout"
+      - camera: {recoil: true, away: [-18, 38], to: 3.3}   # "suddenly he recoiled with a shout": back from the parapet, clear of her walk round it
       - say: {who: dvij, line: "That is a well! A very deep well!", sources: [novel ¶168]}
       - actor: {who: bhavi, anim: laugh, then: {walk-rim: true}}    # she gets up and walks the parapet (novel ¶169)
       - caption: "It was indeed a deep well, its brick walls covered with slime, the water surface almost indiscernible due to its depth."

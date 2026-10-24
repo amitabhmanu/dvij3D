@@ -173,20 +173,22 @@ export function makeThing(kind: string, x: number, z: number, floor: number, sta
         f.add(arm);
       }
       g.add(at(f, 0, floor, 0));
-      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.1, z] };
+      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.1, z], handle: f }; // (the Professor picks her up: handling.ts)
     }
     case "manuscript": {
       // birch-bark leaves (¶153), loosely stacked, frayed at the edges
       const leaves: Material[] = [];
+      const stack = new Group(); // (picked up together: handling.ts)
+      g.add(stack);
       for (let k = 0; k < 7; k++) {
         const m = new MeshStandardMaterial({ map: barkTexture(11 + k * 7), roughness: 0.9, alphaTest: 0.5, side: DoubleSide });
         leaves.push(m);
         const leaf = at(new Mesh(new PlaneGeometry(0.3, 0.11), m), (k % 3 - 1) * 0.006, floor + 0.785 + k * 0.0025, (k % 2) * 0.004);
         leaf.rotation.set(-Math.PI / 2, 0, (k - 3) * 0.02);
         leaf.castShadow = false;
-        g.add(leaf);
+        stack.add(leaf);
       }
-      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.8, z], dispose: () => leaves.forEach((m) => { (m as MeshStandardMaterial).map?.dispose(); m.dispose(); }) };
+      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.8, z], handle: stack, dispose: () => leaves.forEach((m) => { (m as MeshStandardMaterial).map?.dispose(); m.dispose(); }) };
     }
     case "tea-pot": {
       // a small brass kerosene stove, its burner's blue ring, an aluminium pan of milky tea on it (¶209)

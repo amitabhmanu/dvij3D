@@ -664,8 +664,18 @@
        "actor": {
         "who": "professor",
         "walk": [
-         -13.4,
-         -12.0
+         -14.3,
+         -11.9
+        ],
+        "via": [
+         [
+          -7.75,
+          -10.0
+         ],
+         [
+          -13.0,
+          -10.8
+         ]
         ],
         "wearing": "spectacles",
         "look": "player"
@@ -746,8 +756,15 @@
       {
        "actor": {
         "who": "professor",
-        "take": "varahi",
-        "anim": "pick-up"
+        "take": "varahi"
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "face": "player",
+        "look": "player",
+        "anim": "show"
        }
       },
       {
@@ -776,6 +793,15 @@
          "novel ¶149"
         ]
        }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "put": [
+         -13.45,
+         -12.32
+        ]
+       }
       }
      ]
     },
@@ -798,8 +824,15 @@
       {
        "actor": {
         "who": "professor",
-        "take": "manuscript",
-        "anim": "talk"
+        "take": "manuscript"
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "face": "player",
+        "look": "player",
+        "anim": "show"
        }
       },
       {
@@ -1099,7 +1132,12 @@
      "then": [
       {
        "camera": {
-        "recoil": true
+        "recoil": true,
+        "away": [
+         -18,
+         38
+        ],
+        "to": 3.3
        }
       },
       {
@@ -1658,6 +1696,15 @@
      ],
      "do": [
       {
+       "say": {
+        "who": "maharaj",
+        "line": "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.",
+        "sources": [
+         "novel ¶214"
+        ]
+       }
+      },
+      {
        "actor": {
         "who": "maharaj",
         "walk": [
@@ -1669,15 +1716,6 @@
          0
         ],
         "anim": "tend"
-       }
-      },
-      {
-       "say": {
-        "who": "maharaj",
-        "line": "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.",
-        "sources": [
-         "novel ¶214"
-        ]
        }
       }
      ]

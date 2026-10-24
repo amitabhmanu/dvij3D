@@ -50,6 +50,14 @@ export function sleep(seconds: number, paused: () => boolean, early: () => boole
   });
 }
 
+/** Where one steps back to from `centre`, along the line from it through where one stands, `dist` away (world x, z). */
+export function recoilTo(me: [number, number], centre: [number, number], dist: number): [number, number] {
+  let dx = me[0] - centre[0], dz = me[1] - centre[1];
+  const d = Math.hypot(dx, dz);
+  if (d < 1e-3) { dx = 0; dz = -1; } else { dx /= d; dz /= d; }
+  return [centre[0] + dx * dist, centre[1] + dz * dist];
+}
+
 const POSES = new Set(["lie", "sit", "sit-low", "stand", "floor"]);
 
 export class StoryStage implements Stage {
@@ -232,6 +240,12 @@ export class StoryStage implements Stage {
       case "camera": {
         if (arg.recoil) {
           if (!hurried) await body.glance(0.35, 0.6);
+          // and he steps back from it, out of the way of whoever walks its edge (the well's parapet: Bhavi walks it)
+          if (arg.away) {
+            const me = this.game.player(), c = this.world(arg.away);
+            const [x, z] = recoilTo([me.x, me.z], [c[0], c[2]], arg.to ?? 2.8);
+            if (Math.hypot(me.x - c[0], me.z - c[2]) < (arg.to ?? 2.8)) await body.pose({ pose: "stand", at: [x, z], look: [c[0], c[1] - 0.3, c[2]], seconds: hurried ? 0 : 0.8 });
+          }
           return;
         }
         if (!POSES.has(arg.pose)) return;
