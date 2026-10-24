@@ -1,0 +1,17 @@
+# Who each face crop from find_faces.py is (pipeline/.cache/likeness/faces/<key>.jpg), read by eye from the
+# crops' contact sheets, b1-p002..p013. Crops cut off, too small, in the dark or of the ghosts are left out.
+professor: [b1-p005-f00, b1-p005-f01, b1-p005-f02, b1-p005-f09, b1-p005-f11, b1-p006-f08, b1-p006-f10,
+            b1-p007-f00, b1-p007-f06, b1-p007-f08, b1-p007-f10, b1-p007-f12, b1-p007-f13, b1-p007-f14,
+            b1-p012-f06, b1-p012-f09, b1-p012-f14, b1-p012-f16, b1-p012-f20, b1-p012-f23, b1-p012-f25, b1-p012-f29, b1-p012-f31,
+            b1-p013-f01, b1-p013-f06, b1-p013-f07, b1-p013-f14, b1-p013-f15, b1-p013-f22]
+bhavi: [b1-p008-f01, b1-p008-f04, b1-p009-f00, b1-p009-f04, b1-p009-f05,
+        b1-p012-f07, b1-p012-f10, b1-p012-f15, b1-p012-f19, b1-p012-f21, b1-p012-f22, b1-p012-f24, b1-p012-f26, b1-p012-f28,
+        b1-p013-f00, b1-p013-f02, b1-p013-f08, b1-p013-f09, b1-p013-f12, b1-p013-f17, b1-p013-f20]
+dvij: [b1-p004-f00, b1-p004-f02, b1-p004-f04, b1-p007-f01, b1-p007-f02, b1-p007-f03, b1-p007-f05, b1-p007-f07, b1-p007-f09,
+       b1-p007-f11, b1-p007-f15, b1-p008-f00, b1-p009-f01, b1-p009-f02, b1-p009-f03, b1-p009-f06, b1-p010-f02, b1-p010-f05,
+       b1-p011-f03, b1-p012-f00, b1-p012-f02, b1-p012-f05, b1-p012-f08, b1-p012-f11, b1-p012-f18, b1-p012-f27, b1-p012-f30,
+       b1-p013-f03, b1-p013-f05, b1-p013-f10, b1-p013-f11, b1-p013-f16, b1-p013-f18, b1-p013-f19]
+# for later (step 6): the other main characters
+mahant: [b1-p005-f04, b1-p005-f06, b1-p005-f08, b1-p005-f10, b1-p006-f01, b1-p006-f02, b1-p006-f03, b1-p006-f05, b1-p011-f05, b1-p011-f08, b1-p011-f09, b1-p011-f11]
+baldev: [b1-p005-f03, b1-p006-f00, b1-p006-f09, b1-p011-f04, b1-p011-f06, b1-p011-f07, b1-p011-f12]
+vaidji: [b1-p005-f05, b1-p006-f11]
