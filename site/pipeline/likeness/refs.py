@@ -37,8 +37,9 @@ WHO = {
              "warm golden-brown skin with light freckles on the nose and cheeks, long thick mostly straight black hair, "
              "a white kurta printed with small red flowers",
     "dvij": "a young Indian man in his late twenties, thick dark curly hair, a short stubble beard, strong brows, warm brown skin, "
-            "a white gauze bandage wound round his head, a cream cotton shirt",
+            "a short full dark beard, a white gauze bandage wound round his head, a cream cotton shirt",
 }
+PICK = {"professor": ("b1-p013-f01", "b1-p012-f09"), "bhavi": ("b1-p009-f04", "b1-p013-f20"), "dvij": ("b1-p009-f03", "b1-p013-f10")}
 EXPR = {
     "professor": ["smiling warmly", "laughing, head tipped back", "frowning", "surprised, brows raised"],
     "bhavi": ["smiling warmly", "laughing", "frowning", "surprised, brows raised", "glaring, eyes narrowed", "chewing her lower lip, unsure"],
@@ -87,6 +88,9 @@ def main(whos):
         big = [c for c in cs if c[3] > 150] or cs
         front = min(big, key=lambda c: abs(c[1]) + abs(c[2]) * 0.5)
         side = max(big, key=lambda c: abs(c[1]))
+        # clean, single-face crops picked by eye (the automatic pick can land on a crowded panel)
+        if who in PICK:
+            front, side = (next((c for c in cs if c[0] == k), d) for k, d in zip(PICK[who], (front, side)))
         desc = WHO[who]
         g = torch.Generator().manual_seed(7)
         jobs = [("front", front[0], f"head and shoulders portrait, facing the viewer, neutral expression, {desc}, {STYLE}", 0.55),

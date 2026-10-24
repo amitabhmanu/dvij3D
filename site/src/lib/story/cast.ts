@@ -13,6 +13,7 @@ import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import { aim, bindLook, look, reach } from "./ik";
 import { FaceLife } from "./face-life";
+import { eyeMaterial, softCards } from "./eyes";
 import { pickUp, putDown, show } from "./handling";
 import { SELF_LAYER } from "../walk/game";
 
@@ -65,6 +66,8 @@ export type CastEnv = {
   heading: () => number;
   /** Someone moved: their shadow is to be drawn again. */
   stir?: () => void;
+  /** The lifelike layers (eyes.ts, skin, hair): on unless the quality is low. */
+  lifelike?: boolean;
 };
 export type PeopleInfo = { people: Record<string, { file: string; height: number; face?: { smile?: number; frown?: number; brows?: number } }>; mouths?: string };
 
@@ -314,11 +317,15 @@ export class Actor {
                              brows: [d.browInnerUp, d.browOuterUpRight].filter((x) => x != null), frown: d.mouthFrownLeft,
                              pucker: d.mouthPucker, wide: d.mouthStretchLeft, close: d.mouthClose });
         }
-        // hair, brows, lashes, the tilak: cut out where their textures are clear, not blended (no sorting troubles)
+        // hair, brows, lashes, the tilak: cut out where their textures are clear, not blended (no sorting troubles);
+        // the brows and lashes soft-edged by the multisampling, and the eyes layered (eyes.ts), unless kept plain
+        const life = env.lifelike !== false;
         for (const mat of ([] as Material[]).concat(m.material)) {
           if (mat.transparent) { mat.transparent = false; mat.alphaTest = 0.5; mat.depthWrite = true; }
+          if (life && /^(eyebrows|eyelashes)/.test(mat.name)) softCards(mat);
         }
         if (!Array.isArray(m.material) && m.material.name.startsWith("skin")) m.material = skinOf(m.material);
+        if (life && !Array.isArray(m.material) && m.material.name === "eyes") m.material = eyeMaterial(m.material, who.split(/[#-]/)[0], m, this.model);
       }
     });
     this.mixer = new AnimationMixer(this.model);
