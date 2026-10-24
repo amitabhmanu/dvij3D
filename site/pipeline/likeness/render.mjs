@@ -12,7 +12,7 @@ const shots = JSON.parse(readFileSync(args[0], "utf8"));
 const b = await chromium.launch({ channel: "chrome", headless: true, args: ["--use-angle=d3d11", "--ignore-gpu-blocklist", "--enable-gpu"] });
 const page = await b.newPage({ viewport: { width: 800, height: 800 } });
 page.on("pageerror", (e) => console.log("pageerror", e.message));
-await page.goto(`http://localhost:${port}/dev/lab/people`);
+await page.goto(`http://localhost:${port}/dev/lab/people${args.includes("--plain") ? "?plain" : ""}`);
 await page.waitForFunction(() => window.lab, null, { timeout: 120_000 });
 let loaded = "";
 for (const s of shots) {

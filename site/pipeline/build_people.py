@@ -68,6 +68,9 @@ PEOPLE = {
         targets={"nose/nose-scale-horiz-incr": 0.5, "nose/nose-scale-vert-incr": 0.5, "nose/nose-point-width-incr": 0.3, "ears/l-ear-scale-incr": 0.8, "ears/r-ear-scale-incr": 0.8, "eyebrows/eyebrows-trans-down": 0.5, "eyes/l-eye-scale-incr": 0.55, "eyes/r-eye-scale-incr": 0.55, "mouth/mouth-angles-up": 0.6, "forehead/forehead-scale-vert-incr": 0.3}, face=dict(smile=0.25),
         skin=dict(texture="old_caucasian_male", tone=[0.66, 0.48, 0.36]), hair_color=[0.87, 0.86, 0.83],
         brow_color=[0.84, 0.82, 0.78], eyebrows="eyebrow010", detail=dict(age=1.5, pores=0.7),
+        # the lifelike pilot: skin zones (ruddy nose and ears, the eyes' darker skin, a shaven old man's faint shadow),
+        # and his hair, moustache and brows as cards (blender/lifelike.py)
+        zones=dict(nose=0.5, cheeks=0.4, ears=0.6, eyes=0.55, beard=0.2), brow_cards=True,
         garments=[dict(kind="top", name="shirt", color=[0.8, 0.74, 0.58], sleeve=0.55, loose=0.16, smooth=24, tucked=True, **{"from": "waist-0.005"}),
                   dict(kind="shirt-front", name="shirt-front", color=[0.78, 0.72, 0.56]),
                   dict(kind="legs", name="shorts", color=[0.68, 0.6, 0.43], top="waist+0.035", offset=0.022, smooth=12),
@@ -76,16 +79,39 @@ PEOPLE = {
                   dict(kind="socks", name="socks", color=[0.9, 0.89, 0.85]),
                   dict(kind="sole", name="shoes", color=[0.32, 0.19, 0.1]),
                   dict(kind="stubble", name="scalp", color=[0.7, 0.68, 0.64]),
-                  dict(kind="curls", name="curls", color=[0.9, 0.89, 0.86]),
-                  dict(kind="moustache", name="moustache", size=1.45, bushy=True, color=[0.88, 0.87, 0.84]),
+                  dict(kind="curls", name="mane", color=[0.5, 0.49, 0.47], depth=0.024, knots=False),  # (the mass under the cards)
+                  # loose grey curls standing off the head, fullest over the ears and behind, whiter at the ears (b1-p012-6, b1-p013-1)
+                  dict(kind="hair-cards", name="curls", style="curly", color=[0.78, 0.77, 0.74], root=[0.42, 0.41, 0.39], tip=[0.9, 0.89, 0.86],
+                       volume=0.036, length=0.055, curl=0.008, turns=1.6, width=0.016, gap=0.007, wave=0.25, strands=34, light=0.05),
+                  # the white moustache, drooping over the lip and a little uneven (b1-p012-6, b1-p012-23)
+                  dict(kind="hair-cards", name="moustache", style="moustache", color=[0.84, 0.83, 0.8], root=[0.58, 0.57, 0.54], tip=[0.92, 0.91, 0.89],
+                       size=1.35, count=70, strands=44, width=0.011),
+                  dict(kind="hair-cards", name="brows", style="brows", color=[0.82, 0.8, 0.76], root=[0.6, 0.58, 0.55], tip=[0.9, 0.89, 0.86],
+                       arch=0.002, length=0.014, width=0.0065, count=30, strands=16),
                   dict(kind="spectacles", name="spectacles", color=[0.22, 0.17, 0.12]),
                   dict(kind="ear-hair", name="ear-hair", color=[0.9, 0.89, 0.86])]),
     # Bhavi in her rustling morning gown, Ch7-8 (¶249; comic b1-p012-2, b1-p013-1): long, mostly straight hair (the author, 21 Oct)
     "bhavi": dict(
-        height=1.62, macro=dict(gender=0.0, age=age(25), muscle=0.45, weight=0.42, height=0.42, proportions=0.65, race=south_asian(0.2, 0.15)),
-        targets={"eyes/l-eye-scale-incr": 0.45, "eyes/r-eye-scale-incr": 0.45, "chin/chin-width-decr": 0.5, "head/head-oval": 0.5, "nose/nose-scale-horiz-decr": 0.25, "mouth/mouth-lowerlip-volume-incr": 0.3, "mouth/mouth-upperlip-volume-incr": 0.2, "eyebrows/eyebrows-angle-up": 0.2}, face=dict(smile=0.12),
-        skin=dict(texture="young_caucasian_female", tone=[0.76, 0.56, 0.43]), hair="long01", hair_color=BLACK_HAIR, hair_length=1.9,
-        eyebrows="eyebrow006", eyelashes="eyelashes02", detail=dict(age=0.12, pores=0.3),
+        # the lifelike pilot (5b), refit to her panels (b1-p008-4, b1-p012-28, b1-p013-9): eyes larger and almond, the outer
+        # corners lifted; a narrower jaw and small chin; cheekbones up; a slimmer bridge and finer tip; fuller lips with a
+        # defined bow; a longer neck; lithe
+        height=1.62, macro=dict(gender=0.0, age=age(25), muscle=0.45, weight=0.36, height=0.42, proportions=0.8, race=south_asian(0.2, 0.15)),
+        targets={"eyes/l-eye-scale-incr": 0.75, "eyes/r-eye-scale-incr": 0.75, "eyes/l-eye-corner2-up": 0.4, "eyes/r-eye-corner2-up": 0.4,
+                 "eyes/l-eye-height2-incr": 0.2, "eyes/r-eye-height2-incr": 0.2,
+                 "chin/chin-width-decr": 0.8, "chin/chin-triangle": 0.35, "head/head-oval": 0.7, "head/head-invertedtriangular": 0.25,
+                 "cheek/l-cheek-bones-incr": 0.5, "cheek/r-cheek-bones-incr": 0.5, "cheek/l-cheek-trans-up": 0.3, "cheek/r-cheek-trans-up": 0.3,
+                 "nose/nose-scale-horiz-decr": 0.4, "nose/nose-width1-decr": 0.5, "nose/nose-point-width-decr": 0.35,
+                 "mouth/mouth-lowerlip-volume-incr": 0.6, "mouth/mouth-upperlip-volume-incr": 0.5, "mouth/mouth-cupidsbow-incr": 0.6,
+                 "eyebrows/eyebrows-angle-up": 0.35, "neck/neck-scale-vert-incr": 0.45}, face=dict(smile=0.12),
+        # a warmer golden-brown, sampled from her panels; freckles over the nose and cheeks and a natural flush
+        skin=dict(texture="young_caucasian_female", tone=[0.74, 0.52, 0.36]), hair_color=BLACK_HAIR,
+        zones=dict(nose=0.45, cheeks=0.55, ears=0.5, eyes=0.4, freckles=80), brow_cards=True,
+        eyelashes="eyelashes02", detail=dict(age=0.12, pores=0.3),
+        hair_cards=[  # long, thick, mostly straight (the author, 21 Oct), volume at the crown and sides, strands framing the face
+            dict(kind="hair-cards", name="hair", style="long", color=BLACK_HAIR, root=[0.03, 0.025, 0.02], tip=[0.09, 0.07, 0.055],
+                 length=0.5, volume=0.02, width=0.019, gap=0.0068, framing=0.3, flyaways=10, wave=0.0025, strands=40, light=0.04),
+            dict(kind="hair-cards", name="brows", style="brows", color=[0.05, 0.04, 0.035], root=[0.04, 0.03, 0.025], tip=[0.08, 0.06, 0.05],
+                 arch=0.005, length=0.015, width=0.0075, count=36, strands=18)],
         garments=[dict(kind="top", name="gown", color=[0.95, 0.86, 0.86], print="floral", ink=[0.86, 0.38, 0.46], sleeve=2.0, loose=0.1, **{"from": 0.9}),
                   dict(kind="skirt", name="gown-skirt", color=[0.95, 0.86, 0.86], print="floral", ink=[0.86, 0.38, 0.46], flare=0.07, pleats=0.008),
                   dict(kind="waistband", name="sash", color=[0.7, 0.3, 0.36], width=0.05)]),
@@ -175,11 +201,19 @@ PEOPLE = {
         height=1.76, macro=dict(gender=1.0, age=age(26), muscle=0.55, weight=0.42, height=0.58, race=south_asian(0.3, 0.1)),
         skin=dict(texture="young_caucasian_male", tone=[0.62, 0.44, 0.31]), eyebrows="eyebrow002", brow_color=[0.04, 0.035, 0.03],
         detail=dict(age=0.3, pores=0.45),  # (gaunt from the coma: the folds a little deeper than his years)
+        # the lifelike pilot (5c): skin zones; thick dark curls springing up over the bandage, strong brows (b1-p012-11, b1-p013-19)
+        targets={"eyebrows/eyebrows-trans-down": 0.25, "chin/chin-width-incr": 0.2, "head/head-square": 0.2},
+        zones=dict(nose=0.35, cheeks=0.3, ears=0.5, eyes=0.6, beard=0.35), brow_cards=True,
+        hair_cards=[dict(kind="hair-cards", name="curls", style="curly", color=[0.05, 0.04, 0.035], root=[0.03, 0.025, 0.02], tip=[0.1, 0.08, 0.065],
+                         volume=0.03, length=0.045, curl=0.008, turns=1.3, width=0.016, gap=0.0085, wave=0.2, strands=30, above=0.045, light=0.05),
+                    dict(kind="hair-cards", name="brows", style="brows", color=[0.04, 0.035, 0.03], root=[0.03, 0.025, 0.02], tip=[0.07, 0.055, 0.045],
+                         arch=0.003, length=0.012, width=0.0065, count=30, strands=16)],
         garments=[dict(kind="top", name="gown", color=[0.66, 0.63, 0.55], sleeve=1.25, loose=0.18, **{"from": 0.75}),
                   dict(kind="skirt", name="gown-skirt", color=[0.66, 0.63, 0.55], to=0.55, flare=0.05),
                   dict(kind="trousers", name="pyjama", color=[0.78, 0.8, 0.84], pleats=0.003),
                   dict(kind="cast", name="plaster", color=[0.8, 0.77, 0.7]),
-                  dict(kind="bandage", name="bandage", color=[0.95, 0.94, 0.9]),
+                  dict(kind="curls", name="mane", color=[0.04, 0.032, 0.028], depth=0.016, knots=False),  # (the mass of his hair under the cards)
+                  dict(kind="bandage", name="bandage", color=[0.95, 0.94, 0.9], band_only=True),
                   dict(kind="beard", name="beard", color=[0.05, 0.04, 0.035]),
                   dict(kind="moustache", name="moustache", color=[0.05, 0.04, 0.035])]),
     # The villagers at the altar: thin men in white, caps and turbans (b1-p015-1; no women: the author, 21 Oct); seen from afar
@@ -327,6 +361,10 @@ CREDITS = [
     "| MakeHuman system assets: skins, eyes, eyebrows, eyelashes, hair | The MakeHuman team | https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html | CC0 1.0 | The story's people's skin textures (re-toned), eyes, brows, lashes and hair (people-*.glb) |",
     "| Rhubarb Lip Sync 1.14.0 (the program; nothing of it is shipped) | Daniel S. Wolf | https://github.com/DanielSWolf/rhubarb-lip-sync | MIT | The mouths' shapes for every voiced line, read from the sound (voice-mouths.*.json) |",
     "| Universal Animation Library (Standard) | Quaternius | https://quaternius.com/packs/universalanimationlibrary.html (https://quaternius.itch.io/universal-animation-library) | CC0 1.0 | The story's people's walks, idles, sitting, kneeling, crouching, reaching and picking up, retargeted onto MakeHuman's skeleton (people-*.glb) |",
+]
+CREDITS += [
+    "| MediaPipe Face Landmarker (the program and its model; nothing of it is shipped) | Google | https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker | Apache 2.0 | Reading the comic's faces to score the 3D faces' likeness (pipeline/likeness/, the lifelike pilot) |",
+    "| DreamShaper 8 (Stable Diffusion 1.5) with the LCM LoRA for SD 1.5 (nothing of them, nor their pictures, is shipped) | Lykon; latent-consistency | https://huggingface.co/Lykon/dreamshaper-8, https://huggingface.co/latent-consistency/lcm-lora-sdv1-5 | CreativeML OpenRAIL-M; OpenRAIL++ | Reference pictures for fitting the faces and grooming the hair, made on the laptop (pipeline/likeness/refs.py) |",
 ]
 HEADER = "# Model credits\n\n| Model | Author | Source | Licence | Used for |\n|---|---|---|---|---|\n"
 

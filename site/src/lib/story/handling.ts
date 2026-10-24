@@ -17,7 +17,7 @@ export function middleOf(o: Object3D): Vector3 {
 }
 
 /** How far from a thing to stand to reach it (m, from the feet to it, flat), low (the floor) or at a desk's height. */
-const STAND_OFF = { low: 0.4, high: 0.48 };
+const STAND_OFF = { low: 0.3, high: 0.36 };
 /** The palm's middle is this far beyond the wrist (m): the hand bone's goal is short of the thing by this. */
 const PALM = 0.075;
 
@@ -31,7 +31,7 @@ function reachTo(goal: Vector3, low: boolean, touch: () => void, hand: (a: Actor
     const wrist = goal.clone().addScaledVector(dir, -PALM).add(new Vector3(0, 0.015, 0));
     const after = ease((t - 0.52) / 0.38);
     const to = done ? wrist.lerp(hand(a), after) : wrist;
-    const bend = (low ? 0.5 : 0.38) * (done ? 1 - after * 0.85 : ease(t / 0.4));
+    const bend = (low ? 0.7 : 0.45) * (done ? 1 - after * 0.85 : ease(t / 0.4));
     return { spine: bend, head: 0.3 * (done ? 1 - after : 1), handR: to };
   };
   return { seconds: low ? 2.6 : 2.0, clip: low ? "Crouch_Idle_Loop" : undefined, at };

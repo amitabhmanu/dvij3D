@@ -211,6 +211,8 @@ for s, sign in (("l", 1), ("r", -1)):
         og.remove(idx)
     eyes.vertex_groups.new(name=f"eye_{s}").add(idx, 1.0, "REPLACE")
 for kind in ("eyebrows", "eyelashes"):
+    if kind == "eyebrows" and spec.get("brow_cards"):
+        continue  # (brows as cards instead: the lifelike pilot, blender/lifelike.py)
     name = spec.get(kind) or {"eyebrows": "eyebrow001", "eyelashes": "eyelashes01"}[kind]
     o = mhclo(kind, name)
     tex = mhmat_texture(kind, name)
@@ -502,6 +504,11 @@ def sculpt_face(d):
 
 if spec.get("detail"):
     sculpt_face(spec["detail"])
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import lifelike  # noqa: E402 (the lifelike pilot's skin zones and hair cards)
+if spec.get("zones"):
+    lifelike.paint_skin(globals(), spec)
 
 
 def arm_t(i, side):
@@ -1180,8 +1187,12 @@ for g in spec.get("garments", []):
         # gauze crossed over and over: a thick layer of it over the skull, and the last turns on alternating slants
         # standing proud of it, flattened into bands
         hc = Vector((0, (EYE_L.y + EYE_R.y) / 2 + 0.07, 0))
-        shell(nm, scalp(BROW - 0.004), 0.022, mat, remove_under=True, smooth=3,
-              swell=lambda co: max(0.0, co.z - (HEAD_TOP - 0.08)) * 0.25)
+        if g.get("band_only"):  # (the comic's: a smooth band of gauze round the head, the hair springing up over it, b1-p012-11)
+            shell(nm, lambda i: scalp(BROW - 0.004)(i) and V[i].z < BROW + 0.045 + max(0.0, V[i].y - FRONT) * 0.12, 0.022, mat, remove_under=False, smooth=6)
+            continue
+        else:
+            shell(nm, scalp(BROW - 0.004), 0.022, mat, remove_under=True, smooth=3,
+                  swell=lambda co: max(0.0, co.z - (HEAD_TOP - 0.08)) * 0.25)
         wound(nm + "-turn", mat, turns=g.get("turns", 6), r_tube=0.006, front=(BROW + 0.004, 0.011), back=(BROW + 0.012, 0.013),
               slant=0.016, flare=0.0004, flat=0.4, lift=0.011)  # (pressed into the layer under them, not standing off it)
     elif k == "cast":  # "a plaster from beyond the elbow" on the right arm (¶96; right: the author, 21 Oct)
@@ -1214,6 +1225,8 @@ for g in spec.get("garments", []):
             return depth * k_ * (1 + 0.35 * noise.noise(co * 55)) + 0.006 * noise.noise(co * 160)
         o = shell(nm, lambda i: i in roots_set, 0.004, cloth(nm, [c * 0.9 for c in g["color"]], "plain", rough=0.8),
                   remove_under=False, smooth=3, swell=puff) if (roots_set := set(roots)) else None
+        if g.get("knots") is False:  # (the lifelike pilot: the mass only, under hair cards)
+            continue
         # knots of curl over the mass, so its edge is broken, not smooth
         tones = [[c * f for c in g["color"]] for f in (0.88, 0.96, 1.02)]
         parts = [([], []) for _ in tones]
@@ -1280,6 +1293,8 @@ for g in spec.get("garments", []):
         face = c + top_dir * (r + 0.002)
         sphere_mesh(nm + "-face", face, 0.011, cloth(nm + "-face", g.get("color", [0.85, 0.82, 0.7]), "plain", rough=0.3), f"lowerarm_{side}",
                     scale=(1, 1, 0.35), seg=10)
+    elif k == "hair-cards":  # hair, a moustache, brows as cards (the lifelike pilot: blender/lifelike.py)
+        lifelike.hair_cards(globals(), g)
     elif k == "stubble":  # a shaved head's shadow
         shell(nm, scalp(BROW + 0.02), 0.0015, mat, remove_under=False)
     elif k == "moustache":
@@ -1374,6 +1389,9 @@ for g in spec.get("garments", []):
             vs = [Vector((x, y, z)) for z in (-0.002, 0.014) for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))]
             fs = [(0, 1, 2, 3), (4, 7, 6, 5), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)]
             rigid(f"{nm}-{s}", vs, fs, mat, f"foot_{s}")
+
+for g in spec.get("hair_cards", []):  # (the lifelike pilot's hair, beside whatever the garments are: blender/lifelike.py)
+    lifelike.hair_cards(globals(), g)
 
 # the mouth's inside, seen when it opens to speak: MakeHuman's teeth and tongue (Mahant's teeth red with paan, breakdown
 # ch9), and a dark hollow behind them, all moving with the head (the lower teeth drop with the jaw's shape key)

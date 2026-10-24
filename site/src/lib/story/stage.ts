@@ -158,6 +158,7 @@ export class StoryStage implements Stage {
         seen: (p) => body.lookingAt([p.x, p.y, p.z], 50),
         heading: () => this.game.player().heading,
         stir: () => body.stir(),
+        lifelike: !new URLSearchParams(location.search).has("plain"), // (?plain: the cast as before the lifelike pilot, to compare)
       });
       this.cast = cast;
       this.castReady = cast.setUp((sc.cast ?? []) as CastSpec[], sc.start.at).catch((e) => console.warn("the cast:", e));

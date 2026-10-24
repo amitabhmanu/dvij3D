@@ -15,6 +15,8 @@ import { aim, bindLook, look, reach } from "./ik";
 import { FaceLife } from "./face-life";
 import { eyeMaterial, softCards } from "./eyes";
 import { IdleLife, type Body as IdleBody } from "./idle";
+import { skinMaterial } from "./skin";
+import { Hair } from "./hair";
 import { pickUp, putDown, show } from "./handling";
 import { SELF_LAYER } from "../walk/game";
 
@@ -84,6 +86,8 @@ const POSE_CLIP: Record<string, [string, string]> = {
   crouch: ["Crouch_Idle_Loop", "Crouch_Idle_Loop"],
   crosslegged: ["Sitting_Idle_Loop", "Sitting_Talking_Loop"],
 };
+/** Within this far of the camera (m), a person wears the lifelike skin and eyes (the hero tier). */
+const HERO_DISTANCE = 4.5;
 /** When, in Fixing_Kneeling, he is down on one knee and settled (seconds; lifelike pilot, the clip sampled). */
 const KNEEL_AT = 1.6;
 const WALK_SPEED = 1.05; // m/s (the old and the heavy go a little slower)
@@ -270,6 +274,18 @@ export class Actor {
   private gazeW = 0;
   /** Where the eyes go, how the head follows, the blinks (face-life.ts). */
   private life: FaceLife;
+  /** The meshes with a close-up material and a plain one: [mesh, plain, lifelike] (hero()). */
+  private tiers: [Mesh, Material, Material][] = [];
+  private heroOn = false;
+  /** Close to the camera (the hero tier): the lifelike skin and eyes; further off, the plain ones, which cost less. */
+  hero(on: boolean) {
+    if (on === this.heroOn) return;
+    this.heroOn = on;
+    for (const [m, plain, life] of this.tiers) m.material = on ? life : plain;
+  }
+  /** The hair cards and their swing (hair.ts), and a mesh of them (whose frame the swing is given in). */
+  private hair = new Hair();
+  private hairMesh: Object3D | null = null;
   /** The breath, the weight from foot to foot, the chest joining big looks (idle.ts). */
   private idle: IdleLife;
   private idleBody: IdleBody;
@@ -331,8 +347,17 @@ export class Actor {
           if (mat.transparent) { mat.transparent = false; mat.alphaTest = 0.5; mat.depthWrite = true; }
           if (life && /^(eyebrows|eyelashes)/.test(mat.name)) softCards(mat);
         }
-        if (!Array.isArray(m.material) && m.material.name.startsWith("skin")) m.material = skinOf(m.material);
-        if (life && !Array.isArray(m.material) && m.material.name === "eyes") m.material = eyeMaterial(m.material, who.split(/[#-]/)[0], m, this.model);
+        if (life && !Array.isArray(m.material) && m.material.name.startsWith("hair-cards")) { // (soft-edged, both sides, a hair's highlight; it swings: hair.ts)
+          m.material = this.hair.material(m.material, /-hair$/.test(m.material.name) ? 1 : 0.3);
+          this.hairMesh ??= m;
+        }
+        // the skin and the eyes: the lifelike ones close up (the hero tier, hero()), the plain ones further off
+        if (!Array.isArray(m.material) && m.material.name.startsWith("skin")) {
+          const plain = skinOf(m.material);
+          if (life) this.tiers.push([m, plain, skinMaterial(m.material, who.split(/[#-]/)[0])]);
+          m.material = plain;
+        }
+        if (life && !Array.isArray(m.material) && m.material.name === "eyes") this.tiers.push([m, m.material, eyeMaterial(m.material, who.split(/[#-]/)[0], m, this.model)]);
       }
     });
     this.mixer = new AnimationMixer(this.model);
@@ -686,6 +711,11 @@ export class Actor {
       if (this.layerW <= 0) this.from = null;
     } else this.layerW = Object.keys(this.held).length ? Math.min(1, this.layerW + dt * 3) : Math.max(0, this.layerW - dt * 3);
     this.layer = layer;
+    // between beats: the breath, and stood still, the weight from foot to foot (the feet kept planted); before the
+    // hands' reaches below, so a hand on something stays on it
+    const still = this.pose === "stand" && !this.path.length && !this.loopRim && !this.turning && !this.gesture && !Object.keys(this.held).length && !this.from;
+    this.idle.apply(dt, this.idleBody, still, this.talking, this.talking && !this.wasTalking);
+    this.wasTalking = this.talking;
     if (this.lean) this.pose_({ spine: this.lean }, 1);
     const tilt = (this.layer.tilt ?? 0) * this.layerW;
     if (this.pose === "crosslegged") {
@@ -697,10 +727,6 @@ export class Actor {
       this.pose_({ spine: -0.2, head: -0.1, handL: this.point(-0.16, 0.95, 0.32), handR: this.carried ? this.point(0.14, 1.05, 0.34) : null }, 1);
     }
     this.pose_(this.layer, this.layerW);
-    // between beats: the breath, and stood still, the weight from foot to foot (the feet kept planted)
-    const still = this.pose === "stand" && !this.path.length && !this.loopRim && !this.turning && !this.gesture && !Object.keys(this.held).length && !this.from;
-    this.idle.apply(dt, this.idleBody, still, this.talking, this.talking && !this.wasTalking);
-    this.wasTalking = this.talking;
     this.carry(tilt);
     // the eyes and head: towards what they look at (eased), within a neck's reach
     const target = typeof this.gaze === "function" ? this.gaze() : this.gaze;
@@ -708,7 +734,7 @@ export class Actor {
     const neck = this.bone("neck_01"), head = this.bone("head");
     // the head turns to an eased aim (no snaps when the speaker changes), and a share of the way the eyes look off
     const aimAt = this.life.headTarget(dt, target, this.talking, head?.getWorldPosition(new Vector3()));
-    this.idle.chestTo(this.idleBody, aimAt, this.gazeW); // (a look further round than the neck goes takes the chest with it)
+    if (!this.gesture && !Object.keys(this.held).length) this.idle.chestTo(this.idleBody, aimAt, this.gazeW); // (a look further round than the neck goes takes the chest with it; not while the hands are at something)
     if (neck && head && aimAt) look(neck, head, aimAt, this.facing(), this.gazeW * 0.9);
     // never quite still: the head drifts a little, more when talking (a nod to the words, a turn of thought)
     if (head) {
@@ -716,6 +742,8 @@ export class Actor {
       bendAbout(head, new Vector3(-1, 0, 0).applyQuaternion(this.obj.getWorldQuaternion(q0)), (Math.sin(this.t * 0.7) * 0.02 + Math.sin(this.t * 1.9 + 1) * 0.012) * k - this.jaw * 0.04);
       bendAbout(head, new Vector3(0, 1, 0), (Math.sin(this.t * 0.43 + 2) * 0.03 + Math.sin(this.t * 1.3) * 0.01) * k);
     }
+    // the hair swings after the back of the head (which moves as they turn, too)
+    if (this.hairMesh && head) this.hair.update(dt, head.getWorldPosition(new Vector3()).addScaledVector(this.facing(), -0.12), this.hairMesh);
     this.talkHands(dt);
     // the skirts, the lungi, the dhoti's pleats swing on their spring bones (blender/build_human.py SPRINGS): lagging
     // behind the hips as they move and turn, overshooting, settling; swaying a little with each step
@@ -1029,6 +1057,7 @@ export class Cast {
       // the far ones, and those he isn't looking at, move less often: every third frame
       const at = a.obj.getWorldPosition(new Vector3());
       const d = at.distanceTo(eyes);
+      a.hero(d < HERO_DISTANCE); // (the lifelike skin and eyes only near: their cost goes where they show)
       const slow = d > 7 || (d > 2.5 && !this.env.seen(at.add(new Vector3(0, 1.2, 0))));
       a.pending += dt;
       if (slow && (this.frame + k) % 3) continue;

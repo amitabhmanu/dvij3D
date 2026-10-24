@@ -48,7 +48,7 @@ export function startLab(canvas: HTMLCanvasElement) {
       who = name;
       cast = new Cast(people as PeopleInfo, {
         root, ground: () => 0, eyes: () => camera.position.clone(), prop: () => null, url: walkAsset,
-        seen: () => true, heading: () => 0,
+        seen: () => true, heading: () => 0, lifelike: !new URLSearchParams(location.search).has("plain"), // (?plain: as before the pilot)
       });
       await cast.setUp([{ who: name, at: [0, 0], pose: "stand", face: [0, 5] }]);
       return !!cast.get(name);
@@ -63,6 +63,7 @@ export function startLab(canvas: HTMLCanvasElement) {
       camera.updateProjectionMatrix();
       if (v.background) scene.background = new Color(v.background);
       a.express({ smile: 0, frown: 0, brows: 0, ...(v.face ?? {}) });
+      a.hero(true); // (the lab is always a close-up)
       const head = () => a.headAt().add(new Vector3(0, -0.07, 0)); // (headAt is a little over the eyes)
       // place the camera, then let them live a moment looking at it (or ahead), then place it again on the head
       const put = () => {

@@ -21,7 +21,7 @@ props:
   - {id: tumbler, kind: glass, held-by: professor}
   - {id: veena, kind: veena, state: toppled, at: [-14.6, -11.6], sources: [novel ¶140, breakdown ch3 p4]}
   - {id: varahi, kind: figurine, at: [-13.8, -13.6], sources: [novel ¶147, breakdown ch3 p5]}
-  - {id: manuscript, kind: manuscript, at: [-12.8, -12.6], on: desk, sources: [novel ¶151, novel ¶153, breakdown ch3 p8]}
+  - {id: manuscript, kind: manuscript, at: [-12.05, -12.3], on: desk, sources: [novel ¶151, novel ¶153, breakdown ch3 p8]}   # (on the desk's near edge, by Dvij's chair: within the Professor's reach)
 
 beats:
   - id: water-face
