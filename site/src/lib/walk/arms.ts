@@ -44,7 +44,7 @@ export class Arms {
   private stride = 0;
   private dispose_: () => void;
   /** Something held in a hand, carried with it: the object, and where its grip sits on it (its own frame). */
-  private held: Record<Side, { obj: Object3D; grip: Vector3; tilt: number } | null> = { l: null, r: null };
+  private held: Record<Side, { obj: Object3D; grip: Vector3; tilt: number; radius: number } | null> = { l: null, r: null };
 
   private constructor(model: Object3D, private camera: PerspectiveCamera) {
     this.root.add(model);
@@ -138,11 +138,12 @@ export class Arms {
     return world.clone().applyMatrix4(m4.copy(this.camera.matrixWorld).invert());
   }
 
-  /** Put something in a hand, gripped at `grip` (its own frame); null lets go, leaving it where it is in `into`. */
-  hold(s: Side, obj: Object3D | null, grip = new Vector3(), into?: Object3D) {
+  /** Put something in a hand, gripped at `grip` (its own frame); null lets go, leaving it where it is in `into`.
+   * `radius`: how far its middle stands out from the palm (a glass held round its side: the fingers on it, not in it). */
+  hold(s: Side, obj: Object3D | null, grip = new Vector3(), into?: Object3D, radius = 0) {
     const was = this.held[s];
     if (was && into) into.attach(was.obj);
-    this.held[s] = obj ? { obj, grip, tilt: 0 } : null;
+    this.held[s] = obj ? { obj, grip, tilt: 0, radius } : null;
     if (obj) this.handOf(s).attach(obj);
   }
 
@@ -197,6 +198,16 @@ export class Arms {
         held.obj.quaternion.copy(parentInv.multiply(up));
         held.obj.updateMatrixWorld(true);
         const grip = held.grip.clone().applyMatrix4(held.obj.matrixWorld);
+        if (held.radius > 0) {
+          // its side against the palm: its middle out from the palm towards the thumb, level across its own upright,
+          // a radius and the hand's flesh away (Ch1: the fingers had closed through the glass)
+          const knuckle = r.fingers[1][0].getWorldPosition(new Vector3()), along = knuckle.clone().sub(r.hand.getWorldPosition(new Vector3())).normalize();
+          const thumb = r.thumb[r.thumb.length - 1].getWorldPosition(new Vector3());
+          const upright = new Vector3(0, 1, 0).applyQuaternion(held.obj.getWorldQuaternion(new Quaternion()));
+          const out = thumb.sub(palm);
+          out.addScaledVector(along, -out.dot(along)).addScaledVector(upright, -out.dot(upright));
+          if (out.lengthSq() > 1e-8) palm.addScaledVector(out.normalize(), held.radius + 0.012);
+        }
         const offset = palm.sub(grip);
         held.obj.position.add(held.obj.parent!.worldToLocal(held.obj.getWorldPosition(new Vector3()).add(offset)).sub(held.obj.position));
       }

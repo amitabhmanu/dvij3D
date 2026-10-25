@@ -3,6 +3,7 @@
 // (Walk.tsx) shows captions, subtitles, objectives, comic panels and the
 // reflection; the props are the scene's own things.
 import type { Game } from "../walk/game";
+import type { Pane } from "../walk/pane";
 import { reachPage } from "../progress";
 import type { Act, Scene, Stage, Vec2, Vec3 } from "./director";
 import { Props } from "./props";
@@ -73,6 +74,8 @@ export class StoryStage implements Stage {
    * needs them waits for this. */
   private castReady: Promise<void> = Promise.resolve();
   private unstep: (() => void) | null = null;
+  /** A dirty pane with his face coming up in it as he nears it (Ch1's study window), and what eases it. */
+  private pane: { pane: Pane; unstep: () => void } | null = null;
   private frame = "lodge";
   private pressed = false;
   private advance = false;
@@ -124,6 +127,16 @@ export class StoryStage implements Stage {
     const body = this.game.body;
     if (act.kind === "press" || !t) return this.sleep(1.2, () => this.cancelled);
     if (act.kind === "reach") return body.walkTo([t[0], t[2]]);
+    // a thing with a place to stand in front of it (the shutters): there, then square to it, not at it from the side
+    const front = typeof act.target === "string" ? this.props?.front(act.target) : null;
+    if (front && this.pose === "stand") {
+      const f = this.world([front[0], front[1]]);
+      await body.walkTo([f[0], f[2]]);
+      if (this.cancelled) return;
+      await body.turnTo(t, 0.9);
+      await this.sleep(0.4, () => this.cancelled);
+      return;
+    }
     const me = this.game.player();
     const d = Math.hypot(t[0] - me.x, t[2] - me.z);
     if (d > 2.2 && this.pose === "stand") await body.walkTo([t[0] + ((me.x - t[0]) / d) * 1.1, t[2] + ((me.z - t[2]) / d) * 1.1]);
@@ -135,10 +148,12 @@ export class StoryStage implements Stage {
   async setUp(sc: Scene): Promise<void> {
     this.game.body.halt();
     this.screen.panel(null);
+    this.clearPane();
     this.props?.dispose();
     this.frame = sc.frame ?? "lodge";
     const body = this.game.body;
     body.setting({ sun: sc.setting?.sun, court: sc.setting?.court });
+    body.doors(sc.setting?.doors !== "shut"); // (Ch1: shut, and he opens each he goes through)
     body.chapter(sc.scene);
     for (const [room, speed] of Object.entries(sc.setting?.fans ?? {})) body.fan(room, speed);
     const origin = this.world([0, 0, 0]); // (the props stand in the scene's frame: translated only)
@@ -288,7 +303,14 @@ export class StoryStage implements Stage {
         }
         if (arg.id === "shutters" && arg.state === "open" && !hurried) {
           const p = this.props?.point("shutters");
-          if (p) return this.hands.pull(new Vector3(...this.world(p as Vec3)), () => this.props?.set(arg.id, arg.state));
+          // as the leaves part, the creak and the sun full in his eyes at once (¶99: "the brilliance of sunlight blinded
+          // him momentarily"), then his eyes adjusting till the wall outside comes clear
+          if (p) return this.hands.pull(new Vector3(...this.world(p as Vec3)), () => {
+            this.props?.set(arg.id, arg.state);
+            body.fx("creak");
+            body.sight.set({ flash: 1, blur: 0.35 }, 0.2);
+            void this.sleep(0.6).then(() => body.sight.set({ flash: 0, blur: 0 }, 2.8));
+          });
         }
         this.props?.set(arg.id, arg.state);
         return;
@@ -299,12 +321,40 @@ export class StoryStage implements Stage {
       case "panel":
         this.screen.panel(arg.id ?? null);
         return;
+      case "pane": {
+        // the window he is going to: dirty, and his face coming up in it as he comes to it (the author, 25 Oct)
+        this.clearPane();
+        if (hurried) return;
+        const at = this.world(arg.at), look = this.world(arg.look);
+        const pane = body.pane([at[0], look[1], at[2]], look);
+        if (!pane) return;
+        await this.castReady;
+        await this.cast?.self(dvijFor(sc.scene)); // (his body, that only a reflection sees)
+        const unstep = body.every(() => {
+          const me = this.game.player();
+          const k = Math.max(0, Math.min(1, (4.5 - Math.hypot(me.x - pane.centre.x, me.z - pane.centre.z)) / 3.2));
+          pane.strength(k * k * (3 - 2 * k));
+        });
+        this.pane = { pane, unstep };
+        return;
+      }
       case "reflection": {
         if (hurried) return;
         // his own face in the glass first (the bearded stranger, ¶101), then the comic's drawing of it
         await this.castReady;
         const me = await this.cast?.self(dvijFor(sc.scene));
-        if (me && body.mirror(true)) {
+        const p = this.pane?.pane;
+        if (me && p) {
+          // closer and closer to the glass, till it is his own face filling it (the author, 25 Oct): before one half of
+          // the window (not its mullion), eye to eye with himself (his body's eyes brought to the camera's)
+          this.cast?.selfAtEyes(true);
+          const eye = this.game.player().y;
+          const side = p.width > 0.9 ? p.width / 4 : 0;
+          const on = p.centre.clone().addScaledVector(p.across, side);
+          const stand: [number, number] = [on.x + p.normal.x * 0.25, on.z + p.normal.z * 0.25];
+          await body.pose({ pose: "stand", at: stand, look: [on.x, eye, on.z], seconds: 3.2 });
+          await this.sleep(3.5);
+        } else if (me && body.mirror(true)) {
           await this.sleep(4);
           body.mirror(false);
         }
@@ -397,7 +447,14 @@ export class StoryStage implements Stage {
     writeSaved({ scene, beat });
   }
 
+  private clearPane() {
+    this.pane?.unstep();
+    this.pane?.pane.dispose();
+    this.pane = null;
+  }
+
   dispose(): void {
+    this.clearPane();
     this.unstep?.();
     this.cast?.dispose();
     this.props?.dispose();

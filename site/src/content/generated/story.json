@@ -14,7 +14,8 @@
    ],
    "setting": {
     "sun": "morning",
-    "court": "open"
+    "court": "open",
+    "doors": "shut"
    },
    "start": {
     "pose": "lie",
@@ -58,7 +59,7 @@
      "kind": "spectacles",
      "at": [
       -14.2,
-      6.65
+      6.88
      ],
      "on": "stool",
      "sources": [
@@ -302,15 +303,6 @@
        }
       },
       {
-       "effect": {
-        "flash": 1.0,
-        "over": 1.5
-       }
-      },
-      {
-       "sound": "creak"
-      },
-      {
        "caption": "He tugged at the stops. The brilliance of sunlight blinded him momentarily..."
       },
       {
@@ -365,6 +357,19 @@
       "radius": 1.6
      },
      "then": [
+      {
+       "pane": {
+        "at": [
+         -15.0,
+         -13.25
+        ],
+        "look": [
+         -17.0,
+         1.9,
+         -13.25
+        ]
+       }
+      },
       {
        "caption": "There were books everywhere. As if antiquity was preserved there, albeit a bit haphazardly."
       }

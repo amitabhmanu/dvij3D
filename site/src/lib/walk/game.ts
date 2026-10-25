@@ -27,6 +27,7 @@ import { applyWear } from "./wear";
 import { lodgeFx } from "./lodge-fx";
 import { openFire } from "./fire-fx";
 import { Arms } from "./arms";
+import { makePane, type Pane } from "./pane";
 import { lawnGrass } from "./grass";
 import armsInfo from "../../content/generated/arms.json";
 import { inkComposer } from "./post";
@@ -117,6 +118,8 @@ export type Body = {
   follow: (p: (() => [number, number, number] | null) | null) => void;
   /** Walk there by himself, round the walls (watch mode). */
   walkTo: (at: [number, number]) => Promise<void>;
+  /** Every door shut, or open (a scene's setting: in Ch1 he opens each one he goes through). */
+  doors: (open: boolean) => void;
   /** Stop whatever he was moving through: a new scene is starting. */
   halt: () => void;
   /** How fast the story's time runs: 0.5 slow motion, 1, 2 or 4 fast forward. */
@@ -129,6 +132,9 @@ export type Body = {
   /** A reflection in the window pane he is looking at, of his own body only (on SELF_LAYER), laid over the
    * glass as daylight lets one show (novel ¶101); false: none. Returns whether there was a pane to look in. */
   mirror: (on: boolean) => boolean;
+  /** The pane met looking from `from` towards `toward` (world), made dirty, with his reflection in it at a strength
+   * the story sets as he comes to it (walk/pane.ts); null if there's no glass there. */
+  pane: (from: [number, number, number], toward: [number, number, number]) => Pane | null;
   /** Something that casts a shadow moved (one of the story's people walking): the shadows are drawn again. */
   stir: () => void;
   /** Dvij's own arms (arms.ts), if they loaded. */
@@ -558,11 +564,22 @@ export async function createGame(o: GameOptions): Promise<Game> {
   };
 
   const halfW = walk.worldWidth / 2 - 3, halfD = walk.worldDepth / 2 - 3;
-  const blocked = (x: number, z: number, r: number) =>
+  // (`through`: a shut door is no bar, for a way the story walks him: he opens it when he gets there)
+  const blocked = (x: number, z: number, r: number, through = false) =>
     Math.abs(x) > halfW || Math.abs(z) > halfD ||
     walk.water.some((lake) => inside(lake.points, x, z)) ||
     blockers.hits(x, z, r) ||
-    models().some((m) => m.hits(x, z, Number.isFinite(feet) ? feet : ground(x, z), r));
+    models().some((m) => m.hits(x, z, Number.isFinite(feet) ? feet : ground(x, z), r, through));
+  const routeTo = (to: [number, number]) => findRoute([player.x, player.z], to, (x, z) => blocked(x, z, 0.32, true));
+  /** A hand goes out to a door: pushing it open, or pulling it to (comic b1-p004-7 "holding the doorframe"). */
+  const reachForDoor = (d: { open: boolean; at: [number, number, number] }) => {
+    if (!arms) return;
+    const at = arms.toCamera(new Vector3(...d.at));
+    at.y = Math.max(-0.25, Math.min(0.0, at.y));
+    at.setLength(Math.min(at.length(), 0.55));
+    arms.go("l", { at, grip: d.open ? 0.7 : 0.15, show: true }, 0.35);
+    setTimeout(() => arms.go("l", { at: Arms.rest("l"), grip: 0.25, show: false }, 0.6), 650);
+  };
 
   const input = new Input(o.canvas);
   const rules = walk.player;
@@ -586,7 +603,8 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // Story mode's hold on the body (design §10.4).
   let hold: "free" | "look" | "none" = "free";
   let eye = rules.eye, speed = 1, sway = 0, roll = 0, swayT = 0;
-  let route: { pts: [number, number][]; done: () => void } | null = null;
+  // (`opening`: seconds left of opening a door on the way, its middle; the way is found again after, round the open leaf)
+  let route: { pts: [number, number][]; done: () => void; to: [number, number]; opening?: { left: number; at: [number, number] } } | null = null;
   let rate = 1;
   let follow: (() => [number, number, number] | null) | null = null;
   const release = () => {
@@ -608,7 +626,30 @@ export async function createGame(o: GameOptions): Promise<Game> {
       eye = L(tween.from.eye, tween.to.eye);
       roll = L(tween.from.roll, tween.to.roll);
       if (k >= 1) { const d = tween.done; tween = null; d(); }
+    } else if (route?.opening) {
+      // a door in the way, being opened: he turns to it while it swings, then goes on round the open leaf
+      const o = route.opening;
+      const want = Math.atan2(o.at[0] - player.x, -(o.at[1] - player.z));
+      const dh = Math.atan2(Math.sin(want - player.heading), Math.cos(want - player.heading));
+      player = { ...player, heading: player.heading + Math.sign(dh) * Math.min(Math.abs(dh), 3 * STEP * rate) };
+      o.left -= STEP * rate;
+      if (o.left <= 0) { route.opening = undefined; route.pts = routeTo(route.to); if (!route.pts.length) { const r = route; route = null; r.done(); } }
     } else if (route) {
+      // a shut door just ahead that the way goes through: stop, reach out, open it (Ch1: he doesn't walk through doors)
+      // (on the way: the line to the next corner passes through the doorway; a way pulled straight has no corner in it)
+      const door = lodge?.doorNear(player.x, player.z);
+      const across = (a: [number, number], b: [number, number], p: [number, number, number]) => {
+        const ux = b[0] - a[0], uz = b[1] - a[1], L2 = ux * ux + uz * uz || 1e-9;
+        const k = Math.max(0, Math.min(1, ((p[0] - a[0]) * ux + (p[2] - a[1]) * uz) / L2));
+        return Math.hypot(a[0] + ux * k - p[0], a[1] + uz * k - p[2]);
+      };
+      if (door && !door.open && Math.hypot(door.at[0] - player.x, door.at[2] - player.z) < 1.1
+          && across([player.x, player.z], route.pts[0], door.at) < 0.7) {
+        reachForDoor(door);
+        lodge!.toggleDoor(door.name);
+        route.opening = { left: 1.0, at: [door.at[0], door.at[2]] };
+        return moveBy(m);
+      }
       // walking by himself: turn toward the next corner, and go
       const [tx, tz] = route.pts[0];
       const dx = tx - player.x, dz = tz - player.z, d = Math.hypot(dx, dz);
@@ -854,8 +895,9 @@ export async function createGame(o: GameOptions): Promise<Game> {
     }),
     walkTo: (at) => new Promise<void>((done) => {
       release();
-      route = { pts: findRoute([player.x, player.z], at, (x, z) => blocked(x, z, 0.32)), done };
+      route = { pts: routeTo(at), done, to: at };
     }),
+    doors: (open) => { for (const m of models()) m.setDoors(open); shadowDirty = true; },
     follow: (p) => { follow = p; },
     halt: () => { follow = null; release(); },
     rate: (r) => { rate = r; sight.speed = r; },
@@ -899,6 +941,12 @@ export async function createGame(o: GameOptions): Promise<Game> {
       scene.add(m, mirrorLight, mirrorLight.target);
       mirror = m;
       return true;
+    },
+    pane: (from, toward) => {
+      if (!lodge) return null;
+      const glass: Object3D[] = [];
+      lodge.root.traverse((o) => { if (/^window-glass/.test(o.name)) glass.push(o); });
+      return makePane(scene, glass, new Vector3(...from), new Vector3(...toward));
     },
     arms: () => arms,
     fromSite: (id, x, y, z) => {
@@ -988,14 +1036,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     useDoor: () => {
       const d = lodge?.doorNear(player.x, player.z);
       if (!d) return false;
-      // a hand goes out to it: pushing it open, or pulling it to (comic b1-p004-7 "holding the doorframe")
-      if (arms) {
-        const at = arms.toCamera(new Vector3(...d.at));
-        at.y = Math.max(-0.25, Math.min(0.0, at.y));
-        at.setLength(Math.min(at.length(), 0.55));
-        arms.go("l", { at, grip: d.open ? 0.7 : 0.15, show: true }, 0.35);
-        setTimeout(() => arms.go("l", { at: Arms.rest("l"), grip: 0.25, show: false }, 0.6), 650);
-      }
+      reachForDoor(d);
       lodge!.toggleDoor(d.name);
       return true;
     },

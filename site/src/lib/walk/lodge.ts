@@ -33,6 +33,7 @@ type Door = {
   swing: number; // +/- radians to open
   centre: Vector3; // the doorway's middle, in the model's frame
   box: Box3; // the doorway when shut, in the model's frame
+  openBox: Box3; // where the leaf stands when open (it was walked through: Ch1)
   open: boolean;
   t: number; // 0 shut, 1 open
 };
@@ -41,13 +42,16 @@ export type Lodge = {
   root: Group;
   /** The floor under (x, z) within a step of feet height, in world metres; null if none. */
   floorAt: (x: number, z: number, feet: number) => number | null;
-  /** Would someone of radius r standing at (x, z) with their feet at `feet` touch the model? */
-  hits: (x: number, z: number, feet: number, r: number) => boolean;
+  /** Would someone of radius r standing at (x, z) with their feet at `feet` touch the model? `through`: a shut
+   * door is no bar (a way planned through it opens it on the way). */
+  hits: (x: number, z: number, feet: number, r: number, through?: boolean) => boolean;
   /** Under the roof, rather than outside or in the open courtyard. */
   indoors: (x: number, z: number) => boolean;
   /** The doorway within reach of (x, z), if any, and whether its door is open. */
   doorNear: (x: number, z: number) => { name: string; open: boolean; at: [number, number, number] } | null;
   toggleDoor: (name: string) => void;
+  /** Every door shut (at once), or every door open: a scene's setting (Ch1: he opens each himself). */
+  setDoors: (open: boolean) => void;
   /** Something to look at within reach of (x, z), if any (lodge.yaml `looks`). */
   lookNear: (x: number, z: number) => Look | null;
   /** Show the back wall's painted patch: a puzzle, for readers who have reached it. */
@@ -126,8 +130,11 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
   for (const o of leaves) {
     const box = new Box3().setFromObject(o).applyMatrix4(inverse.matrixWorld);
     const side = /\dR$/.test(o.name) ? -1 : 1;
-    doors.push({ name: o.name, leaf: o, closed: o.rotation.y, swing: side * SWING, centre: box.getCenter(new Vector3()), box, open: true, t: 1 });
-    o.rotation.y = o.rotation.y + side * SWING; // they start open: the house is lived in
+    const closed = o.rotation.y;
+    o.rotation.y = closed + side * SWING; // they start open: the house is lived in
+    o.updateMatrixWorld(true);
+    const openBox = new Box3().setFromObject(o).applyMatrix4(inverse.matrixWorld);
+    doors.push({ name: o.name, leaf: o, closed, swing: side * SWING, centre: box.getCenter(new Vector3()), box, openBox, open: true, t: 1 });
   }
 
   // the ceiling fans: their blades turn (blender/build_lodge.py ceiling_fan)
@@ -158,7 +165,7 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
       const hit = bvh.raycastFirst(ray, DoubleSide as unknown as Material);
       return hit && from - hit.point.y < STEP_UP + 3 ? hit.point.y + info.at.y : null;
     },
-    hits: (x, z, feet, r) => {
+    hits: (x, z, feet, r, through = false) => {
       const [lx, lz] = local(x, z);
       if (Math.abs(lx) > reach || Math.abs(lz) > reach) return false;
       const fy = feet - info.at.y;
@@ -167,8 +174,9 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
         if (bvh.intersectsSphere(sphere)) return true;
       }
       for (const d of doors) {
-        if (d.t > 0.15) continue; // an open door is out of the way
-        const b = d.box;
+        // a shut door bars the doorway; an open one stands where it swung to (it was walked through, Ch1); one swinging, neither
+        const b = d.t < 0.15 ? (through ? null : d.box) : d.t > 0.85 ? d.openBox : null;
+        if (!b) continue;
         const cx = Math.max(b.min.x, Math.min(lx, b.max.x)), cz = Math.max(b.min.z, Math.min(lz, b.max.z));
         if (Math.hypot(lx - cx, lz - cz) < r && fy < b.max.y && fy + 1.8 > b.min.y) return true;
       }
@@ -208,6 +216,13 @@ export async function loadLodge(info: LodgeInfo, scene: Scene): Promise<Lodge> {
     patchVisible: () => !!patch?.visible,
     toggleDoor: (name) => {
       for (const d of doors) if (d.name === name || d.name.replace(/(\d)[LR]$/, "$1") === name) d.open = !d.open;
+    },
+    setDoors: (open) => {
+      for (const d of doors) {
+        d.open = open;
+        d.t = open ? 1 : 0;
+        d.leaf.rotation.y = d.closed + d.swing * d.t;
+      }
     },
     update: (dt) => {
       for (const f of fans) {

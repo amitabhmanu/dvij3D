@@ -971,6 +971,10 @@ export class Cast {
   get(who: string) { return this.actors.get(who); }
 
   private me: Actor | null = null;
+  private selfLevel = false;
+  private selfLift = 0;
+  /** His body in the glass with its eyes at the camera's (on), or standing on the floor (off): for a close-up of his face. */
+  selfAtEyes(on: boolean) { this.selfLevel = on; }
   /** Dvij's own body, on the layer only a reflection sees (the author, 21 Oct): it stands where he stands. */
   async self(model = "dvij"): Promise<Actor | null> {
     if (this.me) return this.me;
@@ -1082,6 +1086,16 @@ export class Cast {
       this.me.obj.position.set(at.x, this.env.ground(at.x, at.z, at.y), at.z);
       this.me.obj.rotation.y = Math.PI - this.env.heading();
       this.me.update(dt);
+      // his eyes brought up to the camera's, eased (the close-up of his face in the pane, Ch1: standing on the floor, his
+      // eyes are below the camera's and the glass showed the top of his bandaged head)
+      const want = this.selfLevel ? (() => {
+        const eye = this.me!.obj.getObjectByName("eye_l") ?? this.me!.obj.getObjectByName("head");
+        if (!eye) return 0;
+        this.me!.obj.updateMatrixWorld(true);
+        return this.env.eyes().y - eye.getWorldPosition(new Vector3()).y;
+      })() : 0;
+      this.selfLift += (want - this.selfLift) * Math.min(1, dt * 3);
+      if (Math.abs(this.selfLift) > 1e-4) { this.me.obj.position.y += this.selfLift; this.me.obj.updateMatrixWorld(true); }
     }
     const eyes = this.env.eyes();
     let k = 0;

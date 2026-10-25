@@ -15,6 +15,7 @@ novel: [93, 102]
 setting:                                         # soft daylight, the court "wonderfully sunlit" (novel ¶100, breakdown ch1 p1, p7)
   sun: morning
   court: open
+  doors: shut                                    # he opens each door he goes through (the author, 25 Oct)
 start:
   # flat on his back in the iron bed, staring up at the fan (breakdown ch1 p2; novel ¶93)
   pose: lie
@@ -24,7 +25,7 @@ props:
   # what the scene needs beyond the lodge's own furniture
   - {id: stool, kind: stool, at: [-14.3, 6.75], sources: [novel ¶94]}
   - {id: glass, kind: glass, at: [-14.3, 6.75], on: stool, sources: [novel ¶94, breakdown ch1 p3]}
-  - {id: spectacles, kind: spectacles, at: [-14.2, 6.65], on: stool, sources: [novel ¶98]}   # the Professor's (ch3 asks for them)
+  - {id: spectacles, kind: spectacles, at: [-14.2, 6.88], on: stool, sources: [novel ¶98]}   # the Professor's (ch3 asks for them); on the stool's far side, clear of the shawl
   - {id: book, kind: open-book, at: [-14.4, 6.6], on: stool, sources: [novel ¶98]}
   - {id: rocking-chair, kind: rocking-chair, at: [-13.6, 6.4], sources: [novel ¶99]}
   - {id: shutters, kind: shutters, window: dvij-room:0, state: boarded, sources: [novel ¶97, novel ¶99, breakdown ch1 p4, breakdown ch1 p5]}
@@ -95,9 +96,7 @@ beats:
       target: shutters
       hint: [-15.6, 5.25]
     then:
-      - prop: {id: shutters, state: open}
-      - effect: {flash: 1.0, over: 1.5}        # "the brilliance of sunlight blinded him momentarily"
-      - sound: creak
+      - prop: {id: shutters, state: open}      # he walks square in front, tugs them open: the creak, and at once "the brilliance of sunlight blinded him momentarily", his eyes adjusting (stage.ts)
       - caption: "He tugged at the stops. The brilliance of sunlight blinded him momentarily..."
       - wait: 2
       - caption: "What greeted him was a battered boundary wall with grey grass growing all over it."
@@ -122,6 +121,7 @@ beats:
       target: [-7.75, -12.0]                   # through the study's door from the corridor
       radius: 1.6
     then:
+      - pane: {at: [-15.0, -13.25], look: [-17.0, 1.9, -13.25]}   # the west window's dirty pane: his face comes up in it as he walks to it (novel ¶101; the author, 25 Oct)
       - caption: "There were books everywhere. As if antiquity was preserved there, albeit a bit haphazardly."
 
   - id: window

@@ -12,6 +12,8 @@ import { makeThing } from "./things";
 
 export type PropSpec = {
   id: string; kind: string; at?: [number, number]; on?: string; state?: string; window?: string; room?: string;
+  /** which way a window's wall faces, into the room (x, z) */
+  inward?: [number, number];
   /** the ground it stands on, in the lodge's frame: the plinth (0.6) indoors, 0 out on the lawn */
   floor?: number;
   /** a point it faces (a chair turned to the others) */
@@ -19,6 +21,8 @@ export type PropSpec = {
 };
 type Made = {
   obj: Object3D; set: (state: string) => void; point: () => [number, number, number];
+  /** Where one stands to use it, square in front of it (the shutters: Ch1), if it matters. */
+  front?: () => [number, number];
   /** Something a hand can pick up: the object, in the lodge's frame. */
   handle?: Object3D;
   update?: (dt: number) => void;
@@ -122,8 +126,31 @@ function make(p: PropSpec): Made {
       };
     }
     case "spectacles": {
-      for (const s of [-0.035, 0.035]) g.add(at(new Mesh(new TorusGeometry(0.025, 0.004, 6, 16), IRON), s, FLOOR + 0.505, 0));
-      g.children.forEach((c) => (c.rotation.x = Math.PI / 2));
+      // "a pair of thick spectacles" (novel ¶98), the Professor's (comic b1-p007-2): round rims of dark tortoiseshell,
+      // thick lenses that catch the light, a bridge, the arms folded behind; lying lenses-up on the stool, clear of
+      // the shawl (they had been two thin dark rings, lost against the wood under it)
+      const RIM = mat("#3a2414", { roughness: 0.45 });
+      const LENS = new MeshPhysicalMaterial({ color: "#dfe8e6", roughness: 0.05, metalness: 0, transparent: true, opacity: 0.45, clearcoat: 1, clearcoatRoughness: 0.03 });
+      const y = FLOOR + 0.505 + 0.009;
+      const glasses = new Group();
+      for (const s of [-0.036, 0.036]) {
+        const rim = at(new Mesh(new TorusGeometry(0.026, 0.0045, 8, 24), RIM), s, 0, 0);
+        rim.rotation.x = Math.PI / 2;
+        const lens = at(new Mesh(new CylinderGeometry(0.025, 0.025, 0.006, 24), LENS), s, 0, 0); // (thick: his eyes are bad)
+        glasses.add(rim, lens);
+      }
+      const bridge = at(new Mesh(new TorusGeometry(0.01, 0.003, 6, 10, Math.PI), RIM), 0, 0.002, -0.004);
+      bridge.rotation.x = -Math.PI / 2;
+      glasses.add(bridge);
+      for (const s of [-1, 1]) { // the arms, folded in behind the rims
+        const arm = at(new Mesh(new BoxGeometry(0.11, 0.004, 0.004), RIM), s * 0.012, 0.005, 0.03 + (s > 0 ? 0.006 : 0));
+        arm.rotation.y = s * 0.08;
+        glasses.add(arm);
+      }
+      glasses.position.y = y;
+      glasses.rotation.y = 0.6;
+      g.add(glasses);
+      top = y + 0.01;
       break;
     }
     case "deck-chair": {
@@ -187,6 +214,8 @@ function make(p: PropSpec): Made {
         obj: at(g, x, 0, z),
         set: (s) => { state = s; target = s === "open" ? 1 : 0; }, // (the script plays the creak)
         point: () => [x, FLOOR + 1.85, z],
+        // square in front of the middle of the window, clear of the leaves as they swing in (0.7 m each)
+        front: () => { const [nx, nz] = p.inward ?? [1, 0]; return [x + nx * 0.85, z + nz * 0.85]; },
         update: (dt) => {
           if (open === target) return;
           open = Math.min(1, Math.max(0, open + Math.sign(target - open) * dt / 0.8));
@@ -246,9 +275,9 @@ function make(p: PropSpec): Made {
   return { obj: at(g, x, 0, z), set, point: () => [x, top, z] };
 }
 
-/** Where a window's shutters go: the window's middle on its wall. */
-const WINDOWS: Record<string, [number, number]> = {
-  "dvij-room:0": [-15.75, 5.25], // the west window of the room where he wakes (lodge.yaml)
+/** Where a window's shutters go: the window's middle on its wall, and which way the wall faces into the room. */
+const WINDOWS: Record<string, [number, number, number, number]> = {
+  "dvij-room:0": [-15.75, 5.25, 1, 0], // the west window of the room where he wakes (lodge.yaml)
 };
 /** Where a room's clutter lies. */
 const CLUTTER: Record<string, [number, number]> = {
@@ -281,7 +310,8 @@ export class Props {
       if (theirs) { theirs.visible = false; this.restore.push(() => { theirs.visible = true; }); }
     }
     for (const p of specs) {
-      const spec = { ...p, at: p.at ?? (p.window ? WINDOWS[p.window] : p.room ? CLUTTER[p.room] : undefined) };
+      const win = p.window ? WINDOWS[p.window] : undefined;
+      const spec = { ...p, at: p.at ?? (win ? [win[0], win[1]] as [number, number] : p.room ? CLUTTER[p.room] : undefined), inward: win ? [win[2], win[3]] as [number, number] : undefined };
       const m = make(spec);
       if (p.state) m.set(p.state);
       if ((p as { "held-by"?: string })["held-by"]) m.obj.visible = false; // someone else has it until it's handed over
@@ -339,6 +369,11 @@ export class Props {
 
   set(id: string, state: string) {
     this.made.get(id)?.set(state);
+  }
+
+  /** Where one stands to use a prop, if it has such a place (the lodge's frame, x z). */
+  front(id: string): [number, number] | null {
+    return this.made.get(id)?.front?.() ?? null;
   }
 
   /** A prop's middle, in the lodge's frame. */

@@ -131,6 +131,20 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const [rate, setRate] = useState(1);
   const rateRef = useRef(1);
   rateRef.current = rate;
+  // the film bar's clock: how far into the chapter the story is (its own time: faster at 2x, still when held or in
+  // the menu), from nothing again at each chapter (the author, 25 Oct)
+  const [clock, setClock] = useState(0);
+  useEffect(() => {
+    if (!story || !watching) return;
+    let scene = "", t = 0;
+    const tick = setInterval(() => {
+      const now = director.current?.current?.scene ?? "";
+      if (now !== scene) { scene = now; t = 0; }
+      else if (!heldRef.current && ["playing", "card", "look"].includes(screenRef.current)) t += 0.25 * rateRef.current;
+      setClock(t);
+    }, 250);
+    return () => clearInterval(tick);
+  }, [story, watching]);
   const [chapters, setChapters] = useState<{ id: string; title: string }[]>([]);
   const chaptersRef = useRef(chapters);
   chaptersRef.current = chapters;
@@ -603,6 +617,9 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
                 ))}
               </span>
               <span class="now">{chapters[i]?.title ?? ""}</span>
+              <span class="clock" role="timer" aria-label="Time into the chapter" title="Time into the chapter">
+                {Math.floor(clock / 60)}:{String(Math.floor(clock % 60)).padStart(2, "0")}
+              </span>
               <button type="button" class="take" onClick={() => watch(false)}>Play it yourself</button>
             </div>
           );
