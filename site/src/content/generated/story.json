@@ -644,6 +644,10 @@
          [
           -7.75,
           -10.0
+         ],
+         [
+          -9.25,
+          -9.25
          ]
         ],
         "then": "pick-up",
@@ -668,6 +672,10 @@
          -11.9
         ],
         "via": [
+         [
+          -9.25,
+          -9.25
+         ],
          [
           -7.75,
           -10.0
@@ -831,8 +839,14 @@
        "actor": {
         "who": "professor",
         "face": "player",
-        "look": "player",
         "anim": "show"
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "look": "manuscript",
+        "keep": true
        }
       },
       {
@@ -935,6 +949,12 @@
        }
       },
       {
+       "actor": {
+        "who": "professor",
+        "anim": "hand-to-chin"
+       }
+      },
+      {
        "say": {
         "who": "dvij",
         "line": "I woke up in a strange room, walked out into a courtyard, and then into this room. Next thing I remember is you asking me for your glasses.",
@@ -959,6 +979,12 @@
         "sources": [
          "novel ¶162"
         ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "offer"
        }
       },
       {
@@ -2056,7 +2082,7 @@
        }
       },
       {
-       "caption": "The reams of bandages had been replaced by a much smaller bandage. Hair was growing back on his shaven head. His left arm was still plastered, but he found that he was able to move it freely now."
+       "caption": "The reams of bandages had been replaced by a much smaller bandage. Hair was growing back on his shaven head. His right arm was still plastered, but he found that he was able to move it freely now."
       },
       {
        "camera": {
@@ -2193,6 +2219,12 @@
          "novel ¶256"
         ]
        }
+      },
+      {
+       "actor": {
+        "who": "bhavi",
+        "anim": "laugh"
+       }
       }
      ]
     },
@@ -2229,6 +2261,16 @@
          9.6,
          33.5
         ],
+        "via": [
+         [
+          7.2,
+          30.0
+         ],
+         [
+          7.4,
+          34.0
+         ]
+        ],
         "from": [
          0,
          20.4
@@ -2262,6 +2304,16 @@
         "walk": [
          0,
          20.4
+        ],
+        "via": [
+         [
+          7.4,
+          34.0
+         ],
+         [
+          7.2,
+          30.0
+         ]
         ],
         "exit": true
        }
@@ -2430,6 +2482,12 @@
        }
       },
       {
+       "actor": {
+        "who": "bhavi",
+        "anim": "point"
+       }
+      },
+      {
        "say": {
         "who": "bhavi",
         "line": "Bah! I think you are pretending. This is all planned by that evil Mahant. He bought you with money. You had the accident as per Mahant's plan, and now that you are healed, you will start working with him. This is all an evil scheme, uncle. We have to stop it before it's too late.",
@@ -2459,6 +2517,12 @@
       "novel ¶275"
      ],
      "do": [
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "finger-raise"
+       }
+      },
       {
        "say": {
         "who": "professor",
@@ -2506,6 +2570,16 @@
         "walk": [
          0,
          20.4
+        ],
+        "via": [
+         [
+          11.6,
+          31.5
+         ],
+         [
+          11.2,
+          28.8
+         ]
         ],
         "exit": true
        }

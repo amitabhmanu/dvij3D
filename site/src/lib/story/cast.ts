@@ -75,6 +75,8 @@ export type CastEnv = {
 export type PeopleInfo = { people: Record<string, { file: string; height: number; face?: { smile?: number; frown?: number; brows?: number } }>; mouths?: string };
 
 /** How high each kind of seat is above the floor (m): the hips go there (build_lodge.py, build_site.py, props.ts). */
+/** The tallest step a walker goes up (m): the court's edge is 0.30, a doorstep 0.2. */
+const MAX_STEP = 0.34;
 const SEATS: Record<string, number> = { ground: 0.08, "deck-chair": 0.36, armchair: 0.44, chair: 0.47, divan: 0.46, stool: 0.42, "well-rim": 0.8 };
 /** The clip each pose loops in, and what it talks in. */
 const POSE_CLIP: Record<string, [string, string]> = {
@@ -246,6 +248,8 @@ const cache = new Map<string, Promise<{ scene: Object3D; clips: AnimationClip[] 
 
 export class Actor {
   readonly obj = new Group();
+  /** A look the story gave with `keep`: held while anyone speaks (the Professor lost in his manuscript, b1-p007-7), till the next look. */
+  keepLook = false;
   private model: Object3D;
   private mixer: AnimationMixer;
   private actions = new Map<string, AnimationAction>();
@@ -421,6 +425,36 @@ export class Actor {
     }
     this.mixer.update(0.01);
     this.settle();
+  }
+
+  /** In a chair (or on the divan): what standUp() gets them out of. */
+  get seated() { return this.seat > 0 && (this.pose === "sit" || this.pose === "recline"); }
+
+  /** Up out of the chair with the clip's own rise, not a pop to standing (Bhavi rising in a huff, comic b1-p012-10). */
+  async standUp(): Promise<void> {
+    const rise = this.actions.get("Sitting_Exit");
+    if (!this.seated || !rise) { this.place(this.where(), "stand"); return; }
+    // the feet on the floor round the seat (a chair may be solid to the ground's query), and the rise played from the sitting loop
+    const [x, z] = this.where();
+    let floor = Infinity;
+    for (let k = 0; k < 8; k++) floor = Math.min(floor, this.env.ground(x + Math.sin(k * 0.785) * 1.3, z + Math.cos(k * 0.785) * 1.3, 3));
+    this.pose = "stand";
+    this.seat = 0;
+    this.lean = 0;
+    this.obj.position.y = floor;
+    rise.reset().setLoop(LoopOnce, 1).setEffectiveWeight(1).fadeIn(0.2).play();
+    rise.clampWhenFinished = true;
+    this.base?.fadeOut(0.2);
+    this.base = rise; // (so the standing loop takes over from the rise, not from the sitting)
+    await new Promise<void>((done) => {
+      const end = (e: { action: AnimationAction }) => {
+        if (e.action !== rise) return;
+        this.mixer.removeEventListener("finished", end as never);
+        done();
+      };
+      this.mixer.addEventListener("finished", end as never);
+    });
+    this.loop("Idle_Loop", 0.3);
   }
 
   /** Sit them down on the seat's height: the clip's hips meet it. */
@@ -647,7 +681,9 @@ export class Actor {
       const p = this.obj.position;
       const next = this.path[0];
       const d = Math.hypot(next.x - p.x, next.z - p.z);
-      const fast = this.env.seen(this.obj.getWorldPosition(new Vector3()).add(new Vector3(0, 1, 0))) ? 1 : 5;
+      // (only well away from him: close behind his chair, a hurry is seen out of the corner of the eye, Ch3)
+      const me = this.obj.getWorldPosition(new Vector3()), eyes = this.env.eyes();
+      const fast = this.env.seen(me.clone().add(new Vector3(0, 1, 0))) || Math.hypot(eyes.x - me.x, eyes.z - me.z) < 3 ? 1 : 5;
       const speed = WALK_SPEED * (SLOW[this.who] ?? 1) * fast;
       const step = Math.min(d, speed * dt);
       if (d > 1e-3) {
@@ -658,7 +694,10 @@ export class Actor {
         p.x += ((next.x - p.x) / d) * step;
         p.z += ((next.z - p.z) / d) * step;
       }
-      p.y = this.env.ground(p.x, p.z, p.y + 0.6);
+      // a step up is a stair's at most (the court's edge is 0.3 m): anything taller underfoot is a thing on the floor
+      // (the veena, a fallen book), walked past, not stood on; and up or down a step eased, not jumped (Ch3)
+      const floor = this.env.ground(p.x, p.z, p.y + 0.6);
+      if (floor - p.y < MAX_STEP) p.y += (floor - p.y) * Math.min(1, dt * 12);
       if (this.base) this.base.timeScale = Math.min(2, speed / 1.15); // (the clip's stride: about 1.15 m/s)
       if (d - step < 0.02) {
         this.path.shift();
@@ -959,12 +998,13 @@ export class Cast {
     if (!ac) return;
     if (a.from) { ac.place(a.from, "stand"); ac.show(true); }
     if (a.stop) ac.stop();
-    if (a.pose) ac.place(ac.where(), a.pose, a.on);
+    if (a.pose === "stand" && !a.on && ac.seated && !hurried) await ac.standUp();
+    else if (a.pose) ac.place(ac.where(), a.pose, a.on);
     const face = () => ac.turnTo(a.face === "player" ? this.playerAt() : a.face, hurried ? 0.01 : 0.8);
     if (a.face && !a.walk) await face();
     if (a.anim === "turn" && !hurried) await ac.turnTo(a.look && a.look !== "player" && Array.isArray(a.look) ? (a.look as V2) : this.playerAt());
     if (a.holding) ac.hold(this.env.prop(a.holding));
-    if (a.look) ac.lookAt(this.target(a.look));
+    if (a.look) { ac.lookAt(this.target(a.look)); ac.keepLook = !!a.keep; }
     if (a.walk) {
       const going = ac.walk(a.walk, a.via ?? [], hurried);
       if (a.exit) { void going.then(() => ac.show(false)); return; } // they go; the story doesn't wait
@@ -1008,9 +1048,10 @@ export class Cast {
   speaking(who: string | null, level: (() => number) | null) {
     for (const [name, a] of this.actors) {
       if (!a.visible) continue;
-      if (name === who) { a.speak(level); a.lookAt(() => this.env.eyes()); a.turnToFace(this.playerAt()); }
+      if (name === who) { a.speak(level); if (!a.keepLook) { a.lookAt(() => this.env.eyes()); a.turnToFace(this.playerAt()); } }
       else {
         a.speak(null);
+        if (a.keepLook) continue;
         const s = who ? this.actors.get(who) : null;
         if (who === "dvij") a.lookAt(() => this.env.eyes());
         else if (s?.visible) a.lookAt(() => s.headAt());

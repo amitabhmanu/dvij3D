@@ -42,7 +42,62 @@ describe("Bhavi walking the well's parapet (Ch4)", () => {
   });
 });
 
+describe("walking (the Ch3/Ch7 audit)", () => {
+  function walker(e: CastEnv) {
+    const scene = new Group();
+    scene.add(new Mesh(new BoxGeometry(0.4, 1.6, 0.3), new MeshBasicMaterial()));
+    const a = new Actor("professor", { scene, clips: [] }, e);
+    e.root.add(a.obj);
+    return a;
+  }
+
+  it("walks past a thing on the floor, not up onto it, and eases down a step", () => {
+    // the floor at 0.8, a 0.39 m thing on it at x 1..1.4 (the study floor, Ch3), and the court 0.3 m down beyond x 3
+    const e = { ...env(), ground: (x: number) => (x > 1 && x < 1.4 ? 1.19 : x > 3 ? 0.5 : 0.8) };
+    const a = walker(e);
+    a.place([-1, 0], "stand");
+    void a.walk([5, 0]);
+    let top = 0, drop = 0, y = a.obj.position.y;
+    for (let i = 0; i < 60 * 10; i++) {
+      a.update(1 / 60);
+      top = Math.max(top, a.obj.position.y);
+      drop = Math.max(drop, y - a.obj.position.y);
+      y = a.obj.position.y;
+    }
+    expect(top).toBeLessThan(0.81);
+    expect(a.obj.position.y).toBeCloseTo(0.5, 2); // (down the step at last)
+    expect(drop).toBeLessThan(0.1); // (eased over frames, not in one)
+  });
+
+  it("doesn't hurry close to Dvij, even out of his sight (Ch3: behind his chair)", () => {
+    const e = { ...env(), seen: () => false };
+    const speed = (z: number) => {
+      const a = walker(e);
+      a.place([-1, z], "stand");
+      void a.walk([1, z]);
+      for (let i = 0; i < 30; i++) a.update(1 / 60);
+      return (a.where()[0] + 1) * 2; // (metres a second)
+    };
+    expect(speed(1)).toBeLessThan(2);
+    expect(speed(10)).toBeGreaterThan(3); // (well away and unseen, they still hurry)
+  });
+});
+
 describe("the eyes (face-life.ts)", () => {
+  it("turn the head to someone beside them without a whip (Bhavi in Ch7: 65 degrees as the talk passes)", () => {
+    const life = new FaceLife("bhavi");
+    const from = new Vector3(0, 1.5, 0), a = new Vector3(0, 1.5, 2), b = new Vector3(2 * Math.sin(1.13), 1.5, 2 * Math.cos(1.13));
+    life.headTarget(1 / 60, a, false, from);
+    let prev = a.clone().sub(from), fastest = 0;
+    for (let i = 0; i < 90; i++) {
+      const aim = life.headTarget(1 / 60, b, false, from)!.clone().sub(from);
+      fastest = Math.max(fastest, (aim.angleTo(prev) * 180) / Math.PI * 60);
+      prev = aim;
+    }
+    expect(fastest).toBeLessThan(170); // (deg/s: a person's turn; it was ~250)
+    expect((prev.angleTo(b.clone().sub(from)) * 180) / Math.PI).toBeLessThan(5); // (and there within 1.5 s)
+  });
+
   /** A minute of looking at someone a metre away; how much of it the eyes were on them, and the blinks. */
   function minute(talking: boolean) {
     const life = new FaceLife("professor") as unknown as { headTarget: FaceLife["headTarget"]; eye: { yaw: number; pitch: number }; eyes: FaceLife["eyes"] };

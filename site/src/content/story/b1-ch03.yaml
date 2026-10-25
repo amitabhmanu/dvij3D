@@ -45,9 +45,9 @@ beats:
       - animate: {player: drink}
       - sound: gulp
       - say: {who: dvij, line: "There... in the room where I was sleeping. Your glasses... they're on the stool by the bed.", sources: [novel ¶139]}
-      - actor: {who: professor, pose: stand, walk: [-8.5, 3.0], via: [[-7.75, -10.0]], then: pick-up, item: spectacles}   # fetches them from Dvij's room (novel ¶140)
+      - actor: {who: professor, pose: stand, walk: [-8.5, 3.0], via: [[-7.75, -10.0], [-9.25, -9.25]], then: pick-up, item: spectacles}   # fetches them from Dvij's room (novel ¶140); round the corridor's corner, not over the court's sunken edge
       - camera: {pose: sit, at: [-12.8, -11.7], over: 2.0}       # meanwhile he gets himself into the cushioned chair (novel ¶140)
-      - actor: {who: professor, walk: [-14.3, -11.9], via: [[-7.75, -10.0], [-13.0, -10.8]], wearing: spectacles, look: player}   # off the desk's end, a little way from his chair: seen, not loomed over
+      - actor: {who: professor, walk: [-14.3, -11.9], via: [[-9.25, -9.25], [-7.75, -10.0], [-13.0, -10.8]], wearing: spectacles, look: player}   # off the desk's end, a little way from his chair: seen, not loomed over
 
   - id: veena
     sources: [breakdown ch3 p4, novel ¶140, novel ¶141, novel ¶142]
@@ -78,13 +78,14 @@ beats:
     do:
       - say: {who: dvij, line: "Why is my head bandaged?", sources: [novel ¶150]}
       - actor: {who: professor, take: manuscript}                   # the birch-bark leaves, off the desk
-      - actor: {who: professor, face: player, look: player, anim: show}
+      - actor: {who: professor, face: player, anim: show}
+      - actor: {who: professor, look: manuscript, keep: true}      # lost in it, "not making eye contact" (comic b1-p007-7, b1-p007-8), till he turns to him at ¶155
       - actor: {who: professor, anim: finger-raise}                # "Look here... at the edges of the birch barks" (comic b1-p007-9)
       - say: {who: professor, line: "Why indeed? Because of the accident, I should think. Careless driving, I dare say. Must you fret about those things when we are in the midst of such secret knowledge?", sources: [novel ¶151]}
       - say: {who: dvij, line: "I had a car accident?", sources: [novel ¶152]}
       - say: {who: professor, line: "Yes, yes, of course you had an accident. You were in coma. Look here... at the edges of the birch barks... see how they have frayed over time. Beautiful!", sources: [novel ¶153]}
       - say: {who: dvij, line: "Why? Why was I in a coma?", sources: [novel ¶154]}
-      - actor: {who: professor, look: player}
+      - actor: {who: professor, look: player}                       # "turning to face the protagonist directly for the first time" (comic b1-p007-9)
       - say: {who: professor, line: "Well! It's all very simple really. You had an accident. You hurt your head. You went into a coma. Now, if we could get back to the book, I'd appreciate very much.", sources: [novel ¶155]}
 
   - id: introduction
@@ -94,9 +95,11 @@ beats:
       - say: {who: dvij, line: "My past?", sources: [novel ¶158]}
       - actor: {who: professor, anim: hand-on-chest}
       - say: {who: professor, line: "I haven't really introduced myself, have I? How embarrassing. I am Doctor Vidyasagar Parthasarathi, owner of this room and the rest of the lodge that came along with it.", sources: [novel ¶159]}
+      - actor: {who: professor, anim: hand-to-chin}                 # he listens now, his hand on his chin (comic b1-p007-12)
       - say: {who: dvij, line: "I woke up in a strange room, walked out into a courtyard, and then into this room. Next thing I remember is you asking me for your glasses.", sources: [novel ¶160]}
       - say: {who: professor, line: "Think nothing of it! It's your turn to introduce yourself. What's your name? Come on, out with it.", sources: [novel ¶161]}
       - say: {who: dvij, line: "I... I don't know!", sources: [novel ¶162]}
+      - actor: {who: professor, anim: offer}                        # he reaches for him in alarm as he goes down (comic b1-p007-14)
       - effect: {faint: true, over: 2}
       - sound: thud
       - progress: {book: 1, page: 7}

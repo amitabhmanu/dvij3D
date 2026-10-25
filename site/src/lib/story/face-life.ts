@@ -14,7 +14,7 @@
 import { Quaternion, Vector3, type Bone } from "three";
 import { forwardOf } from "./ik";
 
-const v1 = new Vector3(), v2 = new Vector3(), q1 = new Quaternion();
+const v1 = new Vector3(), v2 = new Vector3(), v3 = new Vector3(), q1 = new Quaternion();
 
 /** A seeded, repeatable random (each person their own). */
 function rng(seed: number) {
@@ -99,8 +99,13 @@ export class FaceLife {
       want.y -= Math.tan(this.awayPitch * this.headShare) * dist;
     }
     if (!this.aimed) { this.aim.copy(want); this.aimV.set(0, 0, 0); this.aimed = true; }
-    // a spring that settles in about a third of a second, without overshoot: no snaps when the speaker changes
-    const w = 9;
+    // a spring that settles in about a third of a second, without overshoot: no snaps when the speaker changes; a big
+    // turn (to the one beside them, and back, as the talk passes between two: Bhavi in Ch7) slower, ~0.7 s for 60 deg
+    let w = 9;
+    if (from) {
+      const a = v2.copy(this.aim).sub(from).angleTo(v3.copy(want).sub(from));
+      w = 9 - 4 * Math.min(1, Math.max(0, (a - 0.3) / 0.5));
+    }
     const dx = v1.copy(this.aim).sub(want);
     this.aimV.addScaledVector(dx, -w * w * dt).addScaledVector(this.aimV, -2 * w * dt);
     this.aim.addScaledVector(this.aimV, dt);
