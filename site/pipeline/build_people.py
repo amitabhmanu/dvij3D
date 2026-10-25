@@ -60,12 +60,19 @@ def south_asian(african: float = 0.3, asian: float = 0.1) -> dict:
 
 
 WHITE, CREAM, BLACK_HAIR = [0.94, 0.93, 0.89], [0.9, 0.86, 0.76], [0.045, 0.038, 0.032]
+# Dvij's brows as cards (the lifelike pilot): strong and dark (b1-p013-19)
+DVIJ_BROWS = dict(kind="hair-cards", name="brows", style="brows", color=[0.04, 0.035, 0.03], root=[0.03, 0.025, 0.02], tip=[0.07, 0.055, 0.045],
+                  arch=0.003, length=0.012, width=0.0065, count=30, strands=16)
 # Each person: their body (MakeHuman's sliders), face, skin, hair and what they wear. Colours as written (sRGB).
 PEOPLE = {
     # Dr Vidyasagar Parthasarathi, 60s-70s (¶133, ¶136; breakdowns ch2, ch3; comic b1-p006-7, b1-p007-2, b1-p012-4)
     "professor": dict(
         height=1.68, macro=dict(gender=1.0, age=age(68), muscle=0.45, weight=0.3, height=0.45, race=south_asian(0.25, 0.15)),
-        targets={"nose/nose-scale-horiz-incr": 0.5, "nose/nose-scale-vert-incr": 0.5, "nose/nose-point-width-incr": 0.3, "ears/l-ear-scale-incr": 0.8, "ears/r-ear-scale-incr": 0.8, "eyebrows/eyebrows-trans-down": 0.5, "eyes/l-eye-scale-incr": 0.55, "eyes/r-eye-scale-incr": 0.55, "mouth/mouth-angles-up": 0.6, "forehead/forehead-scale-vert-incr": 0.3}, face=dict(smile=0.25),
+        targets={"nose/nose-scale-horiz-incr": 0.5, "nose/nose-scale-vert-incr": 0.5, "nose/nose-point-width-incr": 0.3, "ears/l-ear-scale-incr": 0.8, "ears/r-ear-scale-incr": 0.8, "eyebrows/eyebrows-trans-down": 0.5, "eyes/l-eye-scale-incr": 0.55, "eyes/r-eye-scale-incr": 0.55, "mouth/mouth-angles-up": 0.6, "forehead/forehead-scale-vert-incr": 0.3,
+                 # the lifelike pilot's refit to his panels (b1-p005-9, b1-p007-2, b1-p012-6, b1-p013-1): a longer, leaner face, the
+                 # chin longer, the cheekbones showing over hollower cheeks, the head narrower (his outline was the worst region)
+                 "head/head-oval": 0.45, "head/head-scale-horiz-decr": 0.2, "head/head-fat-decr": 0.25, "chin/chin-height-incr": 0.4,
+                 "cheek/l-cheek-bones-incr": 0.4, "cheek/r-cheek-bones-incr": 0.4, "cheek/l-cheek-volume-decr": 0.35, "cheek/r-cheek-volume-decr": 0.35}, face=dict(smile=0.25),
         skin=dict(texture="old_caucasian_male", tone=[0.66, 0.48, 0.36]), hair_color=[0.87, 0.86, 0.83],
         brow_color=[0.84, 0.82, 0.78], eyebrows="eyebrow010", detail=dict(age=1.5, pores=0.7),
         # the lifelike pilot: skin zones (ruddy nose and ears, the eyes' darker skin, a shaven old man's faint shadow),
@@ -78,14 +85,16 @@ PEOPLE = {
                   dict(kind="watch", name="watch", side="l", color=[0.86, 0.83, 0.72]),
                   dict(kind="socks", name="socks", color=[0.9, 0.89, 0.85]),
                   dict(kind="sole", name="shoes", color=[0.32, 0.19, 0.1]),
-                  dict(kind="stubble", name="scalp", color=[0.7, 0.68, 0.64]),
+                  dict(kind="stubble", name="scalp", color=[0.52, 0.45, 0.39]),  # (hair round: skin-grey, not a white band under the curls)
                   dict(kind="curls", name="mane", color=[0.5, 0.49, 0.47], depth=0.024, knots=False),  # (the mass under the cards)
                   # loose grey curls standing off the head, fullest over the ears and behind, whiter at the ears (b1-p012-6, b1-p013-1)
                   dict(kind="hair-cards", name="curls", style="curly", color=[0.78, 0.77, 0.74], root=[0.42, 0.41, 0.39], tip=[0.9, 0.89, 0.86],
-                       volume=0.036, length=0.055, curl=0.008, turns=1.6, width=0.016, gap=0.007, wave=0.25, strands=34, light=0.05),
+                       volume=0.036, length=0.06, curl=0.0075, turns=2.0, width=0.0065, gap=0.0048, wave=0.25, strands=14, light=0.05,
+                       band=True, points=13, fill=0.3, thick=[6, 12], root_fade=0.12),  # (hair round: narrow bands wound round each curl, longer and finer, not flakes)
                   # the white moustache, drooping over the lip and a little uneven (b1-p012-6, b1-p012-23)
-                  dict(kind="hair-cards", name="moustache", style="moustache", color=[0.84, 0.83, 0.8], root=[0.58, 0.57, 0.54], tip=[0.92, 0.91, 0.89],
-                       size=1.35, count=70, strands=44, width=0.011),
+                  # (refit: smaller and greyer, as his panels draw it, not a white block)
+                  dict(kind="hair-cards", name="moustache", style="moustache", color=[0.74, 0.73, 0.7], root=[0.48, 0.47, 0.45], tip=[0.86, 0.85, 0.82],
+                       size=1.1, count=56, strands=30, width=0.008),
                   dict(kind="hair-cards", name="brows", style="brows", color=[0.82, 0.8, 0.76], root=[0.6, 0.58, 0.55], tip=[0.9, 0.89, 0.86],
                        arch=0.002, length=0.014, width=0.0065, count=30, strands=16),
                   dict(kind="spectacles", name="spectacles", color=[0.22, 0.17, 0.12]),
@@ -109,9 +118,12 @@ PEOPLE = {
         eyelashes="eyelashes02", detail=dict(age=0.12, pores=0.3),
         hair_cards=[  # long, thick, mostly straight (the author, 21 Oct), volume at the crown and sides, strands framing the face
             dict(kind="hair-cards", name="hair", style="long", color=BLACK_HAIR, root=[0.03, 0.025, 0.02], tip=[0.09, 0.07, 0.055],
-                 length=0.5, volume=0.02, width=0.019, gap=0.0068, framing=0.3, flyaways=10, wave=0.0025, strands=40, light=0.04),
-            dict(kind="hair-cards", name="brows", style="brows", color=[0.05, 0.04, 0.035], root=[0.04, 0.03, 0.025], tip=[0.08, 0.06, 0.05],
-                 arch=0.005, length=0.015, width=0.0075, count=36, strands=18)],
+                 length=0.5, volume=0.02, width=0.019, gap=0.0068, framing=0.3, flyaways=10, wave=0.0025, strands=40, light=0.04,
+                 soft=0.016, edge_keep=0.85, edge_fade=0.02),  # (hair round: a soft hairline, the front row thinned and faded in at the root)
+            # (hair round: lighter, finer brows, of many narrow cards a few hairs each, full at the nose end and fine at the tail:
+            # b1-p008-4, b1-p012-28)
+            dict(kind="hair-cards", name="brows", style="brows", color=[0.07, 0.055, 0.045], root=[0.05, 0.04, 0.032], tip=[0.12, 0.09, 0.07],
+                 arch=0.005, length=0.011, width=0.0032, count=56, strands=4, fill=0.35, thick=[14, 24], taper=0.9, scatter=0.0015)],
         garments=[dict(kind="top", name="gown", color=[0.95, 0.86, 0.86], print="floral", ink=[0.86, 0.38, 0.46], sleeve=2.0, loose=0.1, **{"from": 0.9}),
                   dict(kind="skirt", name="gown-skirt", color=[0.95, 0.86, 0.86], print="floral", ink=[0.86, 0.38, 0.46], flare=0.07, pleats=0.008),
                   dict(kind="waistband", name="sash", color=[0.7, 0.3, 0.36], width=0.05)]),
@@ -204,13 +216,23 @@ PEOPLE = {
         # the lifelike pilot (5c): skin zones; thick dark curls springing up over the bandage, strong brows (b1-p012-11, b1-p013-19)
         targets={"eyebrows/eyebrows-trans-down": 0.25, "chin/chin-width-incr": 0.2, "head/head-square": 0.2},
         zones=dict(nose=0.35, cheeks=0.3, ears=0.5, eyes=0.6, beard=0.35), brow_cards=True,
-        hair_cards=[dict(kind="hair-cards", name="curls", style="curly", color=[0.05, 0.04, 0.035], root=[0.03, 0.025, 0.02], tip=[0.1, 0.08, 0.065],
-                         volume=0.03, length=0.045, curl=0.008, turns=1.3, width=0.016, gap=0.0085, wave=0.2, strands=30, above=0.045, light=0.05),
-                    dict(kind="hair-cards", name="brows", style="brows", color=[0.04, 0.035, 0.03], root=[0.03, 0.025, 0.02], tip=[0.07, 0.055, 0.045],
-                         arch=0.003, length=0.012, width=0.0065, count=30, strands=16)],
+        hair_cards=[DVIJ_BROWS],
+        # Chapters 1-6: the heavy bandage over all his skull (¶101; b1-p004), the borrowed gown, the pyjama too tight
         garments=[dict(kind="top", name="gown", color=[0.66, 0.63, 0.55], sleeve=1.25, loose=0.18, **{"from": 0.75}),
                   dict(kind="skirt", name="gown-skirt", color=[0.66, 0.63, 0.55], to=0.55, flare=0.05),
                   dict(kind="trousers", name="pyjama", color=[0.78, 0.8, 0.84], pleats=0.003),
+                  dict(kind="cast", name="plaster", color=[0.8, 0.77, 0.7]),
+                  dict(kind="bandage", name="bandage", color=[0.95, 0.94, 0.9]),
+                  dict(kind="beard", name="beard", color=[0.05, 0.04, 0.035]),
+                  dict(kind="moustache", name="moustache", color=[0.05, 0.04, 0.035])]),
+    # Dvij from Chapter 7: "the mass of bandages had been replaced by a much smaller bandage" (b1-ch07 healed), a band of
+    # gauze with his thick dark curls springing up over it, a cream shirt, the plaster still on his right arm (b1-p012-11)
+    "dvij-healed": dict(
+        base="dvij",
+        hair_cards=[dict(kind="hair-cards", name="curls", style="curly", color=[0.05, 0.04, 0.035], root=[0.03, 0.025, 0.02], tip=[0.1, 0.08, 0.065],
+                         volume=0.03, length=0.045, curl=0.008, turns=1.3, width=0.016, gap=0.0085, wave=0.2, strands=30, above=0.045, light=0.05)] + [DVIJ_BROWS],
+        garments=[dict(kind="top", name="shirt", color=[0.86, 0.82, 0.7], sleeve=0.55, loose=0.12, **{"from": "waist-0.12"}),
+                  dict(kind="trousers", name="trousers", color=[0.62, 0.58, 0.5], pleats=0.003),
                   dict(kind="cast", name="plaster", color=[0.8, 0.77, 0.7]),
                   dict(kind="curls", name="mane", color=[0.04, 0.032, 0.028], depth=0.016, knots=False),  # (the mass of his hair under the cards)
                   dict(kind="bandage", name="bandage", color=[0.95, 0.94, 0.9], band_only=True),

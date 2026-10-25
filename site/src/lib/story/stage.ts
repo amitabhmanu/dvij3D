@@ -50,6 +50,12 @@ export function sleep(seconds: number, paused: () => boolean, early: () => boole
   });
 }
 
+/** Which built Dvij a chapter shows: the heavy bandage until Chapter 7, then the smaller band (b1-ch07 "healed"). */
+export function dvijFor(scene: string): string {
+  const ch = Number(/ch(\d+)/.exec(scene)?.[1] ?? 0);
+  return ch >= 7 ? "dvij-healed" : "dvij";
+}
+
 /** Where one steps back to from `centre`, along the line from it through where one stands, `dist` away (world x, z). */
 export function recoilTo(me: [number, number], centre: [number, number], dist: number): [number, number] {
   let dx = me[0] - centre[0], dz = me[1] - centre[1];
@@ -297,7 +303,7 @@ export class StoryStage implements Stage {
         if (hurried) return;
         // his own face in the glass first (the bearded stranger, ¶101), then the comic's drawing of it
         await this.castReady;
-        const me = await this.cast?.self();
+        const me = await this.cast?.self(dvijFor(sc.scene));
         if (me && body.mirror(true)) {
           await this.sleep(4);
           body.mirror(false);

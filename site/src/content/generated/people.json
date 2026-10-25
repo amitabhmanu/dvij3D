@@ -1,14 +1,14 @@
 {
  "people": {
   "professor": {
-   "file": "people-professor.83e120067f.glb",
+   "file": "people-professor.ae7cca4455.glb",
    "height": 1.68,
    "face": {
     "smile": 0.25
    }
   },
   "bhavi": {
-   "file": "people-bhavi.dd8b58f4c8.glb",
+   "file": "people-bhavi.91f0407d19.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
@@ -51,7 +51,7 @@
    "height": 1.72
   },
   "bhavi-kurta": {
-   "file": "people-bhavi-kurta.42e77853bc.glb",
+   "file": "people-bhavi-kurta.00250f84f6.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
@@ -70,7 +70,11 @@
    "height": 1.62
   },
   "dvij": {
-   "file": "people-dvij.46d5867a57.glb",
+   "file": "people-dvij.586b9a9a95.glb",
+   "height": 1.76
+  },
+  "dvij-healed": {
+   "file": "people-dvij-healed.be16c8fb59.glb",
    "height": 1.76
   }
  },

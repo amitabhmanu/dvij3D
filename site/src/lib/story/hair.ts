@@ -29,13 +29,16 @@ export class Hair {
     mat.onBeforeCompile = (sh) => {
       sh.uniforms.uSwing = { value: swing };
       sh.uniforms.uGive = { value: give };
+      // coverage in proportion to the strands' alpha: three's own alpha-to-coverage cuts hard at alphaTest (a
+      // smoothstep only one pixel wide), so every lock and brow came out a solid block with a sharp edge (hair round)
+      sh.fragmentShader = sh.fragmentShader.replace("#include <alphatest_fragment>", "if ( diffuseColor.a < 0.05 ) discard;");
       sh.vertexShader = sh.vertexShader
         .replace("#include <common>", "#include <common>\nuniform vec3 uSwing;\nuniform float uGive;")
         .replace("#include <skinning_vertex>", `#include <skinning_vertex>
           // the cards' v runs 1 at the root to 0 at the tip: the tip swings most
           { float k = 1.0 - uv.y; transformed += uSwing * uGive * k * k; }`);
     };
-    mat.customProgramCacheKey = () => `hair-cards-${give}`;
+    mat.customProgramCacheKey = () => `hair-cards-a2c-${give}`;
     this.mats.push(mat);
     return mat;
   }

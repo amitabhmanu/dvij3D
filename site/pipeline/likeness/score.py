@@ -26,7 +26,7 @@ SITE = Path(__file__).resolve().parents[2]
 CACHE = SITE / "pipeline" / ".cache" / "likeness"
 FACES = CACHE / "faces"
 OUT = Path("C:/Users/Amitabh/projects/dvij3D/.downloads/lifelike-pilot/likeness")
-MODEL_OF = {"bhavi": "bhavi-kurta"}  # (which built person plays them)
+MODEL_OF = {"bhavi": "bhavi-kurta", "dvij": "dvij-healed"}  # (which built person plays them)
 
 C = mp.tasks.vision.FaceLandmarksConnections
 REGIONS = {

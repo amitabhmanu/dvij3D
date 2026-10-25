@@ -123,8 +123,9 @@ def paint_skin(G, spec):
 
 
 # ---------------------------------------------------------------- hair cards
-def strand_texture(name, root, tip, strands=34, wave=0.0, w=128, h=512, seed=1, light=0.0, fill=0.55, thick=(2.5, 5.5)):
-    """Strands on a card (sRGB RGBA, v=0 at the root): each its own tone, thinning to its tip; the alpha is the strands."""
+def strand_texture(name, root, tip, strands=34, wave=0.0, w=128, h=512, seed=1, light=0.0, fill=0.55, thick=(2.5, 5.5), root_fade=0.0):
+    """Strands on a card (sRGB RGBA, v=0 at the root): each its own tone, thinning to its tip; the alpha is the strands.
+    root_fade: the share of the card over which the strands come in from nothing at the root (a soft hairline)."""
     r = np.random.default_rng(seed)
     px = np.zeros((h, w, 4), dtype=np.float32)
     v = np.linspace(0, 1, h)[:, None]
@@ -148,6 +149,9 @@ def strand_texture(name, root, tip, strands=34, wave=0.0, w=128, h=512, seed=1, 
     under = np.array(root)[None, None, :] * (1 - v[..., None]) * 0.85 + np.array(tip)[None, None, :] * v[..., None] * 0.85
     px[..., :3] = np.where(px[..., 3:4] < core[..., None], under, px[..., :3])
     px[..., 3] = np.maximum(px[..., 3], core)
+    if root_fade > 0:
+        k = np.clip(v / root_fade, 0, 1)
+        px[..., 3] *= k * k * (3 - 2 * k)
     return np.clip(px, 0, 1)
 
 
@@ -163,12 +167,14 @@ def _push_out(kd, normals, p, clear):
 
 
 def _cards(name, paths, widths, ups, mat, G, bone=None):
-    """One mesh of strips along paths (lists of world points), each `widths[k]` wide, its face turned to `ups[k]`."""
+    """One mesh of strips along paths (lists of world points), each `widths[k]` wide, its face turned to `ups[k]` (one
+    direction, or one per point: a curl's strip turned to its own turn, a band round the curl, not a flake lying flat)."""
     verts, faces, uvs = [], [], []
-    for path, wd, up in zip(paths, widths, ups):
+    for path, wd, up_ in zip(paths, widths, ups):
         base = len(verts)
         n = len(path)
         for j, p in enumerate(path):
+            up = up_[j] if isinstance(up_, list) else up_
             a = path[min(j + 1, n - 1)] - path[max(j - 1, 0)]
             a = a.normalized() if a.length > 1e-6 else Vector((0, 0, -1))
             side = a.cross(up)
@@ -233,7 +239,8 @@ def hair_cards(G, g):
     nm = g.get("name", "hair-cards")
     r = random.Random(nm + style)
     root_c, tip_c = g.get("root", g["color"]), g.get("tip", g["color"])
-    tex = strand_texture(nm, root_c, tip_c, strands=g.get("strands", 34), wave=g.get("wave", 0.0), seed=len(nm), light=g.get("light", 0.04))
+    tex = strand_texture(nm, root_c, tip_c, strands=g.get("strands", 34), wave=g.get("wave", 0.0), seed=len(nm), light=g.get("light", 0.04),
+                         fill=g.get("fill", 0.55), thick=tuple(g.get("thick", (2.5, 5.5))), root_fade=g.get("root_fade", 0.0))
     mat = G["material"](f"hair-cards-{nm}", image=G["image"](nm, tex), alpha=True, rough=0.45)
     kd, normals = _body_kd(G)
     down = Vector((0, 0, -1))
@@ -249,6 +256,12 @@ def hair_cards(G, g):
                  and min((V[i] - EYE_L).length, (V[i] - EYE_R).length) > 0.045
                  and (above is None or V[i].z > above or V[i].y > eye_y + 0.06)]
         roots = _spaced(G, roots, g.get("gap", 0.011), nm)
+        # a soft hairline (g["soft"], metres): in front, the roots nearest the line thinned out and drawn as fine, short
+        # strands that come in from nothing (their own cards, below), not one hard edge of full locks
+        soft = g.get("soft", 0.0)
+        is_edge = lambda i: soft > 0 and V[i].y <= eye_y + 0.03 and V[i].z < line + soft  # noqa: E731
+        edge = [i for i in roots if is_edge(i) and r.random() < g.get("edge_keep", 0.6)]
+        roots = [i for i in roots if not is_edge(i)]
     if style == "curly":
         for i in roots:
             p0, n = V[i], N[i]
@@ -260,15 +273,21 @@ def hair_cards(G, g):
             u = u.normalized() if u.length > 1e-4 else Vector((1, 0, 0))
             w_ = n.cross(u).normalized()
             turns, rc, ph = g.get("turns", 1.1) * r.uniform(0.8, 1.2), g.get("curl", 0.009) * r.uniform(0.8, 1.25), r.uniform(0, 6.3)
-            path = []
-            for j in range(9):
-                t = j / 8
+            path, turned = [], []
+            pts = g.get("points", 9)  # (more along a longer, finer coil)
+            for j in range(pts):
+                t = j / (pts - 1)
                 a = ph + t * turns * 2 * math.pi
-                p = p0 + n * (0.003 + vol * t) + (u * math.cos(a) + w_ * math.sin(a)) * rc * min(1.0, t * 2.5) + down * L * 0.25 * t * t
+                # (hang: the coil's axis leans down and back off the scalp, as a curl falls, not standing straight out)
+                axis = (n + (down + Vector((0, 0.5, 0))) * g.get("hang", 0.0)).normalized()
+                p = p0 + n * 0.003 + axis * vol * t + (u * math.cos(a) + w_ * math.sin(a)) * rc * min(1.0, t * 2.5) + down * L * 0.25 * t * t
                 path.append(_push_out(kd, normals, p, 0.004))
+                turned.append(u * math.cos(a) + w_ * math.sin(a))
             paths.append(path)
             widths.append(g.get("width", 0.016) * r.uniform(0.8, 1.2))
-            ups.append((p0 - hc).normalized())
+            # band: the strip faces out from the curl's axis at each point, so it winds round it like a spring (seen as a
+            # curl from every side); else the old way, all of it facing out from the skull (it lies flat: a flake)
+            ups.append(turned if g.get("band") else (p0 - hc).normalized())
         obj = _cards(nm, paths, widths, ups, mat, G, bone="head")
     elif style == "long":
         length = g.get("length", 0.5)
@@ -287,7 +306,11 @@ def hair_cards(G, g):
                 if abs(p.x) < need:
                     p = Vector((math.copysign(need, p.x if abs(p.x) > 1e-4 else 1.0), p.y, p.z))
             return p
-        for i in roots:
+        main_p, main_w, main_u = paths, widths, ups
+        ep, ew, eu = [], [], []  # (the hairline's own locks: the same, but drawn coming in from nothing at the root)
+        at_edge = set(edge)
+        for i in roots + edge:
+            paths, widths, ups = (ep, ew, eu) if i in at_edge else (main_p, main_w, main_u)
             p0, n = V[i], N[i]
             sx = 1.0 if p0.x >= 0 else -1.0
             crown = max(0.0, (p0.z - (HEAD_TOP - 0.05)) / 0.05)
@@ -316,6 +339,7 @@ def hair_cards(G, g):
             paths.append(path)
             widths.append(g.get("width", 0.024) * r.uniform(0.85, 1.15))
             ups.append(Vector((p0.x - hc.x, p0.y - hc.y, 0)).normalized() if (p0 - hc).length > 1e-4 else Vector((0, 1, 0)))
+        paths, widths, ups = main_p, main_w, main_u
         # flyaways: a few fine single strands standing off the mass
         for _ in range(g.get("flyaways", 18)):
             i = r.choice(roots)
@@ -330,6 +354,12 @@ def hair_cards(G, g):
             widths.append(0.004)
             ups.append(n)
         obj = _cards(nm, paths, widths, ups, mat, G)  # (skinned from the body nearest: the head, the neck, the back)
+        if ep:  # the soft hairline: the front row of locks, their roots coming in from nothing (no hard edge on the brow)
+            etex = strand_texture(nm + "-edge", root_c, tip_c, strands=g.get("strands", 34), wave=g.get("wave", 0.0), seed=len(nm) + 7,
+                                  light=g.get("light", 0.04), fill=0.4, root_fade=g.get("edge_fade", 0.12))
+            emat = G["material"](f"hair-cards-{nm}-edge", image=G["image"](nm + "-edge", etex), alpha=True, rough=0.45)
+            _cards(nm + "-edge", ep, ew, eu, emat, G)
+            print(f"PEOPLE hair cards {nm}-edge: {len(ep)} cards")
     elif style == "moustache":
         # drooping, a little uneven, its ends hanging past the mouth's corners (the Professor's, b1-p012-6)
         sz = g.get("size", 1.0)
@@ -365,12 +395,15 @@ def hair_cards(G, g):
                 near = min((i for i in in_body if dominant[i] == "head" and abs(V[i].x - x) < 0.005 and abs(V[i].z - z) < 0.005), key=lambda i: V[i].y, default=None)
                 if near is None:
                     continue
-                p0 = V[near] + N[near] * 0.0008
+                # its own place along the brow (not the nearest vertex's: they are ~5 mm apart, and the cards piled up on
+                # a few of them), at the skin's depth there, a little scattered up and down
+                p0 = Vector((x, V[near].y, z + r.uniform(-1, 1) * g.get("scatter", 0.0))) + N[near] * 0.0008
                 d = Vector((sx * (0.5 + t * 0.6), 0, 0.6 - t * 0.9)).normalized()  # (up at the nose end, out along the tail)
                 L = g.get("length", 0.011) * r.uniform(0.8, 1.2)
                 path = [p0, _push_out(kd, normals, p0 + d * L * 0.5, 0.0012), _push_out(kd, normals, p0 + d * L, 0.0014)]
                 paths.append(path)
-                widths.append(g.get("width", 0.005))
+                # (g["taper"]: full at the nose end, fine at the tail, as a brow grows)
+                widths.append(g.get("width", 0.005) * (1 + g.get("taper", 0.0) * (0.3 - t)))
                 ups.append(N[near])
         obj = _cards(nm, paths, widths, ups, mat, G, bone="head")
     print(f"PEOPLE hair cards {nm} ({style}): {len(paths)} cards")
