@@ -701,16 +701,26 @@ people's films Dvij is seen in full; in his own he shows only in reflections and
 his arms. Chapter 2 runs while Dvij wanders in Chapter 1 and ends mid-morning, and
 Chapter 3 starts from there.
 
-At run time `src/lib/story/pov-stage.ts` wraps the stage for the chosen film
-(`/valley/walk/?pov=professor` until the picker is built). The game still moves
+At run time `src/lib/story/pov-stage.ts` wraps the stage for the chosen film,
+picked on the start screen ("Whose eyes") or on pause in the film bar, which switches
+to the same beat if that person is in it, else the scene alongside, else their next
+(`/valley/walk/?pov=professor` opens it directly). The game still moves
 Dvij's body as in his own film, so walks, seats and the people who look at him are
 unchanged; in someone else's film he is also added to the cast and his figure follows
 that body (standing, walking, seated, lying), the camera is `film-camera.ts`'s
 (over the shoulder of the film's person, swung round walls), and what belongs to his
 eyes and hands alone (his sight effects, the drink at his lips, the glance at his
 arm, the reflection) isn't played. An `effect` with `for:` plays only in that
-person's film. Scenes Dvij is away from start with `pose: away`. Films other than
-Dvij's don't save a place yet.
+person's film, and a `camera` with `for:` and `shot: eyes` is that film's close-up of
+someone's eyes (Mahant's glare, Ch 2). Scenes Dvij is away from start with `pose: away`.
+Each film keeps its own saved place (`saved.ts`); Dvij's is never touched by another's.
+
+Dvij's own film is cut by `pov.ts` too, so a beat only someone else is there for is
+played unseen in it. The short same-day gap from the garden to the study is such a
+beat: the Professor walks in by way of the kitchen, where he fills the tumbler, sped
+up (`pace:` on an actor's walk), and kneels where Dvij's film finds him. A film that
+skips a scene shows that scene's `meanwhile` card (pov.yaml) before the next scene's
+first words: Dvij's, at the start of Chapter 3, for the garden.
 
 ## 11. The Bestiary (Layer 5) — built: `/bestiary/`
 

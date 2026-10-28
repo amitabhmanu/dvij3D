@@ -136,6 +136,10 @@ export class PovStage implements Stage {
         try { return await this.inner.perform(verb, arg, sc, hurried); }
         finally { this.speaker = null; }
       }
+      case "actor":
+        // the film's person comes on somewhere else (the Professor, back from the garden): the camera cuts to them
+        if (arg?.from && arg.who === this.who) setTimeout(() => this.camera.cut(), 0);
+        return this.inner.perform(verb, arg, sc, hurried);
       default:
         return this.inner.perform(verb, arg, sc, hurried);
     }

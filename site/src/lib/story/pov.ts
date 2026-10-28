@@ -17,7 +17,7 @@ export type When = { day: number; time: string; with?: string };
 export type Pov = {
   films: Record<string, { name: string; pilot?: boolean; scenes?: string[] }>;
   times: string[];
-  scenes: Record<string, { when: When; absent?: string[]; present?: string[] }>;
+  scenes: Record<string, { when: When; absent?: string[]; present?: string[]; meanwhile?: string }>;
   beats?: Record<string, { for?: string[]; "not-for"?: string[]; "captions-for"?: string[] }>;
 };
 export type FilmBeat = Beat & { offstage?: boolean };
@@ -119,9 +119,17 @@ export function film(who: string, all: Scene[], pov: Pov): Film {
   const scenes = picked.map(({ sc, beats }, i) => {
     const next = picked[i + 1]?.sc ?? null;
     joins.push(next ? join(sc, next, pov) : { kind: "end", from: sc.scene, card: endCard(who, sc, order, pov) });
-    return { ...sc, beats: endsAt(beats, next?.scene ?? null) };
+    return { ...sc, beats: endsAt(meanwhile(beats, missed[sc.scene] ?? [], pov), next?.scene ?? null) };
   });
   return { who, scenes, joins, missed };
+}
+
+/** A card for what happened while the film was away (pov.yaml's `meanwhile`), before the scene's first words. */
+function meanwhile(beats: FilmBeat[], missed: string[], pov: Pov): FilmBeat[] {
+  const cards = missed.map((s) => pov.scenes[s]?.meanwhile).filter((c): c is string => !!c);
+  const first = beats.findIndex((b) => !b.offstage);
+  if (!cards.length || first < 0) return beats;
+  return beats.map((b, i) => (i === first ? { ...b, do: [...cards.map((c) => ({ caption: c })), ...(b.do ?? [])] } : b));
 }
 
 /** The last card of a film that stops before the story does. */

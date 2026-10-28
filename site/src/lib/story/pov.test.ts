@@ -12,7 +12,11 @@ describe("points of view", () => {
   it("Dvij's film is the story as it plays today", () => {
     const f = film("dvij", all, pov);
     expect(f.scenes.map((s) => s.scene)).toEqual(story.scenes.map((s) => s.scene));
-    expect(f.scenes.every((s) => s.beats.every((b) => !b.offstage))).toBe(true);
+    // all of it but the Professor's way in from the garden, which he is there for alone
+    expect(f.scenes.flatMap((s) => s.beats.filter((b) => b.offstage).map((b) => `${s.scene}#${b.id}`))).toEqual(["b1-ch03#on-his-way"]);
+    // and a card for the garden he misses, before Chapter 3's first words
+    const water = f.scenes.find((s) => s.scene === "b1-ch03")!.beats.find((b) => b.id === "water-face")!;
+    expect(String(water.do![0].caption)).toMatch(/^Meanwhile, out in the garden/);
     expect(f.missed["b1-ch03"]).toEqual(["b1-ch02"]);
     expect(f.missed["b1-ch07"]).toEqual(["b1-ch06"]);
     for (const [i, sc] of f.scenes.entries()) expect(ends(sc)).toEqual([f.scenes[i + 1]?.scene ?? null]);
@@ -29,7 +33,10 @@ describe("points of view", () => {
     // he has gone indoors by the time Mahant stands thinking
     expect(f.scenes[0].beats.find((b) => b.id === "the-thought")!.offstage).toBe(true);
     // his waking is told from inside Dvij: its caption is his film's alone
-    const waking = (g: typeof f) => g.scenes.find((s) => s.scene === "b1-ch03")!.beats[0].do!.some((a) => "caption" in a);
+    const waking = (g: typeof f) => g.scenes.find((s) => s.scene === "b1-ch03")!.beats.find((b) => b.id === "water-face")!.do!.some((a) => "caption" in a);
+    // he walks in from the garden by way of the kitchen, in his film only
+    expect(f.scenes[1].beats[0]).toMatchObject({ id: "on-his-way" });
+    expect(f.scenes[1].beats[0].offstage).toBeFalsy();
     expect(waking(f)).toBe(false);
     expect(waking(film("dvij", all, pov))).toBe(true);
   });

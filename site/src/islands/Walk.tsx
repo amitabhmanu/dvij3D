@@ -335,7 +335,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     // whose film (design §10.4.1): Dvij's, or someone else's, cut from the same scenes
     const story = (data.default ?? data) as unknown as { scenes: Scene[]; offstage: Scene[]; pov: Pov };
     const all = [...story.scenes, ...story.offstage];
-    const scenesOf = (who: string) => (who === "dvij" ? story.scenes : film(who, all, story.pov).scenes);
+    const scenesOf = (who: string) => film(who, all, story.pov).scenes; // (Dvij's too: a beat only someone else is there for is played unseen, and a "meanwhile" card stands for a scene he misses)
     const who = story.pov.films[whoseRef.current] ? whoseRef.current : "dvij";
     const scenes = scenesOf(who);
     if (!scenes.some((sc) => sc.scene === fromWhere.current?.scene)) fromWhere.current = who === "dvij" ? fromWhere.current : { scene: scenes[0].scene };

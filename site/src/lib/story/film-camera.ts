@@ -81,6 +81,7 @@ export class FilmCamera {
     // walking: their head moving, with no one speaking
     const speed = this.was ? Math.hypot(head.x - this.was.x, head.z - this.was.z) / Math.max(dt, 1e-3) : 0;
     this.was = head.clone();
+    this.speed = speed;
     this.moving = speed > 0.45 ? Math.min(1, this.moving + dt * 2) : Math.max(0, this.moving - dt * 1.5);
     const s = this.shot.speaker();
     // two people too close for one to be seen over the other's shoulder: both, from the side
@@ -99,6 +100,8 @@ export class FilmCamera {
   }
 
   private side = 1;
+  private blocked = false;
+  private speed = 0; // how fast the head is going (m/s, on the clock): a camera that keeps up with a sped-up walk
   /** The two-shot: side on to the pair, on the side of the line the other shots keep to, unless a wall is there. */
   private two(camera: PerspectiveCamera, me: Actor, other: Actor, dt: number, cut: boolean) {
     const a = me.headAt(), b = other.headAt();
@@ -173,9 +176,14 @@ export class FilmCamera {
       this.swing = best;
       this.reach = Math.max(0.25, most);
     }
-    const want = head.clone().add(this.out(back, this.swing, f).multiplyScalar(this.reach));
-    const ease = 1 - Math.exp(-dt * 3);
-    if (dt >= 1 || cut || this.at.distanceTo(want) > 8) { this.at.copy(want); this.aim.copy(look); }
+    // every frame, not every few: through a doorway the room behind them closes in fast. The camera comes in short of
+    // a wall behind them, and if a wall has come between it and them (the camera still easing round), it cuts past it.
+    const out = this.out(back, this.swing, f), room = this.clear(head, out, out.length()) / out.length();
+    const to = this.at.clone().sub(head), len = to.length();
+    if (len > 0.5 && this.clear(head, to, len) < len - 0.35) this.blocked = true;
+    const want = head.clone().add(out.multiplyScalar(Math.max(0.15, Math.min(this.reach, room))));
+    const ease = 1 - Math.exp(-dt * (3 + Math.min(12, this.speed)));
+    if (dt >= 1 || cut || this.blocked || this.at.distanceTo(want) > 8) { this.at.copy(want); this.aim.copy(look); this.blocked = false; }
     else { this.at.lerp(want, ease); this.aim.lerp(look, ease); }
     camera.position.copy(this.at);
     camera.lookAt(this.aim);

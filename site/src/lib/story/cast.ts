@@ -305,6 +305,7 @@ export class Actor {
   private lean = 0;
   private path: Vector3[] = [];
   private onArrive: (() => void) | null = null;
+  private pace = 1; // a walk sped up, as a film cuts a long way short (pov.ts: the Professor's way back indoors)
   private loopRim: { c: V2; r: number; a: number } | null = null;
   private gesture: { g: Gesture; t: number; done: () => void } | null = null;
   private held: Layer = {};
@@ -526,8 +527,9 @@ export class Actor {
   show(on: boolean) { this.hidden = !on; this.obj.visible = on; }
 
   /** Walk to the end of `via`, then `to` (frame metres). Resolves on arrival. */
-  walk(to: V2, via: V2[] = [], hurried = false): Promise<void> {
+  walk(to: V2, via: V2[] = [], hurried = false, pace = 1): Promise<void> {
     this.loopRim = null;
+    this.pace = pace;
     const pts = [...via, to].map(([x, z]) => new Vector3(x, 0, z));
     if (hurried) {
       const last = pts[pts.length - 1];
@@ -722,7 +724,7 @@ export class Actor {
       // (only well away from him: close behind his chair, a hurry is seen out of the corner of the eye, Ch3)
       const me = this.obj.getWorldPosition(new Vector3()), eyes = this.env.eyes();
       const fast = this.env.seen(me.clone().add(new Vector3(0, 1, 0))) || Math.hypot(eyes.x - me.x, eyes.z - me.z) < 3 ? 1 : 5;
-      const speed = WALK_SPEED * (SLOW[this.who] ?? 1) * fast;
+      const speed = WALK_SPEED * (SLOW[this.who] ?? 1) * fast * this.pace;
       const step = Math.min(d, speed * dt);
       if (d > 1e-3) {
         const want = Math.atan2(next.x - p.x, next.z - p.z);
@@ -736,7 +738,7 @@ export class Actor {
       // (the veena, a fallen book), walked past, not stood on; and up or down a step eased, not jumped (Ch3)
       const floor = this.env.ground(p.x, p.z, p.y + 0.6);
       if (floor - p.y < MAX_STEP) p.y += (floor - p.y) * Math.min(1, dt * 12);
-      if (this.base) this.base.timeScale = Math.min(2, speed / 1.15); // (the clip's stride: about 1.15 m/s)
+      if (this.base) this.base.timeScale = Math.min(2 * this.pace, speed / 1.15); // (the clip's stride: about 1.15 m/s)
       if (d - step < 0.02) {
         this.path.shift();
         if (!this.path.length) {
@@ -1045,10 +1047,10 @@ export class Cast {
     const face = () => ac.turnTo(a.face === "player" ? this.playerAt() : a.face, hurried ? 0.01 : 0.8);
     if (a.face && !a.walk) await face();
     if (a.anim === "turn" && !hurried) await ac.turnTo(a.look && a.look !== "player" && Array.isArray(a.look) ? (a.look as V2) : this.playerAt());
-    if (a.holding) ac.hold(this.env.prop(a.holding));
+    if (a.holding !== undefined) ac.hold(a.holding ? this.env.prop(a.holding) : null); // (`holding: null`: empty-handed)
     if (a.look) { ac.lookAt(this.target(a.look)); ac.keepLook = !!a.keep; }
     if (a.walk) {
-      const going = ac.walk(a.walk, a.via ?? [], hurried);
+      const going = ac.walk(a.walk, a.via ?? [], hurried, a.pace ?? 1);
       if (a.exit) { void going.then(() => ac.show(false)); return; } // they go; the story doesn't wait
       await going;
       if (a.face) await face();
