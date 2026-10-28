@@ -127,10 +127,11 @@ const storyPages = Object.fromEntries(
     background: rgb(43 36 28 / 55%); color: #efe3c8; font: 600 0.8rem var(--font-ui); cursor: pointer; }
   .walk .story-acts { position: absolute; bottom: 14px; right: 14px; display: flex; gap: 8px; }
   .walk .story-acts .skip { position: static; }
-  /* the film bar is one row, whatever the screen: the controls shrink, the chapter's name gives way first, and
+  /* the film bar is one row, whatever the screen, and a fixed width (its clocks ticking over don't shift it): the
+     controls shrink, the chapter's name gives way first, and
      "Whose eyes" (shown on pause) sits just above it rather than beside it */
   .walk .film-bar { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2; pointer-events: auto;
-    display: flex; align-items: center; gap: 2px; flex-wrap: nowrap; max-width: calc(100% - 32px); box-sizing: border-box;
+    display: flex; align-items: center; gap: 2px; flex-wrap: nowrap; width: min(820px, calc(100% - 32px)); box-sizing: border-box;
     padding: 4px 8px; border-radius: 999px; background: rgb(43 36 28 / 78%); color: #efe3c8; font: 600 0.78rem var(--font-ui); }
   .walk .film-bar button { flex: none; min-width: 28px; height: 28px; padding: 0 4px; border: 0; border-radius: 999px;
     background: transparent; color: inherit; font: inherit; cursor: pointer; }
