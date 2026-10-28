@@ -27,6 +27,10 @@ import lodgeInfo from "../content/generated/lodge.json";
 import siteInfo from "../content/generated/temple-site.json";
 import type { Director, Scene } from "../lib/story/director";
 import type { StoryStage } from "../lib/story/stage";
+import { beatAt, mmss, positionAt, type Timeline } from "../lib/story/timeline";
+import storyTimeline from "../content/generated/story-timeline.json";
+
+const TIMELINE = storyTimeline as Timeline;
 import { loadSaved } from "../lib/story/saved";
 // (as storyFile in lib/manifest.ts, which this page can't import: it carries every book's manifest)
 const storyFile = (name: string) => `${(import.meta.env.PUBLIC_3D_BASE || "/_assets").replace(/\/$/, "")}/story/${name}`;
@@ -133,15 +137,20 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   rateRef.current = rate;
   // the film bar's clock: how far into the chapter the story is (its own time: faster at 2x, still when held or in
   // the menu), from nothing again at each chapter (the author, 25 Oct)
-  const [clock, setClock] = useState(0);
+  // With the chapter's measured timeline (story-timeline.json) it is the film's position: the beat's start, and on from
+  // there; the slider beside it moves the film back and forth, beat by beat (lib/story/timeline.ts)
+  const [clock, setClock] = useState({ at: 0, total: 0 });
+  const [scrub, setScrub] = useState<number | null>(null); // where the slider is being dragged to (seconds)
+  const scrubFrom = useRef<boolean | null>(null); // was it playing when the drag began
   useEffect(() => {
     if (!story || !watching) return;
-    let scene = "", t = 0;
+    let scene = "", beat = "", t = 0, since = 0;
     const tick = setInterval(() => {
-      const now = director.current?.current?.scene ?? "";
-      if (now !== scene) { scene = now; t = 0; }
-      else if (!heldRef.current && ["playing", "card", "look"].includes(screenRef.current)) t += 0.25 * rateRef.current;
-      setClock(t);
+      const now = director.current?.current;
+      if ((now?.scene ?? "") !== scene) { scene = now?.scene ?? ""; t = 0; }
+      if ((now?.beat ?? "") !== beat) { beat = now?.beat ?? ""; since = 0; }
+      if (!heldRef.current && ["playing", "card", "look"].includes(screenRef.current)) { t += 0.25 * rateRef.current; since += 0.25 * rateRef.current; }
+      setClock(positionAt(TIMELINE, scene, beat, since) ?? { at: t, total: 0 });
     }, 250);
     return () => clearInterval(tick);
   }, [story, watching]);
@@ -341,6 +350,19 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const goTo = (id: string) => {
     clearScreen();
     director.current?.play(id);
+  };
+  // the slider let go: the chapter set up again and played on from the start of the moment it landed in (back or
+  // forth: what came before is replayed at once, the props, doors and window as they were), playing again if it was
+  const seek = (at: number) => {
+    const scene = director.current?.current?.scene;
+    const to = scene ? beatAt(TIMELINE, scene, at) : null;
+    const resume = scrubFrom.current;
+    scrubFrom.current = null;
+    setScrub(null);
+    if (!scene || !to) return;
+    clearScreen();
+    director.current?.play(scene, to.id);
+    if (resume) hold(false);
   };
   // (these run from the key handler, set up once: they read the chapters through a ref)
   const chapterAt = () => chaptersRef.current.findIndex((c) => c.id === director.current?.current?.scene);
@@ -617,8 +639,22 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
                 ))}
               </span>
               <span class="now">{chapters[i]?.title ?? ""}</span>
-              <span class="clock" role="timer" aria-label="Time into the chapter" title="Time into the chapter">
-                {Math.floor(clock / 60)}:{String(Math.floor(clock % 60)).padStart(2, "0")}
+              <span class="film-time" role="group" aria-label="The chapter's time">
+                <span class="clock" role="timer" title="Time into the chapter">{mmss(scrub ?? clock.at)}</span>
+                {clock.total > 0 && (
+                  <>
+                    <input
+                      type="range" class="scrub" min={0} max={clock.total} step={0.1} value={scrub ?? clock.at}
+                      aria-label="Move through the chapter" title="Drag to move through the chapter (it lands at the start of a moment)"
+                      onInput={(e) => {
+                        if (scrubFrom.current === null) { scrubFrom.current = !held; if (!held) hold(true); }
+                        setScrub(Number((e.target as HTMLInputElement).value));
+                      }}
+                      onChange={(e) => seek(Number((e.target as HTMLInputElement).value))}
+                    />
+                    <span class="clock left" title="Time left in the chapter">-{mmss(clock.total - (scrub ?? clock.at))}</span>
+                  </>
+                )}
               </span>
               <button type="button" class="take" onClick={() => watch(false)}>Play it yourself</button>
             </div>

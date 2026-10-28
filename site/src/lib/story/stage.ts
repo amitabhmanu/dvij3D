@@ -149,6 +149,7 @@ export class StoryStage implements Stage {
     this.game.body.halt();
     this.screen.panel(null);
     this.clearPane();
+    this.hands.reset(); // (a seek back from the drink: the glass is made again, not left in his hand)
     this.props?.dispose();
     this.frame = sc.frame ?? "lodge";
     const body = this.game.body;
@@ -323,8 +324,8 @@ export class StoryStage implements Stage {
         return;
       case "pane": {
         // the window he is going to: dirty, and his face coming up in it as he comes to it (the author, 25 Oct)
+        // (made even when hurried: it is the room's state, there when the slider seeks past this beat)
         this.clearPane();
-        if (hurried) return;
         const at = this.world(arg.at), look = this.world(arg.look);
         const pane = body.pane([at[0], look[1], at[2]], look);
         if (!pane) return;
@@ -376,6 +377,14 @@ export class StoryStage implements Stage {
       default:
         return;
     }
+  }
+
+  /** An act passed over at once: he is where it would have left him (walked there; in front of the shutters). */
+  skipped(act: Act): void {
+    if (this.pose !== "stand" || (act.kind !== "reach" && act.kind !== "use")) return;
+    const front = typeof act.target === "string" ? this.props?.front(act.target) : null;
+    const at = front ? this.world([front[0], front[1]]) : act.kind === "reach" && act.target ? this.world(act.target as Vec2 | Vec3) : null;
+    if (at) void this.game.body.pose({ pose: "stand", at: [at[0], at[2]], seconds: 0 });
   }
 
   /** Show what to do, and wait until Dvij has done it. */

@@ -122,6 +122,16 @@ export class Hands {
 
   holding(): Object3D | null { return this.cup?.obj ?? null; }
 
+  /** Empty-handed, both hands at rest, at once (a scene set up again: the slider seeking). */
+  reset() {
+    const a = this.arms();
+    this.cup = null;
+    if (!a) return;
+    a.hold("l", null);
+    a.hold("r", null);
+    for (const s of ["l", "r"] as Side[]) a.go(s, { at: Arms.rest(s), grip: s === "l" ? 0.25 : 0.2, show: false }, 0);
+  }
+
   /** Tug at the shutters with both hands (the right as well as it can), then shield his eyes from the light. */
   async pull(world: Vector3, open: () => void) {
     const a = this.arms();

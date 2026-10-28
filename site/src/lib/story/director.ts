@@ -42,6 +42,8 @@ export interface Stage {
   save(scene: string, beat: string): void;
   /** Stop waiting for the player: the scene is being skipped. */
   cancel?(): void;
+  /** An act passed over (replaying up to a beat: the film bar's slider, a resume): put him where doing it would have. */
+  skipped?(act: Act, scene: Scene): void;
 }
 
 export class Director {
@@ -86,6 +88,7 @@ export class Director {
         await this.run(a, sc);
       }
       if (beat.act && !this.skipping) await this.stage.await(beat.act, sc);
+      else if (beat.act) this.stage.skipped?.(beat.act, sc); // (replaying at once: where the act would have left him)
       for (const a of beat.then ?? []) {
         if (over()) return;
         await this.run(a, sc);
