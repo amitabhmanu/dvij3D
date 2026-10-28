@@ -19,6 +19,7 @@
 // reader has read that far. Fast travel goes only to places already reached.
 import { useEffect, useRef, useState } from "preact/hooks";
 import type { Game, Quality } from "../lib/walk/game";
+import { discreteGpu, gpuName } from "../lib/walk/gpu";
 import { isVeiled, revealAll, type FirstSeen } from "../lib/spoilers";
 import { walk } from "../lib/walk/walk-data";
 import type { Look } from "../lib/walk/lodge";
@@ -26,6 +27,10 @@ import lodgeInfo from "../content/generated/lodge.json";
 import siteInfo from "../content/generated/temple-site.json";
 import type { Director, Scene } from "../lib/story/director";
 import type { StoryStage } from "../lib/story/stage";
+import { beatAt, mmss, positionAt, type Timeline } from "../lib/story/timeline";
+import storyTimeline from "../content/generated/story-timeline.json";
+
+const TIMELINE = storyTimeline as Timeline;
 import { loadSaved } from "../lib/story/saved";
 // (as storyFile in lib/manifest.ts, which this page can't import: it carries every book's manifest)
 const storyFile = (name: string) => `${(import.meta.env.PUBLIC_3D_BASE || "/_assets").replace(/\/$/, "")}/story/${name}`;
@@ -58,7 +63,17 @@ const hasWebGL2 = () => {
   try { return !!document.createElement("canvas").getContext("webgl2"); } catch { return false; }
 };
 const touchFirst = () => matchMedia("(pointer: coarse)").matches;
-const defaultQuality = (): Quality => (touchFirst() ? "low" : innerWidth * devicePixelRatio > 2600 ? "high" : "medium");
+/** The graphics chip, as WebGL names it ("" if it won't say). */
+const gpu = (): string => {
+  try {
+    const gl = document.createElement("canvas").getContext("webgl2");
+    const name = gl ? gpuName(gl) : "";
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return name;
+  } catch { return ""; }
+};
+// a graphics card of its own: Ultra (Chapter 1's film look; ultra.ts); else by the screen, as before
+const defaultQuality = (): Quality => (touchFirst() ? "low" : discreteGpu(gpu()) ? "ultra" : innerWidth * devicePixelRatio > 2600 ? "high" : "medium");
 
 /** World x, z to 0-1 across the book's map. */
 const onMap = (x: number, z: number): [number, number] => [x / walk.worldWidth + 0.5, z / walk.worldDepth + 0.5];
@@ -120,6 +135,25 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const [rate, setRate] = useState(1);
   const rateRef = useRef(1);
   rateRef.current = rate;
+  // the film bar's clock: how far into the chapter the story is (its own time: faster at 2x, still when held or in
+  // the menu), from nothing again at each chapter (the author, 25 Oct)
+  // With the chapter's measured timeline (story-timeline.json) it is the film's position: the beat's start, and on from
+  // there; the slider beside it moves the film back and forth, beat by beat (lib/story/timeline.ts)
+  const [clock, setClock] = useState({ at: 0, total: 0 });
+  const [scrub, setScrub] = useState<number | null>(null); // where the slider is being dragged to (seconds)
+  const scrubFrom = useRef<boolean | null>(null); // was it playing when the drag began
+  useEffect(() => {
+    if (!story || !watching) return;
+    let scene = "", beat = "", t = 0, since = 0;
+    const tick = setInterval(() => {
+      const now = director.current?.current;
+      if ((now?.scene ?? "") !== scene) { scene = now?.scene ?? ""; t = 0; }
+      if ((now?.beat ?? "") !== beat) { beat = now?.beat ?? ""; since = 0; }
+      if (!heldRef.current && ["playing", "card", "look"].includes(screenRef.current)) { t += 0.25 * rateRef.current; since += 0.25 * rateRef.current; }
+      setClock(positionAt(TIMELINE, scene, beat, since) ?? { at: t, total: 0 });
+    }, 250);
+    return () => clearInterval(tick);
+  }, [story, watching]);
   const [chapters, setChapters] = useState<{ id: string; title: string }[]>([]);
   const chaptersRef = useRef(chapters);
   chaptersRef.current = chapters;
@@ -316,6 +350,19 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   const goTo = (id: string) => {
     clearScreen();
     director.current?.play(id);
+  };
+  // the slider let go: the chapter set up again and played on from the start of the moment it landed in (back or
+  // forth: what came before is replayed at once, the props, doors and window as they were), playing again if it was
+  const seek = (at: number) => {
+    const scene = director.current?.current?.scene;
+    const to = scene ? beatAt(TIMELINE, scene, at) : null;
+    const resume = scrubFrom.current;
+    scrubFrom.current = null;
+    setScrub(null);
+    if (!scene || !to) return;
+    clearScreen();
+    director.current?.play(scene, to.id);
+    if (resume) hold(false);
   };
   // (these run from the key handler, set up once: they read the chapters through a ref)
   const chapterAt = () => chaptersRef.current.findIndex((c) => c.id === director.current?.current?.scene);
@@ -592,6 +639,23 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
                 ))}
               </span>
               <span class="now">{chapters[i]?.title ?? ""}</span>
+              <span class="film-time" role="group" aria-label="The chapter's time">
+                <span class="clock" role="timer" title="Time into the chapter">{mmss(scrub ?? clock.at)}</span>
+                {clock.total > 0 && (
+                  <>
+                    <input
+                      type="range" class="scrub" min={0} max={clock.total} step={0.1} value={scrub ?? clock.at}
+                      aria-label="Move through the chapter" title="Drag to move through the chapter (it lands at the start of a moment)"
+                      onInput={(e) => {
+                        if (scrubFrom.current === null) { scrubFrom.current = !held; if (!held) hold(true); }
+                        setScrub(Number((e.target as HTMLInputElement).value));
+                      }}
+                      onChange={(e) => seek(Number((e.target as HTMLInputElement).value))}
+                    />
+                    <span class="clock left" title="Time left in the chapter">-{mmss(clock.total - (scrub ?? clock.at))}</span>
+                  </>
+                )}
+              </span>
               <button type="button" class="take" onClick={() => watch(false)}>Play it yourself</button>
             </div>
           );
@@ -683,6 +747,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
               <option value="low">Low (phones, older laptops)</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
+              <option value="ultra">Ultra (a graphics card; Chapter 1's film look)</option>
             </select>
           </label>
           <Controls />

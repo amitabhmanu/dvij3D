@@ -140,6 +140,10 @@ const storyPages = Object.fromEntries(
   .walk .film-bar .speeds button { min-width: 38px; }
   .walk .film-bar .speeds button[aria-pressed="true"] { background: #e9b77f; color: var(--ink); }
   .walk .film-bar .now { padding: 0 8px; opacity: 0.85; white-space: nowrap; }
+  .walk .film-bar .film-time { display: flex; align-items: center; gap: 8px; padding-right: 6px; }
+  .walk .film-bar .clock { opacity: 0.85; font-variant-numeric: tabular-nums; min-width: 2.8em; text-align: right; }
+  .walk .film-bar .clock.left { text-align: left; }
+  .walk .film-bar .scrub { width: clamp(120px, 22vw, 260px); accent-color: #e9b77f; cursor: pointer; }
   .walk .film-bar .take { padding: 0 12px; border: 1px solid rgb(239 227 200 / 45%); }
   .walk[data-watching] .words { bottom: 90px; }
   .walk[data-watching] .hud { z-index: 3; } /* the film bar stays on top of a comic page */

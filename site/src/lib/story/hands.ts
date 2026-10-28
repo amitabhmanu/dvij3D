@@ -3,11 +3,13 @@
 // spills it, gulps the rest and lets it go (¶94-95); he takes a tumbler (¶138, ¶258); he tugs the
 // shutters open and shields his eyes (¶99, comic b1-p004-5); he reaches for whatever a beat asks
 // him to touch. The left hand does most: the right is in plaster from beyond the elbow.
-import { Vector3, type Object3D } from "three";
+import { Box3, Vector3, type Object3D } from "three";
 import { Arms, type Side } from "../walk/arms";
 
 type Wait = (seconds: number) => Promise<void>;
 const V = (x: number, y: number, z: number) => new Vector3(x, y, z);
+/** How far the fingers close round a glass or a tumbler: on its side, not through it (a fist is 1). */
+const CUP_GRIP = 0.5;
 const MOUTH = V(-0.03, -0.12, -0.25), LOW = V(-0.12, -0.32, -0.36);
 
 export class Hands {
@@ -66,11 +68,14 @@ export class Hands {
         cup.visible = true;
         if (cup.parent) cup.parent.visible = true;
       }
+      // round its side: as wide as it is, the fingers closing only so far (Ch1: they had closed through the glass)
+      const size = new Box3().setFromObject(cup).getSize(new Vector3());
+      const radius = Math.max(0.02, Math.min(size.x, size.z) / 2);
       a.go("l", { at: far ? V(-0.1, -0.26, -0.5) : this.reach("l", where.add(grip)), grip: 0.1, show: true }, 0.9);
       await this.wait(0.95);
-      a.go("l", { grip: 0.75 }, 0.25);
+      a.go("l", { grip: CUP_GRIP }, 0.25);
       await this.wait(0.25);
-      a.hold("l", cup, grip);
+      a.hold("l", cup, grip, undefined, radius);
       this.cup = { obj: cup, into, from, wasHidden };
     } else {
       a.go("l", { at: V(-0.1, -0.26, -0.48), grip: 0.75, show: true }, 0.6);
@@ -116,6 +121,16 @@ export class Hands {
   }
 
   holding(): Object3D | null { return this.cup?.obj ?? null; }
+
+  /** Empty-handed, both hands at rest, at once (a scene set up again: the slider seeking). */
+  reset() {
+    const a = this.arms();
+    this.cup = null;
+    if (!a) return;
+    a.hold("l", null);
+    a.hold("r", null);
+    for (const s of ["l", "r"] as Side[]) a.go(s, { at: Arms.rest(s), grip: s === "l" ? 0.25 : 0.2, show: false }, 0);
+  }
 
   /** Tug at the shutters with both hands (the right as well as it can), then shield his eyes from the light. */
   async pull(world: Vector3, open: () => void) {

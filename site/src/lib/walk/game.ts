@@ -6,7 +6,7 @@
 // runs while paused.
 import {
   BackSide, Color, DirectionalLight, DoubleSide, Euler, Fog, HemisphereLight, IcosahedronGeometry,
-  InstancedMesh, LinearFilter, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshStandardMaterial, PCFShadowMap, PerspectiveCamera,
+  InstancedMesh, LinearFilter, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshStandardMaterial, PCFShadowMap, VSMShadowMap, PerspectiveCamera,
   PMREMGenerator, Quaternion,
   Scene, ShaderMaterial, Shape, ShapeGeometry, SphereGeometry, SRGBColorSpace, Texture, TextureLoader,
   NoColorSpace, RepeatWrapping, Vector2, Vector3, WebGLRenderer, type Material,
@@ -27,19 +27,22 @@ import { applyWear } from "./wear";
 import { lodgeFx } from "./lodge-fx";
 import { openFire } from "./fire-fx";
 import { Arms } from "./arms";
+import { makePane, type Pane } from "./pane";
 import { lawnGrass } from "./grass";
 import armsInfo from "../../content/generated/arms.json";
 import { inkComposer } from "./post";
+import { ultra, ultraHas, ultraLook, ULTRA_SCENES, WAKE_WINDOW, type UltraLook } from "./ultra";
 import { SightEffect } from "../story/effects";
 import { findRoute } from "../story/route";
 import { cutoutMesh, decodeTrees, type Stand } from "./cutouts";
+import { trees3d } from "./trees3d";
 import type { EffectComposer } from "postprocessing";
 import { Input, type Settings } from "./input";
 import { Blockers, inside, step, type Player } from "./player";
 import { atlas, walk, walkAsset, type Building } from "./walk-data";
 import { Sounds, type Surface } from "./audio";
 
-export type Quality = "low" | "medium" | "high";
+export type Quality = "low" | "medium" | "high" | "ultra";
 export type GameOptions = {
   canvas: HTMLCanvasElement;
   heightUrl: string;
@@ -110,8 +113,13 @@ export type Body = {
   face: (p: [number, number, number]) => void;
   /** Turn to look at this point over `seconds` (watch mode). */
   turnTo: (p: [number, number, number], seconds: number) => Promise<void>;
+  /** Keep his eyes on this point while nothing else moves them, following it as it goes (watch mode: whoever speaks,
+   * walking round the well, walking off); null, or a null from it, lets go. */
+  follow: (p: (() => [number, number, number] | null) | null) => void;
   /** Walk there by himself, round the walls (watch mode). */
   walkTo: (at: [number, number]) => Promise<void>;
+  /** Every door shut, or open (a scene's setting: in Ch1 he opens each one he goes through). */
+  doors: (open: boolean) => void;
   /** Stop whatever he was moving through: a new scene is starting. */
   halt: () => void;
   /** How fast the story's time runs: 0.5 slow motion, 1, 2 or 4 fast forward. */
@@ -119,9 +127,14 @@ export type Body = {
   /** The lodge's frame -> the world's. */
   fromLodge: (x: number, y: number, z: number) => [number, number, number];
   lodgeRoot: () => import("three").Object3D | null;
+  /** The chapter now playing (its scene's id): Ultra dresses Chapter 1 only (ultra.ts). */
+  chapter: (id: string) => void;
   /** A reflection in the window pane he is looking at, of his own body only (on SELF_LAYER), laid over the
    * glass as daylight lets one show (novel ¶101); false: none. Returns whether there was a pane to look in. */
   mirror: (on: boolean) => boolean;
+  /** The pane met looking from `from` towards `toward` (world), made dirty, with his reflection in it at a strength
+   * the story sets as he comes to it (walk/pane.ts); null if there's no glass there. */
+  pane: (from: [number, number, number], toward: [number, number, number]) => Pane | null;
   /** Something that casts a shadow moved (one of the story's people walking): the shadows are drawn again. */
   stir: () => void;
   /** Dvij's own arms (arms.ts), if they loaded. */
@@ -148,9 +161,9 @@ const SKY_TOP = lin("#7f9fb4");
 export const HAZE = lin("#e2d3b4"); // the sky at the horizon and the far haze are one colour
 export const PAPER = lin("#c9a878");
 const SUN_DIR = new Vector3(0.85, 0.42, -0.2).normalize();
-const GRID: Record<Quality, number> = { low: 192, medium: 288, high: 384 };
-const PIXELS: Record<Quality, number> = { low: 1, medium: 1.5, high: 2 };
-const DRAW: Record<Quality, [number, number]> = { low: [450, 700], medium: [1100, 1600], high: [2000, 2800] };
+const GRID: Record<Quality, number> = { low: 192, medium: 288, high: 384, ultra: 384 };
+const PIXELS: Record<Quality, number> = { low: 1, medium: 1.5, high: 2, ultra: 2 };
+const DRAW: Record<Quality, [number, number]> = { low: [450, 700], medium: [1100, 1600], high: [2000, 2800], ultra: [2000, 2800] };
 const STEP = 1 / 60;
 const HEMI = 1.3; // the sky's light all round (dimmed indoors)
 const ENV = 0.12; // how much the lodge's materials reflect their surroundings (dimmed indoors)
@@ -158,16 +171,18 @@ const SUN = 2.0;
 // The sun's shadows (medium and high): a square this many metres each way of
 // where you look, in a map this many texels across.
 const SHADOW_REACH = 32;
-const SHADOW_MAP: Record<Quality, number> = { low: 0, medium: 1024, high: 2048 };
+const SHADOW_MAP: Record<Quality, number> = { low: 0, medium: 1024, high: 2048, ultra: 2048 };
 /** How far off the boulders are drawn (m): further, they are specks on the painted ground, and 7,000 of them valley-wide
  * were half a million triangles a frame. */
 /** The picture's buffers: multisampling (the antialias) and half-float colour, by quality: the most a frame spends
  * on this GPU after the scene itself. */
 /** The comic's ink lines (a full-screen pass over the picture and its depth): on high only, where there is the
  * margin for them on this GPU. */
-const INK: Record<Quality, boolean> = { low: false, medium: false, high: true };
-const COMPOSER: Record<Quality, { samples: number; half: boolean }> = { low: { samples: 0, half: false }, medium: { samples: 2, half: false }, high: { samples: 2, half: false } };
-const STONES_NEAR: Record<Quality, number> = { low: 150, medium: 300, high: 500 };
+const INK: Record<Quality, boolean> = { low: false, medium: false, high: true, ultra: true };
+const COMPOSER: Record<Quality, { samples: number; half: boolean }> = { low: { samples: 0, half: false }, medium: { samples: 2, half: false }, high: { samples: 2, half: false }, ultra: { samples: 2, half: false } };
+/** How far round you the trees stand in the round (m; trees3d.ts), past it the painting's cut-outs: none on low. */
+const TREES_NEAR: Record<Quality, number> = { low: 0, medium: 70, high: 110, ultra: 110 };
+const STONES_NEAR: Record<Quality, number> = { low: 150, medium: 300, high: 500, ultra: 500 };
 const AO = 0.7; // how much the lodge's baked occlusion darkens the sky's light and reflections (1 makes its tightest corners black)
 
 async function fetchWithProgress(url: string, onBytes: (f: number) => void): Promise<ArrayBuffer> {
@@ -403,7 +418,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   for (const b of painted) blockers.add(b.x, b.z, b.r);
   const woods = new Blockers(24); // the trees alone, for how wooded it sounds
   for (const t of await decodeTrees(treeBuf)) {
-    stands.push({ x: t.x, y: ground(t.x, t.z), z: t.z, height: t.height, sprite: t.sprite });
+    stands.push({ x: t.x, y: ground(t.x, t.z), z: t.z, height: t.height, sprite: t.sprite, tree: true });
     blockers.add(t.x, t.z, 0.35);
     woods.add(t.x, t.z, 0.35);
   }
@@ -411,8 +426,12 @@ export async function createGame(o: GameOptions): Promise<Game> {
   const buildCutouts = (q: Quality) => {
     if (cutouts) { scene.remove(cutouts); cutouts.geometry.dispose(); (cutouts.material as ShaderMaterial).dispose(); }
     cutouts = cutoutMesh(stands, atlas, cutTex, HAZE, [900, 7000], DRAW[q]);
+    (cutouts.material as ShaderMaterial).uniforms.near.value = TREES_NEAR[q];
     scene.add(cutouts);
+    round?.setReach(TREES_NEAR[q]);
   };
+  // the trees near you in the round (trees3d.ts): the painting's own trees, where it has them
+  const round = trees3d(scene, stands.filter((s) => s.tree));
   buildCutouts(o.quality);
   // The lodge (design §10.3): small enough (about 400 KB) to load with the valley.
   o.onProgress(0.92, "Opening the lodge");
@@ -480,8 +499,19 @@ export async function createGame(o: GameOptions): Promise<Game> {
   sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.03;
   sun.shadow.radius = 1.5;
+  /** The chapter playing (story mode), for Ultra: its look is Chapter 1's only (ultra.ts). */
+  let chapter = "";
+  let quality = o.quality;
+  const ultraNow = () => quality === "ultra" && ULTRA_SCENES.has(chapter);
   const setShadows = (q: Quality) => {
     const size = SHADOW_MAP[q];
+    // soft shadows under Ultra: variance maps, blurred (their edges widen with distance, as a real sun's do); the
+    // ceiling fans cast theirs too, the map drawn again each frame while one turns
+    const soft = ultraNow() && ultraHas("soft");
+    if ((renderer.shadowMap.type === VSMShadowMap) !== soft) { renderer.shadowMap.type = soft ? VSMShadowMap : PCFShadowMap; sun.shadow.map?.dispose(); sun.shadow.map = null; }
+    sun.shadow.radius = soft ? 7 : 1;
+    sun.shadow.blurSamples = soft ? 16 : 8;
+    for (const m of models()) for (const f of m.fanBodies?.() ?? []) f.traverse((o) => { if ((o as Mesh).isMesh) o.castShadow = soft && ultraHas("fan"); });
     sun.castShadow = size > 0;
     renderer.shadowMap.enabled = size > 0;
     if (!size || sun.shadow.mapSize.x !== size) {
@@ -534,11 +564,22 @@ export async function createGame(o: GameOptions): Promise<Game> {
   };
 
   const halfW = walk.worldWidth / 2 - 3, halfD = walk.worldDepth / 2 - 3;
-  const blocked = (x: number, z: number, r: number) =>
+  // (`through`: a shut door is no bar, for a way the story walks him: he opens it when he gets there)
+  const blocked = (x: number, z: number, r: number, through = false) =>
     Math.abs(x) > halfW || Math.abs(z) > halfD ||
     walk.water.some((lake) => inside(lake.points, x, z)) ||
     blockers.hits(x, z, r) ||
-    models().some((m) => m.hits(x, z, Number.isFinite(feet) ? feet : ground(x, z), r));
+    models().some((m) => m.hits(x, z, Number.isFinite(feet) ? feet : ground(x, z), r, through));
+  const routeTo = (to: [number, number]) => findRoute([player.x, player.z], to, (x, z) => blocked(x, z, 0.32, true));
+  /** A hand goes out to a door: pushing it open, or pulling it to (comic b1-p004-7 "holding the doorframe"). */
+  const reachForDoor = (d: { open: boolean; at: [number, number, number] }) => {
+    if (!arms) return;
+    const at = arms.toCamera(new Vector3(...d.at));
+    at.y = Math.max(-0.25, Math.min(0.0, at.y));
+    at.setLength(Math.min(at.length(), 0.55));
+    arms.go("l", { at, grip: d.open ? 0.7 : 0.15, show: true }, 0.35);
+    setTimeout(() => arms.go("l", { at: Arms.rest("l"), grip: 0.25, show: false }, 0.6), 650);
+  };
 
   const input = new Input(o.canvas);
   const rules = walk.player;
@@ -562,8 +603,10 @@ export async function createGame(o: GameOptions): Promise<Game> {
   // Story mode's hold on the body (design §10.4).
   let hold: "free" | "look" | "none" = "free";
   let eye = rules.eye, speed = 1, sway = 0, roll = 0, swayT = 0;
-  let route: { pts: [number, number][]; done: () => void } | null = null;
+  // (`opening`: seconds left of opening a door on the way, its middle; the way is found again after, round the open leaf)
+  let route: { pts: [number, number][]; done: () => void; to: [number, number]; opening?: { left: number; at: [number, number] } } | null = null;
   let rate = 1;
+  let follow: (() => [number, number, number] | null) | null = null;
   const release = () => {
     for (let k = 0; tween && k < 3; k++) { const d = tween.done; tween = null; d(); } // a glance has two halves
     if (route) { const d = route.done; route = null; d(); }
@@ -583,7 +626,30 @@ export async function createGame(o: GameOptions): Promise<Game> {
       eye = L(tween.from.eye, tween.to.eye);
       roll = L(tween.from.roll, tween.to.roll);
       if (k >= 1) { const d = tween.done; tween = null; d(); }
+    } else if (route?.opening) {
+      // a door in the way, being opened: he turns to it while it swings, then goes on round the open leaf
+      const o = route.opening;
+      const want = Math.atan2(o.at[0] - player.x, -(o.at[1] - player.z));
+      const dh = Math.atan2(Math.sin(want - player.heading), Math.cos(want - player.heading));
+      player = { ...player, heading: player.heading + Math.sign(dh) * Math.min(Math.abs(dh), 3 * STEP * rate) };
+      o.left -= STEP * rate;
+      if (o.left <= 0) { route.opening = undefined; route.pts = routeTo(route.to); if (!route.pts.length) { const r = route; route = null; r.done(); } }
     } else if (route) {
+      // a shut door just ahead that the way goes through: stop, reach out, open it (Ch1: he doesn't walk through doors)
+      // (on the way: the line to the next corner passes through the doorway; a way pulled straight has no corner in it)
+      const door = lodge?.doorNear(player.x, player.z);
+      const across = (a: [number, number], b: [number, number], p: [number, number, number]) => {
+        const ux = b[0] - a[0], uz = b[1] - a[1], L2 = ux * ux + uz * uz || 1e-9;
+        const k = Math.max(0, Math.min(1, ((p[0] - a[0]) * ux + (p[2] - a[1]) * uz) / L2));
+        return Math.hypot(a[0] + ux * k - p[0], a[1] + uz * k - p[2]);
+      };
+      if (door && !door.open && Math.hypot(door.at[0] - player.x, door.at[2] - player.z) < 1.1
+          && across([player.x, player.z], route.pts[0], door.at) < 0.7) {
+        reachForDoor(door);
+        lodge!.toggleDoor(door.name);
+        route.opening = { left: 1.0, at: [door.at[0], door.at[2]] };
+        return moveBy(m);
+      }
       // walking by himself: turn toward the next corner, and go
       const [tx, tz] = route.pts[0];
       const dx = tx - player.x, dz = tz - player.z, d = Math.hypot(dx, dz);
@@ -597,6 +663,17 @@ export async function createGame(o: GameOptions): Promise<Game> {
         if (!route.pts.length) { const r = route; route = null; r.done(); }
       } else player = { ...player, x: player.x + (dx / d) * go, z: player.z + (dz / d) * go, heading, pitch };
       if (speed < 1) swayT += go * 3.2;
+    } else if (follow && hold === "none") {
+      // eyes on a speaker who moves: eased after them, a little behind, as a head turns
+      const p = follow();
+      if (p) {
+        const c = camera.position;
+        const want = Math.atan2(p[0] - c.x, -(p[2] - c.z));
+        const dh = Math.atan2(Math.sin(want - player.heading), Math.cos(want - player.heading));
+        const pitch = Math.atan2(p[1] - c.y, Math.max(Math.hypot(p[0] - c.x, p[2] - c.z), 0.01));
+        const k = 1 - Math.exp(-2.5 * STEP * rate);
+        player = { ...player, heading: player.heading + dh * k, pitch: player.pitch + (pitch - player.pitch) * k };
+      }
     }
     player = step(player, m, STEP, { ...r, eye }, world);
     if (speed < 1) {
@@ -615,7 +692,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
   };
   // the picture's size: the quality's pixel ratio, scaled down (to 60% at most) while frames run slower than about
   // 31 fps, and back up while they're quicker than 42; checked every 45 frames, a step at a time
-  let quality = o.quality, scale = 1;
+  let scale = 1;
   const frameMs: number[] = [];
   const pixelRatio = () => Math.min(devicePixelRatio, PIXELS[quality]) * scale;
   const adapt = (ms: number) => {
@@ -635,7 +712,19 @@ export async function createGame(o: GameOptions): Promise<Game> {
   renderer.setPixelRatio(pixelRatio());
   let composer: EffectComposer | null = null;
   const sight = new SightEffect();
+  let look: UltraLook | null = null;
   const setInk = (q: Quality) => {
+    look?.dispose();
+    look = null;
+    ultra.on = ultraNow();
+    if (ultra.on) { // (the composer the Ultra look's own: it disposes it)
+      composer = null;
+      const w = WAKE_WINDOW.at;
+      look = ultraLook(renderer, scene, camera, o.story ? [sight] : [],
+                       { at: new Vector3(w[0] + walk.lodge.x, w[1] + walk.lodge.y, w[2] + walk.lodge.z), size: WAKE_WINDOW.size });
+      composer = look.composer;
+      return;
+    }
     composer?.dispose();
     // story mode always runs the sight pass; the ink comes with medium and high quality
     composer = !INK[q] && !o.story ? null : inkComposer(renderer, scene, camera, o.story ? [sight] : [], INK[q], COMPOSER[q]);
@@ -648,7 +737,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     if (shadowDirty) { renderer.shadowMap.needsUpdate = true; shadowDirty = false; }
     // through the composer only for the ink, or while a story effect is showing: otherwise straight to the screen,
     // with the canvas's own antialias (a whole extra picture saved)
-    if (composer && (INK[quality] || sight.active())) composer.render();
+    if (composer && (INK[quality] || sight.active() || look)) composer.render();
     else renderer.render(scene, camera);
     lastInfo.calls = renderer.info.render.calls;
     lastInfo.triangles = renderer.info.render.triangles;
@@ -708,8 +797,13 @@ export async function createGame(o: GameOptions): Promise<Game> {
     for (const m of models()) moved = m.update(1 / 60) || moved;
     if (moved || ++shadowAge > 30) { shadowDirty = true; shadowAge = 0; }
     lightFor(1 / 60); // (the sight pass eases itself, each time the composer renders)
+    if (look) {
+      look.update(1 / 60, sunDir, lodge ? [lodge.root] : []);
+      if (ultraHas("fan") && models().some((m) => m.fans().some((f) => f.speed > 0.02))) shadowDirty = true; // (the fan's shadow turning)
+    }
     moving.update(1 / 60, camera);
     grass.update(1 / 60);
+    round.update(player.x, player.z);
     for (const f of fires) f.update(1 / 60, camera);
     arms?.update(1 / 60, walking);
     place();
@@ -801,12 +895,19 @@ export async function createGame(o: GameOptions): Promise<Game> {
     }),
     walkTo: (at) => new Promise<void>((done) => {
       release();
-      route = { pts: findRoute([player.x, player.z], at, (x, z) => blocked(x, z, 0.32)), done };
+      route = { pts: routeTo(at), done, to: at };
     }),
-    halt: release,
+    doors: (open) => { for (const m of models()) m.setDoors(open); shadowDirty = true; },
+    follow: (p) => { follow = p; },
+    halt: () => { follow = null; release(); },
     rate: (r) => { rate = r; sight.speed = r; },
     fromLodge: (x, y, z) => [x + walk.lodge.x, y + walk.lodge.y, z + walk.lodge.z],
     lodgeRoot: () => lodge?.root ?? null,
+    chapter: (id) => {
+      const was = ultraNow();
+      chapter = id;
+      if (ultraNow() !== was) { setInk(quality); setShadows(quality); draw(); }
+    },
     stir: () => { shadowDirty = true; },
     mirror: (on) => {
       if (mirror) { scene.remove(mirror, mirrorLight, mirrorLight.target); mirror.dispose(); mirror = null; }
@@ -840,6 +941,12 @@ export async function createGame(o: GameOptions): Promise<Game> {
       scene.add(m, mirrorLight, mirrorLight.target);
       mirror = m;
       return true;
+    },
+    pane: (from, toward) => {
+      if (!lodge) return null;
+      const glass: Object3D[] = [];
+      lodge.root.traverse((o) => { if (/^window-glass/.test(o.name)) glass.push(o); });
+      return makePane(scene, glass, new Vector3(...from), new Vector3(...toward));
     },
     arms: () => arms,
     fromSite: (id, x, y, z) => {
@@ -929,14 +1036,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
     useDoor: () => {
       const d = lodge?.doorNear(player.x, player.z);
       if (!d) return false;
-      // a hand goes out to it: pushing it open, or pulling it to (comic b1-p004-7 "holding the doorframe")
-      if (arms) {
-        const at = arms.toCamera(new Vector3(...d.at));
-        at.y = Math.max(-0.25, Math.min(0.0, at.y));
-        at.setLength(Math.min(at.length(), 0.55));
-        arms.go("l", { at, grip: d.open ? 0.7 : 0.15, show: true }, 0.35);
-        setTimeout(() => arms.go("l", { at: Arms.rest("l"), grip: 0.25, show: false }, 0.6), 650);
-      }
+      reachForDoor(d);
       lodge!.toggleDoor(d.name);
       return true;
     },
@@ -979,6 +1079,7 @@ export async function createGame(o: GameOptions): Promise<Game> {
       for (const m of [rockMat, castMat, waterMat, sky.material as ShaderMaterial]) m.dispose();
       casters.dispose();
       sky.geometry.dispose();
+      round.dispose();
       stones.dispose();
       colours.dispose();
       if (detail) for (const d of Object.values(detail)) { d.color.dispose(); d.normal.dispose(); }

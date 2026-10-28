@@ -54,6 +54,18 @@ describe("the director", () => {
     expect(f.log.filter((l) => l.startsWith("act:"))[0]).toBe("act:Open the boarded window.");
   });
 
+  it("seeking to a beat (the film bar's slider) passes over the acts before it, telling the stage where they'd leave him", async () => {
+    const f = fake({ autoAct: true });
+    const skipped: string[] = [];
+    f.stage.skipped = (act) => { skipped.push(act.objective); };
+    await new Director(f.stage, scenes).play("b1-ch01", "study");
+    expect(skipped).toEqual(["Reach for the glass on the stool.", "Sit up.", "Stand up.", "Try the spectacles on the stool.", "Open the boarded window.", "Find water."]);
+    expect(f.log.filter((l) => l.startsWith("act:"))).toEqual(["act:Look for someone.", "act:Go to the windows."]);
+    // what the beats before it did to the room is replayed (the shutters open), without their words
+    expect(f.log).toContain('prop:{"id":"shutters","state":"open"}');
+    expect(f.log.some((l) => l.startsWith("caption:He tugged at the stops"))).toBe(false);
+  });
+
   it("skipping plays the scene's consequences but not its words or waits", async () => {
     const f = fake();
     const d = new Director(f.stage, scenes);

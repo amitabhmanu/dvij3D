@@ -1,0 +1,273 @@
+{
+ "b1-ch08": {
+  "beats": [
+   {
+    "id": "the-tape",
+    "at": 0
+   },
+   {
+    "id": "the-wound",
+    "at": 28.4
+   },
+   {
+    "id": "the-arm",
+    "at": 55
+   },
+   {
+    "id": "the-gong",
+    "at": 72.5
+   },
+   {
+    "id": "the-summons",
+    "at": 102.3
+   },
+   {
+    "id": "the-cowherd",
+    "at": 128.1
+   },
+   {
+    "id": "the-henchman",
+    "at": 150.5
+   }
+  ],
+  "total": 163.5
+ },
+ "b1-ch09": {
+  "beats": [
+   {
+    "id": "the-tent",
+    "at": 0
+   },
+   {
+    "id": "the-paan",
+    "at": 44.1
+   },
+   {
+    "id": "the-prophecy",
+    "at": 85.4
+   },
+   {
+    "id": "the-duties",
+    "at": 139.7
+   },
+   {
+    "id": "the-saviour",
+    "at": 197.9
+   },
+   {
+    "id": "the-name",
+    "at": 222.3
+   },
+   {
+    "id": "the-altar",
+    "at": 275.9
+   },
+   {
+    "id": "the-seat",
+    "at": 296.8
+   },
+   {
+    "id": "the-rite",
+    "at": 306.9
+   },
+   {
+    "id": "dismissed",
+    "at": 328.7
+   },
+   {
+    "id": "the-plain",
+    "at": 342.4
+   }
+  ],
+  "total": 364
+ },
+ "b1-ch05": {
+  "beats": [
+   {
+    "id": "courtyard",
+    "at": 0
+   },
+   {
+    "id": "kitchen",
+    "at": 11.5
+   },
+   {
+    "id": "stool",
+    "at": 45
+   },
+   {
+    "id": "fear",
+    "at": 82.4
+   },
+   {
+    "id": "tea",
+    "at": 105.8
+   },
+   {
+    "id": "tulsi",
+    "at": 135.1
+   },
+   {
+    "id": "way-out",
+    "at": 169.9
+   }
+  ],
+  "total": 239.7
+ },
+ "b1-ch07": {
+  "beats": [
+   {
+    "id": "days",
+    "at": 0
+   },
+   {
+    "id": "healed",
+    "at": 13.1
+   },
+   {
+    "id": "outside",
+    "at": 31.6
+   },
+   {
+    "id": "the-clearing",
+    "at": 50.8
+   },
+   {
+    "id": "the-doctor",
+    "at": 65.1
+   },
+   {
+    "id": "the-bow",
+    "at": 110.1
+   },
+   {
+    "id": "panchamrita",
+    "at": 137.5
+   },
+   {
+    "id": "the-anomaly",
+    "at": 175.8
+   },
+   {
+    "id": "the-accusation",
+    "at": 232.3
+   },
+   {
+    "id": "the-name",
+    "at": 278.7
+   },
+   {
+    "id": "the-huff",
+    "at": 304.1
+   },
+   {
+    "id": "what-you-know",
+    "at": 314.7
+   }
+  ],
+  "total": 350.9
+ },
+ "b1-ch01": {
+  "beats": [
+   {
+    "id": "wake",
+    "at": 0
+   },
+   {
+    "id": "water",
+    "at": 17.4
+   },
+   {
+    "id": "sit-up",
+    "at": 29.6
+   },
+   {
+    "id": "stand",
+    "at": 42.2
+   },
+   {
+    "id": "spectacles",
+    "at": 45.5
+   },
+   {
+    "id": "shutters",
+    "at": 58.4
+   },
+   {
+    "id": "courtyard",
+    "at": 77.4
+   },
+   {
+    "id": "study",
+    "at": 95
+   },
+   {
+    "id": "window",
+    "at": 133.7
+   },
+   {
+    "id": "faint",
+    "at": 171.5
+   }
+  ],
+  "total": 182.2
+ },
+ "b1-ch03": {
+  "beats": [
+   {
+    "id": "water-face",
+    "at": 0
+   },
+   {
+    "id": "drink",
+    "at": 9.4
+   },
+   {
+    "id": "veena",
+    "at": 71.5
+   },
+   {
+    "id": "varahi",
+    "at": 104
+   },
+   {
+    "id": "questions",
+    "at": 138.2
+   },
+   {
+    "id": "introduction",
+    "at": 192.1
+   }
+  ],
+  "total": 239.2
+ },
+ "b1-ch04": {
+  "beats": [
+   {
+    "id": "doorsteps",
+    "at": 0
+   },
+   {
+    "id": "gate-view",
+    "at": 9.3
+   },
+   {
+    "id": "silhouette",
+    "at": 16.6
+   },
+   {
+    "id": "the-well",
+    "at": 34.8
+   },
+   {
+    "id": "talk",
+    "at": 49
+   },
+   {
+    "id": "why-here",
+    "at": 88
+   }
+  ],
+  "total": 109.8
+ }
+}

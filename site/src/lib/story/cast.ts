@@ -5,14 +5,43 @@
 // and brightness (pipeline/build_people.py) and their hands move with the talk. The cast list is in each scene's
 // yaml; everyone in it is placed at the scene's start, and hidden until they come on if they enter.
 import {
-  AnimationMixer, Box3, Group, LoopOnce, LoopRepeat, Quaternion, Sphere, Vector3,
-  type AnimationAction, type AnimationClip, type Bone, type Material, type Mesh, type Object3D, type SkinnedMesh,
+  AnimationMixer, Box3, Color, Group, LoopOnce, LoopRepeat, MeshPhysicalMaterial, Quaternion, Sphere, Vector3,
+  type AnimationAction, type MeshStandardMaterial, type AnimationClip, type Bone, type Material, type Mesh, type Object3D, type SkinnedMesh,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import { aim, bindLook, look, reach } from "./ik";
+import { FaceLife } from "./face-life";
+import { eyeMaterial, softCards } from "./eyes";
+import { IdleLife, type Body as IdleBody } from "./idle";
+import { skinMaterial } from "./skin";
+import { Hair } from "./hair";
+import { pickUp, putDown, show } from "./handling";
 import { SELF_LAYER } from "../walk/game";
+
+const q0 = new Quaternion();
+
+/** Turn a bone about a world axis by `rad`, over the pose it has. */
+function bendAbout(b: Bone, axis: Vector3, rad: number) {
+  if (!rad || !b.parent) return;
+  const world = b.getWorldQuaternion(new Quaternion()).premultiply(new Quaternion().setFromAxisAngle(axis.normalize(), rad));
+  b.quaternion.copy(b.parent.getWorldQuaternion(new Quaternion()).invert().multiply(world));
+  b.updateMatrixWorld(true);
+}
+
+/** Rhubarb Lip Sync's mouth shapes as [jaw open, lips wide, lips rounded, lips pressed] (the jaw scaled by loudness). */
+const VISEME: Record<string, [number, number, number, number]> = {
+  A: [0, 0, 0, 0.9], // m, b, p: shut
+  B: [0.15, 0.55, 0, 0], // k, s, t, ee: the teeth together, lips drawn
+  C: [0.4, 0.35, 0, 0], // eh, ae
+  D: [0.75, 0.2, 0, 0], // ah: wide open
+  E: [0.35, 0, 0.45, 0], // aw, er: rounded
+  F: [0.12, 0, 1, 0], // oo, w: puckered
+  G: [0.1, 0.25, 0, 0.45], // f, v: the lower lip under the teeth
+  H: [0.3, 0.15, 0, 0], // l: the tongue up
+  X: [0, 0, 0, 0], // at rest
+};
 
 export type V2 = [number, number];
 export type CastSpec = {
@@ -40,10 +69,14 @@ export type CastEnv = {
   heading: () => number;
   /** Someone moved: their shadow is to be drawn again. */
   stir?: () => void;
+  /** The lifelike layers (eyes.ts, skin, hair): on unless the quality is low. */
+  lifelike?: boolean;
 };
 export type PeopleInfo = { people: Record<string, { file: string; height: number; face?: { smile?: number; frown?: number; brows?: number } }>; mouths?: string };
 
 /** How high each kind of seat is above the floor (m): the hips go there (build_lodge.py, build_site.py, props.ts). */
+/** The tallest step a walker goes up (m): the court's edge is 0.30, a doorstep 0.2. */
+const MAX_STEP = 0.34;
 const SEATS: Record<string, number> = { ground: 0.08, "deck-chair": 0.36, armchair: 0.44, chair: 0.47, divan: 0.46, stool: 0.42, "well-rim": 0.8 };
 /** The clip each pose loops in, and what it talks in. */
 const POSE_CLIP: Record<string, [string, string]> = {
@@ -55,6 +88,10 @@ const POSE_CLIP: Record<string, [string, string]> = {
   crouch: ["Crouch_Idle_Loop", "Crouch_Idle_Loop"],
   crosslegged: ["Sitting_Idle_Loop", "Sitting_Talking_Loop"],
 };
+/** Within this far of the camera (m), a person wears the lifelike skin and eyes (the hero tier). */
+const HERO_DISTANCE = 4.5;
+/** When, in Fixing_Kneeling, he is down on one knee and settled (seconds; lifelike pilot, the clip sampled). */
+const KNEEL_AT = 1.6;
 const WALK_SPEED = 1.05; // m/s (the old and the heavy go a little slower)
 const SLOW: Record<string, number> = { professor: 0.85, vaidji: 0.8, maharaj: 0.9, baldev: 0.95 };
 
@@ -67,12 +104,79 @@ type Layer = {
   footL?: Vector3 | null; footR?: Vector3 | null;
   /** How far what the right hand holds is tipped forward (radians): a pitcher pouring. */
   tilt?: number;
+  /** The hands turned in, each towards the other arm's elbow: tucked, as in arms folded. */
+  tuck?: boolean;
+  /** How much of each hand's reach to lay on (0..1, default 1): a hand let go of over a blend. */
+  wL?: number; wR?: number;
 };
-type Gesture = { seconds: number; hold?: boolean; clip?: string; at: (a: Actor, t: number) => Layer };
+/** Two layers mixed, `k` of the way from `a` to `b`: a gesture taking over from the one before, no pop. */
+function mixLayers(a: Layer, b: Layer, k: number): Layer {
+  const n = (x = 0, y = 0) => x + (y - x) * k;
+  const hand = (x?: Vector3 | null, y?: Vector3 | null, wx = 1, wy = 1): [Vector3 | null, number] =>
+    x && y ? [x.clone().lerp(y, k), n(wx, wy)] : y ? [y, wy * k] : x ? [x, wx * (1 - k)] : [null, 0];
+  const [handL, wL] = hand(a.handL, b.handL, a.wL ?? 1, b.wL ?? 1), [handR, wR] = hand(a.handR, b.handR, a.wR ?? 1, b.wR ?? 1);
+  return { spine: n(a.spine, b.spine), head: n(a.head, b.head), tilt: n(a.tilt, b.tilt), handL, handR, wL, wR,
+           footL: b.footL ?? a.footL, footR: b.footR ?? a.footR, tuck: k < 0.5 ? a.tuck : b.tuck };
+}
+export type Gesture = { seconds: number; hold?: boolean; clip?: string; at: (a: Actor, t: number) => Layer };
+
+/** Each main character's own gestures while they talk (keyed() below; their manner in the novel and the comic). */
+const TALK: Record<string, string[]> = {
+  professor: ["lecture", "explain", "spectacles", "lecture"], // (b1-p007-2: all hands, mid-digression)
+  mahant: ["raised-palm", "hand-on-chest"],
+  baldev: ["jab", "wave-off"],
+  maharaj: ["palms-up", "hand-on-chest"],
+  bhavi: ["tuck-hair", "open-hand", "hand-to-chin"],
+  vaidji: ["palms-up", "hand-on-chest"], // (overblown: the palms spread, the hand to the heart)
+  attendant: ["hand-on-chest"], // (obsequious)
+};
+/** Those of them that keep the hands by the body: for talking face to face, close up. */
+const CLOSE_TALK = new Set(["tuck-hair", "hand-to-chin", "hand-on-chest", "spectacles"]);
 
 const up = (a: Actor, h: number, fwd = 0.3, side = 0) => a.point(side, h, fwd);
+/** A hand's place in a keyframe: [height (m, as if stood), forward of the chest, to the right], or none (the clip's). */
+type Hand = [number, number, number] | null;
+type Key = { t: number; spine?: number; head?: number; l?: Hand; r?: Hand };
+/** A gesture keyed by hand, as an animator keys one: poses at moments through it (t: 0..1), eased from each to the next. */
+function keyed(seconds: number, keys: Key[]): Gesture {
+  const ease = (x: number) => x * x * (3 - 2 * x);
+  return {
+    seconds,
+    at: (a, t) => {
+      let k = 0;
+      while (k < keys.length - 2 && t > keys[k + 1].t) k++;
+      const A = keys[k], B = keys[Math.min(k + 1, keys.length - 1)];
+      const f = B.t > A.t ? ease(Math.min(1, Math.max(0, (t - A.t) / (B.t - A.t)))) : 0;
+      const mix = (x = 0, y = 0) => x + (y - x) * f;
+      const hand = (x?: Hand, y?: Hand) => (x && y ? up(a, mix(x[0], y[0]), mix(x[1], y[1]), mix(x[2], y[2])) : null);
+      return { spine: mix(A.spine, B.spine), head: mix(A.head, B.head), handL: hand(A.l, B.l), handR: hand(A.r, B.r) };
+    },
+  };
+}
+
 /** The story's gestures that the clip library hasn't got: poses laid over the pose's own loop. */
 const GESTURES: Record<string, Gesture> = {
+  // keyed by hand, for talk: each person's own way of speaking with their hands (talk(), below)
+  // the Professor lecturing: the right palm raised, swept across as he makes his point, beat twice on it
+  lecture: keyed(2.6, [{ t: 0, r: [1.15, 0.3, 0.12] }, { t: 0.25, r: [1.42, 0.38, 0.22], head: -0.05 }, { t: 0.5, r: [1.38, 0.4, -0.05] },
+                       { t: 0.62, r: [1.3, 0.42, -0.02], head: 0.06 }, { t: 0.74, r: [1.38, 0.4, -0.05] }, { t: 0.86, r: [1.3, 0.42, -0.02], head: 0.06 }, { t: 1, r: [1.15, 0.3, 0.12] }]),
+  // both hands holding up an idea between them, opened out
+  explain: keyed(2.4, [{ t: 0, l: [1.1, 0.28, -0.14], r: [1.1, 0.28, 0.14] }, { t: 0.3, l: [1.3, 0.38, -0.09], r: [1.3, 0.38, 0.09] },
+                       { t: 0.65, l: [1.32, 0.4, -0.26], r: [1.32, 0.4, 0.26], spine: 0.06 }, { t: 1, l: [1.1, 0.28, -0.14], r: [1.1, 0.28, 0.14] }]),
+  // the spectacles pushed up the nose with a finger
+  spectacles: keyed(1.6, [{ t: 0, r: [1.15, 0.3, 0.1] }, { t: 0.4, r: [1.62, 0.13, 0.0], head: 0.05 }, { t: 0.6, r: [1.64, 0.12, 0.0], head: 0.05 }, { t: 1, r: [1.15, 0.3, 0.1] }]),
+  // a palm raised slowly before the chest and held, as one who expects to be heard (Mahant)
+  "raised-palm": keyed(3.0, [{ t: 0, l: [1.05, 0.25, -0.12] }, { t: 0.35, l: [1.38, 0.32, -0.1], head: -0.06 }, { t: 0.75, l: [1.4, 0.32, -0.1], head: -0.06 }, { t: 1, l: [1.05, 0.25, -0.12] }]),
+  // a jab of the hand at whoever he's telling (Baldev)
+  jab: keyed(1.6, [{ t: 0, r: [1.1, 0.3, 0.15] }, { t: 0.3, r: [1.3, 0.55, 0.05], spine: 0.1 }, { t: 0.45, r: [1.26, 0.4, 0.08] },
+                   { t: 0.6, r: [1.3, 0.56, 0.05], spine: 0.12 }, { t: 1, r: [1.1, 0.3, 0.15] }]),
+  // both palms up and out: what can one do (Maharaj)
+  "palms-up": keyed(2.0, [{ t: 0, l: [1.0, 0.25, -0.15], r: [1.0, 0.25, 0.15] }, { t: 0.4, l: [1.12, 0.36, -0.32], r: [1.12, 0.36, 0.32], head: -0.08 },
+                          { t: 0.65, l: [1.12, 0.36, -0.32], r: [1.12, 0.36, 0.32], head: -0.08 }, { t: 1, l: [1.0, 0.25, -0.15], r: [1.0, 0.25, 0.15] }]),
+  // a lock of hair tucked behind her ear (Bhavi)
+  "tuck-hair": keyed(1.8, [{ t: 0, r: [1.1, 0.28, 0.1] }, { t: 0.4, r: [1.58, 0.06, 0.1], head: -0.1 }, { t: 0.6, r: [1.56, 0.02, 0.11], head: -0.1 }, { t: 1, r: [1.1, 0.28, 0.1] }]),
+  // an open hand turned out as she says it
+  "open-hand": keyed(1.8, [{ t: 0, l: [1.05, 0.26, -0.12] }, { t: 0.4, l: [1.25, 0.4, -0.25], head: 0.05 }, { t: 0.7, l: [1.25, 0.4, -0.25], head: 0.05 }, { t: 1, l: [1.05, 0.26, -0.12] }]),
   namaste: { seconds: 2.4, at: (a) => ({ spine: 0.35, head: 0.3, handL: up(a, 1.18, 0.28, -0.02), handR: up(a, 1.18, 0.28, 0.02) }) },
   supplicate: { seconds: 3.2, at: (a, t) => { const k = Math.sin(Math.min(1, t * 1.6) * Math.PI / 2); return { spine: 1.1 * k, head: 0.4 * k, handL: up(a, 1.2 - 0.3 * k, 0.3 + 0.15 * k, -0.02), handR: up(a, 1.2 - 0.3 * k, 0.3 + 0.15 * k, 0.02) }; } },
   pray: { seconds: 1.2, hold: true, at: (a) => ({ head: 0.15, handL: up(a, 1.16, 0.26, -0.015), handR: up(a, 1.16, 0.26, 0.015) }) },
@@ -80,11 +184,14 @@ const GESTURES: Record<string, Gesture> = {
   nod: { seconds: 1.0, at: (_a, t) => ({ head: Math.sin(t * Math.PI * 2) * 0.22 }) },
   laugh: { seconds: 1.6, at: (_a, t) => ({ spine: -0.12 + Math.sin(t * 40) * 0.03, head: -0.35 }) },
   "lean-in": { seconds: 1.0, hold: true, at: () => ({ spine: 0.3, head: 0.1 }) },
-  "finger-raise": { seconds: 1.8, at: (a) => ({ handR: up(a, 1.5, 0.3, 0.18) }) },
+  "finger-raise": { seconds: 1.8, at: (a) => (a.holding ? { handL: up(a, 1.5, 0.3, -0.18) } : { handR: up(a, 1.5, 0.3, 0.18) }) }, // (the free hand, if the right holds something)
   point: { seconds: 1.6, at: (a) => ({ spine: 0.1, handR: a.toward(a.eyesOf(), 0.55, -0.2) }) },
-  "fold-arms": { seconds: 1.0, hold: true, at: (a) => ({ handL: up(a, 1.12, 0.2, 0.12), handR: up(a, 1.1, 0.22, -0.12) }) },
+  // (the wrists at the middle, the fingers tucked towards the other elbow)
+  "fold-arms": { seconds: 1.0, hold: true, at: (a) => ({ handL: up(a, 1.2, 0.25, 0.06), handR: up(a, 1.12, 0.18, -0.06), tuck: true }) },
   "hand-to-chin": { seconds: 2.4, at: (a) => ({ head: 0.1, handR: up(a, 1.48, 0.14, 0.02) }) },
   "hand-to-mouth": { seconds: 2.4, at: (a) => ({ head: 0.15, handR: up(a, 1.52, 0.12, 0.0) }) },
+  // something held up to show him, turned to him, at the height of the face (the Professor "holds things up to the light", b1-p007-4)
+  show: { seconds: 1.2, hold: true, at: (a) => show(a) },
   "hand-on-chest": { seconds: 1.8, at: (a) => ({ handR: up(a, 1.28, 0.16, -0.05) }) },
   "mop-brow": { seconds: 2.0, at: (a, t) => ({ head: 0.15, handR: up(a, 1.64, 0.12, 0.08 - Math.sin(t * Math.PI * 3) * 0.08) }) },
   "wipe-eyes": { seconds: 1.8, at: (a, t) => ({ head: 0.2, handR: up(a, 1.56, 0.1, Math.sin(t * Math.PI * 4) * 0.04) }) },
@@ -121,10 +228,28 @@ const GESTURES: Record<string, Gesture> = {
 
 const loader = new GLTFLoader();
 loader.setMeshoptDecoder(MeshoptDecoder);
+// Skin: light under it comes back out warm and soft, most at the edges turned from the light (a sheen of red
+// stands in for that, cheaply); one for every copy of a person.
+const skins = new WeakMap<Material, Material>();
+function skinOf(mat: Material): Material {
+  let s = skins.get(mat);
+  if (!s) {
+    const m = mat as MeshStandardMaterial;
+    s = new MeshPhysicalMaterial({
+      name: m.name, map: m.map, normalMap: m.normalMap, normalScale: m.normalScale, roughness: 0.58, metalness: 0,
+      sheen: 0.5, sheenColor: new Color(0.9, 0.38, 0.28), sheenRoughness: 0.55, specularIntensity: 0.6,
+    });
+    skins.set(mat, s);
+  }
+  return s;
+}
+
 const cache = new Map<string, Promise<{ scene: Object3D; clips: AnimationClip[] }>>();
 
 export class Actor {
   readonly obj = new Group();
+  /** A look the story gave with `keep`: held while anyone speaks (the Professor lost in his manuscript, b1-p007-7), till the next look. */
+  keepLook = false;
   private model: Object3D;
   private mixer: AnimationMixer;
   private actions = new Map<string, AnimationAction>();
@@ -151,10 +276,36 @@ export class Actor {
   private layerW = 0;
   private gaze: Vector3 | (() => Vector3) | null = null;
   private gazeW = 0;
-  private blinkIn = 2 + Math.random() * 3;
-  private blinkT = -1;
+  /** Where the eyes go, how the head follows, the blinks (face-life.ts). */
+  private life: FaceLife;
+  /** The meshes with a close-up material and a plain one: [mesh, plain, lifelike] (hero()). */
+  private tiers: [Mesh, Material, Material][] = [];
+  private heroOn = false;
+  /** Close to the camera (the hero tier): the lifelike skin and eyes; further off, the plain ones, which cost less. */
+  hero(on: boolean) {
+    if (on === this.heroOn) return;
+    this.heroOn = on;
+    for (const [m, plain, life] of this.tiers) m.material = on ? life : plain;
+  }
+  /** The hair cards and their swing (hair.ts), and a mesh of them (whose frame the swing is given in). */
+  private hair = new Hair();
+  private hairMesh: Object3D | null = null;
+  /** The breath, the weight from foot to foot, the chest joining big looks (idle.ts). */
+  private idle: IdleLife;
+  private idleBody: IdleBody;
+  private wasTalking = false;
+  /** The layer a new gesture takes over from, and how much of it was on. */
+  private from: { layer: Layer; w: number } | null = null;
   private mouth: (() => number) | null = null;
   private tone: (() => number) | null = null;
+  /** The lips' shape now, as Rhubarb Lip Sync's letter for it (A..H, X; pipeline/build_people.py's shapes()), if known. */
+  private viseme: (() => string) | null = null;
+  /** The lips' and jaw's shape keys, eased towards the viseme's. */
+  private lips = { jaw: 0, wide: 0, pucker: 0, close: 0 };
+  /** Talking: a moment before the next gesture of the hands (talk(), TALK). */
+  private nextTalkGesture = 1.5 + Math.random() * 2;
+  /** The hanging cloth's swing (radians; forward of the hips, and to their left), its speed, and where the hips were. */
+  private swing = { f: 0, s: 0, vf: 0, vs: 0, at: null as Vector3 | null, yaw: 0 };
   private jaw = 0;
   private bright = 0.5;
   /** Shut between words: the lips pressed for a moment after a syllable (m, b, p), eased. */
@@ -169,6 +320,9 @@ export class Actor {
   get busy() { return !!(this.path.length || this.loopRim || this.turning || this.gesture); }
 
   constructor(readonly who: string, made: { scene: Object3D; clips: AnimationClip[] }, private env: CastEnv) {
+    this.life = new FaceLife(who);
+    this.idle = new IdleLife(who);
+    this.idleBody = { bone: (n) => this.bone(n), obj: this.obj, bend: bendAbout };
     this.model = cloneSkinned(made.scene);
     this.obj.add(this.model);
     this.obj.name = `cast-${who}`;
@@ -190,10 +344,24 @@ export class Actor {
                              brows: [d.browInnerUp, d.browOuterUpRight].filter((x) => x != null), frown: d.mouthFrownLeft,
                              pucker: d.mouthPucker, wide: d.mouthStretchLeft, close: d.mouthClose });
         }
-        // hair, brows, lashes, the tilak: cut out where their textures are clear, not blended (no sorting troubles)
+        // hair, brows, lashes, the tilak: cut out where their textures are clear, not blended (no sorting troubles);
+        // the brows and lashes soft-edged by the multisampling, and the eyes layered (eyes.ts), unless kept plain
+        const life = env.lifelike !== false;
         for (const mat of ([] as Material[]).concat(m.material)) {
           if (mat.transparent) { mat.transparent = false; mat.alphaTest = 0.5; mat.depthWrite = true; }
+          if (life && /^(eyebrows|eyelashes)/.test(mat.name)) softCards(mat);
         }
+        if (life && !Array.isArray(m.material) && m.material.name.startsWith("hair-cards")) { // (soft-edged, both sides, a hair's highlight; it swings: hair.ts)
+          m.material = this.hair.material(m.material, /-hair$/.test(m.material.name) ? 1 : 0.3);
+          this.hairMesh ??= m;
+        }
+        // the skin and the eyes: the lifelike ones close up (the hero tier, hero()), the plain ones further off
+        if (!Array.isArray(m.material) && m.material.name.startsWith("skin")) {
+          const plain = skinOf(m.material);
+          if (life) this.tiers.push([m, plain, skinMaterial(m.material, who.split(/[#-]/)[0])]);
+          m.material = plain;
+        }
+        if (life && !Array.isArray(m.material) && m.material.name === "eyes") this.tiers.push([m, m.material, eyeMaterial(m.material, who.split(/[#-]/)[0], m, this.model)]);
       }
     });
     this.mixer = new AnimationMixer(this.model);
@@ -229,6 +397,7 @@ export class Actor {
   private loop(name: string, fade = 0.35) {
     const next = this.actions.get(name) ?? this.actions.get("Idle_Loop");
     if (!next || next === this.base) return;
+    next.timeScale = 1; // (a held pose, the kneel, leaves it stopped)
     next.reset().setLoop(LoopRepeat, Infinity).setEffectiveWeight(1).fadeIn(fade).play();
     this.base?.fadeOut(fade);
     this.base = next;
@@ -249,8 +418,43 @@ export class Actor {
       this.seat = floor + (SEATS[on] ?? 0.45);
     }
     this.loop(POSE_CLIP[pose]?.[0] ?? "Idle_Loop", 0);
+    if (pose === "kneel" && this.base) {
+      // the kneeling clip kneels, works at something on the floor, stands and kneels again: held still, knelt
+      this.base.time = KNEEL_AT;
+      this.base.timeScale = 0;
+    }
     this.mixer.update(0.01);
     this.settle();
+  }
+
+  /** In a chair (or on the divan): what standUp() gets them out of. */
+  get seated() { return this.seat > 0 && (this.pose === "sit" || this.pose === "recline"); }
+
+  /** Up out of the chair with the clip's own rise, not a pop to standing (Bhavi rising in a huff, comic b1-p012-10). */
+  async standUp(): Promise<void> {
+    const rise = this.actions.get("Sitting_Exit");
+    if (!this.seated || !rise) { this.place(this.where(), "stand"); return; }
+    // the feet on the floor round the seat (a chair may be solid to the ground's query), and the rise played from the sitting loop
+    const [x, z] = this.where();
+    let floor = Infinity;
+    for (let k = 0; k < 8; k++) floor = Math.min(floor, this.env.ground(x + Math.sin(k * 0.785) * 1.3, z + Math.cos(k * 0.785) * 1.3, 3));
+    this.pose = "stand";
+    this.seat = 0;
+    this.lean = 0;
+    this.obj.position.y = floor;
+    rise.reset().setLoop(LoopOnce, 1).setEffectiveWeight(1).fadeIn(0.2).play();
+    rise.clampWhenFinished = true;
+    this.base?.fadeOut(0.2);
+    this.base = rise; // (so the standing loop takes over from the rise, not from the sitting)
+    await new Promise<void>((done) => {
+      const end = (e: { action: AnimationAction }) => {
+        if (e.action !== rise) return;
+        this.mixer.removeEventListener("finished", end as never);
+        done();
+      };
+      this.mixer.addEventListener("finished", end as never);
+    });
+    this.loop("Idle_Loop", 0.3);
   }
 
   /** Sit them down on the seat's height: the clip's hips meet it. */
@@ -273,6 +477,13 @@ export class Actor {
     return new Promise((done) => { this.turning!.done = done; });
   }
   private turning: { from: number; by: number; t: number; seconds: number; done?: () => void } | null = null;
+  /** On their feet with their back half turned to `p` (frame metres): turn to it, as one does to talk to someone (the head alone can't reach). */
+  turnToFace(p: V2) {
+    if (this.pose !== "stand" || this.path.length || this.loopRim || this.turning) return;
+    const want = Math.atan2(p[0] - this.obj.position.x, p[1] - this.obj.position.z);
+    const off = Math.atan2(Math.sin(want - this.obj.rotation.y), Math.cos(want - this.obj.rotation.y));
+    if (Math.abs(off) > 1.1 && Math.hypot(p[0] - this.obj.position.x, p[1] - this.obj.position.z) < 6) void this.turnTo(p, 0.9);
+  }
   /** Where they stand now (frame metres). */
   where(): V2 { return [this.obj.position.x, this.obj.position.z]; }
 
@@ -292,6 +503,7 @@ export class Actor {
     this.pose = "stand";
     this.seat = 0;
     this.lean = 0;
+    this.letGo(); // (a held gesture, the tumbler offered, doesn't walk with him)
     this.path = pts;
     this.loop(this.who === "mahant" ? "Walk_Formal_Loop" : "Walk_Loop", 0.3);
     return new Promise((done) => { this.onArrive = done; });
@@ -315,10 +527,39 @@ export class Actor {
     this.loop(POSE_CLIP[this.pose]?.[0] ?? "Idle_Loop");
   }
 
+  /** While they talk, now and then one of their own gestures (TALK), unless the story has them doing something else. */
+  private talkHands(dt: number) {
+    const own = TALK[this.who.split("#")[0]];
+    if (!own || !this.talking || this.gesture || this.carried || Object.keys(this.held).length || this.path.length || this.turning) return;
+    if (this.pose !== "stand" && this.pose !== "sit") return;
+    this.nextTalkGesture -= dt;
+    if (this.nextTalkGesture > 0) return;
+    this.nextTalkGesture = 2.5 + Math.random() * 3.5;
+    // right up to him (at work on his forehead): only what stays by their own body, not a hand thrust into his face
+    const eyes = this.env.eyes(), at = this.obj.getWorldPosition(new Vector3());
+    const near = Math.hypot(eyes.x - at.x, eyes.z - at.z) < 1.0;
+    const can = near ? own.filter((g) => CLOSE_TALK.has(g)) : own;
+    if (can.length) void this.act(can[Math.floor(Math.random() * can.length)]);
+  }
+
+  /** A held gesture let go of, eased out. */
+  letGo() {
+    if (Object.keys(this.held).length) { this.from = { layer: this.held, w: this.layerW }; this.held = {}; }
+    if (this.gesture?.g.hold) this.gesture.done();
+  }
+
+  /** Is the right hand holding something? */
+  get holding() { return !!this.carried; }
+
   /** Play a gesture or a clip once; resolves as it ends (a held gesture stays until the next). */
   act(name: string): Promise<void> {
     const g = GESTURES[name];
-    if (!g) return Promise.resolve();
+    return g ? this.perform(g) : Promise.resolve();
+  }
+
+  /** Play a gesture made for the moment (handling.ts: a reach for something where it lies). */
+  perform(g: Gesture): Promise<void> {
+    if (this.layerW > 0.02) this.from = { layer: this.layer, w: this.layerW }; // (the one before, blended out under it)
     this.gesture?.done();
     if (g.clip && !g.seconds) {
       const a = this.actions.get(g.clip);
@@ -355,7 +596,7 @@ export class Actor {
 
   /** Hold a prop in the right hand (its handle), or let it go (null). */
   hold(obj: Object3D | null) {
-    if (this.carried && !obj) { this.carried.visible = false; this.carried.removeFromParent(); }
+    if (this.carried && this.carried !== obj) { this.carried.visible = false; this.carried.removeFromParent(); } // (given away, or put aside for the next)
     this.carried = obj;
     if (obj) {
       obj.visible = true;
@@ -372,10 +613,42 @@ export class Actor {
   }
   private grip = new Vector3();
 
+  /** Put what the right hand holds down into `into`, its foot on `at` (world), upright. */
+  release(into: Object3D, at: Vector3) {
+    const o = this.carried;
+    if (!o) return;
+    this.carried = null;
+    into.attach(o);
+    // upright: only its turn about the vertical kept
+    const ahead = new Vector3(0, 0, 1).applyQuaternion(o.getWorldQuaternion(new Quaternion()));
+    const q = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), Math.atan2(ahead.x, ahead.z));
+    o.quaternion.copy(into.getWorldQuaternion(new Quaternion()).invert().multiply(q));
+    o.updateMatrixWorld(true);
+    // then moved so the middle of its foot is on the spot
+    const box = new Box3().setFromObject(o);
+    const foot = new Vector3((box.min.x + box.max.x) / 2, box.min.y, (box.min.z + box.max.z) / 2);
+    o.position.copy(into.worldToLocal(o.getWorldPosition(new Vector3()).add(at.clone().sub(foot))));
+    o.updateMatrixWorld(true);
+  }
+
+  /** Where what the right hand holds was taken from (its prop's own group), to put it back into. */
+  carriedHome(): Object3D | null { return this.carried ? (this.carried.userData.home as Object3D) ?? this.obj.parent : null; }
+  /** How tall what the right hand holds is (m). */
+  carriedHeight(): number { return this.carried ? new Box3().setFromObject(this.carried).getSize(new Vector3()).y : 0; }
+
+  /** The palm's middle now (world): where a held thing's middle rides. */
+  palm(): Vector3 | null {
+    const hand = this.bone("hand_r"), mid = this.bone("middle_01_r");
+    return hand && mid ? hand.getWorldPosition(new Vector3()).lerp(mid.getWorldPosition(new Vector3()), 0.55) : null;
+  }
+
+  /** Where the right shoulder is (world). */
+  shoulder(): Vector3 { return (this.bone("upperarm_r") ?? this.obj).getWorldPosition(new Vector3()); }
+
   /** What the right hand holds, in the palm, upright but for a tip forward; the fingers closed round it. */
   private carry(tilt: number) {
     const o = this.carried, hand = this.bone("hand_r"), mid = this.bone("middle_01_r");
-    if (o && o.parent !== this.obj) { this.carried = null; return; } // (taken from him: Dvij has the tumbler now, hands.ts)
+    if (o && o.parent !== this.obj) { this.carried = null; this.letGo(); return; } // (taken from him: Dvij has the tumbler now, hands.ts; the offering hand comes down)
     if (!o || !hand || !mid) return;
     for (const f of ["index", "middle", "ring", "pinky"]) {
       for (const k of [1, 2, 3]) this.bone(`${f}_0${k}_r`)?.rotateX(k === 1 ? 0.55 : 0.7);
@@ -393,9 +666,10 @@ export class Actor {
   }
 
   /** Speak: the mouth follows the voice's loudness (0..1, by the clip's time), and the hands the talk. */
-  speak(level: (() => number) | null, bright: (() => number) | null = null) {
+  speak(level: (() => number) | null, bright: (() => number) | null = null, shape: (() => string) | null = null) {
     this.mouth = level;
     this.tone = bright;
+    this.viseme = level ? shape : null;
     this.talking = !!level;
     if (!this.path.length && !this.loopRim) this.loop(POSE_CLIP[this.pose]?.[level ? 1 : 0] ?? "Idle_Loop", 0.5);
   }
@@ -407,7 +681,9 @@ export class Actor {
       const p = this.obj.position;
       const next = this.path[0];
       const d = Math.hypot(next.x - p.x, next.z - p.z);
-      const fast = this.env.seen(this.obj.getWorldPosition(new Vector3()).add(new Vector3(0, 1, 0))) ? 1 : 5;
+      // (only well away from him: close behind his chair, a hurry is seen out of the corner of the eye, Ch3)
+      const me = this.obj.getWorldPosition(new Vector3()), eyes = this.env.eyes();
+      const fast = this.env.seen(me.clone().add(new Vector3(0, 1, 0))) || Math.hypot(eyes.x - me.x, eyes.z - me.z) < 3 ? 1 : 5;
       const speed = WALK_SPEED * (SLOW[this.who] ?? 1) * fast;
       const step = Math.min(d, speed * dt);
       if (d > 1e-3) {
@@ -418,7 +694,10 @@ export class Actor {
         p.x += ((next.x - p.x) / d) * step;
         p.z += ((next.z - p.z) / d) * step;
       }
-      p.y = this.env.ground(p.x, p.z, p.y + 0.6);
+      // a step up is a stair's at most (the court's edge is 0.3 m): anything taller underfoot is a thing on the floor
+      // (the veena, a fallen book), walked past, not stood on; and up or down a step eased, not jumped (Ch3)
+      const floor = this.env.ground(p.x, p.z, p.y + 0.6);
+      if (floor - p.y < MAX_STEP) p.y += (floor - p.y) * Math.min(1, dt * 12);
       if (this.base) this.base.timeScale = Math.min(2, speed / 1.15); // (the clip's stride: about 1.15 m/s)
       if (d - step < 0.02) {
         this.path.shift();
@@ -447,6 +726,7 @@ export class Actor {
       if (k >= 1) { this.turning = null; tr.done?.(); }
     }
     for (const [b, q] of this.rest) b.quaternion.copy(q);
+    this.idle.undo(this.idleBody);
     this.mixer.update(dt);
     this.obj.updateMatrixWorld(true);
     // a gesture: its layer eased in and out over its time
@@ -460,14 +740,30 @@ export class Actor {
       const ease = (x: number) => { const c = Math.max(0, Math.min(1, x)); return c * c * (3 - 2 * c); };
       const rise = ease(this.gesture.t / 0.45), fall = g.hold ? 1 : ease((g.seconds - this.gesture.t) / 0.45);
       this.layerW = Math.min(rise, fall);
+      // taking over from the gesture before: from its pose into this one, not from the clip's
+      if (this.from && rise < 1) { layer = mixLayers(this.from.layer, layer, rise); this.layerW = Math.min(fall, this.from.w + (1 - this.from.w) * rise); }
+      else this.from = null;
       if (k >= 1) { const d = this.gesture.done; d(); }
+    } else if (this.from) { // a held gesture let go of: eased out of its own pose
+      this.layerW = Math.max(0, this.layerW - dt * 2.2);
+      layer = this.from.layer;
+      if (this.layerW <= 0) this.from = null;
     } else this.layerW = Object.keys(this.held).length ? Math.min(1, this.layerW + dt * 3) : Math.max(0, this.layerW - dt * 3);
     this.layer = layer;
+    // between beats: the breath, and stood still, the weight from foot to foot (the feet kept planted); before the
+    // hands' reaches below, so a hand on something stays on it
+    const still = this.pose === "stand" && !this.path.length && !this.loopRim && !this.turning && !this.gesture && !Object.keys(this.held).length && !this.from;
+    this.idle.apply(dt, this.idleBody, still, this.talking, this.talking && !this.wasTalking);
+    this.wasTalking = this.talking;
     if (this.lean) this.pose_({ spine: this.lean }, 1);
     const tilt = (this.layer.tilt ?? 0) * this.layerW;
     if (this.pose === "crosslegged") {
       // the legs folded, each foot under the other knee, the knees out and down; the back straight
       this.pose_({ spine: -0.25, footL: this.onFloor(0.14, 0.24), footR: this.onFloor(-0.14, 0.16) }, 1);
+    }
+    if (this.pose === "kneel") {
+      // knelt by him: the back up a little from the clip's stoop; the left hand on the knee; what the right holds, off the floor
+      this.pose_({ spine: -0.2, head: -0.1, handL: this.point(-0.16, 0.95, 0.32), handR: this.carried ? this.point(0.14, 1.05, 0.34) : null }, 1);
     }
     this.pose_(this.layer, this.layerW);
     this.carry(tilt);
@@ -475,27 +771,64 @@ export class Actor {
     const target = typeof this.gaze === "function" ? this.gaze() : this.gaze;
     this.gazeW += ((target ? 1 : 0) - this.gazeW) * Math.min(1, dt * 3);
     const neck = this.bone("neck_01"), head = this.bone("head");
-    if (neck && head && target) look(neck, head, target, this.facing(), this.gazeW * 0.9);
-    // blinks and the mouth
-    this.blinkIn -= dt;
-    if (this.blinkIn <= 0) { this.blinkT = 0; this.blinkIn = 2 + Math.random() * 4.5; }
-    let blink = 0;
-    if (this.blinkT >= 0) { this.blinkT += dt; blink = Math.max(0, 1 - Math.abs(this.blinkT - 0.08) / 0.08); if (this.blinkT > 0.16) this.blinkT = -1; }
-    const want = this.mouth ? this.mouth() : 0;
+    // the head turns to an eased aim (no snaps when the speaker changes), and a share of the way the eyes look off
+    const aimAt = this.life.headTarget(dt, target, this.talking, head?.getWorldPosition(new Vector3()));
+    if (!this.gesture && !Object.keys(this.held).length) this.idle.chestTo(this.idleBody, aimAt, this.gazeW); // (a look further round than the neck goes takes the chest with it; not while the hands are at something)
+    if (neck && head && aimAt) look(neck, head, aimAt, this.facing(), this.gazeW * 0.9);
+    // never quite still: the head drifts a little, more when talking (a nod to the words, a turn of thought)
+    if (head) {
+      const k = this.talking ? 1 : 0.4;
+      bendAbout(head, new Vector3(-1, 0, 0).applyQuaternion(this.obj.getWorldQuaternion(q0)), (Math.sin(this.t * 0.7) * 0.02 + Math.sin(this.t * 1.9 + 1) * 0.012) * k - this.jaw * 0.04);
+      bendAbout(head, new Vector3(0, 1, 0), (Math.sin(this.t * 0.43 + 2) * 0.03 + Math.sin(this.t * 1.3) * 0.01) * k);
+    }
+    // the hair swings after the back of the head (which moves as they turn, too)
+    if (this.hairMesh && head) this.hair.update(dt, head.getWorldPosition(new Vector3()).addScaledVector(this.facing(), -0.12), this.hairMesh);
+    this.talkHands(dt);
+    // the skirts, the lungi, the dhoti's pleats swing on their spring bones (blender/build_human.py SPRINGS): lagging
+    // behind the hips as they move and turn, overshooting, settling; swaying a little with each step
+    const pelvis = this.bone("pelvis"), springs = ["skirt_f", "skirt_b", "skirt_l", "skirt_r"].map((n) => this.bone(n)).filter((b) => b) as Bone[];
+    if (pelvis && springs.length) {
+      const sw = this.swing, at = pelvis.getWorldPosition(new Vector3()), yaw = this.obj.rotation.y;
+      if (sw.at && dt > 0 && dt < 0.2) {
+        const v = at.clone().sub(sw.at).divideScalar(dt).applyQuaternion(this.obj.getWorldQuaternion(new Quaternion()).invert());
+        const turn = Math.atan2(Math.sin(yaw - sw.yaw), Math.cos(yaw - sw.yaw)) / dt;
+        const step = Math.min(1, Math.hypot(v.x, v.z) / 1.2) * Math.sin(this.t * 5.6) * 0.05;
+        const goalF = Math.max(-0.3, Math.min(0.3, -0.14 * v.z)), goalS = Math.max(-0.3, Math.min(0.3, -0.14 * v.x + 0.05 * turn + step));
+        sw.vf += (40 * (goalF - sw.f) - 6 * sw.vf) * dt;
+        sw.vs += (40 * (goalS - sw.s) - 6 * sw.vs) * dt;
+        sw.f = Math.max(-0.4, Math.min(0.4, sw.f + sw.vf * dt));
+        sw.s = Math.max(-0.4, Math.min(0.4, sw.s + sw.vs * dt));
+      }
+      sw.at = at;
+      sw.yaw = yaw;
+      const body = this.obj.getWorldQuaternion(new Quaternion());
+      const right = new Vector3(-1, 0, 0).applyQuaternion(body), ahead = new Vector3(0, 0, 1).applyQuaternion(body);
+      for (const b of springs) { bendAbout(b, right.clone(), sw.f); bendAbout(b, ahead.clone(), sw.s); }
+    }
+    // the eyes: on the target, both converging on it, the saccades, looks away and blinks of face-life.ts
+    const blink = head ? this.life.eyes(dt, head, this.bone("eye_l"), this.bone("eye_r"), this.gazeW > 0.5 ? target : null, bendAbout) : 0;
+    // Baldev chews his tobacco between words (¶108): the jaw working slowly, a pause now and then
+    const chew = this.who.startsWith("baldev") && !this.mouth ? Math.max(0, Math.sin(this.t * 5.5)) * 0.12 * (Math.sin(this.t * 0.3) > -0.4 ? 1 : 0) : 0;
+    const want = this.mouth ? this.mouth() : chew;
     const wasOpen = this.jaw;
     this.jaw += (want - this.jaw) * Math.min(1, dt * 18);
+    const vis = this.viseme ? VISEME[this.viseme()] ?? VISEME.X : null;
     this.bright += ((this.tone ? this.tone() : 0.5) - this.bright) * Math.min(1, dt * 10);
     this.shut = this.mouth && want < 0.05 && wasOpen > 0.15 ? 1 : Math.max(0, this.shut - dt * 6);
     for (const m of this.morphs) {
       const inf = m.mesh.morphTargetInfluences;
       if (!inf) continue;
       for (const b of m.blink) inf[b] = blink;
-      if (m.jaw != null) inf[m.jaw] = this.jaw * 0.85;
-      // the lips' shape: wide for bright sounds, rounded for dark ones, pressed shut between words
+      // the lips' shape: the viseme's when there is one (its jaw opened as far as the voice is loud); else wide for
+      // bright sounds, rounded for dark ones, pressed shut between words
       const talking = Math.min(1, this.jaw * 2.5);
-      if (m.wide != null) inf[m.wide] = talking * Math.max(0, this.bright - 0.45) * 1.4;
-      if (m.pucker != null) inf[m.pucker] = talking * Math.max(0, 0.45 - this.bright) * 1.6;
-      if (m.close != null) inf[m.close] = this.shut * 0.7;
+      const goal = vis ? { jaw: vis[0] * (0.55 + 0.6 * want), wide: vis[1], pucker: vis[2], close: vis[3] }
+        : { jaw: this.jaw * 0.85, wide: talking * Math.max(0, this.bright - 0.45) * 1.4, pucker: talking * Math.max(0, 0.45 - this.bright) * 1.6, close: this.shut * 0.7 };
+      if (m === this.morphs[0]) for (const k of ["jaw", "wide", "pucker", "close"] as const) this.lips[k] += (goal[k] - this.lips[k]) * Math.min(1, dt * 22);
+      if (m.jaw != null) inf[m.jaw] = this.lips.jaw;
+      if (m.wide != null) inf[m.wide] = this.lips.wide;
+      if (m.pucker != null) inf[m.pucker] = this.lips.pucker;
+      if (m.close != null) inf[m.close] = this.lips.close;
       if (m.smile != null) inf[m.smile] = this.face.smile;
       if (m.frown != null) inf[m.frown] = this.face.frown;
       for (const b of m.brows) inf[b] = this.face.brows + this.jaw * 0.12; // (the brows lift a little with the words)
@@ -532,7 +865,16 @@ export class Actor {
       const u = this.bone(`upperarm_${s}`), lo = this.bone(`lowerarm_${s}`), h = this.bone(`hand_${s}`);
       if (!goal || !u || !lo || !h) continue;
       const out = new Vector3(s === "l" ? 1 : -1, -1.2, -0.3).applyQuaternion(this.obj.getWorldQuaternion(new Quaternion()));
-      reach(u, lo, h, goal, out, w);
+      reach(u, lo, h, goal, out, w * ((s === "l" ? l.wL : l.wR) ?? 1));
+    }
+    if (l.tuck) {
+      for (const s of ["l", "r"] as const) {
+        const h = this.bone(`hand_${s}`), tip = this.bone(`middle_01_${s}`), elbow = this.bone(`lowerarm_${s === "l" ? "r" : "l"}`);
+        if (!h || !tip || !elbow) continue;
+        const was = h.quaternion.clone();
+        aim(h, tip.getWorldPosition(new Vector3()), elbow.getWorldPosition(new Vector3()));
+        if (w < 0.999) { h.quaternion.copy(was.slerp(h.quaternion, w)); h.updateMatrixWorld(true); }
+      }
     }
   }
 
@@ -629,6 +971,10 @@ export class Cast {
   get(who: string) { return this.actors.get(who); }
 
   private me: Actor | null = null;
+  private selfLevel = false;
+  private selfLift = 0;
+  /** His body in the glass with its eyes at the camera's (on), or standing on the floor (off): for a close-up of his face. */
+  selfAtEyes(on: boolean) { this.selfLevel = on; }
   /** Dvij's own body, on the layer only a reflection sees (the author, 21 Oct): it stands where he stands. */
   async self(model = "dvij"): Promise<Actor | null> {
     if (this.me) return this.me;
@@ -656,12 +1002,13 @@ export class Cast {
     if (!ac) return;
     if (a.from) { ac.place(a.from, "stand"); ac.show(true); }
     if (a.stop) ac.stop();
-    if (a.pose) ac.place(ac.where(), a.pose, a.on);
+    if (a.pose === "stand" && !a.on && ac.seated && !hurried) await ac.standUp();
+    else if (a.pose) ac.place(ac.where(), a.pose, a.on);
     const face = () => ac.turnTo(a.face === "player" ? this.playerAt() : a.face, hurried ? 0.01 : 0.8);
     if (a.face && !a.walk) await face();
     if (a.anim === "turn" && !hurried) await ac.turnTo(a.look && a.look !== "player" && Array.isArray(a.look) ? (a.look as V2) : this.playerAt());
     if (a.holding) ac.hold(this.env.prop(a.holding));
-    if (a.look) ac.lookAt(this.target(a.look));
+    if (a.look) { ac.lookAt(this.target(a.look)); ac.keepLook = !!a.keep; }
     if (a.walk) {
       const going = ac.walk(a.walk, a.via ?? [], hurried);
       if (a.exit) { void going.then(() => ac.show(false)); return; } // they go; the story doesn't wait
@@ -672,11 +1019,16 @@ export class Cast {
     if (a["walk-rim"]) { ac.walkRim([-18, 38], 1.42); return; }
     if (a.take) {
       const h = this.env.prop(a.take);
-      if (!hurried) await ac.act(a.anim === "pick-up" || !a.anim ? "pick-up" : "interact");
-      ac.hold(h);
+      // a reach for it where it lies, after walking up to it (handling.ts); with nothing to take, the clip's grab
+      if (h) await pickUp(ac, h, hurried);
+      else if (!hurried) await ac.act(a.anim === "pick-up" || !a.anim ? "pick-up" : "interact");
+    }
+    if (a.put) { // [x, z] in the frame: put down on whatever is there (a desk, the floor)
+      const y = this.env.ground(a.put[0], a.put[1], 2.5);
+      await putDown(ac, this.env.root.localToWorld(new Vector3(a.put[0], y, a.put[1])), hurried);
     }
     if (a.wearing) ac.hold(null); // (the spectacles go on his face: the stand-ins have none to show)
-    if (a.anim && !(a.take && a.anim === "pick-up") && !hurried) await ac.act(a.anim);
+    if (a.anim && !(a.take && (a.anim === "pick-up" || a.anim === "talk")) && !hurried) await ac.act(a.anim);
     if (a.give === "player") { if (!hurried) await ac.act("give"); ac.hold(null); }
     if (a.then) {
       if (typeof a.then === "string") { if (!hurried) await ac.act(a.then); }
@@ -700,9 +1052,10 @@ export class Cast {
   speaking(who: string | null, level: (() => number) | null) {
     for (const [name, a] of this.actors) {
       if (!a.visible) continue;
-      if (name === who) { a.speak(level); a.lookAt(() => this.env.eyes()); }
+      if (name === who) { a.speak(level); if (!a.keepLook) { a.lookAt(() => this.env.eyes()); a.turnToFace(this.playerAt()); } }
       else {
         a.speak(null);
+        if (a.keepLook) continue;
         const s = who ? this.actors.get(who) : null;
         if (who === "dvij") a.lookAt(() => this.env.eyes());
         else if (s?.visible) a.lookAt(() => s.headAt());
@@ -712,17 +1065,18 @@ export class Cast {
 
   /** A voice file's loudness and brightness over its time (0..1 each, 25 a second), for a mouth: from
    * pipeline/build_people.py's mouths(). Loud opens the jaw; bright (ee, ay) draws the lips wide, dark (oo, oh) rounds them. */
-  async level(file: string, time: () => number): Promise<{ open: () => number; bright: () => number }> {
+  async level(file: string, time: () => number): Promise<{ open: () => number; bright: () => number; shape: (() => string) | null }> {
     if (!this.mouths && this.info.mouths) {
       this.mouths = await fetch(this.env.url(this.info.mouths)).then((r) => r.json()).catch(() => ({}));
     }
-    const [loud, tone] = (this.mouths?.[file] ?? "").split("|");
+    const [loud, tone, shapes] = (this.mouths?.[file] ?? "").split("|");
     const at = (s: string | undefined, fallback: number) => () => {
       const i = Math.floor(time() * 25);
       return s && i < s.length ? (s.charCodeAt(i) - 48) / 9 : s ? 0 : fallback;
     };
-    if (!loud) return { open: () => 0.35 + Math.sin(time() * 17) * 0.3, bright: () => 0.5 + Math.sin(time() * 5) * 0.3 }; // (no envelope: a plain flap)
-    return { open: at(loud, 0), bright: at(tone, 0.5) };
+    if (!loud) return { open: () => 0.35 + Math.sin(time() * 17) * 0.3, bright: () => 0.5 + Math.sin(time() * 5) * 0.3, shape: null }; // (no envelope: a plain flap)
+    const shape = shapes ? () => shapes[Math.floor(time() * 25)] ?? "X" : null;
+    return { open: at(loud, 0), bright: at(tone, 0.5), shape };
   }
 
   update(dt: number) {
@@ -732,6 +1086,16 @@ export class Cast {
       this.me.obj.position.set(at.x, this.env.ground(at.x, at.z, at.y), at.z);
       this.me.obj.rotation.y = Math.PI - this.env.heading();
       this.me.update(dt);
+      // his eyes brought up to the camera's, eased (the close-up of his face in the pane, Ch1: standing on the floor, his
+      // eyes are below the camera's and the glass showed the top of his bandaged head)
+      const want = this.selfLevel ? (() => {
+        const eye = this.me!.obj.getObjectByName("eye_l") ?? this.me!.obj.getObjectByName("head");
+        if (!eye) return 0;
+        this.me!.obj.updateMatrixWorld(true);
+        return this.env.eyes().y - eye.getWorldPosition(new Vector3()).y;
+      })() : 0;
+      this.selfLift += (want - this.selfLift) * Math.min(1, dt * 3);
+      if (Math.abs(this.selfLift) > 1e-4) { this.me.obj.position.y += this.selfLift; this.me.obj.updateMatrixWorld(true); }
     }
     const eyes = this.env.eyes();
     let k = 0;
@@ -748,6 +1112,7 @@ export class Cast {
       // the far ones, and those he isn't looking at, move less often: every third frame
       const at = a.obj.getWorldPosition(new Vector3());
       const d = at.distanceTo(eyes);
+      a.hero(d < HERO_DISTANCE); // (the lifelike skin and eyes only near: their cost goes where they show)
       const slow = d > 7 || (d > 2.5 && !this.env.seen(at.add(new Vector3(0, 1.2, 0))));
       a.pending += dt;
       if (slow && (this.frame + k) % 3) continue;

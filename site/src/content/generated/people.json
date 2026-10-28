@@ -1,78 +1,82 @@
 {
  "people": {
   "professor": {
-   "file": "people-professor.ff87359f81.glb",
+   "file": "people-professor.ae7cca4455.glb",
    "height": 1.68,
    "face": {
     "smile": 0.25
    }
   },
   "bhavi": {
-   "file": "people-bhavi.c7f4e9fb89.glb",
+   "file": "people-bhavi.91f0407d19.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
    }
   },
   "maharaj": {
-   "file": "people-maharaj.76c0efda6b.glb",
+   "file": "people-maharaj.58537295ba.glb",
    "height": 1.65,
    "face": {
     "smile": 0.15
    }
   },
   "mahant": {
-   "file": "people-mahant.054de26e07.glb",
+   "file": "people-mahant.cbe71fc889.glb",
    "height": 1.8,
    "face": {
     "smile": 0.12
    }
   },
   "baldev": {
-   "file": "people-baldev.545e6a9858.glb",
+   "file": "people-baldev.7cd6b672fc.glb",
    "height": 1.86,
    "face": {
     "frown": 0.35
    }
   },
   "vaidji": {
-   "file": "people-vaidji.c1485afdaa.glb",
+   "file": "people-vaidji.6607c1e8bd.glb",
    "height": 1.63,
    "face": {
     "brows": 0.35
    }
   },
   "attendant": {
-   "file": "people-attendant.a34a7eccef.glb",
+   "file": "people-attendant.0a624c387f.glb",
    "height": 1.68
   },
   "henchman": {
-   "file": "people-henchman.fd0c21d269.glb",
+   "file": "people-henchman.3d1514326b.glb",
    "height": 1.72
   },
   "bhavi-kurta": {
-   "file": "people-bhavi-kurta.891a562179.glb",
+   "file": "people-bhavi-kurta.00250f84f6.glb",
    "height": 1.62,
    "face": {
     "smile": 0.12
    }
   },
   "villager-a": {
-   "file": "people-villager-a.2576a6ee79.glb",
+   "file": "people-villager-a.4fe5fbdf91.glb",
    "height": 1.64
   },
   "villager-b": {
-   "file": "people-villager-b.3b6294128e.glb",
+   "file": "people-villager-b.9ad8dab520.glb",
    "height": 1.69
   },
   "villager-c": {
-   "file": "people-villager-c.74942c45e3.glb",
+   "file": "people-villager-c.aba529f058.glb",
    "height": 1.62
   },
   "dvij": {
-   "file": "people-dvij.f4ab8d6799.glb",
+   "file": "people-dvij.586b9a9a95.glb",
+   "height": 1.76
+  },
+  "dvij-healed": {
+   "file": "people-dvij-healed.be16c8fb59.glb",
    "height": 1.76
   }
  },
- "mouths": "voice-mouths.3861e97333.json"
+ "mouths": "voice-mouths.4e64ebe0fb.json"
 }

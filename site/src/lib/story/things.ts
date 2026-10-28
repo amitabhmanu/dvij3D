@@ -173,20 +173,22 @@ export function makeThing(kind: string, x: number, z: number, floor: number, sta
         f.add(arm);
       }
       g.add(at(f, 0, floor, 0));
-      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.1, z] };
+      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.1, z], handle: f }; // (the Professor picks her up: handling.ts)
     }
     case "manuscript": {
       // birch-bark leaves (¶153), loosely stacked, frayed at the edges
       const leaves: Material[] = [];
+      const stack = new Group(); // (picked up together: handling.ts)
+      g.add(stack);
       for (let k = 0; k < 7; k++) {
         const m = new MeshStandardMaterial({ map: barkTexture(11 + k * 7), roughness: 0.9, alphaTest: 0.5, side: DoubleSide });
         leaves.push(m);
         const leaf = at(new Mesh(new PlaneGeometry(0.3, 0.11), m), (k % 3 - 1) * 0.006, floor + 0.785 + k * 0.0025, (k % 2) * 0.004);
         leaf.rotation.set(-Math.PI / 2, 0, (k - 3) * 0.02);
         leaf.castShadow = false;
-        g.add(leaf);
+        stack.add(leaf);
       }
-      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.8, z], dispose: () => leaves.forEach((m) => { (m as MeshStandardMaterial).map?.dispose(); m.dispose(); }) };
+      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.8, z], handle: stack, dispose: () => leaves.forEach((m) => { (m as MeshStandardMaterial).map?.dispose(); m.dispose(); }) };
     }
     case "tea-pot": {
       // a small brass kerosene stove, its burner's blue ring, an aluminium pan of milky tea on it (¶209)
@@ -288,13 +290,22 @@ export function makeThing(kind: string, x: number, z: number, floor: number, sta
     }
     case "pipe": {
       // the Professor's pipe, unlit in his hand on the lawn (comic b1-p012-2; the author, 21 Oct)
-      const BRIAR = std("#4a2c1a", { roughness: 0.45 });
+      const BRIAR = std("#4a2c1a", { roughness: 0.35, metalness: 0.05, side: DoubleSide }); // (the bowl's inside wall faces in)
+      const BIT = std("#141210", { roughness: 0.25 });
       const t = new Group();
-      const bowl = at(new Mesh(new CylinderGeometry(0.014, 0.011, 0.034, 10), BRIAR), 0, 0.017, 0);
-      const stem = new Mesh(new CylinderGeometry(0.0045, 0.0055, 0.12, 6), BRIAR);
-      stem.rotation.z = Math.PI / 2 - 0.15;
-      stem.position.set(0.062, 0.012, 0);
-      t.add(bowl, stem);
+      // the bowl: rounded below, its rim lipped, hollow and charred inside (one lathe, out and back in)
+      const bowl = at(new Mesh(lathe([[0, 0], [0.009, 0.002], [0.015, 0.012], [0.0165, 0.026], [0.015, 0.04], [0.0105, 0.04], [0.0105, 0.014], [0, 0.012]], 18), BRIAR), 0, 0, 0);
+      const char = at(new Mesh(new CylinderGeometry(0.0104, 0.0104, 0.002, 14), std("#1a1210", { roughness: 0.95 })), 0, 0.03, 0);
+      // the shank out of the bowl's foot, then the black bit, bent a little up to the mouth
+      const shank = new Mesh(new CylinderGeometry(0.0055, 0.0065, 0.06, 10), BRIAR);
+      shank.rotation.z = Math.PI / 2 - 0.1;
+      shank.position.set(0.042, 0.009, 0);
+      const bit = new Mesh(new CylinderGeometry(0.0032, 0.0052, 0.06, 10), BIT);
+      bit.rotation.z = Math.PI / 2 - 0.3;
+      bit.position.set(0.1, 0.02, 0);
+      const lip = at(new Mesh(new BoxGeometry(0.008, 0.0035, 0.009), BIT), 0.129, 0.029, 0);
+      lip.rotation.z = -0.3;
+      t.add(bowl, char, shank, bit, lip);
       const g = new Group();
       g.add(t);
       return { obj: at(g, x, floor, z), set: () => {}, point: () => [x, floor, z], handle: t };

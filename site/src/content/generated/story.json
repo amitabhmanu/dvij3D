@@ -14,7 +14,8 @@
    ],
    "setting": {
     "sun": "morning",
-    "court": "open"
+    "court": "open",
+    "doors": "shut"
    },
    "start": {
     "pose": "lie",
@@ -58,7 +59,7 @@
      "kind": "spectacles",
      "at": [
       -14.2,
-      6.65
+      6.88
      ],
      "on": "stool",
      "sources": [
@@ -302,15 +303,6 @@
        }
       },
       {
-       "effect": {
-        "flash": 1.0,
-        "over": 1.5
-       }
-      },
-      {
-       "sound": "creak"
-      },
-      {
        "caption": "He tugged at the stops. The brilliance of sunlight blinded him momentarily..."
       },
       {
@@ -365,6 +357,19 @@
       "radius": 1.6
      },
      "then": [
+      {
+       "pane": {
+        "at": [
+         -15.0,
+         -13.25
+        ],
+        "look": [
+         -17.0,
+         1.9,
+         -13.25
+        ]
+       }
+      },
       {
        "caption": "There were books everywhere. As if antiquity was preserved there, albeit a bit haphazardly."
       }
@@ -539,8 +544,8 @@
      "id": "manuscript",
      "kind": "manuscript",
      "at": [
-      -12.8,
-      -12.6
+      -12.05,
+      -12.3
      ],
      "on": "desk",
      "sources": [
@@ -644,6 +649,10 @@
          [
           -7.75,
           -10.0
+         ],
+         [
+          -9.25,
+          -9.25
          ]
         ],
         "then": "pick-up",
@@ -664,8 +673,22 @@
        "actor": {
         "who": "professor",
         "walk": [
-         -13.4,
-         -12.0
+         -14.3,
+         -11.9
+        ],
+        "via": [
+         [
+          -9.25,
+          -9.25
+         ],
+         [
+          -7.75,
+          -10.0
+         ],
+         [
+          -13.0,
+          -10.8
+         ]
         ],
         "wearing": "spectacles",
         "look": "player"
@@ -746,8 +769,15 @@
       {
        "actor": {
         "who": "professor",
-        "take": "varahi",
-        "anim": "pick-up"
+        "take": "varahi"
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "face": "player",
+        "look": "player",
+        "anim": "show"
        }
       },
       {
@@ -776,6 +806,15 @@
          "novel ¶149"
         ]
        }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "put": [
+         -13.45,
+         -12.32
+        ]
+       }
       }
      ]
     },
@@ -798,8 +837,21 @@
       {
        "actor": {
         "who": "professor",
-        "take": "manuscript",
-        "anim": "talk"
+        "take": "manuscript"
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "face": "player",
+        "anim": "show"
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "look": "manuscript",
+        "keep": true
        }
       },
       {
@@ -902,6 +954,12 @@
        }
       },
       {
+       "actor": {
+        "who": "professor",
+        "anim": "hand-to-chin"
+       }
+      },
+      {
        "say": {
         "who": "dvij",
         "line": "I woke up in a strange room, walked out into a courtyard, and then into this room. Next thing I remember is you asking me for your glasses.",
@@ -926,6 +984,12 @@
         "sources": [
          "novel ¶162"
         ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "offer"
        }
       },
       {
@@ -1099,7 +1163,12 @@
      "then": [
       {
        "camera": {
-        "recoil": true
+        "recoil": true,
+        "away": [
+         -18,
+         38
+        ],
+        "to": 3.3
        }
       },
       {
@@ -1658,6 +1727,15 @@
      ],
      "do": [
       {
+       "say": {
+        "who": "maharaj",
+        "line": "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.",
+        "sources": [
+         "novel ¶214"
+        ]
+       }
+      },
+      {
        "actor": {
         "who": "maharaj",
         "walk": [
@@ -1669,15 +1747,6 @@
          0
         ],
         "anim": "tend"
-       }
-      },
-      {
-       "say": {
-        "who": "maharaj",
-        "line": "I have to take care of the tulsi tree, for she must be ready to be wed to Lord Vishnu in four months time, after He has woken up.",
-        "sources": [
-         "novel ¶214"
-        ]
        }
       }
      ]
@@ -2018,7 +2087,7 @@
        }
       },
       {
-       "caption": "The reams of bandages had been replaced by a much smaller bandage. Hair was growing back on his shaven head. His left arm was still plastered, but he found that he was able to move it freely now."
+       "caption": "The reams of bandages had been replaced by a much smaller bandage. Hair was growing back on his shaven head. His right arm was still plastered, but he found that he was able to move it freely now."
       },
       {
        "camera": {
@@ -2155,6 +2224,12 @@
          "novel ¶256"
         ]
        }
+      },
+      {
+       "actor": {
+        "who": "bhavi",
+        "anim": "laugh"
+       }
       }
      ]
     },
@@ -2191,6 +2266,16 @@
          9.6,
          33.5
         ],
+        "via": [
+         [
+          7.2,
+          30.0
+         ],
+         [
+          7.4,
+          34.0
+         ]
+        ],
         "from": [
          0,
          20.4
@@ -2224,6 +2309,16 @@
         "walk": [
          0,
          20.4
+        ],
+        "via": [
+         [
+          7.4,
+          34.0
+         ],
+         [
+          7.2,
+          30.0
+         ]
         ],
         "exit": true
        }
@@ -2392,6 +2487,12 @@
        }
       },
       {
+       "actor": {
+        "who": "bhavi",
+        "anim": "point"
+       }
+      },
+      {
        "say": {
         "who": "bhavi",
         "line": "Bah! I think you are pretending. This is all planned by that evil Mahant. He bought you with money. You had the accident as per Mahant's plan, and now that you are healed, you will start working with him. This is all an evil scheme, uncle. We have to stop it before it's too late.",
@@ -2421,6 +2522,12 @@
       "novel ¶275"
      ],
      "do": [
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "finger-raise"
+       }
+      },
       {
        "say": {
         "who": "professor",
@@ -2468,6 +2575,16 @@
         "walk": [
          0,
          20.4
+        ],
+        "via": [
+         [
+          11.6,
+          31.5
+         ],
+         [
+          11.2,
+          28.8
+         ]
         ],
         "exit": true
        }

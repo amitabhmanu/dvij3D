@@ -111,6 +111,18 @@ test.describe("story mode", () => {
     expect(errors).toEqual([]);
   });
 
+  test("on Ultra, Chapter 1 plays through in its film look (docs/ultra.md), and on into Chapter 3", async ({ page }) => {
+    test.setTimeout(300_000);
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.addInitScript(() => localStorage.setItem("twice-born:walk:v1", JSON.stringify({ quality: "ultra", volume: 0 })));
+    await page.goto("/valley/walk/?story&test");
+    await begin(page, "Play the story");
+    await expect(page.locator(".walk")).toHaveAttribute("data-story", "b1-ch01");
+    await drive(page, (s) => s.scene === "b1-ch03");
+    expect(errors).toEqual([]);
+  });
+
   test("the story resumes from its checkpoint, and a scene can be skipped", async ({ page }) => {
     test.setTimeout(120_000);
     await page.addInitScript(() => localStorage.setItem("twice-born:story:v1", JSON.stringify({ scene: "b1-ch01", beat: "shutters" })));

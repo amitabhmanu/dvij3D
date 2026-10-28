@@ -21,8 +21,8 @@ export type Scene = {
   /** Whose frame its places are in: the lodge's (the default) or another built place's ("temple-site"). */
   frame?: string;
   start: { pose: string; at?: Vec2; look?: "up" | Vec3 };
-  /** The scene's time of day, the courtyard's cover, and the fans that run (default: morning, open, as the lodge has them). */
-  setting?: { sun?: string; court?: "covered" | "open"; fans?: Record<string, number> };
+  /** The scene's time of day, the courtyard's cover, the fans that run, and the doors (default: morning, open, as the lodge has them, open). */
+  setting?: { sun?: string; court?: "covered" | "open"; fans?: Record<string, number>; doors?: "shut" | "open" };
   cast?: { who: string; at: Vec2; pose?: string; on?: string; face?: Vec2 | "player"; holding?: string; enters?: boolean }[];
   props?: Record<string, any>[]; // eslint-disable-line @typescript-eslint/no-explicit-any
   beats: Beat[];
@@ -42,6 +42,8 @@ export interface Stage {
   save(scene: string, beat: string): void;
   /** Stop waiting for the player: the scene is being skipped. */
   cancel?(): void;
+  /** An act passed over (replaying up to a beat: the film bar's slider, a resume): put him where doing it would have. */
+  skipped?(act: Act, scene: Scene): void;
 }
 
 export class Director {
@@ -86,6 +88,7 @@ export class Director {
         await this.run(a, sc);
       }
       if (beat.act && !this.skipping) await this.stage.await(beat.act, sc);
+      else if (beat.act) this.stage.skipped?.(beat.act, sc); // (replaying at once: where the act would have left him)
       for (const a of beat.then ?? []) {
         if (over()) return;
         await this.run(a, sc);

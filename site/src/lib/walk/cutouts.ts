@@ -10,7 +10,7 @@ import {
 export type Sprite = { id: string; kind: string; x: number; y: number; w: number; h: number; height?: number };
 export type Atlas = { w: number; h: number; sprites: Sprite[] };
 /** One cut-out standing somewhere: its foot, its height in metres, and which picture. */
-export type Stand = { x: number; y: number; z: number; height: number; sprite: number };
+export type Stand = { x: number; y: number; z: number; height: number; sprite: number; tree?: boolean };
 
 /** Gzip'd rows of int16 x and z in quarter metres, uint8 sprite, uint8 height in decimetres. */
 export async function decodeTrees(buf: ArrayBuffer): Promise<{ x: number; z: number; sprite: number; height: number }[]> {
@@ -27,6 +27,8 @@ const vertex = /* glsl */ `
   attribute vec3 foot;
   attribute vec2 size;     // width, height in metres
   attribute vec4 rect;     // x, y, w, h in the atlas, 0-1
+  attribute float tree;    // 1 for a tree (it gives way to trees3d.ts's near you), 0 for a building
+  varying float vTree;
   varying vec2 vUv;
   varying float vDist;
   varying float vShade;
@@ -37,6 +39,7 @@ const vertex = /* glsl */ `
     vec3 p = foot + right * (position.x * size.x) + vec3(0.0, position.y * size.y, 0.0);
     vUv = rect.xy + vec2(position.x + 0.5, 1.0 - position.y) * rect.zw;
     vDist = distance(foot, cameraPosition);
+    vTree = tree;
     vShade = 0.85 + 0.15 * position.y; // a little darker at the foot
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
   }
@@ -47,6 +50,8 @@ const fragment = /* glsl */ `
   uniform vec3 haze;
   uniform vec2 hazeRange;
   uniform vec2 drawRange;
+  uniform float near;      // within this (m) the trees are trees3d.ts's, in the round
+  varying float vTree;
   varying vec2 vUv;
   varying float vDist;
   varying float vShade;
@@ -54,6 +59,7 @@ const fragment = /* glsl */ `
     vec4 c = texture2D(atlas, vUv);
     // fade out past the draw range by dithering, so nothing pops
     float keep = 1.0 - smoothstep(drawRange.x, drawRange.y, vDist);
+    if (vTree > 0.5 && near > 0.0) keep *= smoothstep(near, near + 10.0, vDist); // (crossing over to the round ones)
     float dither = fract(sin(dot(floor(gl_FragCoord.xy), vec2(12.9898, 78.233))) * 43758.5453);
     if (c.a < 0.5 || dither > keep) discard;
     vec3 col = c.rgb * vShade;
@@ -69,15 +75,18 @@ export function cutoutMesh(stands: Stand[], atlas: Atlas, texture: Texture, haze
   const foot = new Float32Array(stands.length * 3);
   const size = new Float32Array(stands.length * 2);
   const rect = new Float32Array(stands.length * 4);
+  const tree = new Float32Array(stands.length);
   stands.forEach((s, i) => {
     const sp = atlas.sprites[s.sprite];
     foot.set([s.x, s.y - 0.15, s.z], i * 3); // sink a little, so they don't float on slopes
     size.set([(s.height * sp.w) / sp.h, s.height], i * 2);
     rect.set([sp.x / atlas.w, sp.y / atlas.h, sp.w / atlas.w, sp.h / atlas.h], i * 4);
+    tree[i] = s.tree ? 1 : 0;
   });
   g.setAttribute("foot", new InstancedBufferAttribute(foot, 3));
   g.setAttribute("size", new InstancedBufferAttribute(size, 2));
   g.setAttribute("rect", new InstancedBufferAttribute(rect, 4));
+  g.setAttribute("tree", new InstancedBufferAttribute(tree, 1));
   g.instanceCount = stands.length;
   const m = new ShaderMaterial({
     vertexShader: vertex,
@@ -88,6 +97,7 @@ export function cutoutMesh(stands: Stand[], atlas: Atlas, texture: Texture, haze
       haze: { value: haze },
       hazeRange: { value: new Vector2(...hazeRange) },
       drawRange: { value: new Vector2(...drawRange) },
+      near: { value: 0 },
     },
   });
   const mesh = new Mesh(g, m);
