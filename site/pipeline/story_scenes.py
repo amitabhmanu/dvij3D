@@ -9,7 +9,7 @@ author to read the scripts against the book.
 
 Inputs:  src/content/story/*.yaml, book/The Twice Born.docx, images/**/chapterN_panel_breakdown.md,
          src/content/manifests/*.json
-Output:  src/content/generated/story.json (committed), docs/story/review.md
+Output:  src/content/generated/story.json and story-films.json (committed), docs/story/review.md
 Usage:   python story_scenes.py
 """
 import json
@@ -216,6 +216,9 @@ def main() -> None:
     story = {"version": 1, "scenes": [sc for _, sc in scenes() if not sc.get("skip")],
              "offstage": [sc for _, sc in scenes() if sc.get("skip")], "pov": pov()}
     out.write_text(json.dumps(story, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    # whose films there are, for the start screen's "Whose eyes?" (it doesn't load the scenes)
+    films = [{"id": k, **v} for k, v in pov()["films"].items()]
+    (out.parent / "story-films.json").write_text(json.dumps({"films": films}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     REVIEW.parent.mkdir(parents=True, exist_ok=True)
     REVIEW.write_text(review(paras), encoding="utf-8")
     n = sum(len(sc["beats"]) for _, sc in scenes())

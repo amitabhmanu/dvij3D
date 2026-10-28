@@ -28,9 +28,9 @@ cast:
   - {who: vaidji, at: [-35.0, 40.6], pose: stand, enters: true, sources: [novel ¶104, novel ¶127, breakdown ch2 p2]}
   - {who: baldev, at: [-37.0, 40.6], pose: stand, enters: true, holding: scroll, sources: [novel ¶104, novel ¶108, novel ¶111, breakdown ch2 p2]}
 props:
-  - {id: flower-bed, kind: flower-bed, at: [-40.0, 30.0], size: [2.4, 1.2], sources: [novel ¶103, breakdown ch2 p1]}   # parched; where on the lawn is ours
-  - {id: sapling, kind: sapling, at: [-40.0, 30.0], state: planted, sources: [novel ¶104, breakdown ch2 p2]}   # "the sapling's only leaf"
-  - {id: watering-can, kind: watering-can, at: [-39.0, 29.6], sources: [novel ¶108, breakdown ch2 p6]}
+  - {id: flower-bed, kind: flower-bed, floor: 0, at: [-40.0, 30.0], size: [2.4, 1.2], sources: [novel ¶103, breakdown ch2 p1]}   # parched; where on the lawn is ours
+  - {id: sapling, kind: sapling, floor: 0, at: [-40.0, 30.0], state: planted, sources: [novel ¶104, breakdown ch2 p2]}   # "the sapling's only leaf"
+  - {id: watering-can, kind: watering-can, floor: 0, at: [-39.0, 29.6], sources: [novel ¶108, breakdown ch2 p6]}
   - {id: scroll, kind: scroll, held-by: baldev, sources: [novel ¶111, breakdown ch2 p8]}   # rolled, tied with a cord (breakdown ch2 p8)
 
 beats:
@@ -43,15 +43,15 @@ beats:
       - wait: 1.5
       - actor: {who: professor, anim: touch-leaf}                     # its only leaf, with a mother's gentleness (novel ¶104, breakdown ch2 p2)
       - caption: "He touched the sapling's only leaf with gentleness. Just then, a pair of feet entered his vision..."
-      - actor: {who: mahant, walk: [-40.6, 31.2], face: [-40.0, 30.0]}   # the clogs, dangerously close to the bed (novel ¶104)
+      - actor: {who: mahant, from: [-36.0, 40.0], walk: [-40.6, 31.2], face: [-40.0, 30.0]}   # the clogs, dangerously close to the bed (novel ¶104)
       - actor: {who: professor, anim: wave-off}                       # he waves his hands (novel ¶104)
-      - actor: {who: vaidji, walk: [-39.2, 31.4], face: [-40.0, 30.0]}
+      - actor: {who: vaidji, from: [-35.0, 40.6], walk: [-39.2, 31.4], face: [-40.0, 30.0]}
 
   - id: the-crush
     sources: [comic b1-p005, breakdown ch2 p3, breakdown ch2 p4, novel ¶104]
     do:
       - actor: {who: professor, anim: lunge}                          # he almost leapfrogs over it, too late (novel ¶104, breakdown ch2 p3)
-      - actor: {who: baldev, walk: [-40.0, 30.5], face: [-40.0, 29.2], anim: stomp}
+      - actor: {who: baldev, from: [-37.0, 40.6], walk: [-40.0, 30.5], face: [-40.0, 29.2], anim: stomp}
       - sound: stomp
       - prop: {id: sapling, state: crushed}
       - caption: "Before the professor could act, the large rustic foot had stepped over the sapling in a single cruel stroke."

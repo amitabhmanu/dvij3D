@@ -197,6 +197,8 @@ const GESTURES: Record<string, Gesture> = {
   "wipe-eyes": { seconds: 1.8, at: (a, t) => ({ head: 0.2, handR: up(a, 1.56, 0.1, Math.sin(t * Math.PI * 4) * 0.04) }) },
   offer: { seconds: 1.5, hold: true, at: (a) => ({ spine: 0.15, handL: a.toward(a.eyesOf(), 0.5, -0.45, -0.12), handR: a.toward(a.eyesOf(), 0.5, -0.45, 0.12) }) },
   give: { seconds: 1.4, at: (a) => ({ spine: 0.12, handR: a.toward(a.eyesOf(), 0.55, -0.35) }) },
+  // held out straight ahead, to whoever they have turned to (not Dvij)
+  "hand-over": keyed(1.4, [{ t: 0, r: [1.1, 0.3, 0.12] }, { t: 0.45, r: [1.15, 0.6, 0.05], spine: 0.1 }, { t: 0.7, r: [1.15, 0.6, 0.05], spine: 0.1 }, { t: 1, r: [1.1, 0.3, 0.12] }]),
   // the pitcher raised over the tumbler and tipped, then righted (comic b1-p012-5)
   pour: { seconds: 2.6, at: (a, t) => ({ spine: 0.2, head: 0.3, handL: up(a, 0.98, 0.4, -0.08), handR: up(a, 1.18, 0.42, 0.04),
                                           tilt: 1.2 * Math.sin(Math.min(1, Math.max(0, (t - 0.2) / 0.6)) * Math.PI) }) },
@@ -222,6 +224,40 @@ const GESTURES: Record<string, Gesture> = {
   talk: { seconds: 2.2, clip: "Idle_Talking_Loop", at: () => ({}) },
   turn: { seconds: 0.6, at: () => ({}) },
   "jump-down": { seconds: 0, clip: "Jump_Land", at: () => ({}) },
+  // Chapter 2, the garden (novel ¶103-133, comic b1-p005/006): the Professor's
+  // the last tender pats to the soil, crouched over the bed (¶104)
+  "pat-soil": { seconds: 2.4, at: (a, t) => ({ head: 0.45, spine: 0.2, handR: up(a, 0.55 + Math.abs(Math.sin(t * Math.PI * 4)) * 0.08, 0.45, 0.05), handL: up(a, 0.6, 0.4, -0.12) }) },
+  // the sapling's one leaf touched with a fingertip, "with a mother's gentleness" (¶104)
+  "touch-leaf": keyed(2.6, [{ t: 0, r: [0.9, 0.3, 0.08], head: 0.4 }, { t: 0.4, r: [0.62, 0.5, 0.02], head: 0.5 }, { t: 0.75, r: [0.63, 0.5, 0.03], head: 0.5 }, { t: 1, r: [0.9, 0.3, 0.08], head: 0.4 }]),
+  // he almost leapfrogs over the sapling to save it, too late (¶104)
+  lunge: keyed(1.0, [{ t: 0, spine: 0.1 }, { t: 0.35, spine: 0.55, head: 0.2, l: [1.0, 0.75, -0.2], r: [1.0, 0.75, 0.2] }, { t: 1, spine: 0.15 }]),
+  // he looks up and recoils in horror (¶104): back from the waist, the hands up before him
+  recoil: keyed(1.4, [{ t: 0 }, { t: 0.25, spine: -0.25, head: -0.25, l: [1.45, 0.3, -0.12], r: [1.45, 0.3, 0.12] }, { t: 0.7, spine: -0.2, head: -0.2, l: [1.4, 0.28, -0.12], r: [1.4, 0.28, 0.12] }, { t: 1 }]),
+  // fumbling at the rolled scroll with both hands, not finding its end (¶116)
+  fumble: { seconds: 2.4, at: (a, t) => ({ head: 0.3, handL: up(a, 1.05, 0.32, -0.06 + Math.sin(t * 19) * 0.02), handR: up(a, 1.05, 0.32, 0.06 + Math.sin(t * 23 + 1) * 0.02) }) },
+  // the scroll almost touching his nose, then at arm's length (¶118)
+  "squint-near": { seconds: 2.2, at: (a) => ({ head: 0.1, spine: 0.05, handL: up(a, 1.6, 0.12, -0.08), handR: up(a, 1.6, 0.12, 0.08) }) },
+  "squint-far": { seconds: 2.2, at: (a) => ({ head: -0.08, spine: -0.08, handL: up(a, 1.4, 0.62, -0.1), handR: up(a, 1.4, 0.62, 0.1) }) },
+  // searching the flower bed for his spectacles, crouched (¶118)
+  "search-ground": { seconds: 3.2, at: (a, t) => ({ head: 0.55, spine: 0.25, handR: up(a, 0.45, 0.45 + Math.sin(t * 5) * 0.1, 0.2 + Math.sin(t * 3) * 0.15), handL: up(a, 0.45, 0.45 + Math.cos(t * 4) * 0.1, -0.2 + Math.cos(t * 3.5) * 0.15) }) },
+  // Mahant: "long fingers that seemed to be probing all the time" (¶106), feeling the air before him
+  "caress-air": { seconds: 3.0, at: (a, t) => ({ handL: up(a, 1.3 + Math.sin(t * 6) * 0.04, 0.42, -0.2 + Math.sin(t * 4) * 0.08) }) },
+  // the clog nudges the watering can over (¶108): the weight on one foot, a push of the other
+  "knock-over": keyed(1.2, [{ t: 0 }, { t: 0.4, spine: 0.08, head: 0.3 }, { t: 0.6, spine: 0.04, head: 0.3 }, { t: 1, head: 0.15 }]),
+  // he opens his thin long palm before Baldev (¶111)
+  "open-palm": keyed(2.0, [{ t: 0, l: [1.05, 0.25, -0.12] }, { t: 0.4, l: [1.22, 0.48, -0.08], head: 0.05 }, { t: 0.8, l: [1.22, 0.48, -0.08], head: 0.05 }, { t: 1, l: [1.05, 0.25, -0.12] }]),
+  // "A vast smile spread over Mahant's lips" (¶114)
+  smile: { seconds: 2.6, at: (a, t) => { a.express({ smile: Math.sin(Math.min(1, t * 2.5) * Math.PI / 2) * (t > 0.85 ? (1 - t) / 0.15 : 1) }); return { head: -0.06 }; } },
+  // his hands on the shaking Professor's shoulders, holding him still (¶123)
+  "hold-shoulders": { seconds: 2.6, at: (a) => ({ spine: 0.12, head: 0.1, handL: a.toward(a.eyesOf(), 0.5, -0.25, -0.2), handR: a.toward(a.eyesOf(), 0.5, -0.25, 0.2) }) },
+  // the stare: the head forward and still, the brows down (¶131)
+  stare: { seconds: 2.4, hold: true, at: (a, t) => { a.express({ frown: Math.min(1, t * 3) * 0.5 }); return { spine: 0.08, head: -0.05 }; } },
+  // thumb circling the fingertips, thinking (¶133)
+  "thumb-circles": { seconds: 3.2, at: (a, t) => ({ head: 0.12, handR: up(a, 1.1 + Math.sin(t * 12) * 0.01, 0.3 + Math.cos(t * 12) * 0.01, 0.06) }) },
+  // Baldev: a foot brought down on the sapling (¶104), then ground in (¶108); the snatch of the scroll (¶116)
+  stomp: keyed(1.0, [{ t: 0 }, { t: 0.35, spine: -0.05, head: 0.25 }, { t: 0.55, spine: 0.12, head: 0.35 }, { t: 1, head: 0.2 }]),
+  grind: { seconds: 2.0, at: (_a, t) => ({ spine: 0.08 + Math.sin(t * 14) * 0.03, head: 0.35 }) },
+  snatch: keyed(1.2, [{ t: 0, r: [1.1, 0.3, 0.12] }, { t: 0.3, r: [1.15, 0.7, 0.0], spine: 0.15 }, { t: 0.55, r: [1.2, 0.3, 0.1] }, { t: 0.8, r: [1.2, 0.65, 0.0], spine: 0.12 }, { t: 1, r: [1.1, 0.3, 0.12] }]),
   chew: { seconds: 3.0, at: (_a, t) => ({ head: Math.sin(t * 22) * 0.025 }) },
   "eye-dart": { seconds: 1.6, at: (_a, t) => ({ head: 0.05 + Math.sin(t * 9) * 0.03 }) },
 };
@@ -612,6 +648,8 @@ export class Actor {
     }
   }
   private grip = new Vector3();
+  /** Let go of what the right hand holds without putting it anywhere: someone else takes it. */
+  handOver() { this.carried = null; }
 
   /** Put what the right hand holds down into `into`, its foot on `at` (world), upright. */
   release(into: Object3D, at: Vector3) {
@@ -1030,6 +1068,13 @@ export class Cast {
     if (a.wearing) ac.hold(null); // (the spectacles go on his face: the stand-ins have none to show)
     if (a.anim && !(a.take && (a.anim === "pick-up" || a.anim === "talk")) && !hurried) await ac.act(a.anim);
     if (a.give === "player") { if (!hurried) await ac.act("give"); ac.hold(null); }
+    else if (a.give) { // to someone else: turned to them, held out, and taken (Baldev's scroll to Mahant, Mahant's to the Professor: Ch2)
+      const to = this.actors.get(a.give);
+      const h = this.env.prop(a.item);
+      if (to && !hurried) await ac.turnTo(to.where(), 0.5);
+      if (!hurried) await ac.act("hand-over");
+      if (to && h) { ac.handOver(); to.hold(h); }
+    }
     if (a.then) {
       if (typeof a.then === "string") { if (!hurried) await ac.act(a.then); }
       else await this.beat({ who: a.who, ...a.then }, hurried);

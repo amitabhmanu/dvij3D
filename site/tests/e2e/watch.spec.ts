@@ -166,4 +166,24 @@ test.describe("watch mode", () => {
     await expect.poll(() => page.evaluate(() => (window as unknown as S).walkStory.stage.inner.people.get("dvij")?.visible ?? false), { timeout: 30_000 }).toBe(true);
     expect(errors).toEqual([]);
   });
+
+  test("whose eyes: picked on the start screen, and changed on pause", async ({ page }) => {
+    test.setTimeout(180_000);
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto("/valley/walk/?test");
+    await page.getByRole("group", { name: "Whose story" }).getByRole("button", { name: /The Professor/ }).click();
+    await page.getByRole("button", { name: "Watch it as The Professor" }).click();
+    await page.locator('.walk[data-screen="ready"]').waitFor({ timeout: 60_000 });
+    await page.locator(".begin").click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch02");
+    await expect(bar(page).getByRole("button", { name: "Play it yourself" })).toHaveCount(0); // only Dvij's film can be taken over
+    const box = await bar(page).boundingBox();
+    expect(box!.height).toBeLessThan(50); // one row
+    await bar(page).getByRole("button", { name: "Pause" }).click();
+    await bar(page).getByRole("group", { name: "Whose eyes" }).getByRole("button", { name: "Dvij" }).click();
+    await expect(walkEl(page)).toHaveAttribute("data-story", "b1-ch01", { timeout: 60_000 }); // Dvij's film has no Chapter 2
+    await expect(bar(page).getByRole("button", { name: "Play it yourself" })).toBeVisible();
+    expect(errors).toEqual([]);
+  });
 });

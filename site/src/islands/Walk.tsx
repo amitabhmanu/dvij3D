@@ -34,6 +34,10 @@ import storyTimeline from "../content/generated/story-timeline.json";
 
 const TIMELINE = storyTimeline as Timeline;
 import { loadSaved } from "../lib/story/saved";
+import storyFilms from "../content/generated/story-films.json";
+
+/** Whose eyes the film can be watched through (design §10.4.1): Dvij's, and the pilot's others. */
+const FILMS = storyFilms.films as { id: string; name: string; pilot?: boolean; scenes?: string[] }[];
 // (as storyFile in lib/manifest.ts, which this page can't import: it carries every book's manifest)
 const storyFile = (name: string) => `${(import.meta.env.PUBLIC_3D_BASE || "/_assets").replace(/\/$/, "")}/story/${name}`;
 
@@ -130,6 +134,12 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   // Watch mode: the story plays itself
   const [watching, setWatching] = useState(false);
   const watchingRef = useRef(false);
+  /** Whose film it is: Dvij's, or someone else's (watch only). */
+  const [whose, setWhoseState] = useState("dvij");
+  const whoseRef = useRef("dvij");
+  const setWhose = (who: string) => { whoseRef.current = who; setWhoseState(who); setSaved(loadSaved(who)); };
+  /** Switching films from the pause menu: the scenes of each, and how to land in the other. */
+  const switching = useRef<((who: string) => void) | null>(null);
   watchingRef.current = watching;
   const [held, setHeld] = useState(false); // paused, with the film bar still showing
   const heldRef = useRef(false);
@@ -166,7 +176,9 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
     const q = new URLSearchParams(location.search);
     if (q.has("story") || q.has("watch")) setStory(true);
     if (q.has("watch")) setWatching(true);
-    setSaved(loadSaved());
+    const pov = q.get("pov");
+    if (pov && FILMS.some((f) => f.id === pov)) { whoseRef.current = pov; setWhoseState(pov); setStory(true); setWatching(true); }
+    setSaved(loadSaved(whoseRef.current));
     return () => game.current?.dispose();
   }, []);
 
@@ -285,7 +297,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
   prefsRef.current = prefs;
 
   const setUpStory = async (g: Game) => {
-    const [{ Director }, { StoryStage }, { PovStage }, { film }, data, spoken] = await Promise.all([
+    const [{ Director }, { StoryStage }, { PovStage }, { film, switchTo }, data, spoken] = await Promise.all([
       import("../lib/story/director"), import("../lib/story/stage"), import("../lib/story/pov-stage"), import("../lib/story/pov"),
       import("../content/generated/story.json"), import("../content/generated/story-voices.json"),
     ]);
@@ -320,17 +332,33 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
       paused,
       rate: () => rateRef.current,
     };
-    // whose film (design §10.4.1): Dvij's, or ?pov= someone else's, cut from the same scenes
+    // whose film (design §10.4.1): Dvij's, or someone else's, cut from the same scenes
     const story = (data.default ?? data) as unknown as { scenes: Scene[]; offstage: Scene[]; pov: Pov };
-    const who = new URLSearchParams(location.search).get("pov") ?? "dvij";
-    const own = who === "dvij" || !story.pov.films[who];
-    const scenes = own ? story.scenes : film(who, [...story.scenes, ...story.offstage], story.pov).scenes;
-    if (!own && !scenes.some((sc) => sc.scene === fromWhere.current?.scene)) fromWhere.current = { scene: scenes[0].scene };
-    const st = new PovStage(g, new StoryStage(g, screen), screen, own ? "dvij" : who);
+    const all = [...story.scenes, ...story.offstage];
+    const scenesOf = (who: string) => (who === "dvij" ? story.scenes : film(who, all, story.pov).scenes);
+    const who = story.pov.films[whoseRef.current] ? whoseRef.current : "dvij";
+    const scenes = scenesOf(who);
+    if (!scenes.some((sc) => sc.scene === fromWhere.current?.scene)) fromWhere.current = who === "dvij" ? fromWhere.current : { scene: scenes[0].scene };
+    const st = new PovStage(g, new StoryStage(g, screen), screen, who);
     stage.current = st;
     st.setAuto(watchingRef.current);
     director.current = new Director(st, scenes);
     setChapters(director.current.order);
+    // the pause menu's "Whose eyes": the same moment if they are in it, the scene alongside, or their next
+    switching.current = (to: string) => {
+      const now = director.current?.current;
+      if (!now || to === whoseRef.current) return;
+      const at = switchTo(to, now, all, story.pov);
+      if (!at) return;
+      director.current?.stop();
+      setWhose(to);
+      st.setWho(to);
+      st.setAuto(true);
+      director.current = new Director(st, scenesOf(to));
+      setChapters(director.current.order);
+      clearScreen();
+      void director.current.play(at.scene, at.beat);
+    };
     // the screen shows which scene and beat play, for the tests and for anyone curious
     setInterval(() => {
       const c = director.current?.current;
@@ -634,7 +662,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           const i = chapterAt();
           return (
             <div class="film-bar" role="toolbar" aria-label="The story's controls">
-              <button type="button" onClick={restart} aria-label="From the beginning" title="From the beginning (R)">⏮</button>
+              <button type="button" class="restart" onClick={restart} aria-label="From the beginning" title="From the beginning (R)">⏮</button>
               <button type="button" onClick={prevChapter} aria-label="Previous chapter" title="Previous chapter (←)">«</button>
               <button type="button" class="big" onClick={() => hold(!held)} aria-label={held ? "Play" : "Pause"} title={`${held ? "Play" : "Pause"} (Space)`}>
                 {held ? "▶" : "❚❚"}
@@ -649,7 +677,7 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
               </span>
               <span class="now">{chapters[i]?.title ?? ""}</span>
               <span class="film-time" role="group" aria-label="The chapter's time">
-                <span class="clock" role="timer" title="Time into the chapter">{mmss(scrub ?? clock.at)}</span>
+                <span class="clock at" role="timer" title="Time into the chapter">{mmss(scrub ?? clock.at)}</span>
                 {clock.total > 0 && (
                   <>
                     <input
@@ -665,7 +693,17 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
                   </>
                 )}
               </span>
-              <button type="button" class="take" onClick={() => watch(false)}>Play it yourself</button>
+              {held && (
+                <span class="whose" role="group" aria-label="Whose eyes">
+                  {FILMS.map((f) => (
+                    <button type="button" key={f.id} aria-pressed={whose === f.id} onClick={() => switching.current?.(f.id)}
+                      title={f.pilot ? `${f.name}: a first try, Chapters ${(f.scenes ?? []).map((x) => +x.slice(-2)).join(" and ")}` : f.name}>
+                      {f.name}
+                    </button>
+                  ))}
+                </span>
+              )}
+              {whose === "dvij" && <button type="button" class="take" onClick={() => watch(false)} aria-label="Play it yourself" title="Play it yourself"><span class="long">Play it yourself</span><span class="short">Take over</span></button>}
             </div>
           );
         })()}
@@ -689,15 +727,32 @@ export default function Walk({ heightUrl, worldUrl, groundUrl, mapUrl, backUrl, 
           <div class="story-start">
             <p class="eyebrow">Or play the story</p>
             <p>Be Dvij, waking in the Professor's lodge after the accident: the chapters of Book 1 he is in, from 1 to 9.</p>
-            {saved ? (
-              <>
-                <button type="button" class="go" onClick={() => enter(true, saved, false)} autofocus={story && !watching}>Continue the story</button>
-                <button type="button" class="go quiet" onClick={() => enter(true, null, false)}>Start from the beginning</button>
-              </>
-            ) : (
-              <button type="button" class="go" onClick={() => enter(true, null, false)} autofocus={story && !watching}>Play the story</button>
+            {(() => {
+              // playing is always as Dvij, from his own place
+              const mine = whose === "dvij" ? saved : loadSaved("dvij");
+              const asDvij = (from: typeof saved) => { setWhose("dvij"); enter(true, from, false); };
+              return mine ? (
+                <>
+                  <button type="button" class="go" onClick={() => asDvij(mine)} autofocus={story && !watching}>Continue the story</button>
+                  <button type="button" class="go quiet" onClick={() => asDvij(null)}>Start from the beginning</button>
+                </>
+              ) : (
+                <button type="button" class="go" onClick={() => asDvij(null)} autofocus={story && !watching}>Play the story</button>
+              );
+            })()}
+            <button type="button" class="go quiet" onClick={() => enter(true, whose === "dvij" ? null : saved, true)} autofocus={watching}>
+              {whose === "dvij" ? "Watch it play, like a film" : `Watch it as ${FILMS.find((f) => f.id === whose)?.name ?? whose}`}
+            </button>
+            {FILMS.length > 1 && (
+              <p class="whose-start" role="group" aria-label="Whose story">
+                <span>Whose eyes:</span>
+                {FILMS.map((f) => (
+                  <button type="button" key={f.id} class="chip" aria-pressed={whose === f.id} onClick={() => setWhose(f.id)}>
+                    {f.name}{f.pilot ? ` (Ch. ${(f.scenes ?? []).map((x) => +x.slice(-2)).join(" and ")}, trial)` : ""}
+                  </button>
+                ))}
+              </p>
             )}
-            <button type="button" class="go quiet" onClick={() => enter(true, null, true)} autofocus={watching}>Watch it play, like a film</button>
           </div>
           <Controls />
           <p class="back"><a href={backUrl}>Back to the map</a></p>

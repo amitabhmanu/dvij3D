@@ -13,6 +13,7 @@ import type { Act, Scene, Stage } from "./director";
 import type { Actor } from "./cast";
 import type { StoryScreen, StoryStage } from "./stage";
 import { FilmCamera } from "./film-camera";
+import { writeSaved } from "./saved";
 import { Vector3 } from "three";
 
 /** What his body is doing, as the stage has him placed. */
@@ -28,7 +29,7 @@ export class PovStage implements Stage {
   private lying = 0;
   private camera: FilmCamera;
 
-  constructor(private game: Game, private inner: StoryStage, private screen: StoryScreen, readonly who: string) {
+  constructor(private game: Game, private inner: StoryStage, private screen: StoryScreen, public who: string) {
     this.camera = new FilmCamera({
       who: () => this.inner.people?.get(this.who) ?? null,
       speaker: () => (this.speaker ? this.inner.people?.get(this.speaker) ?? null : null),
@@ -142,13 +143,21 @@ export class PovStage implements Stage {
 
   await(act: Act, sc: Scene): Promise<void> { return this.inner.await(act); void sc; }
 
+  /** Watch through someone else's eyes from the next scene set up (the pause menu's "Whose eyes"). */
+  setWho(who: string): void {
+    this.who = who;
+    this.setAuto(true);
+  }
+
   finished(sc: Scene, next: string | null): void {
     if (this.own) return this.inner.finished(sc, next);
-    this.screen.ended(sc, next); // (a film other than Dvij's keeps no place in his: P6 gives each its own)
+    if (next) writeSaved({ scene: next }, this.who); // (each film keeps its own place: Dvij's is never touched)
+    this.screen.ended(sc, next);
   }
 
   save(scene: string, beat: string): void {
     if (this.own) this.inner.save(scene, beat);
+    else writeSaved({ scene, beat }, this.who);
   }
 
   dispose(): void {

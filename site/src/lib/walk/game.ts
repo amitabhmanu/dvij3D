@@ -216,6 +216,7 @@ function loadTexture(url: string): Promise<Texture> {
  * and its colour then. The default is the walk's own morning. */
 const SUNS: Record<string, { dir: [number, number, number]; colour: string; strength: number }> = {
   morning: { dir: [0.85, 0.42, -0.2], colour: "#fff1d6", strength: 2.0 },
+  "mid-morning": { dir: [0.62, 0.72, -0.05], colour: "#fff4e0", strength: 2.2 }, // (Ch 2: already hot, the sun climbing)
   midday: { dir: [0.25, 0.94, 0.22], colour: "#fff6e8", strength: 2.4 },
   afternoon: { dir: [-0.6, 0.55, 0.58], colour: "#ffefcf", strength: 2.2 },
   evening: { dir: [-0.85, 0.22, 0.45], colour: "#ffc98f", strength: 1.6 },

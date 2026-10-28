@@ -3980,6 +3980,7 @@
     {
      "id": "flower-bed",
      "kind": "flower-bed",
+     "floor": 0,
      "at": [
       -40.0,
       30.0
@@ -3996,6 +3997,7 @@
     {
      "id": "sapling",
      "kind": "sapling",
+     "floor": 0,
      "at": [
       -40.0,
       30.0
@@ -4009,6 +4011,7 @@
     {
      "id": "watering-can",
      "kind": "watering-can",
+     "floor": 0,
      "at": [
       -39.0,
       29.6
@@ -4069,6 +4072,10 @@
       {
        "actor": {
         "who": "mahant",
+        "from": [
+         -36.0,
+         40.0
+        ],
         "walk": [
          -40.6,
          31.2
@@ -4088,6 +4095,10 @@
       {
        "actor": {
         "who": "vaidji",
+        "from": [
+         -35.0,
+         40.6
+        ],
         "walk": [
          -39.2,
          31.4
@@ -4118,6 +4129,10 @@
       {
        "actor": {
         "who": "baldev",
+        "from": [
+         -37.0,
+         40.6
+        ],
         "walk": [
          -40.0,
          30.5
