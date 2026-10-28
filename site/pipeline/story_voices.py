@@ -55,6 +55,9 @@ def spoken_lines(story: dict) -> list[tuple[str, str]]:
             for v in o:
                 walk(v)
     walk(story["scenes"])
+    # and the scenes Dvij isn't in that another person's film plays (pov.yaml's films: Ch 2, the Professor's)
+    filmed = {s for f in story.get("pov", {}).get("films", {}).values() for s in f.get("scenes", [])}
+    walk([sc for sc in story.get("offstage", []) if sc["scene"] in filmed])
     return out
 
 
@@ -152,7 +155,12 @@ def main() -> None:
     lines = spoken_lines(story)
     index = json.loads(INDEX.read_text(encoding="utf-8")) if INDEX.exists() else {"lines": {}}
     wanted, jobs = {}, []
+    unvoiced = sorted({w for w, _ in lines if w not in cast["characters"]})
+    if unvoiced:
+        print(f"No voice in voices.yaml yet for {', '.join(unvoiced)}: their lines stay captions only.")
     for w, line in lines:
+        if w in unvoiced:
+            continue
         voice = voice_of(cast, w)
         name = clip_name(w, line, voice)
         key = f"{w}|{line}"
