@@ -1,21 +1,152 @@
 # Book 1, Chapter 2: the Professor, Mahant and the scroll (story mode, design §10.4).
-# Dvij lies unconscious through this chapter (novel ¶103-134), so for this slice it
-# plays as the comic's own panels; staging it with Mahant, Baldev and Vaidji is the
-# next slice (agreed 20 Oct).
+# DRAFT for the author's review. Novel ¶103-133; breakdown chapter 2; comic b1-p005, b1-p006.
+# Lines are the book's, shortened only where the comic shortens them.
+#
+# Dvij lies fainted on the study floor through this chapter, so his film skips it
+# (the story is seen through his eyes, the author, 20 Oct). The Professor's film plays
+# it (multi-POV pilot, the author, 23 Oct): it runs while Dvij wanders in Chapter 1 and
+# ends mid-morning, and Chapter 3 starts from there (pov.yaml).
+#
+# Where: the front lawn of the lodge, by the western hedge, where the row of eucalyptus
+# lines the boundary (novel ¶103, breakdown ch2 setting). The novel gives no more than
+# "the flower bed"; its place is ours. Lodge frame: metres, x east, z south, origin at
+# the courtyard's centre; the gate is at [0, 75], the front doorsteps at [0, 20.4].
 
 scene: b1-ch02
-skip: "Dvij is not in this chapter, and the story is seen only through his eyes (the author, 20 Oct): skipped"
+skip: "Dvij is not in this chapter, and his film is seen only through his eyes (the author, 20 Oct): not in his film"
 book: 1
 pages: [5, 6]
 title: Chapter 2
-novel: [103, 134]
-start: {pose: interlude}
+novel: [103, 133]
+setting:                                         # mid-morning, already hot: "Summer was at its peak" (novel ¶103); ends "the sun is bright" (the author, 23 Oct)
+  sun: mid-morning
+  court: open
+start: {pose: away}                              # Dvij isn't here: the film's camera is the Professor's
+cast:
+  - {who: professor, at: [-40.0, 29.2], pose: crouch, face: [-40.0, 30.0], hat: tucked, glasses: none, sources: [novel ¶103, novel ¶133, breakdown ch2 p1]}   # crouched over the bed; his hat already tucked in the back of his shorts, his glasses lost
+  - {who: mahant, at: [-36.0, 40.0], pose: stand, enters: true, sources: [novel ¶104, novel ¶106, breakdown ch2 p2]}   # wooden clogs; the three come across the lawn from the drive
+  - {who: vaidji, at: [-35.0, 40.6], pose: stand, enters: true, sources: [novel ¶104, novel ¶127, breakdown ch2 p2]}
+  - {who: baldev, at: [-37.0, 40.6], pose: stand, enters: true, holding: scroll, sources: [novel ¶104, novel ¶108, novel ¶111, breakdown ch2 p2]}
+props:
+  - {id: flower-bed, kind: flower-bed, floor: 0, at: [-40.0, 30.0], size: [2.4, 1.2], sources: [novel ¶103, breakdown ch2 p1]}   # parched; where on the lawn is ours
+  - {id: sapling, kind: sapling, floor: 0, at: [-40.0, 30.0], state: planted, sources: [novel ¶104, breakdown ch2 p2]}   # "the sapling's only leaf"
+  - {id: watering-can, kind: watering-can, floor: 0, at: [-39.0, 29.6], sources: [novel ¶108, breakdown ch2 p6]}
+  - {id: scroll, kind: scroll, held-by: baldev, sources: [novel ¶111, breakdown ch2 p8]}   # rolled, tied with a cord (breakdown ch2 p8)
 
 beats:
-  - id: panels
-    sources: [comic b1-p005, comic b1-p006, novel ¶103-133]
+  - id: the-sapling
+    sources: [comic b1-p005, breakdown ch2 p1, breakdown ch2 p2, novel ¶103, novel ¶104]
     do:
       - chapter: {title: "Chapter 2", subtitle: "Meanwhile, in the garden"}
-      - panels: {pages: [b1-p005, b1-p006]}
+      - caption: "Summer was at its peak. The professor had been planting trees, despite the drought. 'They are always around when you want to talk to someone,' he would say."
+      - actor: {who: professor, anim: pat-soil}                       # the final tender pats to the soil (novel ¶104)
+      - wait: 1.5
+      - actor: {who: professor, anim: touch-leaf}                     # its only leaf, with a mother's gentleness (novel ¶104, breakdown ch2 p2)
+      - caption: "He touched the sapling's only leaf with gentleness. Just then, a pair of feet entered his vision..."
+      - actor: {who: mahant, from: [-36.0, 40.0], walk: [-40.6, 31.2], face: [-40.0, 30.0]}   # the clogs, dangerously close to the bed (novel ¶104)
+      - actor: {who: professor, anim: wave-off}                       # he waves his hands (novel ¶104)
+      - actor: {who: vaidji, from: [-35.0, 40.6], walk: [-39.2, 31.4], face: [-40.0, 30.0]}
+
+  - id: the-crush
+    sources: [comic b1-p005, breakdown ch2 p3, breakdown ch2 p4, novel ¶104]
+    do:
+      - actor: {who: professor, anim: lunge}                          # he almost leapfrogs over it, too late (novel ¶104, breakdown ch2 p3)
+      - actor: {who: baldev, from: [-37.0, 40.6], walk: [-40.0, 30.5], face: [-40.0, 29.2], anim: stomp}
+      - sound: stomp
+      - prop: {id: sapling, state: crushed}
+      - caption: "Before the professor could act, the large rustic foot had stepped over the sapling in a single cruel stroke."
+      - actor: {who: baldev, walk: [-41.4, 31.0], face: [-40.0, 29.2]}
+      - actor: {who: professor, anim: recoil, look: mahant}           # "looked up and recoiled in horror" (novel ¶104, breakdown ch2 p4)
+      - caption: "The professor looked up and recoiled in horror."
+
+  - id: the-drought
+    sources: [comic b1-p005, breakdown ch2 p5, breakdown ch2 p6, novel ¶106-108]
+    do:
+      - actor: {who: mahant, anim: caress-air, look: professor}       # "long fingers that seemed to be probing all the time" (novel ¶106)
+      - say: {who: mahant, line: "Now, now professor! Must you really plant trees when people around you are dying of thirst? The Gods are punishing us, the villagers say to each other. First pestilence, then disease and now famine. And yet, here you are, pouring precious drops of water into the ground!", sources: [novel ¶107]}
+      - actor: {who: mahant, anim: knock-over}                        # he knocks the watering can over (novel ¶108)
+      - prop: {id: watering-can, state: spilled}
+      - sound: clang
+      - actor: {who: baldev, walk: [-40.0, 30.5], anim: grind}        # crushes it again, on purpose (novel ¶108, breakdown ch2 p6)
+      - say: {who: baldev, line: "Ha ha ha!", sources: [breakdown ch2 p6]}
+      - actor: {who: baldev, walk: [-41.4, 31.0], face: [-40.0, 29.2], anim: chew}   # he chews tobacco (breakdown ch2; the author, 21 Oct)
+
+  - id: the-madman
+    sources: [comic b1-p005, breakdown ch2 p7, novel ¶109, novel ¶110]
+    do:
+      - say: {who: mahant, line: "Let me tell you a story, professor.", sources: [novel ¶109]}
+      - actor: {who: professor, pose: stand}                          # he gets up off his knees to hear it (ours)
+      - say: {who: mahant, line: "A few days back, a man went and stood under the large kadamba tree in the valley below. He was raving mad. He began shouting that Gods are angry with us, that They will punish us till every one of us is dead.", sources: [novel ¶110]}
+      - say: {who: mahant, line: "They began pelting stones at the mad man. He carried on till his legs gave way under him. A hush descended. They knew he was dead. Fear! You know why? Because they now knew that hatred was amongst them.", sources: [novel ¶110]}
+
+  - id: the-scroll
+    sources: [comic b1-p006, breakdown ch2 p8, breakdown ch2 p9, breakdown ch2 p10, novel ¶111-115]
+    do:
+      - actor: {who: mahant, anim: open-palm, look: baldev}           # he opens his thin long palm before Baldev (novel ¶111, breakdown ch2 p8)
+      - actor: {who: baldev, give: mahant, item: scroll}
+      - actor: {who: mahant, give: professor, item: scroll, look: professor}
+      - say: {who: mahant, line: "How does the Wounded One do?", sources: [novel ¶112]}
+      - say: {who: professor, line: "Who? Oh, him? He's fine. I can't be sure. He's not woken up, really.", sources: [novel ¶113]}
+      - actor: {who: mahant, anim: smile}                             # "A vast smile spread over Mahant's lips" (novel ¶114, breakdown ch2 p10)
+      - say: {who: mahant, line: "Of course he sleeps. Sleep will transform him. It is written and it is for good.", sources: [novel ¶114]}
+      - say: {who: mahant, line: "I have seen everything. I predicted the exact date of his arrival. And once the Wounded One with No Past will spring out of his slumber, he will become our saviour. He will be our messenger to the Gods.", sources: [novel ¶115]}
+
+  - id: the-glasses
+    sources: [comic b1-p006, breakdown ch2 p11, breakdown ch2 p12, novel ¶116-122]
+    do:
+      - actor: {who: professor, anim: fumble, holding: scroll}        # fumbling with it, still rolled (novel ¶116)
+      - actor: {who: baldev, anim: snatch}                            # snatches it, opens it, thrusts it back (novel ¶116, breakdown ch2 p11)
+      - prop: {id: scroll, state: open}
+      - say: {who: baldev, line: "Read it, professor, and burn the date in this muddled head of yours!", sources: [novel ¶117]}
+      - actor: {who: professor, anim: squint-near}                    # the scroll almost touching his nose (novel ¶118)
+      - wait: 1.2
+      - actor: {who: professor, anim: squint-far}                     # then at arm's length (novel ¶118)
+      - wait: 1.2
+      - actor: {who: professor, pose: crouch, anim: search-ground}    # searching the flower bed (novel ¶118, breakdown ch2 p12)
+      - say: {who: mahant, line: "What is this, professor? You do not take my words seriously?", sources: [novel ¶119]}
+      - say: {who: professor, line: "No my dear Mahant, I take them very seriously. That is why I am searching.", sources: [novel ¶120]}
+      - say: {who: mahant, line: "Searching? Searching for what?", sources: [novel ¶121]}
+      - say: {who: professor, line: "For my glasses. They're missing.", sources: [novel ¶122]}
+
+  - id: the-ceremony
+    sources: [comic b1-p006, breakdown ch2 p13, novel ¶123-126]
+    do:
+      - actor: {who: professor, pose: stand}
+      - actor: {who: mahant, walk: [-40.0, 29.9], anim: hold-shoulders, look: professor}   # he holds the shaking professor still (novel ¶123, breakdown ch2 p13)
+      - say: {who: mahant, line: "A temple is to be constructed to celebrate the Arrival. The Garbhadhana ceremony, that lays the temple foundation, is exactly two weeks from now. The Wounded One must attend the function. He must sit by my side as I preside over the function. It is written and must be done!", sources: [novel ¶124]}
+      - say: {who: professor, line: "But... his wounds... they have to heal.", sources: [novel ¶125]}
+      - say: {who: mahant, line: "And heal they will, for he is the Healer. They would already have, had we handed the care of the Wounded One to our competent Vaidji. Wouldn't he, Vaidji?", sources: [novel ¶126]}
+      - actor: {who: vaidji, anim: nod}                               # nervously (novel ¶127)
+
+  - id: the-hairline
+    sources: [novel ¶127-130]
+    do:
+      - actor: {who: professor, anim: point, look: vaidji}
+      - say: {who: professor, line: "Him? Heal the wounded one? Why, he can't even heal his own hairline.", sources: [novel ¶128]}
+      - say: {who: vaidji, line: "What! You question the ancient arts of my profession. How dare you?", sources: [novel ¶129]}
+      - say: {who: professor, line: "No Vaidji, I only question the modern man who has little understanding of the ancient arts.", sources: [novel ¶130]}
+
+  - id: the-stare
+    sources: [comic b1-p006, breakdown ch2 p14, novel ¶131, novel ¶132]
+    do:
+      - actor: {who: mahant, walk: [-40.0, 30.0], face: professor, anim: stare}   # he steps between the two (novel ¶131)
+      - say: {who: mahant, line: "Look here. Look into my eyes. Two weeks from now. The Wounded One must be present at the ceremony.", sources: [novel ¶131]}
+      - camera: {for: professor, shot: eyes, of: mahant}              # the mesmerizing glare: a close-up of his eyes, played straight (the author, 23 Oct; breakdown ch2 p14)
+      - wait: 2
+      - camera: {for: professor, shot: follow}
+      - say: {who: professor, line: "Yes, he must.", sources: [novel ¶132]}
+
+  - id: the-hat
+    sources: [comic b1-p006, breakdown ch2 p15, breakdown ch2 p16, novel ¶132, novel ¶133]
+    do:
+      - say: {who: professor, line: "And now gentlemen, I am forced to return indoors, as the sun is bright and my hat is missing.", sources: [novel ¶132]}   # "the sun is bright" in place of the novel's "almost overhead": mid-morning (the author, 23 Oct)
+      - actor: {who: professor, anim: wave-off, then: {walk: [0, 20.4], via: [[-30, 24]], exit: true}}   # back towards the lodge, waving; the hat tucked in his shorts (novel ¶133, breakdown ch2 p15)
+      - caption: "His hat could be seen tucked neatly on the backside of his soiled khaki shorts."
+
+  - id: the-thought
+    sources: [comic b1-p006, breakdown ch2 p16, novel ¶133]
+    do:                                            # the Professor has gone: his film walks on with him to the study (pov.ts)
+      - actor: {who: mahant, anim: thumb-circles}                     # (novel ¶133, breakdown ch2 p16)
+      - caption: "But the humour was lost on Mahant who stood still in severe thought, his thumb making circles over his elongated fingers."
       - progress: {book: 1, page: 6}
       - end: {next: b1-ch03}

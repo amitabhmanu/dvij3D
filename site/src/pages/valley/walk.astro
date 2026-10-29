@@ -127,24 +127,46 @@ const storyPages = Object.fromEntries(
     background: rgb(43 36 28 / 55%); color: #efe3c8; font: 600 0.8rem var(--font-ui); cursor: pointer; }
   .walk .story-acts { position: absolute; bottom: 14px; right: 14px; display: flex; gap: 8px; }
   .walk .story-acts .skip { position: static; }
+  /* the film bar is one row, whatever the screen, and a fixed width (its clocks ticking over don't shift it): the
+     controls shrink, the chapter's name gives way first, and
+     "Whose eyes" (shown on pause) sits just above it rather than beside it */
   .walk .film-bar { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2; pointer-events: auto;
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: calc(100% - 32px);
-    padding: 6px 10px; border-radius: 999px; background: rgb(43 36 28 / 78%); color: #efe3c8; font: 600 0.85rem var(--font-ui); }
-  .walk .film-bar button { min-width: 34px; height: 34px; border: 0; border-radius: 999px; background: transparent; color: inherit;
-    font: inherit; cursor: pointer; }
+    display: flex; align-items: center; gap: 2px; flex-wrap: nowrap; width: min(820px, calc(100% - 32px)); box-sizing: border-box;
+    padding: 4px 8px; border-radius: 999px; background: rgb(43 36 28 / 78%); color: #efe3c8; font: 600 0.78rem var(--font-ui); }
+  .walk .film-bar button { flex: none; min-width: 28px; height: 28px; padding: 0 4px; border: 0; border-radius: 999px;
+    background: transparent; color: inherit; font: inherit; cursor: pointer; }
   .walk .film-bar button:hover, .walk .film-bar button:focus-visible { background: rgb(245 236 218 / 18%); outline: none; }
   .walk .film-bar button:disabled { opacity: 0.35; cursor: default; }
-  .walk .film-bar .big { width: 42px; height: 42px; background: #efe3c8; color: var(--ink); }
+  .walk .film-bar .big { width: 34px; height: 34px; background: #efe3c8; color: var(--ink); }
   .walk .film-bar .big:hover { background: #fff; }
-  .walk .film-bar .speeds { display: flex; gap: 2px; margin-left: 6px; padding-left: 8px; border-left: 1px solid rgb(239 227 200 / 30%); }
-  .walk .film-bar .speeds button { min-width: 38px; }
+  .walk .film-bar .speeds { flex: none; display: flex; gap: 0; margin-left: 4px; padding-left: 4px; border-left: 1px solid rgb(239 227 200 / 30%); }
+  .walk .film-bar .speeds button { min-width: 30px; }
   .walk .film-bar .speeds button[aria-pressed="true"] { background: #e9b77f; color: var(--ink); }
-  .walk .film-bar .now { padding: 0 8px; opacity: 0.85; white-space: nowrap; }
-  .walk .film-bar .film-time { display: flex; align-items: center; gap: 8px; padding-right: 6px; }
-  .walk .film-bar .clock { opacity: 0.85; font-variant-numeric: tabular-nums; min-width: 2.8em; text-align: right; }
+  .walk .film-bar .now { flex: 0 1 auto; min-width: 0; max-width: 11em; padding: 0 6px; opacity: 0.85; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; }
+  .walk .film-bar .film-time { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px; padding-right: 4px; }
+  .walk .film-bar .clock { flex: none; opacity: 0.85; font-variant-numeric: tabular-nums; min-width: 2.8em; text-align: right; }
   .walk .film-bar .clock.left { text-align: left; }
-  .walk .film-bar .scrub { width: clamp(120px, 22vw, 260px); accent-color: #e9b77f; cursor: pointer; }
-  .walk .film-bar .take { padding: 0 12px; border: 1px solid rgb(239 227 200 / 45%); }
+  .walk .film-bar .scrub { flex: 1 1 auto; width: clamp(60px, 20vw, 240px); min-width: 50px; accent-color: #e9b77f; cursor: pointer; }
+  .walk .film-bar .take { flex: none; padding: 0 10px; border: 1px solid rgb(239 227 200 / 45%); white-space: nowrap; }
+  .walk .film-bar .whose { position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); display: flex;
+    align-items: center; gap: 2px; padding: 4px 8px; border-radius: 999px; background: rgb(43 36 28 / 78%); white-space: nowrap; }
+  .walk .film-bar .whose::before { content: "Whose eyes:"; padding: 0 6px; opacity: 0.85; }
+  .walk .film-bar .whose button { padding: 0 10px; white-space: nowrap; }
+  .walk .film-bar .whose button[aria-pressed="true"] { background: #e9b77f; color: var(--ink); }
+  .walk .film-bar .take .short { display: none; }
+  @media (max-width: 640px) {
+    .walk .film-bar { padding: 4px 6px; }
+    .walk .film-bar .now, .walk .film-bar .restart, .walk .film-bar .clock, .walk .film-bar .take .long { display: none; }
+    .walk .film-bar .take .short { display: inline; }
+    .walk .film-bar .speeds button { min-width: 26px; padding: 0 2px; }
+    .walk .film-bar .scrub { min-width: 36px; }
+    .walk .film-bar .take { padding: 0 8px; }
+  }
+  .walk .whose-start { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font: 600 0.85rem var(--font-ui); }
+  .walk .whose-start .chip { border: 1px solid var(--paper-3); border-radius: 999px; padding: 4px 10px; background: transparent;
+    color: inherit; font: inherit; cursor: pointer; }
+  .walk .whose-start .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper, #f5ecda); border-color: var(--ink); }
   .walk[data-watching] .words { bottom: 90px; }
   .walk[data-watching] .hud { z-index: 3; } /* the film bar stays on top of a comic page */
   .walk .story-panel { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px 16px 140px;

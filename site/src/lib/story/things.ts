@@ -8,6 +8,10 @@
 //   steel-tumbler   a steel tumbler of frothy panchamrita (¶258, b1-p012-7)
 //   pitcher      the pitcher Maharaj brings it in (¶257)
 //   pipe         the Professor's pipe (comic b1-p012-2)
+//   flower-bed   the Professor's parched bed on the front lawn, a low brick edge round dry earth (¶103, b1-p005-1)
+//   sapling      "the sapling's only leaf": planted, then crushed under Baldev's foot (¶104, b1-p005-2/3)
+//   watering-can a galvanised can, knocked over by Mahant (¶108, b1-p005-6)
+//   scroll       the Maharaj's invitation, rolled and tied, then opened (¶111-118, b1-p005-8/11)
 // Shapes in metres; the materials are props.ts's, which take on the lodge's own.
 import {
   AdditiveBlending, BoxGeometry, BufferGeometry, CanvasTexture, Color, CylinderGeometry, DoubleSide, Float32BufferAttribute,
@@ -335,6 +339,95 @@ export function makeThing(kind: string, x: number, z: number, floor: number, sta
       k.add(used, stain);
       g.add(at(k, 0, floor, 0));
       return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.05, z] };
+    }
+    case "flower-bed": {
+      // a low edge of old bricks round a bed of dry, cracked earth, a little raised (¶103 "the parched flower bed")
+      const EARTH = std("#7a5a3a", { roughness: 1 });
+      const BRICK = std("#8c4a30", { roughness: 0.9 });
+      const W = 2.4, D = 1.2;
+      const b = new Group();
+      b.add(at(new Mesh(new BoxGeometry(W - 0.12, 0.08, D - 0.12), EARTH), 0, 0.04, 0));
+      for (const [w, d, ox, oz] of [[W, 0.1, 0, D / 2], [W, 0.1, 0, -D / 2], [0.1, D, W / 2, 0], [0.1, D, -W / 2, 0]] as const) {
+        b.add(at(new Mesh(new BoxGeometry(w, 0.12, d), BRICK), ox, 0.06, oz));
+      }
+      let s = 11;
+      const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+      for (let k = 0; k < 18; k++) { // clods
+        const c = at(new Mesh(new SphereGeometry(0.04 + rnd() * 0.04, 6, 4), EARTH), (rnd() - 0.5) * (W - 0.3), 0.08, (rnd() - 0.5) * (D - 0.3));
+        c.scale.y = 0.5;
+        b.add(c);
+      }
+      g.add(at(b, 0, floor, 0));
+      return { obj: at(g, x, 0, z), set: () => {}, point: () => [x, floor + 0.1, z] };
+    }
+    case "sapling": {
+      // a thin stem with a single leaf, in a small well of watered earth; crushed: bent flat, the leaf torn
+      const STEM = std("#5a4a2a", { roughness: 0.8 });
+      const LEAF = std("#5e7d34", { roughness: 0.6, side: DoubleSide });
+      const WET = std("#4a3424", { roughness: 0.6 });
+      const t = new Group();
+      t.add(at(new Mesh(new CylinderGeometry(0.09, 0.11, 0.02, 14), WET), 0, 0.085, 0));
+      const plant = new Group();
+      plant.add(at(new Mesh(new CylinderGeometry(0.004, 0.006, 0.22, 6), STEM), 0, 0.11, 0));
+      const leaf = at(new Mesh(new SphereGeometry(0.035, 8, 4), LEAF), 0.025, 0.2, 0);
+      leaf.scale.set(1, 0.15, 0.55);
+      leaf.rotation.z = -0.4;
+      plant.add(leaf);
+      t.add(at(plant, 0, 0.09, 0));
+      g.add(at(t, 0, floor, 0));
+      const set = (st: string) => {
+        const crushed = st === "crushed";
+        plant.rotation.set(crushed ? 1.45 : 0, crushed ? 0.6 : 0, 0);
+        leaf.scale.set(crushed ? 0.7 : 1, crushed ? 0.08 : 0.15, crushed ? 0.4 : 0.55);
+      };
+      set(state);
+      return { obj: at(g, x, 0, z), set, point: () => [x, floor + 0.25, z] };
+    }
+    case "watering-can": {
+      // a galvanised can with a long spout and a rose; spilled: on its side, a dark stain of water spreading
+      const ZINC = std("#9aa0a0", { metalness: 0.8, roughness: 0.4 });
+      const WATER = std("#3a2a1c", { roughness: 0.25 });
+      const c = new Group();
+      c.add(at(new Mesh(new CylinderGeometry(0.1, 0.11, 0.26, 16), ZINC), 0, 0.13, 0));
+      const spout = at(new Mesh(new CylinderGeometry(0.012, 0.02, 0.36, 8), ZINC), 0.2, 0.2, 0);
+      spout.rotation.z = -0.9;
+      const rose = at(new Mesh(new CylinderGeometry(0.035, 0.02, 0.04, 10), ZINC), 0.35, 0.3, 0);
+      rose.rotation.z = -0.9;
+      const handle = at(new Mesh(new TorusGeometry(0.09, 0.01, 6, 14, Math.PI), ZINC), -0.02, 0.26, 0);
+      c.add(spout, rose, handle);
+      const stain = at(new Mesh(new CylinderGeometry(0.3, 0.3, 0.004, 20), WATER), 0.35, 0.003, 0.05);
+      stain.scale.set(1.2, 1, 0.7);
+      g.add(at(c, 0, floor, 0), stain);
+      stain.position.y = floor + 0.003;
+      const set = (st: string) => {
+        const down = st === "spilled";
+        c.rotation.set(down ? Math.PI / 2 : 0, 0, 0);
+        c.position.y = floor + (down ? 0.1 : 0);
+        stain.visible = down;
+      };
+      set(state);
+      return { obj: at(g, x, 0, z), set, point: () => [x, floor + 0.15, z] };
+    }
+    case "scroll": {
+      // the invitation (¶111): a roll of paper tied with a red cord; open: unrolled, held flat, written on
+      const RED = std("#9a2a1c", { roughness: 0.7 });
+      const t = new Group();
+      const roll = at(new Mesh(new CylinderGeometry(0.018, 0.018, 0.3, 12), M.PAPER), 0, 0, 0);
+      roll.rotation.z = Math.PI / 2;
+      const cord = at(new Mesh(new TorusGeometry(0.02, 0.003, 6, 12), RED), 0, 0, 0);
+      cord.rotation.y = Math.PI / 2;
+      const sheet = at(new Mesh(new BoxGeometry(0.3, 0.002, 0.4), M.PAPER), 0, 0, -0.2);
+      const writing = at(new Mesh(new PlaneGeometry(0.24, 0.3), new MeshStandardMaterial({ map: barkTexture(7), transparent: true, opacity: 0.55, roughness: 1 })), 0, 0.002, -0.2);
+      writing.rotation.x = -Math.PI / 2;
+      t.add(roll, cord, sheet, writing);
+      g.add(at(t, 0, floor, 0));
+      const set = (st: string) => {
+        const open = st === "open";
+        cord.visible = !open;
+        sheet.visible = writing.visible = open;
+      };
+      set(state);
+      return { obj: at(g, x, 0, z), set, point: () => [x, floor, z], handle: t };
     }
     default:
       return null;

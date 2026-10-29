@@ -682,6 +682,46 @@ without a loading screen.
   the drive, stops at a wall, leaves by the study's back door unless it is shut, checks indoors, the look cards'
   veils, the back-wall puzzle, map travel and the model's budget.
 
+### 10.4.1 Story mode: points of view (pilot, in progress on `pov-film`)
+
+The film can be watched through someone other than Dvij. Each chapter keeps one
+script; a person's film is those scripts cut to the scenes and beats they are in
+(`src/lib/story/pov.ts`). Who is in a beat comes from the script itself: the cast,
+Dvij unless the scene leaves him out, and the actors' `enters` and `exit`.
+`src/content/story/pov.yaml` adds only what a script can't say: each scene's story
+day and time (`when`, with `with:` for scenes that happen at the same time),
+`absent` and `present`, and per-beat `for` / `not-for`. The director plays a film's
+scenes unchanged; a beat its person isn't there for is marked `offstage` and played
+hurried. Between scenes a film walks a short same-day gap and fades a longer one
+with a card. Scenes marked `skip` (not in Dvij's film) go to `story.json`'s
+`offstage` list for the other films.
+
+The pilot is the Professor in Chapters 2 and 3 (the author, 23 Oct 2026). In other
+people's films Dvij is seen in full; in his own he shows only in reflections and as
+his arms. Chapter 2 runs while Dvij wanders in Chapter 1 and ends mid-morning, and
+Chapter 3 starts from there.
+
+At run time `src/lib/story/pov-stage.ts` wraps the stage for the chosen film,
+picked on the start screen ("Whose eyes") or on pause in the film bar, which switches
+to the same beat if that person is in it, else the scene alongside, else their next
+(`/valley/walk/?pov=professor` opens it directly). The game still moves
+Dvij's body as in his own film, so walks, seats and the people who look at him are
+unchanged; in someone else's film he is also added to the cast and his figure follows
+that body (standing, walking, seated, lying), the camera is `film-camera.ts`'s
+(over the shoulder of the film's person, swung round walls), and what belongs to his
+eyes and hands alone (his sight effects, the drink at his lips, the glance at his
+arm, the reflection) isn't played. An `effect` with `for:` plays only in that
+person's film, and a `camera` with `for:` and `shot: eyes` is that film's close-up of
+someone's eyes (Mahant's glare, Ch 2). Scenes Dvij is away from start with `pose: away`.
+Each film keeps its own saved place (`saved.ts`); Dvij's is never touched by another's.
+
+Dvij's own film is cut by `pov.ts` too, so a beat only someone else is there for is
+played unseen in it. The short same-day gap from the garden to the study is such a
+beat: the Professor walks in by way of the kitchen, where he fills the tumbler, sped
+up (`pace:` on an actor's walk), and kneels where Dvij's film finds him. A film that
+skips a scene shows that scene's `meanwhile` card (pov.yaml) before the next scene's
+first words: Dvij's, at the start of Chapter 3, for the garden.
+
 ## 11. The Bestiary (Layer 5) — built: `/bestiary/`
 
 The valley is full of creatures. Most are spoken of rather than met: the cook warns of yakshas hiding in the trees, Viraat reels off banmanus, pichhal peris, pishachas, kimpurushas and kinnars as the van climbs into the dark, Bhavi explains the boulder field with a rakshasa riding a mountain, and vyalas are carved on the temple steps. The Bestiary is where a reader can browse them, see them, and read what tradition says about them.

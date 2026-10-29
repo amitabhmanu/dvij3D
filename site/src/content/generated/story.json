@@ -557,6 +557,114 @@
    ],
    "beats": [
     {
+     "id": "on-his-way",
+     "sources": [
+      "ours"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "professor",
+        "from": [
+         -34.0,
+         26.0
+        ],
+        "holding": null,
+        "pace": 4,
+        "walk": [
+         9.5,
+         -13.2
+        ],
+        "via": [
+         [
+          -30.0,
+          24.0
+         ],
+         [
+          0,
+          21.0
+         ],
+         [
+          0,
+          13.25
+         ],
+         [
+          0,
+          9.0
+         ],
+         [
+          8.75,
+          9.0
+         ],
+         [
+          8.75,
+          -9.0
+         ],
+         [
+          7.75,
+          -10.0
+         ],
+         [
+          7.75,
+          -12.0
+         ]
+        ],
+        "face": [
+         10.5,
+         -15.0
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "holding": "tumbler",
+        "anim": "interact"
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "pace": 4,
+        "walk": [
+         -14.0,
+         -12.4
+        ],
+        "via": [
+         [
+          7.75,
+          -12.0
+         ],
+         [
+          7.75,
+          -9.25
+         ],
+         [
+          -7.75,
+          -9.25
+         ],
+         [
+          -9.25,
+          -9.25
+         ],
+         [
+          -13.0,
+          -10.8
+         ]
+        ],
+        "face": "player"
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "pose": "kneel",
+        "face": "player"
+       }
+      }
+     ]
+    },
+    {
      "id": "water-face",
      "sources": [
       "breakdown ch3 p1",
@@ -3889,5 +3997,1300 @@
     }
    ]
   }
- ]
+ ],
+ "offstage": [
+  {
+   "scene": "b1-ch02",
+   "skip": "Dvij is not in this chapter, and his film is seen only through his eyes (the author, 20 Oct): not in his film",
+   "book": 1,
+   "pages": [
+    5,
+    6
+   ],
+   "title": "Chapter 2",
+   "novel": [
+    103,
+    133
+   ],
+   "setting": {
+    "sun": "mid-morning",
+    "court": "open"
+   },
+   "start": {
+    "pose": "away"
+   },
+   "cast": [
+    {
+     "who": "professor",
+     "at": [
+      -40.0,
+      29.2
+     ],
+     "pose": "crouch",
+     "face": [
+      -40.0,
+      30.0
+     ],
+     "hat": "tucked",
+     "glasses": "none",
+     "sources": [
+      "novel ¶103",
+      "novel ¶133",
+      "breakdown ch2 p1"
+     ]
+    },
+    {
+     "who": "mahant",
+     "at": [
+      -36.0,
+      40.0
+     ],
+     "pose": "stand",
+     "enters": true,
+     "sources": [
+      "novel ¶104",
+      "novel ¶106",
+      "breakdown ch2 p2"
+     ]
+    },
+    {
+     "who": "vaidji",
+     "at": [
+      -35.0,
+      40.6
+     ],
+     "pose": "stand",
+     "enters": true,
+     "sources": [
+      "novel ¶104",
+      "novel ¶127",
+      "breakdown ch2 p2"
+     ]
+    },
+    {
+     "who": "baldev",
+     "at": [
+      -37.0,
+      40.6
+     ],
+     "pose": "stand",
+     "enters": true,
+     "holding": "scroll",
+     "sources": [
+      "novel ¶104",
+      "novel ¶108",
+      "novel ¶111",
+      "breakdown ch2 p2"
+     ]
+    }
+   ],
+   "props": [
+    {
+     "id": "flower-bed",
+     "kind": "flower-bed",
+     "floor": 0,
+     "at": [
+      -40.0,
+      30.0
+     ],
+     "size": [
+      2.4,
+      1.2
+     ],
+     "sources": [
+      "novel ¶103",
+      "breakdown ch2 p1"
+     ]
+    },
+    {
+     "id": "sapling",
+     "kind": "sapling",
+     "floor": 0,
+     "at": [
+      -40.0,
+      30.0
+     ],
+     "state": "planted",
+     "sources": [
+      "novel ¶104",
+      "breakdown ch2 p2"
+     ]
+    },
+    {
+     "id": "watering-can",
+     "kind": "watering-can",
+     "floor": 0,
+     "at": [
+      -39.0,
+      29.6
+     ],
+     "sources": [
+      "novel ¶108",
+      "breakdown ch2 p6"
+     ]
+    },
+    {
+     "id": "scroll",
+     "kind": "scroll",
+     "held-by": "baldev",
+     "sources": [
+      "novel ¶111",
+      "breakdown ch2 p8"
+     ]
+    }
+   ],
+   "beats": [
+    {
+     "id": "the-sapling",
+     "sources": [
+      "comic b1-p005",
+      "breakdown ch2 p1",
+      "breakdown ch2 p2",
+      "novel ¶103",
+      "novel ¶104"
+     ],
+     "do": [
+      {
+       "chapter": {
+        "title": "Chapter 2",
+        "subtitle": "Meanwhile, in the garden"
+       }
+      },
+      {
+       "caption": "Summer was at its peak. The professor had been planting trees, despite the drought. 'They are always around when you want to talk to someone,' he would say."
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "pat-soil"
+       }
+      },
+      {
+       "wait": 1.5
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "touch-leaf"
+       }
+      },
+      {
+       "caption": "He touched the sapling's only leaf with gentleness. Just then, a pair of feet entered his vision..."
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "from": [
+         -36.0,
+         40.0
+        ],
+        "walk": [
+         -40.6,
+         31.2
+        ],
+        "face": [
+         -40.0,
+         30.0
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "wave-off"
+       }
+      },
+      {
+       "actor": {
+        "who": "vaidji",
+        "from": [
+         -35.0,
+         40.6
+        ],
+        "walk": [
+         -39.2,
+         31.4
+        ],
+        "face": [
+         -40.0,
+         30.0
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-crush",
+     "sources": [
+      "comic b1-p005",
+      "breakdown ch2 p3",
+      "breakdown ch2 p4",
+      "novel ¶104"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "lunge"
+       }
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "from": [
+         -37.0,
+         40.6
+        ],
+        "walk": [
+         -40.0,
+         30.5
+        ],
+        "face": [
+         -40.0,
+         29.2
+        ],
+        "anim": "stomp"
+       }
+      },
+      {
+       "sound": "stomp"
+      },
+      {
+       "prop": {
+        "id": "sapling",
+        "state": "crushed"
+       }
+      },
+      {
+       "caption": "Before the professor could act, the large rustic foot had stepped over the sapling in a single cruel stroke."
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "walk": [
+         -41.4,
+         31.0
+        ],
+        "face": [
+         -40.0,
+         29.2
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "recoil",
+        "look": "mahant"
+       }
+      },
+      {
+       "caption": "The professor looked up and recoiled in horror."
+      }
+     ]
+    },
+    {
+     "id": "the-drought",
+     "sources": [
+      "comic b1-p005",
+      "breakdown ch2 p5",
+      "breakdown ch2 p6",
+      "novel ¶106-108"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "caress-air",
+        "look": "professor"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "Now, now professor! Must you really plant trees when people around you are dying of thirst? The Gods are punishing us, the villagers say to each other. First pestilence, then disease and now famine. And yet, here you are, pouring precious drops of water into the ground!",
+        "sources": [
+         "novel ¶107"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "knock-over"
+       }
+      },
+      {
+       "prop": {
+        "id": "watering-can",
+        "state": "spilled"
+       }
+      },
+      {
+       "sound": "clang"
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "walk": [
+         -40.0,
+         30.5
+        ],
+        "anim": "grind"
+       }
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "Ha ha ha!",
+        "sources": [
+         "breakdown ch2 p6"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "walk": [
+         -41.4,
+         31.0
+        ],
+        "face": [
+         -40.0,
+         29.2
+        ],
+        "anim": "chew"
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-madman",
+     "sources": [
+      "comic b1-p005",
+      "breakdown ch2 p7",
+      "novel ¶109",
+      "novel ¶110"
+     ],
+     "do": [
+      {
+       "say": {
+        "who": "mahant",
+        "line": "Let me tell you a story, professor.",
+        "sources": [
+         "novel ¶109"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "pose": "stand"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "A few days back, a man went and stood under the large kadamba tree in the valley below. He was raving mad. He began shouting that Gods are angry with us, that They will punish us till every one of us is dead.",
+        "sources": [
+         "novel ¶110"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "They began pelting stones at the mad man. He carried on till his legs gave way under him. A hush descended. They knew he was dead. Fear! You know why? Because they now knew that hatred was amongst them.",
+        "sources": [
+         "novel ¶110"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-scroll",
+     "sources": [
+      "comic b1-p006",
+      "breakdown ch2 p8",
+      "breakdown ch2 p9",
+      "breakdown ch2 p10",
+      "novel ¶111-115"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "open-palm",
+        "look": "baldev"
+       }
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "give": "mahant",
+        "item": "scroll"
+       }
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "give": "professor",
+        "item": "scroll",
+        "look": "professor"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "How does the Wounded One do?",
+        "sources": [
+         "novel ¶112"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Who? Oh, him? He's fine. I can't be sure. He's not woken up, really.",
+        "sources": [
+         "novel ¶113"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "smile"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "Of course he sleeps. Sleep will transform him. It is written and it is for good.",
+        "sources": [
+         "novel ¶114"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "I have seen everything. I predicted the exact date of his arrival. And once the Wounded One with No Past will spring out of his slumber, he will become our saviour. He will be our messenger to the Gods.",
+        "sources": [
+         "novel ¶115"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-glasses",
+     "sources": [
+      "comic b1-p006",
+      "breakdown ch2 p11",
+      "breakdown ch2 p12",
+      "novel ¶116-122"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "fumble",
+        "holding": "scroll"
+       }
+      },
+      {
+       "actor": {
+        "who": "baldev",
+        "anim": "snatch"
+       }
+      },
+      {
+       "prop": {
+        "id": "scroll",
+        "state": "open"
+       }
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "Read it, professor, and burn the date in this muddled head of yours!",
+        "sources": [
+         "novel ¶117"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "squint-near"
+       }
+      },
+      {
+       "wait": 1.2
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "squint-far"
+       }
+      },
+      {
+       "wait": 1.2
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "pose": "crouch",
+        "anim": "search-ground"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "What is this, professor? You do not take my words seriously?",
+        "sources": [
+         "novel ¶119"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "No my dear Mahant, I take them very seriously. That is why I am searching.",
+        "sources": [
+         "novel ¶120"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "Searching? Searching for what?",
+        "sources": [
+         "novel ¶121"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "For my glasses. They're missing.",
+        "sources": [
+         "novel ¶122"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-ceremony",
+     "sources": [
+      "comic b1-p006",
+      "breakdown ch2 p13",
+      "novel ¶123-126"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "professor",
+        "pose": "stand"
+       }
+      },
+      {
+       "actor": {
+        "who": "mahant",
+        "walk": [
+         -40.0,
+         29.9
+        ],
+        "anim": "hold-shoulders",
+        "look": "professor"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "A temple is to be constructed to celebrate the Arrival. The Garbhadhana ceremony, that lays the temple foundation, is exactly two weeks from now. The Wounded One must attend the function. He must sit by my side as I preside over the function. It is written and must be done!",
+        "sources": [
+         "novel ¶124"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "But... his wounds... they have to heal.",
+        "sources": [
+         "novel ¶125"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "And heal they will, for he is the Healer. They would already have, had we handed the care of the Wounded One to our competent Vaidji. Wouldn't he, Vaidji?",
+        "sources": [
+         "novel ¶126"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "vaidji",
+        "anim": "nod"
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-hairline",
+     "sources": [
+      "novel ¶127-130"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "point",
+        "look": "vaidji"
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Him? Heal the wounded one? Why, he can't even heal his own hairline.",
+        "sources": [
+         "novel ¶128"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "vaidji",
+        "line": "What! You question the ancient arts of my profession. How dare you?",
+        "sources": [
+         "novel ¶129"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "No Vaidji, I only question the modern man who has little understanding of the ancient arts.",
+        "sources": [
+         "novel ¶130"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-stare",
+     "sources": [
+      "comic b1-p006",
+      "breakdown ch2 p14",
+      "novel ¶131",
+      "novel ¶132"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "mahant",
+        "walk": [
+         -40.0,
+         30.0
+        ],
+        "face": "professor",
+        "anim": "stare"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "Look here. Look into my eyes. Two weeks from now. The Wounded One must be present at the ceremony.",
+        "sources": [
+         "novel ¶131"
+        ]
+       }
+      },
+      {
+       "camera": {
+        "for": "professor",
+        "shot": "eyes",
+        "of": "mahant"
+       }
+      },
+      {
+       "wait": 2
+      },
+      {
+       "camera": {
+        "for": "professor",
+        "shot": "follow"
+       }
+      },
+      {
+       "say": {
+        "who": "professor",
+        "line": "Yes, he must.",
+        "sources": [
+         "novel ¶132"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-hat",
+     "sources": [
+      "comic b1-p006",
+      "breakdown ch2 p15",
+      "breakdown ch2 p16",
+      "novel ¶132",
+      "novel ¶133"
+     ],
+     "do": [
+      {
+       "say": {
+        "who": "professor",
+        "line": "And now gentlemen, I am forced to return indoors, as the sun is bright and my hat is missing.",
+        "sources": [
+         "novel ¶132"
+        ]
+       }
+      },
+      {
+       "actor": {
+        "who": "professor",
+        "anim": "wave-off",
+        "then": {
+         "walk": [
+          0,
+          20.4
+         ],
+         "via": [
+          [
+           -30,
+           24
+          ]
+         ],
+         "exit": true
+        }
+       }
+      },
+      {
+       "caption": "His hat could be seen tucked neatly on the backside of his soiled khaki shorts."
+      }
+     ]
+    },
+    {
+     "id": "the-thought",
+     "sources": [
+      "comic b1-p006",
+      "breakdown ch2 p16",
+      "novel ¶133"
+     ],
+     "do": [
+      {
+       "actor": {
+        "who": "mahant",
+        "anim": "thumb-circles"
+       }
+      },
+      {
+       "caption": "But the humour was lost on Mahant who stood still in severe thought, his thumb making circles over his elongated fingers."
+      },
+      {
+       "progress": {
+        "book": 1,
+        "page": 6
+       }
+      },
+      {
+       "end": {
+        "next": "b1-ch03"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "scene": "b1-ch06",
+   "skip": "Dvij is not in this chapter, and the story is seen only through his eyes (the author, 20 Oct): skipped",
+   "book": 1,
+   "pages": [
+    11
+   ],
+   "title": "Chapter 6",
+   "novel": [
+    224,
+    246
+   ],
+   "start": {
+    "pose": "interlude"
+   },
+   "cast": [
+    {
+     "who": "mahant",
+     "at": [
+      0,
+      0
+     ],
+     "sources": [
+      "breakdown ch6 p3"
+     ]
+    },
+    {
+     "who": "baldev",
+     "at": [
+      0,
+      0
+     ],
+     "sources": [
+      "breakdown ch6 p2"
+     ]
+    }
+   ],
+   "beats": [
+    {
+     "id": "the-site",
+     "sources": [
+      "comic b1-p011-4",
+      "breakdown ch6 p1",
+      "novel ¶224"
+     ],
+     "do": [
+      {
+       "chapter": {
+        "title": "Chapter 6",
+        "subtitle": "Meanwhile, at the temple site"
+       }
+      },
+      {
+       "panel": {
+        "id": "b1-p011-4"
+       }
+      },
+      {
+       "caption": "Mahant surveyed the temple site from the shade of his pandal. Out in the midday sun, volunteers from the village dug up bones and carcasses, ridding the land of impurities in a ritual called Shalyodhara."
+      },
+      {
+       "caption": "Beyond it lay a considerable stretch of fertile land, something he knew he would later appropriate for his private use."
+      }
+     ]
+    },
+    {
+     "id": "the-tent",
+     "sources": [
+      "comic b1-p011-5",
+      "breakdown ch6 p2",
+      "breakdown ch6 p3",
+      "novel ¶225",
+      "novel ¶226"
+     ],
+     "do": [
+      {
+       "panel": {
+        "id": "b1-p011-5"
+       }
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "That's a good piece of land you've chosen there, Mahant.",
+        "sources": [
+         "novel ¶225"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "All governed by divya vaastu. The Lord dictates what he wants. I am a mere conduit for Him to execute His wishes.",
+        "sources": [
+         "novel ¶226"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-bottle",
+     "sources": [
+      "comic b1-p011-6",
+      "breakdown ch6 p4",
+      "breakdown ch6 p5",
+      "novel ¶227-229"
+     ],
+     "do": [
+      {
+       "panel": {
+        "id": "b1-p011-6"
+       }
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "Indeed! What about my wishes, o holy one?",
+        "sources": [
+         "novel ¶227"
+        ]
+       }
+      },
+      {
+       "caption": "Mahant glowered for an instant, then pointed to a chest behind them. Baldev's eyes grew wide. He drew out a bottle and poured for both of them."
+      },
+      {
+       "sound": "clink"
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "You use my weaknesses against me. But I will not relent this time. What about my wishes, Mahant?",
+        "sources": [
+         "novel ¶229"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-temple",
+     "sources": [
+      "comic b1-p011-7",
+      "breakdown ch6 p6",
+      "breakdown ch6 p7",
+      "novel ¶230",
+      "novel ¶231"
+     ],
+     "do": [
+      {
+       "panel": {
+        "id": "b1-p011-7"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "All in good time, Baldev... all in good time. You will become the mukhiya soon. But first we have to build this temple. Do not spare any cost in its construction. You have access to the village coffers. Empty them for this cause. Use your powers well.",
+        "sources": [
+         "novel ¶230"
+        ]
+       }
+      },
+      {
+       "panel": {
+        "id": "b1-p011-8"
+       }
+      },
+      {
+       "caption": "Mahant paused to sip the intoxicating liquor. Baldev gulped larger quantities down his throat."
+      }
+     ]
+    },
+    {
+     "id": "the-drought",
+     "sources": [
+      "comic b1-p011-9",
+      "breakdown ch6 p8",
+      "breakdown ch6 p9",
+      "novel ¶232-234"
+     ],
+     "do": [
+      {
+       "panel": {
+        "id": "b1-p011-9"
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "We have not had rain the last three years. Your corrupt misadministration is adding fuel to the fire. The fools are losing their faith in me. They have begun to question my edicts. They will never let you become the mukhiya.",
+        "sources": [
+         "novel ¶232"
+        ]
+       }
+      },
+      {
+       "panel": {
+        "id": "b1-p011-10"
+       }
+      },
+      {
+       "sound": "clink"
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "Why do we need this wounded guy? Who is he anyway?",
+        "sources": [
+         "novel ¶234"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-miracle",
+     "sources": [
+      "breakdown ch6 p10",
+      "breakdown ch6 p11",
+      "novel ¶235-243"
+     ],
+     "do": [
+      {
+       "say": {
+        "who": "mahant",
+        "line": "Who he is... is not for you to worry about. Faith needs miracles. He is my miracle. He is a fool who has dropped into my lap like a blessing from the Lord. I have set the stage for the play to begin. He will be the main actor, acting under my direction.",
+        "sources": [
+         "novel ¶235"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "Did he really drop into your lap, Mahant?",
+        "sources": [
+         "novel ¶236"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "What do you mean?",
+        "sources": [
+         "novel ¶237"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "I mean you could have arranged for it to appear as if he dropped into your lap from nowhere.",
+        "sources": [
+         "novel ¶238"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "I could, and I might have. That is none of your concern, Baldev. It is enough for you to know that he is the saviour that I ordered.",
+        "sources": [
+         "novel ¶239"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "But if he's the saviour, why would anyone care for you?",
+        "sources": [
+         "novel ¶240"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "Ah, but he will only be the saviour as long as I want him to be. When I don't need him anymore, he would be gone. You will take care of that when I ask you to. You understand?",
+        "sources": [
+         "novel ¶241"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "baldev",
+        "line": "But what if he does not play along?",
+        "sources": [
+         "novel ¶242"
+        ]
+       }
+      },
+      {
+       "say": {
+        "who": "mahant",
+        "line": "He does not play along? Everybody plays along when I want them to.",
+        "sources": [
+         "novel ¶243"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "the-toast",
+     "sources": [
+      "breakdown ch6 p12",
+      "breakdown ch6 p13",
+      "comic b1-p011-11",
+      "novel ¶244-246"
+     ],
+     "do": [
+      {
+       "say": {
+        "who": "mahant",
+        "line": "He will. You will make sure of that. Got it? Good. The Wounded One with No Past will have to forget everything else and don a new avatar. Here, let us raise a toast to that.",
+        "sources": [
+         "novel ¶245"
+        ]
+       }
+      },
+      {
+       "sound": "clink"
+      },
+      {
+       "panel": {
+        "id": "b1-p011-11"
+       }
+      },
+      {
+       "caption": "The attendant keeping watch outside the tent shook his head with distaste when he heard the clinking of their glasses."
+      },
+      {
+       "caption": "Out on the field, the oppressive heat whirled dust about the tired volunteers, unmindful of their hunger and fatigue, oblivious of the real cause of their suffering."
+      },
+      {
+       "panel": {
+        "id": null
+       }
+      },
+      {
+       "progress": {
+        "book": 1,
+        "page": 11
+       }
+      },
+      {
+       "end": {
+        "next": "b1-ch07"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "pov": {
+  "films": {
+   "dvij": {
+    "name": "Dvij"
+   },
+   "professor": {
+    "name": "The Professor",
+    "pilot": true,
+    "scenes": [
+     "b1-ch02",
+     "b1-ch03"
+    ]
+   }
+  },
+  "times": [
+   "dawn",
+   "morning",
+   "mid-morning",
+   "midday",
+   "afternoon",
+   "evening",
+   "night"
+  ],
+  "scenes": {
+   "b1-ch01": {
+    "when": {
+     "day": 1,
+     "time": "morning"
+    }
+   },
+   "b1-ch02": {
+    "when": {
+     "day": 1,
+     "time": "mid-morning",
+     "with": "b1-ch01"
+    },
+    "absent": [
+     "dvij"
+    ],
+    "meanwhile": "Meanwhile, out in the garden, the Professor had visitors. (Chapter 2: watch it through his eyes.)"
+   },
+   "b1-ch03": {
+    "when": {
+     "day": 1,
+     "time": "mid-morning"
+    }
+   },
+   "b1-ch04": {
+    "when": {
+     "day": 1,
+     "time": "afternoon"
+    }
+   },
+   "b1-ch05": {
+    "when": {
+     "day": 1,
+     "time": "afternoon"
+    }
+   },
+   "b1-ch06": {
+    "when": {
+     "day": 1,
+     "time": "midday"
+    },
+    "absent": [
+     "dvij"
+    ],
+    "present": [
+     "mahant",
+     "baldev"
+    ]
+   },
+   "b1-ch07": {
+    "when": {
+     "day": 5,
+     "time": "morning"
+    }
+   },
+   "b1-ch08": {
+    "when": {
+     "day": 6,
+     "time": "morning"
+    }
+   },
+   "b1-ch09": {
+    "when": {
+     "day": 6,
+     "time": "midday"
+    }
+   }
+  },
+  "beats": {
+   "b1-ch07#days": {
+    "not-for": [
+     "professor",
+     "bhavi"
+    ]
+   },
+   "b1-ch07#healed": {
+    "not-for": [
+     "professor",
+     "bhavi"
+    ]
+   },
+   "b1-ch03#water-face": {
+    "captions-for": [
+     "dvij"
+    ]
+   },
+   "b1-ch03#on-his-way": {
+    "for": [
+     "professor"
+    ]
+   }
+  }
+ }
 }

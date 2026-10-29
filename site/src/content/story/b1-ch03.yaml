@@ -24,6 +24,14 @@ props:
   - {id: manuscript, kind: manuscript, at: [-12.05, -12.3], on: desk, sources: [novel ¶151, novel ¶153, breakdown ch3 p8]}   # (on the desk's near edge, by Dvij's chair: within the Professor's reach)
 
 beats:
+  - id: on-his-way                               # the Professor's film only (pov.yaml): in from the garden, by way of the kitchen
+    sources: [ours]                              # for a tumbler of water (the author, 23 Oct); the way sped up, as a film cuts it short
+    do:
+      - actor: {who: professor, from: [-34.0, 26.0], holding: null, pace: 4, walk: [9.5, -13.2], via: [[-30.0, 24.0], [0, 21.0], [0, 13.25], [0, 9.0], [8.75, 9.0], [8.75, -9.0], [7.75, -10.0], [7.75, -12.0]], face: [10.5, -15.0]}
+      - actor: {who: professor, holding: tumbler, anim: interact}   # filled from the pot
+      - actor: {who: professor, pace: 4, walk: [-14.0, -12.4], via: [[7.75, -12.0], [7.75, -9.25], [-7.75, -9.25], [-9.25, -9.25], [-13.0, -10.8]], face: player}
+      - actor: {who: professor, pose: kneel, face: player}   # down beside him, where Dvij's film finds him
+
   - id: water-face
     sources: [breakdown ch3 p1, novel ¶135, novel ¶136]
     do:

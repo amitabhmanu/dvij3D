@@ -9,7 +9,7 @@ author to read the scripts against the book.
 
 Inputs:  src/content/story/*.yaml, book/The Twice Born.docx, images/**/chapterN_panel_breakdown.md,
          src/content/manifests/*.json
-Output:  src/content/generated/story.json (committed), docs/story/review.md
+Output:  src/content/generated/story.json and story-films.json (committed), docs/story/review.md
 Usage:   python story_scenes.py
 """
 import json
@@ -42,6 +42,51 @@ _Loader.add_implicit_resolver("tag:yaml.org,2002:bool", re.compile(r"^(?:true|Tr
 
 def scenes() -> list[tuple[str, dict]]:
     return [(f.name, yaml.load(f.read_text(encoding="utf-8"), Loader=_Loader)) for f in sorted(STORY.glob("b*-ch*.yaml"))]
+
+
+def pov() -> dict:
+    """The points of view (src/content/story/pov.yaml): whose eyes the film can be watched through."""
+    return yaml.load((STORY / "pov.yaml").read_text(encoding="utf-8"), Loader=_Loader)
+
+
+def pov_problems(pv: dict, scs: list[dict]) -> list[str]:
+    """pov.yaml names only scenes, beats, people and times that exist."""
+    out = []
+    where = "story/pov.yaml"
+    by_id = {sc["scene"]: sc for sc in scs}
+    films = pv.get("films", {})
+    times = pv.get("times", [])
+    if "dvij" not in films:
+        out.append(f"{where}: no film for dvij, the story's own point of view")
+    for who, film in films.items():
+        if who not in SPEAKERS:
+            out.append(f"{where}: film {who!r} is not one of the story's people")
+        for s in film.get("scenes", []):
+            if s not in by_id:
+                out.append(f"{where}: film {who} plays {s!r}, which is not a scene")
+    for s, info in pv.get("scenes", {}).items():
+        if s not in by_id:
+            out.append(f"{where}: {s!r} is not a scene")
+            continue
+        when = info.get("when")
+        if not when or not isinstance(when.get("day"), int) or when.get("time") not in times:
+            out.append(f"{where}: {s} needs when: {{day: <n>, time: <one of {times}>}}")
+        elif when.get("with") and when["with"] not in by_id:
+            out.append(f"{where}: {s} happens with {when['with']!r}, which is not a scene")
+        for who in info.get("absent", []) + info.get("present", []):
+            if who not in SPEAKERS:
+                out.append(f"{where}: {s}: {who!r} is not one of the story's people")
+    for s in by_id:
+        if s not in pv.get("scenes", {}):
+            out.append(f"{where}: {s} has no entry (every scene needs a when:)")
+    for key, info in pv.get("beats", {}).items():
+        s, _, bid = key.partition("#")
+        if s not in by_id or bid not in {b["id"] for b in by_id[s]["beats"]}:
+            out.append(f"{where}: {key!r} is not a scene#beat")
+        for who in info.get("for", []) + info.get("not-for", []) + info.get("captions-for", []):
+            if who not in SPEAKERS:
+                out.append(f"{where}: {key}: {who!r} is not one of the story's people")
+    return out
 
 
 def breakdown_panels(book: int, chapter: int) -> int:
@@ -160,13 +205,20 @@ def main() -> None:
     paras = lodge_reference.novel_paragraphs()
     pages = comic_pages()
     bad = [p for name, sc in scenes() for p in problems(name, sc, len(paras), pages)]
+    bad += pov_problems(pov(), [sc for _, sc in scenes()])
     if bad:
         print("\n".join(bad))
         sys.exit(1)
     # what the game reads: every scene, in order
     out = SITE / "src" / "content" / "generated" / "story.json"
-    # A scene marked `skip` (one Dvij is not in) stays as a script but is not played.
-    out.write_text(json.dumps({"version": 1, "scenes": [sc for _, sc in scenes() if not sc.get("skip")]}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    # A scene marked `skip` (one Dvij is not in) is not in Dvij's film: it goes in `offstage`,
+    # for the other points of view (lib/story/pov.ts), which `pov` describes.
+    story = {"version": 1, "scenes": [sc for _, sc in scenes() if not sc.get("skip")],
+             "offstage": [sc for _, sc in scenes() if sc.get("skip")], "pov": pov()}
+    out.write_text(json.dumps(story, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    # whose films there are, for the start screen's "Whose eyes?" (it doesn't load the scenes)
+    films = [{"id": k, **v} for k, v in pov()["films"].items()]
+    (out.parent / "story-films.json").write_text(json.dumps({"films": films}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     REVIEW.parent.mkdir(parents=True, exist_ok=True)
     REVIEW.write_text(review(paras), encoding="utf-8")
     n = sum(len(sc["beats"]) for _, sc in scenes())
